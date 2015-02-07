@@ -7,17 +7,21 @@ import com.dpc.vthacks.gameobject.DynamicGameObject;
 import com.dpc.vthacks.input.InputListener;
 import com.dpc.vthacks.input.InputSystem;
 import com.dpc.vthacks.screens.GameScreen;
+import com.dpc.vthacks.soldier.Unit;
 
-public class Plane extends DynamicGameObject implements InputListener {
+public class Plane extends Unit implements InputListener {
+    private static final float PLUMMIT_TIME = 0.15f; // If no positive force applied in this time, plane will plummit
+    private static final float DAMAGE = 100;
+    
     private boolean rising;
     private int targetRotation; // Current rotation that is being lerped to
     private int fallRotation = -5, riseRotation = 15, fallDeltaFactor = 4, riseDeltaFactor = 2;
     private float plummitTimer;
-    private static final float PLUMMIT_TIME = 0.15f; // If no positive force applied in this time, plane will plummit
+   
     private Array<Bomb> bombs;
     
     public Plane(float x, float y) {
-        super(Assets.plane, 0, 12, x, y);
+        super(Assets.plane, 0, DAMAGE, 0, 12, x, y);
         
         bombs = new Array<Bomb>();
     }
@@ -53,6 +57,21 @@ public class Plane extends DynamicGameObject implements InputListener {
     }
 
     @Override
+    public void attack(Unit enemy) {
+        
+    }
+
+    @Override
+    public void takeDamage(Unit attacker) {
+        
+    }
+
+    @Override
+    public void move() {
+        
+    }
+    
+    @Override
     public void onInputEvent(int event) {
         if(event == InputSystem.TOUCH_DOWN) {
             rising = true;
@@ -79,5 +98,5 @@ public class Plane extends DynamicGameObject implements InputListener {
             b.dispose();
         }
     }
-    
+  
 }
