@@ -1,6 +1,5 @@
 package com.dpc.vthacks.infantry;
 
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.dpc.vthacks.App;
 import com.dpc.vthacks.SpriteAnimation;
 import com.dpc.vthacks.data.Assets;

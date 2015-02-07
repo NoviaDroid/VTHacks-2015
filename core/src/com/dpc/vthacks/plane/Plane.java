@@ -87,6 +87,10 @@ public class Plane extends Unit implements InputListener {
         }
     }
     
+    public Array<Bomb> getBombs() {
+        return bombs;
+    }
+    
     @Override
     public void dispose() {
         super.dispose();

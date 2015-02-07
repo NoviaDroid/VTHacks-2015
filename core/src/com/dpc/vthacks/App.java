@@ -14,6 +14,7 @@ public class App extends Game {
 	@Override
 	public void create () {
 	    batch = new SpriteBatch();
+	    debugRenderer = new ShapeRenderer();
 	    
 	    setScreen(new GameScreen());
 	}
@@ -46,5 +47,6 @@ public class App extends Game {
         super.dispose();
         
         batch.dispose();
+        debugRenderer.dispose();
     }
 }

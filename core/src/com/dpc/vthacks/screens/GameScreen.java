@@ -14,12 +14,13 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.dpc.vthacks.App;
 import com.dpc.vthacks.GameCamera;
+import com.dpc.vthacks.Road;
 import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.data.JSONManager;
 import com.dpc.vthacks.factories.Factory;
-import com.dpc.vthacks.infantry.Soldier;
 import com.dpc.vthacks.input.InputSystem;
+import com.dpc.vthacks.plane.Bomb;
 import com.dpc.vthacks.plane.Plane;
 
 public class GameScreen implements Screen {
@@ -27,12 +28,12 @@ public class GameScreen implements Screen {
     public static final Vector2 gravity = new Vector2(xGrav, -7);
     private static int levelWidth;
     
+    private Road road;
     private Array<Sprite> backgroundElements;
     private GameCamera gameCamera;
     private Plane player;
     private Sprite background;
     private Sprite[] skyline;
-    private Soldier testSoldier;
     private FPSLogger logger;
     
     public GameScreen() {
@@ -57,10 +58,12 @@ public class GameScreen implements Screen {
         background = new Sprite(Assets.background);
         background.setSize(levelWidth, AppData.height);
         
-        Sprite road = new Sprite(Assets.road);
-        road.setSize(levelWidth, road.getHeight() * 2);
-        road.setX(0);
-        road.setY(0);
+        int rh = Assets.road.getRegionHeight();
+        
+        road = new Road(0, 0, levelWidth, rh);
+        
+        road.setTexWidth(levelWidth);
+        road.setTexHeight(rh * 2);
         
         skyline = new Sprite[Assets.skylines.length];
         
@@ -91,10 +94,7 @@ public class GameScreen implements Screen {
             
             lastBuildingEnd = s.getX() + s.getWidth();
         }
-        
-        
-        backgroundElements.add(road);
-
+       
         InputSystem.initialize();
         InputSystem.register(player);
         
@@ -189,7 +189,6 @@ public class GameScreen implements Screen {
         
         gameCamera.position.y = road.getY();
         
-        testSoldier = Factory.createSoldier(25, 25);
     }
 
     private void updatePlayer(float delta) {
@@ -248,10 +247,22 @@ public class GameScreen implements Screen {
         }
     }
     
+    public void checkForCollisions() {
+        if(player.getBoundingRectangle().overlaps(road)) {
+            player.setY(road.getY() + road.getHeight());
+        }
+        
+        for(Bomb b : player.getBombs()) {
+            if(road.overlaps(b.getBoundingRectangle())) {
+                b.setY(road.getY() + road.getHeight());
+            }
+        }
+    }
+    
     public void update(float delta) {
         updatePlayer(delta);
+        checkForCollisions();
         updateCamera();
-        testSoldier.update(delta);
         
         logger.log();
     }
@@ -273,11 +284,36 @@ public class GameScreen implements Screen {
             s.draw(App.batch);
         }
         
-        player.render();
+        road.render();
         
-        testSoldier.render();
+        player.render();
 
         App.batch.end();
+        
+        
+        
+//        App.debugRenderer.setProjectionMatrix(gameCamera.combined);
+//        App.debugRenderer.setColor(Color.RED);
+//        App.debugRenderer.begin(ShapeType.Filled);
+//        
+//        App.debugRenderer.rect(player.getBoundingRectangle().x,
+//                               player.getBoundingRectangle().y,
+//                               player.getBoundingRectangle().width, 
+//                               player.getBoundingRectangle().height);
+//        
+//        App.debugRenderer.rect(road.x,
+//                               road.y,
+//                               road.width,
+//                               road.height);
+//        
+//        for(Bomb r : player.getBombs()) {
+//            App.debugRenderer.rect(r.getBoundingRectangle().x,
+//                                   r.getBoundingRectangle().y,
+//                                   r.getBoundingRectangle().width,
+//                                   r.getBoundingRectangle().height);
+//        }
+//        
+//        App.debugRenderer.end();
     }
 
     @Override
