@@ -3,6 +3,7 @@ package com.dpc.vthacks.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.dpc.vthacks.App;
 import com.dpc.vthacks.GameCamera;
@@ -13,10 +14,11 @@ import com.dpc.vthacks.gameobject.GameObject;
 import com.dpc.vthacks.input.InputSystem;
 
 public class GameScreen implements Screen {
+    private static final Vector2 gravity = new Vector2(0, -9.807f);
     private Array<GameObject> objects;
     private GameCamera camera;
     private Plane player;
-    
+
     @Override
     public void show() {
         AppData.onResize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -55,8 +57,15 @@ public class GameScreen implements Screen {
         });
     }
 
+    public void update(float delta) {
+        player.applyVel(gravity); // Apply gravity to the player
+        player.update(delta);
+    }
+    
     @Override
     public void render(float delta) {
+        update(delta);
+        
         App.batch.setProjectionMatrix(camera.combined);
         App.batch.begin();
         

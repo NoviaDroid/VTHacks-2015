@@ -13,14 +13,27 @@ public abstract class DynamicGameObject extends GameObject {
     
     @Override
     public abstract void update(float delta);
+    
     @Override
     public abstract void render();
     
-    public void setVelocity(Vector2 velocity) {
+    public void addVel() {
+        getPosition().add(velocity);
+    }
+    
+    public void subVel() {
+        getPosition().sub(velocity);
+    }
+    
+    public void applyVel(Vector2 vel) {
+        getPosition().add(vel);
+    }
+    
+    public void setVel(Vector2 velocity) {
         this.velocity = velocity;
     }
     
-    public Vector2 getVelocity() {
+    public Vector2 getVel() {
         return velocity;
     }
 }

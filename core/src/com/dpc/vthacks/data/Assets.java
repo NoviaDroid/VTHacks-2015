@@ -5,9 +5,8 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Assets {
-    private static TextureAtlas skinAtlas;
-    private static TextureAtlas gameAtlas;
-    public static TextureRegion plane;
+    private static TextureAtlas skinAtlas, gameAtlas;
+    public static TextureRegion plane, bomb;
     
     public static void loadSkins() {
         skinAtlas = new TextureAtlas(Gdx.files.internal("textures/skinAtlas.pack"));
@@ -17,6 +16,7 @@ public class Assets {
         gameAtlas = new TextureAtlas(Gdx.files.internal("textures/gameAtlas.pack"));
         
         plane = gameAtlas.findRegion("plane");
+        bomb = gameAtlas.findRegion("bomb");
     }
     
     public static void unloadSkins() {
