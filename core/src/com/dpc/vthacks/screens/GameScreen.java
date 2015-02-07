@@ -10,26 +10,27 @@ import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.input.GestureDetector.GestureListener;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.utils.Array;
 import com.dpc.vthacks.App;
 import com.dpc.vthacks.GameCamera;
 import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
-import com.dpc.vthacks.gameobject.GameObject;
 import com.dpc.vthacks.input.InputSystem;
 import com.dpc.vthacks.plane.Plane;
 
 public class GameScreen implements Screen {
     private static final float xGrav = 4;
     public static final Vector2 gravity = new Vector2(xGrav, -7);
-    private static final int LEVEL_WIDTH = 3400;
+    private static int levelWidth;
     
-    private Array<GameObject> objects;
     private Array<Sprite> backgroundElements;
     private GameCamera gameCamera;
     private Plane player;
     private Sprite skyline;
+    
+    public GameScreen() {
+        levelWidth = MathUtils.random(3400, 4200);
+    }
     
     @Override
     public void show() {
@@ -38,26 +39,30 @@ public class GameScreen implements Screen {
         
         gameCamera = new GameCamera();
         
-        objects = new Array<GameObject>();
         player = new Plane((AppData.width * 0.5f) - (Assets.plane.getRegionWidth() * 0.5f), 
                            (AppData.height * 0.5f) - (Assets.plane.getRegionHeight() * 0.5f));
         
         backgroundElements = new Array<Sprite>();
         
+        Sprite road = new Sprite(Assets.road);
+        road.setSize(levelWidth, road.getHeight() * 2);
+        road.setX(0);
+        road.setY(0);
         
         skyline = new Sprite(Assets.skylines[2]);
         skyline.setX(0);
-        skyline.setY(0);
-        skyline.setSize(LEVEL_WIDTH, AppData.height);
+        skyline.setY(road.getY() + road.getHeight());
+        skyline.setSize(levelWidth, AppData.height);
         
         backgroundElements.add(skyline);
+        
         
         float lastBuildingEnd = 0;
         
         for(int i = 0; i < 30; i++) {
-            Sprite s = new Sprite(Assets.buildings[MathUtils.random(3)]);
+            Sprite s = new Sprite(Assets.buildings[MathUtils.random(Assets.buildings.length - 1)]);
             s.setX(lastBuildingEnd);
-            s.setY(15);
+            s.setY(road.getY() + road.getHeight());
             s.setSize(Assets.buildings[i % Assets.buildings.length].getRegionWidth() * 3,
                       Assets.buildings[i % Assets.buildings.length].getRegionHeight() * 3);
             
@@ -66,10 +71,6 @@ public class GameScreen implements Screen {
             lastBuildingEnd = s.getX() + s.getWidth();
         }
         
-        Sprite road = new Sprite(Assets.road);
-        road.setSize(LEVEL_WIDTH, road.getHeight() * 2);
-        road.setX(0);
-        road.setY(-(road.getHeight()));
         
         backgroundElements.add(road);
 
@@ -164,12 +165,14 @@ public class GameScreen implements Screen {
         }));
         
         Gdx.input.setInputProcessor(mplexer);
+        
+        gameCamera.position.y = road.getY();
     }
 
     public void update(float delta) {
         // If at the edge of the screen, turn around
-        if(player.getX() + player.getWidth() >= LEVEL_WIDTH) {
-            player.setX(LEVEL_WIDTH - player.getWidth() - 1);
+        if(player.getX() + player.getWidth() >= levelWidth) {
+            player.setX(levelWidth - player.getWidth() - 1);
             
             // Flip the plane
             Assets.plane.flip(true, false);
@@ -193,6 +196,15 @@ public class GameScreen implements Screen {
         player.update(delta);
         
         gameCamera.position.set(player.getX(), gameCamera.position.y, 0);
+        
+        // Clamp the camera's position
+        if(gameCamera.position.x - (gameCamera.viewportWidth * 0.5f) < 0) {
+            gameCamera.position.x = (gameCamera.viewportWidth * 0.5f);
+        }
+        else if(gameCamera.position.x + (gameCamera.viewportWidth * 0.5f) > levelWidth) {
+            gameCamera.position.x = levelWidth - (gameCamera.viewportWidth * 0.5f);
+        }
+        
         gameCamera.update();
         
         if(gravity.x <= 0) {

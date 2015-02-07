@@ -19,13 +19,13 @@ public class Assets {
     public static void loadGameTextures() {
         gameAtlas = new TextureAtlas(Gdx.files.internal("textures/gameAtlas.pack"));
         
-        buildings = new TextureRegion[4];
+        buildings = new TextureRegion[5];
         
         skylines = new TextureRegion[3];
         
         tankFrames = new AtlasRegion[3];
         
-        for(int i = 0; i < 4; i++) {
+        for(int i = 0; i < 5; i++) {
             buildings[i] = gameAtlas.findRegion("building" + (i + 1));
         }
         

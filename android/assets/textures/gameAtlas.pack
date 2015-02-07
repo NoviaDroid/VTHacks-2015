@@ -59,14 +59,14 @@ tank3
   orig: 119, 51
   offset: 0, 0
   index: -1
-building4
+building5
   rotate: false
   xy: 343, 1
   size: 85, 125
   orig: 85, 125
   offset: 0, 0
   index: -1
-building4 deg
+building4
   rotate: false
   xy: 430, 1
   size: 84, 125
