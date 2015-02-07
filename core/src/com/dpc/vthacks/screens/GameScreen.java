@@ -197,21 +197,27 @@ public class GameScreen implements Screen {
         
         gameCamera.position.set(player.getX(), gameCamera.position.y, 0);
         
+        boolean wasClamped = false;
+        
         // Clamp the camera's position
         if(gameCamera.position.x - (gameCamera.viewportWidth * 0.5f) < 0) {
             gameCamera.position.x = (gameCamera.viewportWidth * 0.5f);
+            wasClamped = true;
         }
         else if(gameCamera.position.x + (gameCamera.viewportWidth * 0.5f) > levelWidth) {
             gameCamera.position.x = levelWidth - (gameCamera.viewportWidth * 0.5f);
+            wasClamped = true;
         }
         
         gameCamera.update();
         
-        if(gravity.x <= 0) {
-            skyline.setX(skyline.getX() + 0.25f);
-        }
-        else {
-            skyline.setX(skyline.getX() - 0.25f);
+        if(!wasClamped) {
+            if(gravity.x <= 0) {
+                skyline.setX(skyline.getX() + 0.25f);
+            }
+            else {
+                skyline.setX(skyline.getX() - 0.25f);
+            }
         }
     }
     

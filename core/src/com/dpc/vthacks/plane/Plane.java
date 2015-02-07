@@ -31,14 +31,14 @@ public class Plane extends Unit implements InputListener {
     public void update(float delta) {
         if(rising) {
             addVel();
-          //  setRotation(getRotation() + (targetRotation - getRotation()) * delta * riseDeltaFactor);
+            setRotation(getRotation() + (targetRotation - getRotation()) * delta * riseDeltaFactor);
         }
         else {
             plummitTimer += delta;
             
             // Begin to plummit if no pos force has been applied lately
             if(plummitTimer >= PLUMMIT_TIME) {
-               // setRotation(getRotation() + (targetRotation - getRotation()) * delta * fallDeltaFactor);
+                setRotation(getRotation() + (targetRotation - getRotation()) * delta * fallDeltaFactor);
             }
         }
         
