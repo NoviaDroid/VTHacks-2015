@@ -21,7 +21,7 @@ import com.dpc.vthacks.input.InputSystem;
 import com.dpc.vthacks.plane.Plane;
 
 public class GameScreen implements Screen {
-    private static final float xGrav = 7;
+    private static final float xGrav = 4;
     public static final Vector2 gravity = new Vector2(xGrav, -7);
     private static final int LEVEL_WIDTH = 1200;
     
@@ -29,7 +29,8 @@ public class GameScreen implements Screen {
     private Array<Sprite> backgroundElements;
     private GameCamera gameCamera;
     private Plane player;
-
+    private Sprite skyline;
+    
     @Override
     public void show() {
         AppData.onResize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -44,7 +45,7 @@ public class GameScreen implements Screen {
         backgroundElements = new Array<Sprite>();
         
         
-        Sprite skyline = new Sprite(Assets.skylines[2]);
+        skyline = new Sprite(Assets.skylines[2]);
         skyline.setX(0);
         skyline.setY(0);
         skyline.setSize(LEVEL_WIDTH, AppData.height);
@@ -193,6 +194,13 @@ public class GameScreen implements Screen {
         
         gameCamera.position.set(player.getX(), gameCamera.position.y, 0);
         gameCamera.update();
+        
+        if(gravity.x <= 0) {
+            skyline.setX(skyline.getX() + 0.25f);
+        }
+        else {
+            skyline.setX(skyline.getX() - 0.25f);
+        }
     }
     
     @Override
