@@ -4,31 +4,27 @@ import com.badlogic.gdx.utils.Array;
 import com.dpc.vthacks.App;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.gameobject.DynamicGameObject;
+import com.dpc.vthacks.infantry.Unit;
 import com.dpc.vthacks.input.InputListener;
 import com.dpc.vthacks.input.InputSystem;
 import com.dpc.vthacks.screens.GameScreen;
-import com.dpc.vthacks.soldier.Unit;
 
 public class Plane extends Unit implements InputListener {
     private static final float PLUMMIT_TIME = 0.05f; // If no positive force applied in this time, plane will plummit
-    private static final float DAMAGE = 100, HEALTH = 100;
-    private static final float VEL_X = 0, VEL_Y = 11;
-    
     private boolean rising;
     private int targetRotation; // Current rotation that is being lerped to
     private int fallRotation = -5, riseRotation = 15, fallDeltaFactor = 4, riseDeltaFactor = 2;
     private float plummitTimer;
-   
     private Array<Bomb> bombs;
     
-    public Plane(float x, float y) {
-        super(Assets.plane, 0, DAMAGE, HEALTH, VEL_X, VEL_Y, x, y);
+    public Plane(float damage, float health, float velX, float velY, float x, float y) {
+        super(Assets.plane, 0, damage, health, velX, velY, x, y);
 
         bombs = new Array<Bomb>();
     }
 
     @Override
-    public void update(float delta) {
+    public void update(float delta) {System.out.println(getVelX() + " "+ getVelY());
         if(rising) {
             addVel();
             setRotation(getRotation() + (targetRotation - getRotation()) * delta * riseDeltaFactor);

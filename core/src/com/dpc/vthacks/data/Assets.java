@@ -21,7 +21,7 @@ public class Assets {
         
         buildings = new TextureRegion[5];
         
-        skylines = new TextureRegion[3];
+        skylines = new TextureRegion[4];
         
         tankFrames = new AtlasRegion[3];
         
@@ -32,6 +32,7 @@ public class Assets {
         skylines[0] = gameAtlas.findRegion("skyline1");
         skylines[1] = gameAtlas.findRegion("skyline2");
         skylines[2] = gameAtlas.findRegion("skyline3");
+        skylines[3] = gameAtlas.findRegion("skyline4");
         
         tankFrames[0] = gameAtlas.findRegion("tank1");
         tankFrames[1] = gameAtlas.findRegion("tank2");

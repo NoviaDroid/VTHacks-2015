@@ -1,0 +1,23 @@
+{
+  "tank": [{
+    "cost": "150",
+    "health": "150",
+    "damage": "25",
+    "velX": "8",
+    "velY": "0"
+  }],
+  
+  "enemy plane": [{
+    "health": "100",
+    "damage": "30",
+    "velX": "0",
+    "velY": "11"
+  }],
+  
+  "player": [{
+    "health": "200",
+    "damage": "50",
+    "velX": "0", 
+    "velY": "11"
+  }]
+}

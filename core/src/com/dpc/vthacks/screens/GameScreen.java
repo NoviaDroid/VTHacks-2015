@@ -15,6 +15,8 @@ import com.dpc.vthacks.App;
 import com.dpc.vthacks.GameCamera;
 import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
+import com.dpc.vthacks.data.JSONManager;
+import com.dpc.vthacks.factories.Factory;
 import com.dpc.vthacks.input.InputSystem;
 import com.dpc.vthacks.plane.Plane;
 
@@ -34,13 +36,15 @@ public class GameScreen implements Screen {
     
     @Override
     public void show() {
+        JSONManager.parseProperties();
+        
         AppData.onResize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         Assets.loadGameTextures();
         
         gameCamera = new GameCamera();
         
-        player = new Plane((AppData.width * 0.5f) - (Assets.plane.getRegionWidth() * 0.5f), 
-                           (AppData.height * 0.5f) - (Assets.plane.getRegionHeight() * 0.5f));
+        player = Factory.createPlayer((AppData.width * 0.5f) - (Assets.plane.getRegionWidth() * 0.5f), 
+                                      (AppData.height * 0.5f) - (Assets.plane.getRegionHeight() * 0.5f));
         
         backgroundElements = new Array<Sprite>();
         
@@ -55,8 +59,7 @@ public class GameScreen implements Screen {
         skyline.setSize(levelWidth, AppData.height);
         
         backgroundElements.add(skyline);
-        
-        
+
         float lastBuildingEnd = 0;
         
         for(int i = 0; i < 30; i++) {

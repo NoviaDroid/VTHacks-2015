@@ -1,4 +1,4 @@
-package com.dpc.vthacks.soldier;
+package com.dpc.vthacks.infantry;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.dpc.vthacks.gameobject.DynamicGameObject;
