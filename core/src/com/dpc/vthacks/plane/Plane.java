@@ -12,7 +12,7 @@ import com.dpc.vthacks.soldier.Unit;
 public class Plane extends Unit implements InputListener {
     private static final float PLUMMIT_TIME = 0.05f; // If no positive force applied in this time, plane will plummit
     private static final float DAMAGE = 100, HEALTH = 100;
-    private static final float VEL_X = 0, VEL_Y = 14;
+    private static final float VEL_X = 0, VEL_Y = 15;
     
     private boolean rising;
     private int targetRotation; // Current rotation that is being lerped to
@@ -31,14 +31,14 @@ public class Plane extends Unit implements InputListener {
     public void update(float delta) {
         if(rising) {
             addVel();
-            setRotation(getRotation() + (targetRotation - getRotation()) * delta * riseDeltaFactor);
+          //  setRotation(getRotation() + (targetRotation - getRotation()) * delta * riseDeltaFactor);
         }
         else {
             plummitTimer += delta;
             
             // Begin to plummit if no pos force has been applied lately
             if(plummitTimer >= PLUMMIT_TIME) {
-                setRotation(getRotation() + (targetRotation - getRotation()) * delta * fallDeltaFactor);
+               // setRotation(getRotation() + (targetRotation - getRotation()) * delta * fallDeltaFactor);
             }
         }
         

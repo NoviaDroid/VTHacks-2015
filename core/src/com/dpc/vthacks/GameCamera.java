@@ -9,14 +9,21 @@ public class GameCamera extends OrthographicCamera {
     private Viewport viewport;
     
     public GameCamera() {
-        viewport = new ExtendViewport(480, 800, this);
-        
         setToOrtho(false, AppData.width, AppData.height);
-        position.set(AppData.width * 0.5f, AppData.height * 0.5f, 0);
+        position.set(AppData.width * 0.5f, (AppData.height * 0.5f) - (AppData.height / 4), 0);
+        zoom = 1f;
         update();
+        
+       // viewport = new Stret(480, 800, this);
+        
+       // viewport.update(AppData.width, AppData.height);
     }
     
-    public void resize(float width, float height) {
-        viewport.update((int) width, (int) height);
+    public void resize(int width, int height) {
+        //viewport.update(width, height);    
+        
+        //setToOrtho(false, width, height);
+        //position.set(AppData.width * 0.5f, AppData.height * 0.5f, 0);
+        //update();
     }
 }

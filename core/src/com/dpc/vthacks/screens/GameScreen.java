@@ -10,6 +10,7 @@ import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.input.GestureDetector.GestureListener;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.utils.Array;
 import com.dpc.vthacks.App;
 import com.dpc.vthacks.GameCamera;
@@ -20,23 +21,25 @@ import com.dpc.vthacks.input.InputSystem;
 import com.dpc.vthacks.plane.Plane;
 
 public class GameScreen implements Screen {
-    public static final Vector2 gravity = new Vector2(0, -7);
+    private static final float xGrav = 7;
+    public static final Vector2 gravity = new Vector2(xGrav, -7);
     private Array<GameObject> objects;
-    private GameCamera camera;
-    private Plane player;
     private Array<Sprite> backgroundElements;
-    
+    private GameCamera gameViewport;
+    private Plane player;
+
     @Override
     public void show() {
         AppData.onResize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         Assets.loadGameTextures();
         
-        camera = new GameCamera();
+        gameViewport = new GameCamera();
         objects = new Array<GameObject>();
         player = new Plane((AppData.width * 0.5f) - (Assets.plane.getRegionWidth() * 0.5f), 
                            (AppData.height * 0.5f) - (Assets.plane.getRegionHeight() * 0.5f));
         
         backgroundElements = new Array<Sprite>();
+        
         
         Sprite skyline = new Sprite(Assets.skylines[2]);
         skyline.setX(0);
@@ -50,7 +53,7 @@ public class GameScreen implements Screen {
         for(int i = 0; i < 10; i++) {
             Sprite s = new Sprite(Assets.buildings[MathUtils.random(3)]);
             s.setX(lastBuildingEnd);
-            s.setY(15);System.out.println(i % Assets.buildings.length);
+            s.setY(15);
             s.setSize(Assets.buildings[i % Assets.buildings.length].getRegionWidth() * 3,
                       Assets.buildings[i % Assets.buildings.length].getRegionHeight() * 3);
             
@@ -59,7 +62,13 @@ public class GameScreen implements Screen {
             lastBuildingEnd = s.getX() + s.getWidth();
         }
         
+        Sprite road = new Sprite(Assets.road);
+        road.setSize(AppData.width, road.getHeight() * 2);
+        road.setX(0);
+        road.setY(-(road.getHeight()));
         
+        backgroundElements.add(road);
+
         InputSystem.initialize();
         InputSystem.register(player);
         
@@ -71,7 +80,7 @@ public class GameScreen implements Screen {
                 if(keycode == Keys.B) {
                     InputSystem.dispatchEvent(InputSystem.B);
                 }
-                
+
                 return false;
             }
             
@@ -154,6 +163,28 @@ public class GameScreen implements Screen {
     }
 
     public void update(float delta) {
+        // If at the edge of the screen, turn around
+        if(player.getX() + player.getWidth() >= AppData.width) {
+            player.setX(AppData.width - player.getWidth() - 1);
+            
+            // Flip the plane
+            Assets.plane.flip(true, false);
+            player.setRegion(Assets.plane);
+            
+            // Now set the gravity on the x axis
+            gravity.x = -xGrav;
+        }
+        else if(player.getX() <= 0) {
+            player.setX(1);
+            
+            // Flip the plane
+            Assets.plane.flip(true, false);
+            player.setRegion(Assets.plane);
+            
+            // Now set the gravity on the x axis
+            gravity.x = xGrav;
+        }
+        
         player.applyVel(gravity); // Apply gravity to the player
         player.update(delta);
     }
@@ -162,7 +193,7 @@ public class GameScreen implements Screen {
     public void render(float delta) {
         update(delta);
         
-        App.batch.setProjectionMatrix(camera.combined);
+        App.batch.setProjectionMatrix(gameViewport.combined);
         App.batch.begin();
         
         for(Sprite s : backgroundElements) {
@@ -170,14 +201,14 @@ public class GameScreen implements Screen {
         }
         
         player.render();
-        
+
         App.batch.end();
     }
 
     @Override
     public void resize(int width, int height) {
         AppData.onResize(width, height);
-        camera.resize(width, height);
+        gameViewport.resize(width, height);
     }
 
     @Override

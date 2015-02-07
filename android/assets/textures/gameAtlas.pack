@@ -5,70 +5,98 @@ filter: Nearest,Nearest
 repeat: none
 skyline3
   rotate: false
-  xy: 1, 107
+  xy: 1, 97
   size: 340, 135
   orig: 340, 135
   offset: 0, 0
   index: -1
+road
+  rotate: false
+  xy: 1, 30
+  size: 215, 65
+  orig: 215, 65
+  offset: 0, 0
+  index: -1
 skyline1
   rotate: false
-  xy: 1, 1
+  xy: 343, 128
   size: 170, 104
   orig: 170, 104
   offset: 0, 0
   index: -1
 skyline2
   rotate: false
-  xy: 343, 138
+  xy: 515, 128
   size: 170, 104
   orig: 170, 104
   offset: 0, 0
   index: -1
 plane
   rotate: false
-  xy: 173, 40
+  xy: 687, 167
   size: 153, 65
   orig: 153, 65
   offset: 0, 0
   index: -1
+tank1
+  rotate: false
+  xy: 218, 44
+  size: 119, 51
+  orig: 119, 51
+  offset: 0, 0
+  index: -1
+tank2
+  rotate: false
+  xy: 842, 181
+  size: 119, 51
+  orig: 119, 51
+  offset: 0, 0
+  index: -1
+tank3
+  rotate: false
+  xy: 687, 114
+  size: 119, 51
+  orig: 119, 51
+  offset: 0, 0
+  index: -1
 building4
   rotate: false
-  xy: 515, 117
+  xy: 343, 1
   size: 85, 125
   orig: 85, 125
   offset: 0, 0
   index: -1
 building4 deg
   rotate: false
-  xy: 602, 117
+  xy: 430, 1
   size: 84, 125
   orig: 84, 125
   offset: 0, 0
   index: -1
 building1
   rotate: false
-  xy: 688, 180
+  xy: 516, 64
   size: 38, 62
   orig: 38, 62
   offset: 0, 0
   index: -1
 building2
   rotate: false
-  xy: 728, 180
+  xy: 556, 64
   size: 38, 62
   orig: 38, 62
   offset: 0, 0
   index: -1
 building3
   rotate: false
-  xy: 173, 4
+  xy: 963, 198
   size: 24, 34
   orig: 24, 34
   offset: 0, 0
   index: -1
 bomb
   rotate: false
-  xy: 343, 124
+  xy: 842, 167
   size: 32, 12
   orig: 32, 12
   offset: 0, 0
