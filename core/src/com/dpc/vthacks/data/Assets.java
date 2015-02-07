@@ -1,7 +1,7 @@
 package com.dpc.vthacks.data;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -17,8 +17,8 @@ public class Assets {
     public static void loadSkins() {
         skinAtlas = new TextureAtlas(Gdx.files.internal("textures/SkinPack.pack"));
     }
-    
-    public static void loadGameTextures() {
+
+    public static void loadGameTextures(AssetManager manager) {
         gameAtlas = new TextureAtlas(Gdx.files.internal("textures/gameAtlas.pack"));
         
         buildings = new TextureRegion[5];

@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 public abstract class GameObject extends Sprite {
-
+    
     public GameObject(TextureRegion region, float x, float y) {
         super(region);
         
