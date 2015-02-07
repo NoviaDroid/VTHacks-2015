@@ -23,7 +23,7 @@ import com.dpc.vthacks.plane.Plane;
 public class GameScreen implements Screen {
     private static final float xGrav = 4;
     public static final Vector2 gravity = new Vector2(xGrav, -7);
-    private static final int LEVEL_WIDTH = 1200;
+    private static final int LEVEL_WIDTH = 3400;
     
     private Array<GameObject> objects;
     private Array<Sprite> backgroundElements;
@@ -54,7 +54,7 @@ public class GameScreen implements Screen {
         
         float lastBuildingEnd = 0;
         
-        for(int i = 0; i < 10; i++) {
+        for(int i = 0; i < 30; i++) {
             Sprite s = new Sprite(Assets.buildings[MathUtils.random(3)]);
             s.setX(lastBuildingEnd);
             s.setY(15);
