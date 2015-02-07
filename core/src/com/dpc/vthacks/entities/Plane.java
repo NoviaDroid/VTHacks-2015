@@ -10,10 +10,12 @@ import com.dpc.vthacks.input.InputSystem;
 public class Plane extends DynamicGameObject implements InputListener {
     private boolean rising;
     private int targetRotation; // Current rotation that is being lerped to
-    private int fallRotation = -90, riseRotation = 15, fallDeltaFactor = 1, riseDeltaFactor = 10;
+    private int fallRotation = -90, riseRotation = 15, fallDeltaFactor = 2, riseDeltaFactor = 10;
+    private float plummitTimer;
+    private static final float PLUMMIT_TIME = 0.15f; // If no positive force applied in this time, plane will plummit
     
     public Plane(float x, float y) {
-        super(Assets.plane, 0, 15, x, y);
+        super(Assets.plane, 0, 18, x, y);
     }
 
     @Override
@@ -23,7 +25,12 @@ public class Plane extends DynamicGameObject implements InputListener {
             setRotation(getRotation() + (targetRotation - getRotation()) * delta * riseDeltaFactor);
         }
         else {
-            setRotation(getRotation() + (targetRotation - getRotation()) * delta * fallDeltaFactor);
+            plummitTimer += delta;
+            
+            // Begin to plummit if no pos force has been applied lately
+            if(plummitTimer >= PLUMMIT_TIME) {
+                setRotation(getRotation() + (targetRotation - getRotation()) * delta * fallDeltaFactor);
+            }
         }
         
     }
@@ -38,6 +45,7 @@ public class Plane extends DynamicGameObject implements InputListener {
         if(event == InputSystem.TOUCH_DOWN) {
             rising = true;
             targetRotation = riseRotation;
+            plummitTimer = 0;
         }
         else if(event == InputSystem.TOUCH_DRAGGED) {
             

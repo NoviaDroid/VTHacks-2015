@@ -14,7 +14,7 @@ import com.dpc.vthacks.gameobject.GameObject;
 import com.dpc.vthacks.input.InputSystem;
 
 public class GameScreen implements Screen {
-    private static final Vector2 gravity = new Vector2(0, -9.807f);
+    private static final Vector2 gravity = new Vector2(0, -12);
     private Array<GameObject> objects;
     private GameCamera camera;
     private Plane player;
