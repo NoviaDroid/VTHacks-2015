@@ -9,8 +9,7 @@ public abstract class GameObject {
     
     public GameObject(TextureRegion region, float x, float y) {
         this.region = region;
-        position.x = x;
-        position.y = y;
+        position = new Vector2(x, y);
     }
 
     public abstract void update(float delta);
