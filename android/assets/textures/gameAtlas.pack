@@ -5,14 +5,49 @@ filter: Nearest,Nearest
 repeat: none
 plane
   rotate: false
-  xy: 1, 15
+  xy: 1, 62
   size: 153, 65
   orig: 153, 65
   offset: 0, 0
   index: -1
+building4
+  rotate: false
+  xy: 156, 2
+  size: 85, 125
+  orig: 85, 125
+  offset: 0, 0
+  index: -1
+building4 deg
+  rotate: false
+  xy: 243, 2
+  size: 84, 125
+  orig: 84, 125
+  offset: 0, 0
+  index: -1
+building1
+  rotate: false
+  xy: 329, 65
+  size: 38, 62
+  orig: 38, 62
+  offset: 0, 0
+  index: -1
+building2
+  rotate: false
+  xy: 329, 1
+  size: 38, 62
+  orig: 38, 62
+  offset: 0, 0
+  index: -1
+building3
+  rotate: false
+  xy: 1, 26
+  size: 24, 34
+  orig: 24, 34
+  offset: 0, 0
+  index: -1
 bomb
   rotate: false
-  xy: 1, 1
+  xy: 369, 115
   size: 32, 12
   orig: 32, 12
   offset: 0, 0

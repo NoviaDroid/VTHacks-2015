@@ -1,4 +1,4 @@
-package com.dpc.vthacks.entities;
+package com.dpc.vthacks.plane;
 
 import com.badlogic.gdx.utils.Array;
 import com.dpc.vthacks.App;

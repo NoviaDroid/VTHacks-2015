@@ -1,27 +1,30 @@
 package com.dpc.vthacks.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.input.GestureDetector.GestureListener;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.dpc.vthacks.App;
 import com.dpc.vthacks.GameCamera;
 import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
-import com.dpc.vthacks.entities.Plane;
 import com.dpc.vthacks.gameobject.GameObject;
 import com.dpc.vthacks.input.InputSystem;
+import com.dpc.vthacks.plane.Plane;
 
 public class GameScreen implements Screen {
     public static final Vector2 gravity = new Vector2(0, -7);
     private Array<GameObject> objects;
     private GameCamera camera;
     private Plane player;
+    private Array<Sprite> backgroundElements;
     
     @Override
     public void show() {
@@ -32,6 +35,22 @@ public class GameScreen implements Screen {
         objects = new Array<GameObject>();
         player = new Plane((AppData.width * 0.5f) - (Assets.plane.getRegionWidth() * 0.5f), 
                            (AppData.height * 0.5f) - (Assets.plane.getRegionHeight() * 0.5f));
+        
+        backgroundElements = new Array<Sprite>();
+        
+        float lastBuildingEnd = 0;
+        
+        for(int i = 0; i < 10; i++) {
+            Sprite s = new Sprite(Assets.buildings[MathUtils.random(3)]);
+            s.setX(lastBuildingEnd);
+            s.setY(15);System.out.println(i % Assets.buildings.length);
+            s.setSize(Assets.buildings[i % Assets.buildings.length].getRegionWidth() * 3,
+                      Assets.buildings[i % Assets.buildings.length].getRegionHeight() * 3);
+            
+            backgroundElements.add(s);
+            
+            lastBuildingEnd = s.getX() + s.getWidth() + 5;
+        }
         
         InputSystem.initialize();
         InputSystem.register(player);
@@ -138,6 +157,10 @@ public class GameScreen implements Screen {
         App.batch.setProjectionMatrix(camera.combined);
         App.batch.begin();
         
+        for(Sprite s : backgroundElements) {
+            s.draw(App.batch);
+        }
+        
         player.render();
         
         App.batch.end();
@@ -168,6 +191,10 @@ public class GameScreen implements Screen {
     public void dispose() {
         Assets.unloadGameTextures();
         player.dispose();
+        
+        for(Sprite s : backgroundElements) {
+            s.getTexture().dispose();
+        }
     }
 
 }

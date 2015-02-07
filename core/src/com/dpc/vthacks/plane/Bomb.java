@@ -1,4 +1,4 @@
-package com.dpc.vthacks.entities;
+package com.dpc.vthacks.plane;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.dpc.vthacks.App;
