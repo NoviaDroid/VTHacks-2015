@@ -45,7 +45,7 @@ public class GameScreen implements Screen {
         JSONManager.parseProperties();
         
         AppData.onResize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        Assets.loadGameTextures();
+        Assets.loadGameTextures(null);
         
         gameCamera = new GameCamera();
         
@@ -293,7 +293,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void resume() {
-        Assets.loadGameTextures();
+        Assets.loadGameTextures(null);
     }
 
     @Override
