@@ -18,13 +18,13 @@ public class Plane extends Unit implements InputListener {
     private Array<Bomb> bombs;
     
     public Plane(float damage, float health, float velX, float velY, float x, float y) {
-        super(Assets.plane, 0, damage, health, velX, velY, x, y);
+        super(Assets.plane, damage, health, velX, velY, x, y);
 
         bombs = new Array<Bomb>();
     }
 
     @Override
-    public void update(float delta) {System.out.println(getVelX() + " "+ getVelY());
+    public void update(float delta) {
         if(rising) {
             addVel();
             setRotation(getRotation() + (targetRotation - getRotation()) * delta * riseDeltaFactor);

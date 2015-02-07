@@ -1,5 +1,6 @@
 package com.dpc.vthacks.factories;
 
+import com.dpc.vthacks.infantry.Soldier;
 import com.dpc.vthacks.infantry.Tank;
 import com.dpc.vthacks.plane.Plane;
 
@@ -7,6 +8,7 @@ public class Factory {
     private static float playerHealth, playerDamage, playerVelX, playerVelY;
     private static float tankHealth, tankDamage, tankCost, tankVelX, tankVelY;
     private static float enemyHealth, enemyDamage, enemyVelX, enemyVelY;
+    private static float soldierHealth, soldierDamage, soldierVelX, soldierVelY, soldierCost;
     
     public static Plane createPlayer(float x, float y) {
         return new Plane(playerDamage, playerHealth, playerVelX, playerVelY, x, y);
@@ -18,6 +20,10 @@ public class Factory {
     
     public static Plane createEnemyPlane(float x, float y) {
         return new Plane(enemyDamage, enemyHealth, enemyVelX, enemyVelY, x, y);
+    }
+    
+    public static Soldier createSoldier(float x, float y) {
+        return new Soldier(soldierDamage, soldierHealth, soldierVelX, soldierVelY, x, y);
     }
 
     public static float getPlayerHealth() {

@@ -4,15 +4,13 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.dpc.vthacks.gameobject.DynamicGameObject;
 
 public abstract class Unit extends DynamicGameObject {
-    private int cost;
     private float damage, health;
     
-    public Unit(TextureRegion region, int cost, float damage, float health, float velX, float velY, float x, float y) {
+    public Unit(TextureRegion region, float damage, float health, float velX, float velY, float x, float y) {
         super(region, velX, velY, x, y);
         
         this.health = health;
         this.damage = damage;
-        this.cost = cost;
     }
 
     @Override
@@ -33,14 +31,6 @@ public abstract class Unit extends DynamicGameObject {
     
     public void setHealth(float health) {
         this.health = health;
-    }
-    
-    public int getCost() {
-        return cost;
-    }
-
-    public void setCost(int cost) {
-        this.cost = cost;
     }
     
     public float getDamage() {

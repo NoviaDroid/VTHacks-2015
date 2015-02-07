@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.input.GestureDetector.GestureListener;
@@ -17,6 +18,7 @@ import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.data.JSONManager;
 import com.dpc.vthacks.factories.Factory;
+import com.dpc.vthacks.infantry.Soldier;
 import com.dpc.vthacks.input.InputSystem;
 import com.dpc.vthacks.plane.Plane;
 
@@ -28,10 +30,14 @@ public class GameScreen implements Screen {
     private Array<Sprite> backgroundElements;
     private GameCamera gameCamera;
     private Plane player;
-    private Sprite skyline;
+    private Sprite background;
+    private Sprite[] skyline;
+    private Soldier testSoldier;
+    private FPSLogger logger;
     
     public GameScreen() {
         levelWidth = MathUtils.random(3400, 4200);
+        logger = new FPSLogger();
     }
     
     @Override
@@ -48,18 +54,30 @@ public class GameScreen implements Screen {
         
         backgroundElements = new Array<Sprite>();
         
+        background = new Sprite(Assets.background);
+        background.setSize(levelWidth, AppData.height);
+        
         Sprite road = new Sprite(Assets.road);
         road.setSize(levelWidth, road.getHeight() * 2);
         road.setX(0);
         road.setY(0);
         
-        skyline = new Sprite(Assets.skylines[2]);
-        skyline.setX(0);
-        skyline.setY(road.getY() + road.getHeight());
-        skyline.setSize(levelWidth, AppData.height);
+        skyline = new Sprite[Assets.skylines.length];
         
-        backgroundElements.add(skyline);
+        skyline[0] = new Sprite(Assets.skylines[0]);
+        skyline[0].setX(0);
+        skyline[0].setY(road.getY() + road.getHeight());
+        skyline[0].setSize(levelWidth, AppData.height);
 
+        skyline[1] = new Sprite(Assets.skylines[1]);
+        skyline[1].setX(0);
+        skyline[1].setY(road.getY() + road.getHeight());
+        skyline[1].setSize(levelWidth, AppData.height);
+        
+        for(Sprite s : skyline) {
+            backgroundElements.add(s);
+        }
+        
         float lastBuildingEnd = 0;
         
         for(int i = 0; i < 30; i++) {
@@ -170,10 +188,12 @@ public class GameScreen implements Screen {
         Gdx.input.setInputProcessor(mplexer);
         
         gameCamera.position.y = road.getY();
+        
+        testSoldier = Factory.createSoldier(25, 25);
     }
 
-    public void update(float delta) {
-        // If at the edge of the screen, turn around
+    private void updatePlayer(float delta) {
+     // If at the edge of the screen, turn around
         if(player.getX() + player.getWidth() >= levelWidth) {
             player.setX(levelWidth - player.getWidth() - 1);
             
@@ -197,7 +217,9 @@ public class GameScreen implements Screen {
         
         player.applyVel(gravity); // Apply gravity to the player
         player.update(delta);
-        
+    }
+    
+    private void updateCamera() {
         gameCamera.position.set(player.getX(), gameCamera.position.y, 0);
         
         boolean wasClamped = false;
@@ -216,12 +238,22 @@ public class GameScreen implements Screen {
         
         if(!wasClamped) {
             if(gravity.x <= 0) {
-                skyline.setX(skyline.getX() + 0.25f);
+                skyline[0].setX(skyline[0].getX() + 0.25f);
+                skyline[1].setX(skyline[1].getX() + 0.1f);
             }
             else {
-                skyline.setX(skyline.getX() - 0.25f);
+                skyline[0].setX(skyline[0].getX() - 0.25f);
+                skyline[1].setX(skyline[1].getX() - 0.1f);
             }
         }
+    }
+    
+    public void update(float delta) {
+        updatePlayer(delta);
+        updateCamera();
+        testSoldier.update(delta);
+        
+        logger.log();
     }
     
     @Override
@@ -231,11 +263,19 @@ public class GameScreen implements Screen {
         App.batch.setProjectionMatrix(gameCamera.combined);
         App.batch.begin();
         
+        App.batch.disableBlending();
+        
+        background.draw(App.batch);
+        
+        App.batch.enableBlending();
+        
         for(Sprite s : backgroundElements) {
             s.draw(App.batch);
         }
         
         player.render();
+        
+        testSoldier.render();
 
         App.batch.end();
     }

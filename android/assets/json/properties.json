@@ -2,7 +2,7 @@
   "tank": [{
     "cost": "150",
     "health": "150",
-    "damage": "25",
+    "damage": "30",
     "velX": "8",
     "velY": "0"
   }],
@@ -10,7 +10,7 @@
   "enemy plane": [{
     "health": "100",
     "damage": "30",
-    "velX": "0",
+    "velX": "11",
     "velY": "11"
   }],
   
@@ -19,5 +19,10 @@
     "damage": "50",
     "velX": "0", 
     "velY": "11"
+  }],
+  
+  "soldier": [{
+    "cost": "50",
+    "damage": "10"
   }]
 }

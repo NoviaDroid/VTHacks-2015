@@ -9,7 +9,7 @@ public class Tank extends Unit {
     private SpriteAnimation animation;
     
     public Tank(float damage, float health, float velX, float velY, float x, float y) {
-        super(Assets.tankFrames[0], 0, damage, health, velX, velY, x, y);
+        super(Assets.tankFrames[0], damage, health, velX, velY, x, y);
         
         animation = new SpriteAnimation(Assets.tankFrames, 0.25f);
     }

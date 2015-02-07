@@ -1,19 +1,22 @@
 package com.dpc.vthacks.infantry;
 
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.dpc.vthacks.App;
+import com.dpc.vthacks.SpriteAnimation;
+import com.dpc.vthacks.data.Assets;
 
 public class Soldier extends Unit {
-    private static final float DAMAGE = 30;
-    private static final float VEL_X = 11, VEL_Y = 0, HEALTH = 100;
+    private SpriteAnimation animation;
     
-    public Soldier(TextureRegion region, int cost, float x, float y) {
-        super(region, cost, DAMAGE, HEALTH, VEL_X, VEL_Y, x, y);
+    public Soldier(float damage, float health, float velX, float velY, float x, float y) {
+        super(Assets.soldierFrames[0], damage, health, velX, velY, x, y);
+        
+        animation = new SpriteAnimation(Assets.soldierFrames, 0.1f);
+        setSize(getWidth() * 4, getHeight() * 4);
     }
 
     @Override
     public void update(float delta) {
-        
+        setRegion(animation.update(delta));
     }
 
     @Override
