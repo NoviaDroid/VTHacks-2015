@@ -4,8 +4,11 @@ import com.badlogic.gdx.utils.Array;
 
 public class InputSystem {
     public static final int TOUCH_DOWN = 0;
-    public static final int TOUCH_DRAGGED = 1;
+    public static final int TAP = 1;
     public static final int TOUCH_UP = 2;
+    public static final int TOUCH_DRAGGED = 3;
+    public static final int B = 4;
+    
     private static Array<InputListener> listeners;
     
     public static void initialize() {

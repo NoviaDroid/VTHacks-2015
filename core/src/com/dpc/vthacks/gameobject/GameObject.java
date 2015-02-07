@@ -26,4 +26,8 @@ public abstract class GameObject extends Sprite {
         setX(getX() - x);
         setY(getY() - y);
     }
+    
+    public void dispose() {
+        getTexture().dispose();
+    }
 }

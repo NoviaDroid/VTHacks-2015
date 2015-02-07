@@ -1,21 +1,25 @@
 package com.dpc.vthacks.entities;
 
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.dpc.vthacks.App;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.gameobject.DynamicGameObject;
 import com.dpc.vthacks.input.InputListener;
 import com.dpc.vthacks.input.InputSystem;
+import com.dpc.vthacks.screens.GameScreen;
 
 public class Plane extends DynamicGameObject implements InputListener {
     private boolean rising;
     private int targetRotation; // Current rotation that is being lerped to
-    private int fallRotation = -90, riseRotation = 15, fallDeltaFactor = 2, riseDeltaFactor = 10;
+    private int fallRotation = -5, riseRotation = 15, fallDeltaFactor = 4, riseDeltaFactor = 2;
     private float plummitTimer;
     private static final float PLUMMIT_TIME = 0.15f; // If no positive force applied in this time, plane will plummit
+    private Array<Bomb> bombs;
     
     public Plane(float x, float y) {
-        super(Assets.plane, 0, 18, x, y);
+        super(Assets.plane, 0, 12, x, y);
+        
+        bombs = new Array<Bomb>();
     }
 
     @Override
@@ -33,11 +37,19 @@ public class Plane extends DynamicGameObject implements InputListener {
             }
         }
         
+        // Make each bomb continue to fall
+        for(Bomb b : bombs) {
+            b.update(delta);
+        }
     }
 
     @Override
     public void render() {
         draw(App.batch);
+        
+        for(Bomb b : bombs) {
+            b.draw(App.batch);
+        }
     }
 
     @Override
@@ -47,12 +59,24 @@ public class Plane extends DynamicGameObject implements InputListener {
             targetRotation = riseRotation;
             plummitTimer = 0;
         }
-        else if(event == InputSystem.TOUCH_DRAGGED) {
-            
+        else if(event == InputSystem.TAP || event == InputSystem.B) {
+            bombs.add(new Bomb(getX() + (getWidth() * 0.5f), getY()));
         }
         else if(event == InputSystem.TOUCH_UP) {
             rising = false;
             targetRotation = fallRotation;
+        }
+        else if(event == InputSystem.TOUCH_DRAGGED) {
+            
+        }
+    }
+    
+    @Override
+    public void dispose() {
+        super.dispose();
+        
+        for(Bomb b : bombs) {
+            b.dispose();
         }
     }
     
