@@ -23,9 +23,11 @@ import com.dpc.vthacks.plane.Plane;
 public class GameScreen implements Screen {
     private static final float xGrav = 7;
     public static final Vector2 gravity = new Vector2(xGrav, -7);
+    private static final int LEVEL_WIDTH = 1200;
+    
     private Array<GameObject> objects;
     private Array<Sprite> backgroundElements;
-    private GameCamera gameViewport;
+    private GameCamera gameCamera;
     private Plane player;
 
     @Override
@@ -33,7 +35,8 @@ public class GameScreen implements Screen {
         AppData.onResize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         Assets.loadGameTextures();
         
-        gameViewport = new GameCamera();
+        gameCamera = new GameCamera();
+        
         objects = new Array<GameObject>();
         player = new Plane((AppData.width * 0.5f) - (Assets.plane.getRegionWidth() * 0.5f), 
                            (AppData.height * 0.5f) - (Assets.plane.getRegionHeight() * 0.5f));
@@ -44,7 +47,7 @@ public class GameScreen implements Screen {
         Sprite skyline = new Sprite(Assets.skylines[2]);
         skyline.setX(0);
         skyline.setY(0);
-        skyline.setSize(AppData.width, AppData.height);
+        skyline.setSize(LEVEL_WIDTH, AppData.height);
         
         backgroundElements.add(skyline);
         
@@ -63,7 +66,7 @@ public class GameScreen implements Screen {
         }
         
         Sprite road = new Sprite(Assets.road);
-        road.setSize(AppData.width, road.getHeight() * 2);
+        road.setSize(LEVEL_WIDTH, road.getHeight() * 2);
         road.setX(0);
         road.setY(-(road.getHeight()));
         
@@ -164,8 +167,8 @@ public class GameScreen implements Screen {
 
     public void update(float delta) {
         // If at the edge of the screen, turn around
-        if(player.getX() + player.getWidth() >= AppData.width) {
-            player.setX(AppData.width - player.getWidth() - 1);
+        if(player.getX() + player.getWidth() >= LEVEL_WIDTH) {
+            player.setX(LEVEL_WIDTH - player.getWidth() - 1);
             
             // Flip the plane
             Assets.plane.flip(true, false);
@@ -187,13 +190,16 @@ public class GameScreen implements Screen {
         
         player.applyVel(gravity); // Apply gravity to the player
         player.update(delta);
+        
+        gameCamera.position.set(player.getX(), gameCamera.position.y, 0);
+        gameCamera.update();
     }
     
     @Override
     public void render(float delta) {
         update(delta);
         
-        App.batch.setProjectionMatrix(gameViewport.combined);
+        App.batch.setProjectionMatrix(gameCamera.combined);
         App.batch.begin();
         
         for(Sprite s : backgroundElements) {
@@ -208,7 +214,7 @@ public class GameScreen implements Screen {
     @Override
     public void resize(int width, int height) {
         AppData.onResize(width, height);
-        gameViewport.resize(width, height);
+        gameCamera.resize(width, height);
     }
 
     @Override

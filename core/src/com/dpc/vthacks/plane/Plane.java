@@ -23,7 +23,7 @@ public class Plane extends Unit implements InputListener {
     
     public Plane(float x, float y) {
         super(Assets.plane, 0, DAMAGE, HEALTH, VEL_X, VEL_Y, x, y);
-        setSize(getWidth() * 2, getHeight() * 2);
+
         bombs = new Array<Bomb>();
     }
 
