@@ -11,6 +11,8 @@ public class Tank extends Unit {
         super(Assets.tankFrames[0], damage, health, velX, velY, x, y);
         
         animation = new SpriteAnimation(Assets.tankFrames, 0.25f);
+       
+        setSize(getWidth() * 2, getHeight() * 2);
     }
 
     @Override

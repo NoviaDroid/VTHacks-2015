@@ -19,6 +19,7 @@ import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.data.JSONManager;
 import com.dpc.vthacks.factories.Factory;
+import com.dpc.vthacks.infantry.Army;
 import com.dpc.vthacks.input.InputSystem;
 import com.dpc.vthacks.plane.Bomb;
 import com.dpc.vthacks.plane.Plane;
@@ -28,6 +29,7 @@ public class GameScreen implements Screen {
     public static final Vector2 gravity = new Vector2(xGrav, -7);
     private static int levelWidth;
     
+    private Army allies, enemies;
     private Road road;
     private Array<Sprite> backgroundElements;
     private GameCamera gameCamera;
@@ -60,10 +62,10 @@ public class GameScreen implements Screen {
         
         int rh = Assets.road.getRegionHeight();
         
-        road = new Road(0, 0, levelWidth, rh);
+        road = new Road(0, 0, levelWidth, rh * 4);
         
         road.setTexWidth(levelWidth);
-        road.setTexHeight(rh * 2);
+        road.setTexHeight(rh * 5);
         
         skyline = new Sprite[Assets.skylines.length];
         
@@ -189,6 +191,13 @@ public class GameScreen implements Screen {
         
         gameCamera.position.y = road.getY();
         
+        allies = new Army();
+        enemies = new Army();
+        
+
+        allies.addUnit(Factory.createSoldier(5, 5));
+        allies.addUnit(Factory.createTank(25, 10));
+        allies.addUnit(Factory.createTank(400, 50));
     }
 
     private void updatePlayer(float delta) {
@@ -219,7 +228,7 @@ public class GameScreen implements Screen {
     }
     
     private void updateCamera() {
-        gameCamera.position.set(player.getX(), gameCamera.position.y, 0);
+        gameCamera.position.set(player.getX(), player.getY(), 0);
         
         boolean wasClamped = false;
         
@@ -263,6 +272,8 @@ public class GameScreen implements Screen {
         updatePlayer(delta);
         checkForCollisions();
         updateCamera();
+        allies.update(delta);
+        enemies.update(delta);
         
         logger.log();
     }
@@ -288,6 +299,9 @@ public class GameScreen implements Screen {
         
         player.render();
 
+        allies.render();
+        enemies.render();
+        
         App.batch.end();
         
         
