@@ -4,7 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.utils.Array;
+import com.dpc.vthacks.App;
 import com.dpc.vthacks.GameCamera;
+import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.entities.Plane;
 import com.dpc.vthacks.gameobject.GameObject;
@@ -17,8 +19,12 @@ public class GameScreen implements Screen {
     
     @Override
     public void show() {
+        AppData.onResize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        Assets.loadGameTextures();
+        
+        camera = new GameCamera();
         objects = new Array<GameObject>();
-        player = new Plane(0, 0);
+        player = new Plane(AppData.width * 0.5f, AppData.height * 0.5f);
         
         InputSystem.initialize();
         InputSystem.register(player);
@@ -51,10 +57,18 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        App.batch.setProjectionMatrix(camera.combined);
+        App.batch.begin();
+        
+        player.render();
+        
+        App.batch.end();
     }
 
     @Override
     public void resize(int width, int height) {
+        AppData.onResize(width, height);
+        camera.resize(width, height);
     }
 
     @Override

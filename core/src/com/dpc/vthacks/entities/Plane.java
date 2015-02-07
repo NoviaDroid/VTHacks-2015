@@ -1,6 +1,7 @@
 package com.dpc.vthacks.entities;
 
 import com.badlogic.gdx.math.Vector2;
+import com.dpc.vthacks.App;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.gameobject.DynamicGameObject;
 import com.dpc.vthacks.input.InputListener;
@@ -19,7 +20,7 @@ public class Plane extends DynamicGameObject implements InputListener {
 
     @Override
     public void render() {
-        
+        App.batch.draw(getRegion(), getX(), getY());
     }
 
     @Override

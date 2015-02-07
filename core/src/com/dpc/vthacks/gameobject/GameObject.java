@@ -15,6 +15,22 @@ public abstract class GameObject {
     public abstract void update(float delta);
     public abstract void render();
     
+    public float getX() {
+        return position.x;
+    }
+    
+    public float getY() {
+        return position.y;
+    }
+    
+    public void setX(float x) {
+        position.x = x;
+    }
+    
+    public void setY(float y) {
+        position.y = y;
+    }
+    
     public Vector2 getPosition() {
         return position;
     }
