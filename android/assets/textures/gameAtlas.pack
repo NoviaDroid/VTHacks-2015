@@ -3,51 +3,72 @@ gameAtlas.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
+skyline3
+  rotate: false
+  xy: 1, 107
+  size: 340, 135
+  orig: 340, 135
+  offset: 0, 0
+  index: -1
+skyline1
+  rotate: false
+  xy: 1, 1
+  size: 170, 104
+  orig: 170, 104
+  offset: 0, 0
+  index: -1
+skyline2
+  rotate: false
+  xy: 343, 138
+  size: 170, 104
+  orig: 170, 104
+  offset: 0, 0
+  index: -1
 plane
   rotate: false
-  xy: 1, 62
+  xy: 173, 40
   size: 153, 65
   orig: 153, 65
   offset: 0, 0
   index: -1
 building4
   rotate: false
-  xy: 156, 2
+  xy: 515, 117
   size: 85, 125
   orig: 85, 125
   offset: 0, 0
   index: -1
 building4 deg
   rotate: false
-  xy: 243, 2
+  xy: 602, 117
   size: 84, 125
   orig: 84, 125
   offset: 0, 0
   index: -1
 building1
   rotate: false
-  xy: 329, 65
+  xy: 688, 180
   size: 38, 62
   orig: 38, 62
   offset: 0, 0
   index: -1
 building2
   rotate: false
-  xy: 329, 1
+  xy: 728, 180
   size: 38, 62
   orig: 38, 62
   offset: 0, 0
   index: -1
 building3
   rotate: false
-  xy: 1, 26
+  xy: 173, 4
   size: 24, 34
   orig: 24, 34
   offset: 0, 0
   index: -1
 bomb
   rotate: false
-  xy: 369, 115
+  xy: 343, 124
   size: 32, 12
   orig: 32, 12
   offset: 0, 0

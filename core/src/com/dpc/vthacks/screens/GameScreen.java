@@ -38,6 +38,13 @@ public class GameScreen implements Screen {
         
         backgroundElements = new Array<Sprite>();
         
+        Sprite skyline = new Sprite(Assets.skylines[2]);
+        skyline.setX(0);
+        skyline.setY(0);
+        skyline.setSize(AppData.width, AppData.height);
+        
+        backgroundElements.add(skyline);
+        
         float lastBuildingEnd = 0;
         
         for(int i = 0; i < 10; i++) {
@@ -49,8 +56,9 @@ public class GameScreen implements Screen {
             
             backgroundElements.add(s);
             
-            lastBuildingEnd = s.getX() + s.getWidth() + 5;
+            lastBuildingEnd = s.getX() + s.getWidth();
         }
+        
         
         InputSystem.initialize();
         InputSystem.register(player);

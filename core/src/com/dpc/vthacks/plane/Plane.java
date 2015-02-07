@@ -10,8 +10,9 @@ import com.dpc.vthacks.screens.GameScreen;
 import com.dpc.vthacks.soldier.Unit;
 
 public class Plane extends Unit implements InputListener {
-    private static final float PLUMMIT_TIME = 0.15f; // If no positive force applied in this time, plane will plummit
-    private static final float DAMAGE = 100;
+    private static final float PLUMMIT_TIME = 0.05f; // If no positive force applied in this time, plane will plummit
+    private static final float DAMAGE = 100, HEALTH = 100;
+    private static final float VEL_X = 0, VEL_Y = 14;
     
     private boolean rising;
     private int targetRotation; // Current rotation that is being lerped to
@@ -21,8 +22,8 @@ public class Plane extends Unit implements InputListener {
     private Array<Bomb> bombs;
     
     public Plane(float x, float y) {
-        super(Assets.plane, 0, DAMAGE, 0, 12, x, y);
-        
+        super(Assets.plane, 0, DAMAGE, HEALTH, VEL_X, VEL_Y, x, y);
+        setSize(getWidth() * 2, getHeight() * 2);
         bombs = new Array<Bomb>();
     }
 

@@ -16,7 +16,7 @@ public abstract class GameObject extends Sprite {
 
     public abstract void update(float delta);
     public abstract void render();
-    
+   
     public void addPos(float x, float y) {
         setX(getX() + x);
         setY(getY() + y);

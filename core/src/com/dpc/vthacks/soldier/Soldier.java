@@ -5,10 +5,10 @@ import com.dpc.vthacks.App;
 
 public class Soldier extends Unit {
     private static final float DAMAGE = 30;
-    private static final float VEL_X = 11, VEL_Y = 0;
+    private static final float VEL_X = 11, VEL_Y = 0, HEALTH = 100;
     
     public Soldier(TextureRegion region, int cost, float x, float y) {
-        super(region, cost, DAMAGE, VEL_X, VEL_Y, x, y);
+        super(region, cost, DAMAGE, HEALTH, VEL_X, VEL_Y, x, y);
     }
 
     @Override
