@@ -2,13 +2,14 @@ package com.dpc.vthacks.data;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Assets {
     private static TextureAtlas skinAtlas, gameAtlas;
-    public static TextureRegion plane, bomb, road, background, tankShell, enemyBase, playerBase, bullet;
+    public static TextureRegion plane, bomb, road, background, tankShell, menuBackground, enemyBase, playerBase, healthbar, bullet;
     public static TextureRegion[] buildings;
     public static TextureRegion[] skylines;
     public static AtlasRegion[] tankFrames;
@@ -18,7 +19,8 @@ public class Assets {
     public static AtlasRegion[] explosionFrames;
     
     public static void loadSkins() {
-        skinAtlas = new TextureAtlas(Gdx.files.internal("textures/SkinPack.pack"));
+       // skinAtlas = new TextureAtlas(Gdx.files.internal("textures/SkinPack.pack"));
+        menuBackground = new TextureRegion(new Texture(Gdx.files.internal("textures/MenuScreen.png")));
     }
 
     public static void loadGameTextures(AssetManager manager) {
@@ -68,6 +70,7 @@ public class Assets {
             enemyTankFrames[i] = gameAtlas.findRegion("ETank" + (i + 1));
         }
 
+        healthbar = gameAtlas.findRegion("healthbar");
         bullet = gameAtlas.findRegion("Bullet");
         playerBase = gameAtlas.findRegion("barrack");
         enemyBase = gameAtlas.findRegion("Enemy Barrack");      
@@ -79,7 +82,8 @@ public class Assets {
     }
     
     public static void unloadSkins() {
-        skinAtlas.dispose();
+       // skinAtlas.dispose();
+        menuBackground.getTexture().dispose();
     }
     
     public static void unloadGameTextures() {
@@ -93,6 +97,7 @@ public class Assets {
         enemyBase.getTexture().dispose();
         
         bullet.getTexture().dispose();
+        healthbar.getTexture().dispose();
         
         for(TextureRegion t : explosionFrames) {
             t.getTexture().dispose();

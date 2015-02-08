@@ -25,9 +25,23 @@ public class Battle {
         myArmy.update(delta);
         enemyArmy.update(delta);
         
+        if(myArmy.getBase().getHealth() <= 0 || enemyArmy.getBase().getHealth() <= 0) {
+            GameScreen.triggerGameOver();
+        }
+
         // TODO: DONT cheat :D . Take out the hidden unit
         for(Unit u : myArmy.getUnits()) {
             for(Unit u1 : enemyArmy.getUnits()) {
+                
+                
+                if(u.getBoundingRectangle().overlaps(enemyArmy.getBase().getBoundingRectangle())) {
+                    enemyArmy.getBase().loseLife(0.025f);                    System.out.println("losing");
+                }
+                
+                if(u1.getBoundingRectangle().overlaps(myArmy.getBase().getBoundingRectangle())) {
+                    myArmy.getBase().loseLife(0.025f);                    System.out.println("losing");
+                }
+                
                 if(MathUtil.dst(u.getX(), u.getY(), u1.getX(), u1.getY()) <= u.getRange()) {
                     if(u.moving) {
                         u.stop();                    
@@ -41,18 +55,31 @@ public class Battle {
                         u1.stop();                    
                         u1.attack(u);
                     }
+                    
                 }
                 
                 Array<Bomb> bombs = GameScreen.getPlayer().getBombs();
-                for (Bomb b : bombs) {
-                    if (b.getBoundingRectangle().overlaps(u.getBoundingRectangle())) {
-                        u.takeDamage(b.getDamage());
-                        b.triggerExplosion();
-                    }
+                Iterator<Bomb> iterator = bombs.iterator();
+                
+                while(iterator.hasNext()) {
+                    Bomb b = iterator.next();
                     
-                    if (b.getBoundingRectangle().overlaps(u1.getBoundingRectangle())) {
-                        u1.takeDamage(b.getDamage());
-                        b.triggerExplosion();
+                    if(!b.isAlive()) {
+                        if(b.getBoundingRectangle().overlaps(enemyArmy.getBase().getBoundingRectangle())) {
+                            enemyArmy.getBase().loseLife(1);
+                            System.out.println("life: " + enemyArmy.getBase().getHealth());
+                            b.triggerExplosion();
+                        }
+    
+                        if (b.getBoundingRectangle().overlaps(u.getBoundingRectangle())) {
+                            u.takeDamage(b.getDamage());
+                            b.triggerExplosion();
+                        }
+                        
+                        if (b.getBoundingRectangle().overlaps(u1.getBoundingRectangle())) {
+                            u1.takeDamage(b.getDamage());
+                            b.triggerExplosion();
+                        }
                     }
                 }
                 
@@ -104,7 +131,7 @@ public class Battle {
                             
                                 t.shell.triggerExplosion();
                                 u1.takeDamage(u);
-                                //t.moving = true;
+                                u.moving = true;
                             
                         }
                     }
@@ -118,7 +145,7 @@ public class Battle {
                   
                                 t.shell.triggerExplosion();
                                 u.takeDamage(u1);
-                               // t.moving = true;
+                                u1.moving = true;
                             
                         }
                     }

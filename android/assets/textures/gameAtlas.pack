@@ -5,343 +5,350 @@ filter: Nearest,Nearest
 repeat: none
 background
   rotate: false
-  xy: 1, 806
+  xy: 1, 819
   size: 828, 201
   orig: 828, 201
   offset: 0, 0
   index: -1
 skyline1
   rotate: false
-  xy: 1, 603
+  xy: 1, 616
   size: 828, 201
   orig: 828, 201
   offset: 0, 0
   index: -1
 skyline2
   rotate: false
-  xy: 1, 400
+  xy: 1, 413
   size: 828, 201
   orig: 828, 201
   offset: 0, 0
   index: -1
 Tankfire1
   rotate: false
-  xy: 1, 294
+  xy: 1, 307
   size: 195, 104
   orig: 195, 104
   offset: 0, 0
   index: -1
 Tankfire2
   rotate: false
-  xy: 1, 188
+  xy: 1, 201
   size: 195, 104
   orig: 195, 104
   offset: 0, 0
   index: -1
 Tankfire3
   rotate: false
-  xy: 198, 294
+  xy: 198, 307
   size: 195, 104
   orig: 195, 104
   offset: 0, 0
   index: -1
 Tankfire4
   rotate: false
-  xy: 1, 82
+  xy: 1, 95
   size: 195, 104
   orig: 195, 104
   offset: 0, 0
   index: -1
 Tankfire5
   rotate: false
-  xy: 198, 188
+  xy: 198, 201
   size: 195, 104
   orig: 195, 104
   offset: 0, 0
   index: -1
 road
   rotate: false
-  xy: 395, 333
+  xy: 395, 346
   size: 215, 65
   orig: 215, 65
   offset: 0, 0
   index: -1
+healthbar
+  rotate: false
+  xy: 612, 391
+  size: 245, 20
+  orig: 245, 20
+  offset: 0, 0
+  index: -1
 enemyPlaneBombDoors
   rotate: false
-  xy: 831, 925
+  xy: 1, 11
   size: 153, 82
   orig: 153, 82
   offset: 0, 0
   index: -1
 enemyPlane1
   rotate: false
-  xy: 1, 15
+  xy: 198, 134
   size: 153, 65
   orig: 153, 65
   offset: 0, 0
   index: -1
 plane
   rotate: false
-  xy: 198, 121
+  xy: 395, 279
   size: 153, 65
   orig: 153, 65
   offset: 0, 0
   index: -1
 planeLatchOpen
   rotate: false
-  xy: 395, 266
+  xy: 831, 955
   size: 153, 65
   orig: 153, 65
   offset: 0, 0
   index: -1
 building5
   rotate: false
-  xy: 831, 798
+  xy: 831, 828
   size: 85, 125
   orig: 85, 125
   offset: 0, 0
   index: -1
 building4
   rotate: false
-  xy: 831, 671
+  xy: 831, 701
   size: 84, 125
   orig: 84, 125
   offset: 0, 0
   index: -1
 ETank1
   rotate: false
-  xy: 612, 347
+  xy: 395, 226
   size: 119, 51
   orig: 119, 51
   offset: 0, 0
   index: -1
 ETank2
   rotate: false
-  xy: 395, 213
+  xy: 612, 338
   size: 119, 51
   orig: 119, 51
   offset: 0, 0
   index: -1
 ETank3
   rotate: false
-  xy: 198, 68
+  xy: 733, 338
   size: 119, 51
   orig: 119, 51
   offset: 0, 0
   index: -1
 tank1
   rotate: false
-  xy: 733, 347
+  xy: 198, 81
   size: 119, 51
   orig: 119, 51
   offset: 0, 0
   index: -1
 barrack
   rotate: false
-  xy: 395, 181
-  size: 123, 30
-  orig: 123, 30
-  offset: 0, 0
-  index: -1
-Enemy Barrack
-  rotate: false
-  xy: 612, 315
+  xy: 395, 194
   size: 123, 30
   orig: 123, 30
   offset: 0, 0
   index: -1
 tank2
   rotate: false
-  xy: 737, 294
+  xy: 831, 648
   size: 119, 51
   orig: 119, 51
   offset: 0, 0
   index: -1
 tank3
   rotate: false
-  xy: 831, 618
+  xy: 831, 595
   size: 119, 51
   orig: 119, 51
   offset: 0, 0
   index: -1
+Enemy Barrack
+  rotate: false
+  xy: 831, 563
+  size: 123, 30
+  orig: 123, 30
+  offset: 0, 0
+  index: -1
 Explosion1
   rotate: false
-  xy: 550, 272
+  xy: 550, 285
   size: 53, 59
   orig: 53, 59
   offset: 0, 0
   index: -1
 Explosion2
   rotate: false
-  xy: 918, 864
+  xy: 918, 894
   size: 53, 59
   orig: 53, 59
   offset: 0, 0
   index: -1
 Explosion3
   rotate: false
-  xy: 831, 557
+  xy: 831, 502
   size: 53, 59
   orig: 53, 59
   offset: 0, 0
   index: -1
 Explosion4
   rotate: false
-  xy: 918, 803
+  xy: 918, 833
   size: 53, 59
   orig: 53, 59
   offset: 0, 0
   index: -1
 Explosion5
   rotate: false
-  xy: 831, 496
+  xy: 831, 441
   size: 53, 59
   orig: 53, 59
   offset: 0, 0
   index: -1
 building1
   rotate: false
-  xy: 156, 18
+  xy: 156, 31
   size: 38, 62
   orig: 38, 62
   offset: 0, 0
   index: -1
 building2
   rotate: false
-  xy: 353, 124
+  xy: 353, 137
   size: 38, 62
   orig: 38, 62
   offset: 0, 0
   index: -1
 Apartment
   rotate: false
-  xy: 516, 213
+  xy: 516, 226
   size: 32, 51
   orig: 32, 51
   offset: 0, 0
   index: -1
 ETroop Running1
   rotate: false
-  xy: 986, 972
+  xy: 986, 985
   size: 24, 35
   orig: 24, 35
   offset: 0, 0
   index: -1
 ETroop Running2
   rotate: false
-  xy: 319, 84
+  xy: 319, 97
   size: 24, 35
   orig: 24, 35
   offset: 0, 0
   index: -1
 ETroop Running3
   rotate: false
-  xy: 550, 235
+  xy: 550, 248
   size: 24, 35
   orig: 24, 35
   offset: 0, 0
   index: -1
 ETroop Running4
   rotate: false
-  xy: 886, 581
+  xy: 886, 526
   size: 24, 35
   orig: 24, 35
   offset: 0, 0
   index: -1
 troopRunning1
   rotate: false
-  xy: 831, 459
+  xy: 576, 248
   size: 24, 35
   orig: 24, 35
   offset: 0, 0
   index: -1
 troopRunning2
   rotate: false
-  xy: 986, 935
+  xy: 886, 489
   size: 24, 35
   orig: 24, 35
   offset: 0, 0
   index: -1
 troopRunning3
   rotate: false
-  xy: 576, 235
+  xy: 912, 526
   size: 24, 35
   orig: 24, 35
   offset: 0, 0
   index: -1
 troopRunnning4
   rotate: false
-  xy: 886, 544
+  xy: 886, 452
   size: 24, 35
   orig: 24, 35
   offset: 0, 0
   index: -1
 building3
   rotate: false
-  xy: 912, 582
+  xy: 912, 490
   size: 24, 34
   orig: 24, 34
   offset: 0, 0
   index: -1
 ETroop1
   rotate: false
-  xy: 520, 181
+  xy: 520, 194
   size: 21, 30
   orig: 21, 30
   offset: 0, 0
   index: -1
 ETroop2
   rotate: false
-  xy: 831, 427
+  xy: 912, 458
   size: 21, 30
   orig: 21, 30
   offset: 0, 0
   index: -1
 ETroop3
   rotate: false
-  xy: 857, 464
+  xy: 196, 49
   size: 21, 30
   orig: 21, 30
   offset: 0, 0
   index: -1
 troopStationary1
   rotate: false
-  xy: 886, 512
+  xy: 219, 49
   size: 21, 30
   orig: 21, 30
   offset: 0, 0
   index: -1
 troopStationary2
   rotate: false
-  xy: 912, 550
+  xy: 242, 49
   size: 21, 30
   orig: 21, 30
   offset: 0, 0
   index: -1
 troopStationary3
   rotate: false
-  xy: 196, 36
+  xy: 265, 49
   size: 21, 30
   orig: 21, 30
   offset: 0, 0
   index: -1
 bomb
   rotate: false
-  xy: 1, 1
+  xy: 831, 427
   size: 32, 12
   orig: 32, 12
   offset: 0, 0
   index: -1
 ETank Shell
   rotate: false
-  xy: 550, 225
+  xy: 1, 1
   size: 27, 8
   orig: 27, 8
   offset: 0, 0
   index: -1
 Bullet
   rotate: false
-  xy: 973, 920
+  xy: 973, 950
   size: 9, 3
   orig: 9, 3
   offset: 0, 0

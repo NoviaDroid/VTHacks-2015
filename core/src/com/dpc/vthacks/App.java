@@ -2,10 +2,12 @@ package com.dpc.vthacks;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.dpc.vthacks.screens.GameScreen;
+import com.dpc.vthacks.data.AppData;
+import com.dpc.vthacks.screens.MenuScreen;
 
 public class App extends Game {
     public static SpriteBatch batch;
@@ -13,10 +15,13 @@ public class App extends Game {
     
 	@Override
 	public void create () {
+	    AppData.width = Gdx.graphics.getWidth();
+	    AppData.height = Gdx.graphics.getHeight();
+	    
 	    batch = new SpriteBatch();
 	    debugRenderer = new ShapeRenderer();
 	    
-	    setScreen(new GameScreen());
+	    setScreen(new MenuScreen(this));
 	}
 
 	@Override
@@ -48,5 +53,9 @@ public class App extends Game {
         
         batch.dispose();
         debugRenderer.dispose();
+    }
+    
+    public void setScreen(Screen screen) {
+        super.setScreen(screen);
     }
 }

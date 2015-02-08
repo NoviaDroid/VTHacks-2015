@@ -5,9 +5,11 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.input.GestureDetector.GestureListener;
 import com.badlogic.gdx.math.MathUtils;
@@ -31,15 +33,19 @@ import com.dpc.vthacks.data.JSONManager;
 import com.dpc.vthacks.data.Sounds;
 import com.dpc.vthacks.factories.Factory;
 import com.dpc.vthacks.infantry.Soldier;
+import com.dpc.vthacks.infantry.Unit;
 import com.dpc.vthacks.input.InputSystem;
 import com.dpc.vthacks.plane.Bomb;
 import com.dpc.vthacks.plane.Plane;
 
 public class GameScreen implements Screen {
+    private static boolean gameOver;
+  
     private static final float xGrav = 4;
     public static final Vector2 gravity = new Vector2(xGrav, -7);
     private static int levelWidth;
-
+    private float generationRandThresh;
+    private static final float START_GEN_RAND_THRESH = 0.010f;
     private Road road;
     private Array<Sprite> backgroundElements;
     private GameCamera gameCamera;
@@ -63,6 +69,8 @@ public class GameScreen implements Screen {
         
         Assets.loadGameTextures(null);
         Sounds.load();
+        
+        generationRandThresh = START_GEN_RAND_THRESH;
         
         stage = new Stage(new StretchViewport(AppData.width, AppData.height), App.batch);
         
@@ -154,7 +162,7 @@ public class GameScreen implements Screen {
             }
         });
         
-        mplexer.addProcessor(new GestureDetector(20, 0.5f, 0.1f, 0.15f, new GestureListener() {
+        mplexer.addProcessor(new GestureDetector(20, 0.5f, 0.03f, 0.15f, new GestureListener() {
 
             @Override
             public boolean touchDown(float x, float y, int pointer, int button) {
@@ -342,6 +350,14 @@ public class GameScreen implements Screen {
                 road.set(x, y, w, h);
             }
         }
+        
+        if(player.getBoundingRectangle().overlaps(road)) {
+            Bomb b = Factory.bombPool.obtain();
+            b.setX(player.getX());
+            b.setY(player.getY());
+            
+          //  player.getBombs().add(b);
+        }
     }
     
     public void update(float delta) {
@@ -350,11 +366,13 @@ public class GameScreen implements Screen {
         updateCamera();
         battle.update(delta);
         
-        if(Math.random() < 0.005) {
+        generationRandThresh += 0.000001f;
+        
+        if(Math.random() < generationRandThresh) {
             battle.enemyArmy.add(Factory.enemyTankPool.obtain());
         }
         
-        if(Math.random() < 0.01) {
+        if(Math.random() < generationRandThresh) {
             Soldier s = (Factory.enemySoldierPool.obtain());
             s.parentArmy = battle.enemyArmy;
             battle.enemyArmy.add(s);
@@ -426,9 +444,23 @@ public class GameScreen implements Screen {
 //                    r.getBoundingRectangle().height);
 //        }
 //        
+//        App.debugRenderer.rect(battle.myArmy.getBase().getBoundingRectangle().x,
+//                battle.myArmy.getBase().getBoundingRectangle().y,
+//                battle.myArmy.getBase().getBoundingRectangle().width,
+//                battle.myArmy.getBase().getBoundingRectangle().height);
+//        
+//        App.debugRenderer.rect(battle.enemyArmy.getBase().getBoundingRectangle().x,
+//                battle.enemyArmy.getBase().getBoundingRectangle().y,
+//                battle.enemyArmy.getBase().getBoundingRectangle().width,
+//                battle.enemyArmy.getBase().getBoundingRectangle().height);
+//        
 //        App.debugRenderer.end();
     }
 
+    public static void triggerGameOver() {
+        gameOver = true;
+    }
+    
     @Override
     public void resize(int width, int height) {
         AppData.onResize(width, height);

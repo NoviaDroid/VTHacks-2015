@@ -24,12 +24,16 @@ public class Bomb extends DynamicGameObject implements Poolable {
         
         N_WIDTH = getRegionWidth();
         N_HEIGHT = getRegionHeight();
-        EXP_WIDTH = Assets.explosionFrames[0].getRegionWidth() * 3;
-        EXP_HEIGHT = Assets.explosionFrames[0].getRegionHeight() * 3;
+        EXP_WIDTH = Assets.explosionFrames[0].getRegionWidth() * 5;
+        EXP_HEIGHT = Assets.explosionFrames[0].getRegionHeight() * 5;
         
         explosion = new SpriteAnimation(Assets.explosionFrames, 0.1f);
     }
 
+    public boolean isAlive() {
+        return isDead;
+    }
+    
     @Override
     public void update(float delta) {
         if(!isDead) {
