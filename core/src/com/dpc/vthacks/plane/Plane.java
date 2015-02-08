@@ -13,10 +13,13 @@ import com.dpc.vthacks.input.InputSystem;
 public class Plane extends Unit implements InputListener {
     private static final float PLUMMIT_TIME = 0.05f; // If no positive force applied in this time, plane will plummit
     private boolean rising;
-    private int targetRotation; // Current rotation that is being lerped to
-    private static final int fallRotation = -5, riseRotation = 15, fallDeltaFactor = 4, riseDeltaFactor = 2;
+    private static final int FALL_ROTATION = -5, 
+                             RISE_ROTATION = 15, 
+                             FALL_DELTA_FACTOR = 4, 
+                             RISE_DELTA_FACTOR = 2;
     private float plummitTimer;
     private int ammo;
+    private int targetRotation; // Current rotation that is being lerped to
     private Array<Bomb> bombs;
     
     public Plane(TextureRegion region, float range, float damage, float health, float velX, float velY, float x, float y) {
@@ -29,14 +32,14 @@ public class Plane extends Unit implements InputListener {
     public void update(float delta) {
         if(rising) {
             addVel();
-            setRotation(getRotation() + (targetRotation - getRotation()) * delta * riseDeltaFactor);
+            setRotation(getRotation() + (targetRotation - getRotation()) * delta * RISE_DELTA_FACTOR);
         }
         else {
             plummitTimer += delta;
             
             // Begin to plummit if no pos force has been applied lately
             if(plummitTimer >= PLUMMIT_TIME) {
-                setRotation(getRotation() + (targetRotation - getRotation()) * delta * fallDeltaFactor);
+                setRotation(getRotation() + (targetRotation - getRotation()) * delta * FALL_DELTA_FACTOR);
             }
         }
         
@@ -74,7 +77,7 @@ public class Plane extends Unit implements InputListener {
     public void onInputEvent(int event) {
         if(event == InputSystem.TOUCH_DOWN) {
             rising = true;
-            targetRotation = riseRotation;
+            targetRotation = RISE_ROTATION;
             plummitTimer = 0;
         }
         else if(event == InputSystem.TAP || event == InputSystem.B) {
@@ -89,7 +92,7 @@ public class Plane extends Unit implements InputListener {
         }
         else if(event == InputSystem.TOUCH_UP) {
             rising = false;
-            targetRotation = fallRotation;
+            targetRotation = FALL_ROTATION;
         }
         else if(event == InputSystem.TOUCH_DRAGGED) {
             

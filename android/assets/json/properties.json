@@ -3,7 +3,7 @@
     "cost": "150",
     "health": "150",
     "damage": "30",
-    "velX": "5",
+    "velX": "3",
     "velY": "0",
     "range": "50"
   }],
@@ -29,13 +29,18 @@
     "damage": "10",
     "health": "100",
     "range": "15",
-    "velX": "8",
+    "velX": "6",
     "velY": "0"
   }],
   
   "bomb": [{
 	"damage": "50",
 	"velX": "6",
-	"velY": "5"
+	"velY": "6"
+  }],
+  
+  "tank shell": [{
+  	"velX": "15",
+  	"velY": "4"
   }]
 }

@@ -75,7 +75,7 @@ public class GameScreen implements Screen {
         
         int rh = Assets.road.getRegionHeight();
         
-        road = new Road(0, 0, levelWidth, rh * 4);
+        road = new Road(0, rh, levelWidth, rh);
         
         road.setTexWidth(levelWidth);
         road.setTexHeight(rh * 5);
@@ -315,6 +315,16 @@ public class GameScreen implements Screen {
             if(road.overlaps(b.getBoundingRectangle())) {
                 b.setY(road.getY() + road.getHeight());
                 b.triggerExplosion();
+                
+                int rh = Assets.road.getRegionHeight();
+                int padding = 8;
+                
+                float x = 0;
+                float y = MathUtils.random((rh * 0.5f) - padding, (rh * 2f) + padding);
+                int w = levelWidth;
+                float h = MathUtils.random(rh * 0.5f, rh);
+                
+                road.set(x, y, w, h);
             }
         }
     }
@@ -324,6 +334,8 @@ public class GameScreen implements Screen {
         checkForCollisions();
         updateCamera();
         myArmy.update(delta);
+        enemyArmy.update(delta);
+        
         logger.log();
     }
     

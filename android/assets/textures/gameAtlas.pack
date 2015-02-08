@@ -5,288 +5,330 @@ filter: Nearest,Nearest
 repeat: none
 background
   rotate: false
-  xy: 1, 822
+  xy: 1, 806
   size: 828, 201
   orig: 828, 201
   offset: 0, 0
   index: -1
 skyline1
   rotate: false
-  xy: 1, 619
+  xy: 1, 603
   size: 828, 201
   orig: 828, 201
   offset: 0, 0
   index: -1
 skyline2
   rotate: false
-  xy: 1, 416
+  xy: 1, 400
   size: 828, 201
   orig: 828, 201
   offset: 0, 0
   index: -1
+Tankfire1
+  rotate: false
+  xy: 1, 294
+  size: 195, 104
+  orig: 195, 104
+  offset: 0, 0
+  index: -1
+Tankfire2
+  rotate: false
+  xy: 1, 188
+  size: 195, 104
+  orig: 195, 104
+  offset: 0, 0
+  index: -1
+Tankfire3
+  rotate: false
+  xy: 198, 294
+  size: 195, 104
+  orig: 195, 104
+  offset: 0, 0
+  index: -1
+Tankfire4
+  rotate: false
+  xy: 1, 82
+  size: 195, 104
+  orig: 195, 104
+  offset: 0, 0
+  index: -1
+Tankfire5
+  rotate: false
+  xy: 198, 188
+  size: 195, 104
+  orig: 195, 104
+  offset: 0, 0
+  index: -1
 road
   rotate: false
-  xy: 1, 349
+  xy: 395, 333
   size: 215, 65
   orig: 215, 65
   offset: 0, 0
   index: -1
 enemyPlaneBombDoors
   rotate: false
-  xy: 831, 941
+  xy: 831, 925
   size: 153, 82
   orig: 153, 82
   offset: 0, 0
   index: -1
 enemyPlane1
   rotate: false
-  xy: 1, 282
+  xy: 1, 15
   size: 153, 65
   orig: 153, 65
   offset: 0, 0
   index: -1
 plane
   rotate: false
-  xy: 218, 349
+  xy: 198, 121
   size: 153, 65
   orig: 153, 65
   offset: 0, 0
   index: -1
 planeLatchOpen
   rotate: false
-  xy: 831, 874
+  xy: 395, 266
   size: 153, 65
   orig: 153, 65
   offset: 0, 0
   index: -1
 building5
   rotate: false
-  xy: 1, 155
+  xy: 831, 798
   size: 85, 125
   orig: 85, 125
   offset: 0, 0
   index: -1
 building4
   rotate: false
-  xy: 831, 747
+  xy: 831, 671
   size: 84, 125
   orig: 84, 125
   offset: 0, 0
   index: -1
 ETank1
   rotate: false
-  xy: 156, 296
+  xy: 612, 347
   size: 119, 51
   orig: 119, 51
   offset: 0, 0
   index: -1
 ETank2
   rotate: false
-  xy: 373, 363
+  xy: 395, 213
   size: 119, 51
   orig: 119, 51
   offset: 0, 0
   index: -1
 ETank3
   rotate: false
-  xy: 494, 363
+  xy: 198, 68
   size: 119, 51
   orig: 119, 51
   offset: 0, 0
   index: -1
 tank1
   rotate: false
-  xy: 615, 363
-  size: 119, 51
-  orig: 119, 51
-  offset: 0, 0
-  index: -1
-tank2
-  rotate: false
-  xy: 277, 296
-  size: 119, 51
-  orig: 119, 51
-  offset: 0, 0
-  index: -1
-tank3
-  rotate: false
-  xy: 398, 310
+  xy: 733, 347
   size: 119, 51
   orig: 119, 51
   offset: 0, 0
   index: -1
 Barrack
   rotate: false
-  xy: 519, 331
+  xy: 395, 181
   size: 123, 30
   orig: 123, 30
   offset: 0, 0
   index: -1
+tank2
+  rotate: false
+  xy: 831, 618
+  size: 119, 51
+  orig: 119, 51
+  offset: 0, 0
+  index: -1
+tank3
+  rotate: false
+  xy: 831, 565
+  size: 119, 51
+  orig: 119, 51
+  offset: 0, 0
+  index: -1
 Explosion1
   rotate: false
-  xy: 1, 94
+  xy: 550, 272
   size: 53, 59
   orig: 53, 59
   offset: 0, 0
   index: -1
 Explosion2
   rotate: false
-  xy: 88, 221
+  xy: 918, 864
   size: 53, 59
   orig: 53, 59
   offset: 0, 0
   index: -1
 Explosion3
   rotate: false
-  xy: 831, 686
+  xy: 831, 504
   size: 53, 59
   orig: 53, 59
   offset: 0, 0
   index: -1
 Explosion4
   rotate: false
-  xy: 917, 813
+  xy: 918, 803
   size: 53, 59
   orig: 53, 59
   offset: 0, 0
   index: -1
 Explosion5
   rotate: false
-  xy: 1, 33
+  xy: 831, 443
   size: 53, 59
   orig: 53, 59
   offset: 0, 0
   index: -1
 building1
   rotate: false
-  xy: 88, 157
+  xy: 156, 18
   size: 38, 62
   orig: 38, 62
   offset: 0, 0
   index: -1
 building2
   rotate: false
-  xy: 831, 622
+  xy: 353, 124
   size: 38, 62
   orig: 38, 62
   offset: 0, 0
   index: -1
 Apartment
   rotate: false
-  xy: 986, 972
+  xy: 516, 213
   size: 32, 51
   orig: 32, 51
   offset: 0, 0
   index: -1
-ETroop1
-  rotate: false
-  xy: 1, 1
-  size: 21, 30
-  orig: 21, 30
-  offset: 0, 0
-  index: -1
-ETroop2
-  rotate: false
-  xy: 24, 1
-  size: 21, 30
-  orig: 21, 30
-  offset: 0, 0
-  index: -1
-ETroop3
-  rotate: false
-  xy: 47, 1
-  size: 21, 30
-  orig: 21, 30
-  offset: 0, 0
-  index: -1
 ETroop Running1
   rotate: false
-  xy: 736, 379
+  xy: 986, 972
   size: 24, 35
   orig: 24, 35
   offset: 0, 0
   index: -1
 ETroop Running2
   rotate: false
-  xy: 886, 710
+  xy: 319, 84
   size: 24, 35
   orig: 24, 35
   offset: 0, 0
   index: -1
 ETroop Running3
   rotate: false
-  xy: 917, 776
+  xy: 550, 235
   size: 24, 35
   orig: 24, 35
   offset: 0, 0
   index: -1
 ETroop Running4
   rotate: false
-  xy: 831, 585
+  xy: 886, 528
   size: 24, 35
   orig: 24, 35
   offset: 0, 0
   index: -1
 troopRunning1
   rotate: false
-  xy: 986, 935
+  xy: 831, 406
   size: 24, 35
   orig: 24, 35
   offset: 0, 0
   index: -1
 troopRunning2
   rotate: false
-  xy: 56, 118
+  xy: 986, 935
   size: 24, 35
   orig: 24, 35
   offset: 0, 0
   index: -1
 troopRunning3
   rotate: false
-  xy: 762, 379
+  xy: 576, 235
   size: 24, 35
   orig: 24, 35
   offset: 0, 0
   index: -1
 troopRunnning4
   rotate: false
-  xy: 943, 776
+  xy: 886, 491
   size: 24, 35
   orig: 24, 35
   offset: 0, 0
   index: -1
 building3
   rotate: false
-  xy: 831, 549
+  xy: 912, 529
   size: 24, 34
   orig: 24, 34
   offset: 0, 0
   index: -1
+ETroop1
+  rotate: false
+  xy: 520, 181
+  size: 21, 30
+  orig: 21, 30
+  offset: 0, 0
+  index: -1
+ETroop2
+  rotate: false
+  xy: 857, 411
+  size: 21, 30
+  orig: 21, 30
+  offset: 0, 0
+  index: -1
+ETroop3
+  rotate: false
+  xy: 886, 459
+  size: 21, 30
+  orig: 21, 30
+  offset: 0, 0
+  index: -1
 troopStationary1
   rotate: false
-  xy: 644, 331
+  xy: 912, 497
   size: 21, 30
   orig: 21, 30
   offset: 0, 0
   index: -1
 troopStationary2
   rotate: false
-  xy: 986, 903
+  xy: 196, 36
   size: 21, 30
   orig: 21, 30
   offset: 0, 0
   index: -1
 troopStationary3
   rotate: false
-  xy: 56, 86
+  xy: 219, 36
   size: 21, 30
   orig: 21, 30
   offset: 0, 0
   index: -1
 bomb
   rotate: false
-  xy: 156, 282
+  xy: 1, 1
   size: 32, 12
   orig: 32, 12
+  offset: 0, 0
+  index: -1
+ETank Shell
+  rotate: false
+  xy: 612, 337
+  size: 27, 8
+  orig: 27, 8
   offset: 0, 0
   index: -1

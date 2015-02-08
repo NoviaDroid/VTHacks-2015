@@ -4,7 +4,7 @@ import com.badlogic.gdx.utils.Pool;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.infantry.Soldier;
 import com.dpc.vthacks.infantry.Tank;
-import com.dpc.vthacks.infantry.Unit;
+import com.dpc.vthacks.infantry.TankShell;
 import com.dpc.vthacks.plane.Bomb;
 import com.dpc.vthacks.plane.Plane;
 
@@ -14,7 +14,18 @@ public class Factory {
     private static float enemyHealth, enemyDamage, enemyVelX, enemyVelY, enemyRange;
     private static float soldierHealth, soldierDamage, soldierVelX, soldierVelY, soldierCost, soldierRange;
     private static float bombDamage, bombVelX, bombVelY;
-    private static final int NUMBER_OF_BOMBS = 45;
+    private static float tankShellVelX, tankShellVelY;
+    
+    private static final int NUMBER_OF_BOMBS = 10;
+    
+    public static final Pool<TankShell> shellPool = new Pool<TankShell>(NUMBER_OF_BOMBS) {
+
+        @Override
+        protected TankShell newObject() {
+            return Factory.createTankShell(0, 0);
+        }
+        
+    };
     
     public static final Pool<Bomb> bombPool = new Pool<Bomb>(NUMBER_OF_BOMBS) {
 
@@ -45,6 +56,10 @@ public class Factory {
     
     public static Bomb createBomb(float x, float y) {
         return new Bomb(bombVelX, bombVelY, x, y);
+    }
+    
+    public static TankShell createTankShell(float x, float y) {
+        return new TankShell(Assets.tankShell, tankShellVelX, tankShellVelY, x, y, x, y);
     }
     
     public static Plane createPlayer(float x, float y) {
@@ -270,5 +285,21 @@ public class Factory {
     public static void setBombVelY(float bombVelY) {
         Factory.bombVelY = bombVelY;
     }
-    
+
+    public static float getTankShellVelX() {
+        return tankShellVelX;
+    }
+
+    public static void setTankShellVelX(float tankShellVelX) {
+        Factory.tankShellVelX = tankShellVelX;
+    }
+
+    public static float getTankShellVelY() {
+        return tankShellVelY;
+    }
+
+    public static void setTankShellVelY(float tankShellVelY) {
+        Factory.tankShellVelY = tankShellVelY;
+    }
+
 }

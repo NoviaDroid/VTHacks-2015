@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Assets {
     private static TextureAtlas skinAtlas, gameAtlas;
-    public static TextureRegion plane, bomb, road, background;
+    public static TextureRegion plane, bomb, road, background, tankShell;
     public static TextureRegion[] buildings;
     public static TextureRegion[] skylines;
     public static AtlasRegion[] tankFrames;
@@ -68,6 +68,7 @@ public class Assets {
             enemyTankFrames[i] = gameAtlas.findRegion("ETank" + (i + 1));
         }
 
+        tankShell = gameAtlas.findRegion("ETank Shell");
         background = gameAtlas.findRegion("background");
         plane = gameAtlas.findRegion("plane");
         bomb = gameAtlas.findRegion("bomb");
@@ -83,6 +84,7 @@ public class Assets {
         plane.getTexture().dispose();
         road.getTexture().dispose();
         background.getTexture().dispose();
+        tankShell.getTexture().dispose();
         
         for(TextureRegion t : explosionFrames) {
             t.getTexture().dispose();
