@@ -39,5 +39,11 @@ public class Army {
             u.update(delta);
             u.addVel();
         }
+        
+        for(Unit u1 : units) {
+            for(Unit u : units) {
+                
+            }
+        }
     }
 }

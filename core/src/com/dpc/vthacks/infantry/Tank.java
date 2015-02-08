@@ -1,8 +1,10 @@
 package com.dpc.vthacks.infantry;
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.dpc.vthacks.App;
 import com.dpc.vthacks.SpriteAnimation;
+import com.dpc.vthacks.factories.Factory;
 
 public class Tank extends Unit {
     private SpriteAnimation animation;
@@ -27,7 +29,10 @@ public class Tank extends Unit {
 
     @Override
     public void attack(Unit enemy) {
-        
+        TankShell shell = Factory.tankShellPool.obtain();
+        shell.setRotation(MathUtils.atan2(enemy.getY() - getY(), enemy.getX() - getX()));
+        shell.setTargetX(enemy.getX());
+        shell.setTargetY(enemy.getY());
     }
 
     @Override

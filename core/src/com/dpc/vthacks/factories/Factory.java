@@ -18,7 +18,7 @@ public class Factory {
     
     private static final int NUMBER_OF_BOMBS = 10;
     
-    public static final Pool<TankShell> shellPool = new Pool<TankShell>(NUMBER_OF_BOMBS) {
+    public static final Pool<TankShell> tankShellPool = new Pool<TankShell>(NUMBER_OF_BOMBS) {
 
         @Override
         protected TankShell newObject() {
