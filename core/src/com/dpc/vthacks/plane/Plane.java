@@ -75,7 +75,7 @@ public class Plane extends Unit implements InputListener {
             targetRotation = RISE_ROTATION;
             plummitTimer = 0;
         }
-        else if(event == InputSystem.TAP || event == InputSystem.B) {
+        else if(event == InputSystem.B) {
             Bomb b = Factory.bombPool.obtain();
             b.setX(getX() + (getWidth() * 0.5f));
             b.setY(getY());

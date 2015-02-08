@@ -41,8 +41,8 @@ import com.dpc.vthacks.plane.Plane;
 public class GameScreen implements Screen {
     private static boolean gameOver;
   
-    private static final float xGrav = 4;
-    public static final Vector2 gravity = new Vector2(xGrav, -7);
+    private static final float xGrav = 7;
+    public static final Vector2 gravity = new Vector2(xGrav, -9.807f);
     private static int levelWidth;
     private float generationRandThresh;
     private static final float START_GEN_RAND_THRESH = 0.010f;
@@ -355,8 +355,6 @@ public class GameScreen implements Screen {
             Bomb b = Factory.bombPool.obtain();
             b.setX(player.getX());
             b.setY(player.getY());
-            
-          //  player.getBombs().add(b);
         }
     }
     

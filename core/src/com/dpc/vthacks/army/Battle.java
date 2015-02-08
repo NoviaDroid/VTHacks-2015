@@ -46,6 +46,7 @@ public class Battle {
                     if(u.moving) {
                         u.stop();                    
                         u.attack(u1);
+                        u.moving = true;
                     }
 
                 }
@@ -54,6 +55,7 @@ public class Battle {
                     if(u1.moving) {
                         u1.stop();                    
                         u1.attack(u);
+                        u1.moving = true;
                     }
                     
                 }
