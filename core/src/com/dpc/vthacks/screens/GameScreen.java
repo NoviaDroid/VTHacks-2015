@@ -313,7 +313,6 @@ public class GameScreen implements Screen {
         
         for(Bomb b : player.getBombs()) {
             if(road.overlaps(b.getBoundingRectangle())) {
-                Sounds.explosion.play();
                 b.setY(road.getY() + road.getHeight());
                 b.triggerExplosion();
             }

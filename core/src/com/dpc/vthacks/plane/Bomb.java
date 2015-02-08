@@ -1,12 +1,15 @@
 package com.dpc.vthacks.plane;
 
+import com.badlogic.gdx.utils.Pool.Poolable;
 import com.dpc.vthacks.App;
 import com.dpc.vthacks.SpriteAnimation;
 import com.dpc.vthacks.data.Assets;
+import com.dpc.vthacks.data.Sounds;
+import com.dpc.vthacks.factories.Factory;
 import com.dpc.vthacks.gameobject.DynamicGameObject;
 import com.dpc.vthacks.screens.GameScreen;
 
-public class Bomb extends DynamicGameObject {
+public class Bomb extends DynamicGameObject implements Poolable {
     private static final int TARGET_FALL_ROTATION = -90;
     private boolean isDead;
     private SpriteAnimation explosion;
@@ -30,13 +33,27 @@ public class Bomb extends DynamicGameObject {
         else {
             setRegion(explosion.update(delta));
             
-            if(getTexture().equals(Assets.explosionFrames[Assets.explosionFrames.length - 1])) {
-                
+            // If we are done, enough with this object.
+            if(explosion.getAnimation().isAnimationFinished(explosion.getStateTime())) {
+                Factory.bombPool.free(this);
+                GameScreen.getPlayer().getBombs().removeValue(this, false);
             }
         }
     }
 
+    @Override
+    public void reset() {
+        isDead = false;
+        setRegion(Assets.bomb);
+        setPosition(0, 0);
+        explosion = new SpriteAnimation(Assets.explosionFrames, 0.15f);;
+    }
+    
     public void triggerExplosion() {
+        if(!isDead) {
+            Sounds.explosion.play();
+        }
+        
         isDead = true;
     }
     

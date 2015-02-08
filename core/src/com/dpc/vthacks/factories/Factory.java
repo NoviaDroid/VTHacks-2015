@@ -14,7 +14,7 @@ public class Factory {
     private static float enemyHealth, enemyDamage, enemyVelX, enemyVelY, enemyRange;
     private static float soldierHealth, soldierDamage, soldierVelX, soldierVelY, soldierCost, soldierRange;
     private static float bombDamage, bombVelX, bombVelY;
-    private static final int NUMBER_OF_BOMBS = 5;
+    private static final int NUMBER_OF_BOMBS = 45;
     
     public static final Pool<Bomb> bombPool = new Pool<Bomb>(NUMBER_OF_BOMBS) {
 

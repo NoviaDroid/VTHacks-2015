@@ -23,7 +23,6 @@ public abstract class Unit extends DynamicGameObject {
     
     public abstract void takeDamage(Unit attacker);
     
-    
     public abstract void move();
      
     public float getRange() {

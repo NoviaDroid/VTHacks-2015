@@ -21,7 +21,7 @@ public class Plane extends Unit implements InputListener {
     public Plane(TextureRegion region, float range, float damage, float health, float velX, float velY, float x, float y) {
         super(region, range, damage, health, velX, velY, x, y);
         
-        bombs = new Array<Bomb>();
+        bombs = new Array<Bomb>(45);
     }
 
     @Override
@@ -77,7 +77,6 @@ public class Plane extends Unit implements InputListener {
             plummitTimer = 0;
         }
         else if(event == InputSystem.TAP || event == InputSystem.B) {
-            
             Bomb b = Factory.bombPool.obtain();
             b.setX(getX() + (getWidth() * 0.5f));
             b.setY(getY());
