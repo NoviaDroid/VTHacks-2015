@@ -24,7 +24,7 @@ public class Assets {
     public static void loadGameTextures(AssetManager manager) {
         gameAtlas = new TextureAtlas(Gdx.files.internal("textures/gameAtlas.pack"));
         
-        buildings = new TextureRegion[5];
+        buildings = new TextureRegion[6];
         
         skylines = new TextureRegion[2];
         
@@ -45,6 +45,8 @@ public class Assets {
         for(int i = 0; i < 5; i++) {
             buildings[i] = gameAtlas.findRegion("building" + (i + 1));
         }
+        
+        buildings[5] = gameAtlas.findRegion("Apartment");
         
         for(int i = 0; i < 2; i++) {
             skylines[i] = gameAtlas.findRegion("skyline" + (i + 1));

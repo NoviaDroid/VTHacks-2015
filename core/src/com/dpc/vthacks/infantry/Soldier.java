@@ -12,7 +12,7 @@ public class Soldier extends Unit {
         super(regions[0], range, damage, health, velX, velY, x, y);
         
         animation = new SpriteAnimation(Assets.soldierFrames, 0.1f);
-        setSize(getWidth() * 4, getHeight() * 4);
+        setSize(getWidth() * 2, getHeight() * 2);
     }
 
     @Override

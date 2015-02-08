@@ -14,8 +14,9 @@ public class Plane extends Unit implements InputListener {
     private static final float PLUMMIT_TIME = 0.05f; // If no positive force applied in this time, plane will plummit
     private boolean rising;
     private int targetRotation; // Current rotation that is being lerped to
-    private int fallRotation = -5, riseRotation = 15, fallDeltaFactor = 4, riseDeltaFactor = 2;
+    private static final int fallRotation = -5, riseRotation = 15, fallDeltaFactor = 4, riseDeltaFactor = 2;
     private float plummitTimer;
+    private int ammo;
     private Array<Bomb> bombs;
     
     public Plane(TextureRegion region, float range, float damage, float health, float velX, float velY, float x, float y) {

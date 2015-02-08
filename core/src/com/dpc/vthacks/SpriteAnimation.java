@@ -40,14 +40,14 @@ public class SpriteAnimation implements Disposable {
         return animation.getKeyFrame(time, true);
     }
     
-    public float getStateTime() {
-        return time;
-    }
-    
     public void render(SpriteBatch batch, float delta) {
         time += delta;
         
         batch.draw(animation.getKeyFrame(time, true), 50, 50);
+    }
+    
+    public float getStateTime() {
+        return time;
     }
     
     public Animation getAnimation() {
