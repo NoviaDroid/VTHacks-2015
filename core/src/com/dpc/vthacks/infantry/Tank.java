@@ -46,7 +46,8 @@ public class Tank extends Unit {
     @Override
     public void attack(Unit enemy) {
         // TODO: FIX THIS 
-        shell = Factory.createTankShell(getX() + (getWidth() * 0.5f), getY() + (getHeight() * 0.75f));
+        shell = Factory.tankShellPool.obtain();
+        shell.setPosition(getX() + (getWidth() * 0.5f), getY() + (getHeight() * 0.75f));
         shell.parentTank = this;
         shell.setOrigin(Assets.tankShell.getRegionWidth() * 0.5f , Assets.tankShell.getRegionHeight() * 0.5f);
         shell.setRotation(MathUtils.atan2(enemy.getY() - getY(), enemy.getX() - getX()) * MathUtils.degreesToRadians);
