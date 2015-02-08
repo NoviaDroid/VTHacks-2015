@@ -1,13 +1,14 @@
 package com.dpc.vthacks.plane;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Pool;
 import com.dpc.vthacks.App;
 import com.dpc.vthacks.data.Assets;
-import com.dpc.vthacks.gameobject.DynamicGameObject;
+import com.dpc.vthacks.factories.Factory;
 import com.dpc.vthacks.infantry.Unit;
 import com.dpc.vthacks.input.InputListener;
 import com.dpc.vthacks.input.InputSystem;
-import com.dpc.vthacks.screens.GameScreen;
 
 public class Plane extends Unit implements InputListener {
     private static final float PLUMMIT_TIME = 0.05f; // If no positive force applied in this time, plane will plummit
@@ -17,9 +18,9 @@ public class Plane extends Unit implements InputListener {
     private float plummitTimer;
     private Array<Bomb> bombs;
     
-    public Plane(float damage, float health, float velX, float velY, float x, float y) {
-        super(Assets.plane, damage, health, velX, velY, x, y);
-
+    public Plane(TextureRegion region, float range, float damage, float health, float velX, float velY, float x, float y) {
+        super(region, range, damage, health, velX, velY, x, y);
+        
         bombs = new Array<Bomb>();
     }
 
@@ -76,7 +77,15 @@ public class Plane extends Unit implements InputListener {
             plummitTimer = 0;
         }
         else if(event == InputSystem.TAP || event == InputSystem.B) {
-            bombs.add(new Bomb(getX() + (getWidth() * 0.5f), getY()));
+            
+            Bomb b = Factory.bombPool.obtain();
+            b.setX(getX() + (getWidth() * 0.5f));
+            b.setY(getY());
+            
+            bombs.add(b);
+        }
+        else if(event == InputSystem.B_UP) {
+
         }
         else if(event == InputSystem.TOUCH_UP) {
             rising = false;

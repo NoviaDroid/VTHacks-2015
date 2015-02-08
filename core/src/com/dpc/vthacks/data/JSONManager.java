@@ -19,7 +19,8 @@ public class JSONManager {
         JsonValue tank = root.getChild("tank");
         JsonValue player = root.getChild("player");
         JsonValue enemyPlane = root.getChild("enemy plane");
-
+        JsonValue bomb = root.getChild("bomb");
+        
         Factory.setEnemyDamage(enemyPlane.getFloat("damage"));
         Factory.setEnemyHealth(enemyPlane.getInt("health"));
         Factory.setEnemyVelX(enemyPlane.getFloat("velX"));
@@ -35,5 +36,16 @@ public class JSONManager {
         Factory.setTankHealth(tank.getInt("health"));
         Factory.setTankVelX(tank.getFloat("velX"));
         Factory.setTankVelY(tank.getFloat("velY"));
+        
+        Factory.setSoldierCost(tank.getInt("cost"));
+        Factory.setSoldierDamage(tank.getFloat("damage"));
+        Factory.setSoldierHealth(tank.getInt("health"));
+        Factory.setSoldierRange(tank.getFloat("range"));
+        Factory.setSoldierVelX(tank.getFloat("velX"));
+        Factory.setSoldierVelY(tank.getFloat("velY"));
+        
+        Factory.setBombDamage(bomb.getFloat("damage"));
+        Factory.setBombVelX(bomb.getFloat("velX"));
+        Factory.setBombVelY(bomb.getFloat("velY"));
     }
 }

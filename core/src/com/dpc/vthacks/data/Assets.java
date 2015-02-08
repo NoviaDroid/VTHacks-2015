@@ -15,6 +15,7 @@ public class Assets {
     public static AtlasRegion[] soldierFrames;
     public static AtlasRegion[] enemySoldierFrames;
     public static AtlasRegion[] enemyTankFrames;
+    public static AtlasRegion[] explosionFrames;
     
     public static void loadSkins() {
         skinAtlas = new TextureAtlas(Gdx.files.internal("textures/SkinPack.pack"));
@@ -34,6 +35,12 @@ public class Assets {
         enemySoldierFrames = new AtlasRegion[4];
         
         enemyTankFrames = new AtlasRegion[3];
+        
+        explosionFrames = new AtlasRegion[5];
+        
+        for(int i = 0; i < 5; i++) {
+            explosionFrames[i] = gameAtlas.findRegion("Explosion" + (i + 1));
+        }
         
         for(int i = 0; i < 5; i++) {
             buildings[i] = gameAtlas.findRegion("building" + (i + 1));
@@ -58,7 +65,7 @@ public class Assets {
         for(int i = 0; i < 3; i++) {
             enemyTankFrames[i] = gameAtlas.findRegion("ETank" + (i + 1));
         }
-        
+
         background = gameAtlas.findRegion("background");
         plane = gameAtlas.findRegion("plane");
         bomb = gameAtlas.findRegion("bomb");
@@ -73,8 +80,11 @@ public class Assets {
         gameAtlas.dispose();
         plane.getTexture().dispose();
         road.getTexture().dispose();
-        
         background.getTexture().dispose();
+        
+        for(TextureRegion t : explosionFrames) {
+            t.getTexture().dispose();
+        }
         
         for(TextureRegion b : enemyTankFrames) {
             b.getTexture().dispose();

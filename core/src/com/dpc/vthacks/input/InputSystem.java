@@ -8,6 +8,7 @@ public class InputSystem {
     public static final int TOUCH_UP = 2;
     public static final int TOUCH_DRAGGED = 3;
     public static final int B = 4;
+    public static final int B_UP = 5;
     
     private static Array<InputListener> listeners;
     

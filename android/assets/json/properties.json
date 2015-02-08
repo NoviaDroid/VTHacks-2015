@@ -3,26 +3,39 @@
     "cost": "150",
     "health": "150",
     "damage": "30",
-    "velX": "8",
-    "velY": "0"
+    "velX": "5",
+    "velY": "0",
+    "range": "50"
   }],
   
   "enemy plane": [{
     "health": "100",
     "damage": "30",
     "velX": "11",
-    "velY": "11"
+    "velY": "11",
+    "range": "480"
   }],
   
   "player": [{
     "health": "200",
     "damage": "50",
     "velX": "0", 
-    "velY": "11"
+    "velY": "11",
+    "range": "480"
   }],
   
   "soldier": [{
     "cost": "50",
-    "damage": "10"
+    "damage": "10",
+    "health": "100",
+    "range": "15",
+    "velX": "8",
+    "velY": "0"
+  }],
+  
+  "bomb": [{
+	"damage": "50",
+	"velX": "6",
+	"velY": "5"
   }]
 }

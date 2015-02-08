@@ -1,16 +1,16 @@
 package com.dpc.vthacks.infantry;
 
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.dpc.vthacks.App;
 import com.dpc.vthacks.SpriteAnimation;
-import com.dpc.vthacks.data.Assets;
 
 public class Tank extends Unit {
     private SpriteAnimation animation;
     
-    public Tank(float damage, float health, float velX, float velY, float x, float y) {
-        super(Assets.tankFrames[0], damage, health, velX, velY, x, y);
+    public Tank(AtlasRegion[] regions, float range, float damage, float health, float velX, float velY, float x, float y) {
+        super(regions[0], range, damage, health, velX, velY, x, y);
         
-        animation = new SpriteAnimation(Assets.tankFrames, 0.25f);
+        animation = new SpriteAnimation(regions, 0.25f);
        
         setSize(getWidth() * 2, getHeight() * 2);
     }
@@ -32,7 +32,7 @@ public class Tank extends Unit {
 
     @Override
     public void move() {
-        
+        addVel();
     }
 
     @Override

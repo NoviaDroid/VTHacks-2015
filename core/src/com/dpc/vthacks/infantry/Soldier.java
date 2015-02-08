@@ -1,5 +1,6 @@
 package com.dpc.vthacks.infantry;
 
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.dpc.vthacks.App;
 import com.dpc.vthacks.SpriteAnimation;
 import com.dpc.vthacks.data.Assets;
@@ -7,8 +8,8 @@ import com.dpc.vthacks.data.Assets;
 public class Soldier extends Unit {
     private SpriteAnimation animation;
     
-    public Soldier(float damage, float health, float velX, float velY, float x, float y) {
-        super(Assets.soldierFrames[0], damage, health, velX, velY, x, y);
+    public Soldier(AtlasRegion[] regions, float range, float damage, float health, float velX, float velY, float x, float y) {
+        super(regions[0], range, damage, health, velX, velY, x, y);
         
         animation = new SpriteAnimation(Assets.soldierFrames, 0.1f);
         setSize(getWidth() * 4, getHeight() * 4);
