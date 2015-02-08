@@ -350,13 +350,14 @@ public class GameScreen implements Screen {
         updateCamera();
         battle.update(delta);
         
-        if(Math.random() < 0.05f) {
+        if(Math.random() < 0.005) {
             battle.enemyArmy.add(Factory.enemyTankPool.obtain());
         }
         
-        if(Math.random() < 0.005) {
+        if(Math.random() < 0.01) {
             Soldier s = (Factory.enemySoldierPool.obtain());
             s.parentArmy = battle.enemyArmy;
+            battle.enemyArmy.add(s);
         }
         
         logger.log();

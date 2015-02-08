@@ -339,3 +339,10 @@ ETank Shell
   orig: 27, 8
   offset: 0, 0
   index: -1
+Bullet
+  rotate: false
+  xy: 973, 920
+  size: 9, 3
+  orig: 9, 3
+  offset: 0, 0
+  index: -1

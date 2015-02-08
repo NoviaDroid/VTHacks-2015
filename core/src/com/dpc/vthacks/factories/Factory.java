@@ -3,6 +3,7 @@ package com.dpc.vthacks.factories;
 import com.badlogic.gdx.utils.Pool;
 import com.dpc.vthacks.App;
 import com.dpc.vthacks.data.Assets;
+import com.dpc.vthacks.infantry.Bullet;
 import com.dpc.vthacks.infantry.Soldier;
 import com.dpc.vthacks.infantry.Tank;
 import com.dpc.vthacks.infantry.TankShell;
@@ -49,11 +50,20 @@ public class Factory {
         
     };
     
-    public static final Pool<Soldier> soldierPool = new Pool<Soldier>() {
+    public static final Pool<Soldier> soldierPool = new Pool<Soldier>(NUMBER_OF_BOMBS) {
 
         @Override
         protected Soldier newObject() {
             return Factory.createSoldier(0, 10);
+        }
+        
+    };
+    
+    public static final Pool<Bullet> bulletPool = new Pool<Bullet>(NUMBER_OF_BOMBS) {
+
+        @Override
+        protected Bullet newObject() {
+            return Factory.createBullet(0, 0);
         }
         
     };
@@ -75,6 +85,11 @@ public class Factory {
         }
         
     };
+    
+    public static Bullet createBullet(float x, float y) {
+        System.out.println(Assets.bullet == null);
+        return new Bullet(Assets.bullet, 20, 5, x, y);
+    }
     
     public static Bomb createBomb(float x, float y) {
         return new Bomb(bombVelX, bombVelY, x, y);

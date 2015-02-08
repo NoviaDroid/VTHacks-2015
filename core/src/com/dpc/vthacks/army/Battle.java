@@ -1,11 +1,15 @@
 package com.dpc.vthacks.army;
 
+import java.util.Iterator;
+
 import com.badlogic.gdx.utils.Array;
 import com.dpc.vthacks.MathUtil;
+import com.dpc.vthacks.factories.Factory;
+import com.dpc.vthacks.infantry.Bullet;
+import com.dpc.vthacks.infantry.Soldier;
 import com.dpc.vthacks.infantry.Tank;
 import com.dpc.vthacks.infantry.Unit;
 import com.dpc.vthacks.plane.Bomb;
-import com.dpc.vthacks.plane.Plane;
 import com.dpc.vthacks.screens.GameScreen;
 
 public class Battle {
@@ -52,6 +56,46 @@ public class Battle {
                     }
                 }
                 
+                Array<Bullet> bullets;
+                
+                if(u instanceof Soldier) {
+                    Soldier s = (Soldier) u;
+                    
+                    bullets = s.getBullets();
+                    
+                    Iterator<Bullet> it = bullets.iterator();
+                    
+                    while(it.hasNext()) {
+                        Bullet b = it.next();
+                        
+                        if(b.getBoundingRectangle().overlaps(u1.getBoundingRectangle())) {
+                            u1.takeDamage(100);
+                            Factory.bulletPool.free(b);
+                            it.remove();
+                            u.moving = true;
+                        }
+                    }
+                }
+                
+                if(u1 instanceof Soldier) {
+                    Soldier s = (Soldier) u1;
+                    
+                    bullets = s.getBullets();
+                    
+                    Iterator<Bullet> it = bullets.iterator();
+                    
+                    while(it.hasNext()) {
+                        Bullet b = it.next();
+                        
+                        if(b.getBoundingRectangle().overlaps(u.getBoundingRectangle())) {
+                            u.takeDamage(100);
+                            Factory.bulletPool.free(b);
+                            it.remove();
+                            u1.moving = true;
+                        }
+                    }
+                }
+
                 if(u instanceof Tank) {
                     Tank t = (Tank) u;
                     
