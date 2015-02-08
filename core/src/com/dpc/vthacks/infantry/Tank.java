@@ -8,6 +8,7 @@ import com.dpc.vthacks.factories.Factory;
 
 public class Tank extends Unit {
     private SpriteAnimation animation;
+    private TankShell shell;
     
     public Tank(AtlasRegion[] regions, float range, float damage, float health, float velX, float velY, float x, float y) {
         super(regions[0], range, damage, health, velX, velY, x, y);
@@ -20,16 +21,24 @@ public class Tank extends Unit {
     @Override
     public void update(float delta) {
         setRegion(animation.update(delta));
+        
+        if(shell != null) {
+            shell.update(delta);
+        }
     }
 
     @Override
     public void render() {
         draw(App.batch);
+        
+        if(shell != null) {
+            shell.render();
+        }
     }
 
     @Override
     public void attack(Unit enemy) {
-        TankShell shell = Factory.tankShellPool.obtain();
+        shell = Factory.tankShellPool.obtain();
         shell.setRotation(MathUtils.atan2(enemy.getY() - getY(), enemy.getX() - getX()));
         shell.setTargetX(enemy.getX());
         shell.setTargetY(enemy.getY());
@@ -43,5 +52,9 @@ public class Tank extends Unit {
     @Override
     public void takeDamage(Unit attacker) {
         
+    }
+    
+    public void dispose() {
+        shell.dispose();
     }
 }

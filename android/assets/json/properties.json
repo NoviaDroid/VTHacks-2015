@@ -42,5 +42,21 @@
   "tank shell": [{
   	"velX": "15",
   	"velY": "4"
+  }],
+  
+  "enemy soldier": [{
+  	"velX": "-4",
+  	"velY": "0",
+  	"damage": "8",
+  	"range": "11",
+  	"health": "100"
+  }],
+  
+  "enemy tank": [{
+    "health": "140",
+    "damage": "25",
+    "velX": "3",
+    "velY": "0",
+    "range": "40"
   }]
 }

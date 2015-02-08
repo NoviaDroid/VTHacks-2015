@@ -1,6 +1,7 @@
 package com.dpc.vthacks.infantry;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.dpc.vthacks.MathUtil;
 import com.dpc.vthacks.gameobject.DynamicGameObject;
 
 public abstract class Unit extends DynamicGameObject {
@@ -50,7 +51,6 @@ public abstract class Unit extends DynamicGameObject {
     }
 
     public boolean inRange(Unit u1) {
-        
-        return false;
+        return MathUtil.dst(getX(), getY(), u1.getX(), u1.getY()) <= range;
     }
 }

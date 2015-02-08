@@ -1,21 +1,25 @@
 package com.dpc.vthacks.factories;
 
 import com.badlogic.gdx.utils.Pool;
+import com.dpc.vthacks.App;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.infantry.Soldier;
 import com.dpc.vthacks.infantry.Tank;
 import com.dpc.vthacks.infantry.TankShell;
 import com.dpc.vthacks.plane.Bomb;
 import com.dpc.vthacks.plane.Plane;
+import com.dpc.vthacks.screens.GameScreen;
 
 public class Factory {
     private static float playerHealth, playerDamage, playerVelX, playerVelY, playerRange;
     private static float tankHealth, tankDamage, tankCost, tankVelX, tankVelY, tankRange;
     private static float enemyHealth, enemyDamage, enemyVelX, enemyVelY, enemyRange;
+    private static float enemySoldierHealth, enemySoldierDamage, enemySoldierVelX, enemySoldierVelY, enemySoldierRange;
     private static float soldierHealth, soldierDamage, soldierVelX, soldierVelY, soldierCost, soldierRange;
     private static float bombDamage, bombVelX, bombVelY;
     private static float tankShellVelX, tankShellVelY;
-    
+    private static float enemyTankHealth, enemyTankDamage, enemyTankCost, enemyTankVelX, enemyTankVelY, enemyTankRange;
+   
     private static final int NUMBER_OF_BOMBS = 10;
     
     public static final Pool<TankShell> tankShellPool = new Pool<TankShell>(NUMBER_OF_BOMBS) {
@@ -62,6 +66,10 @@ public class Factory {
         return new TankShell(Assets.tankShell, tankShellVelX, tankShellVelY, x, y, x, y);
     }
     
+    public static Soldier createEnemySoldier() {
+        return new Soldier(Assets.enemySoldierFrames, enemySoldierRange, enemySoldierDamage, enemySoldierHealth, enemySoldierVelX, enemySoldierVelY, GameScreen.battle.myArmy.getBase().getX(), GameScreen.battle.enemyArmy.getBase().getY());
+    }
+    
     public static Plane createPlayer(float x, float y) {
         return new Plane(Assets.plane, playerRange, playerDamage, playerHealth, playerVelX, playerVelY, x, y);
     }
@@ -70,8 +78,8 @@ public class Factory {
         return new Tank(Assets.tankFrames, tankRange, tankDamage, tankHealth, tankVelX, tankVelY, x, y);
     }
     
-    public static Tank createEnemyTank(float x, float y) {
-        return new Tank(Assets.enemyTankFrames, tankRange, tankDamage, tankHealth, tankVelX, tankVelY, x, y);
+    public static Tank createEnemyTank() {
+        return new Tank(Assets.enemyTankFrames, tankRange, tankDamage, tankHealth, tankVelX, tankVelY, GameScreen.battle.enemyArmy.getBase().getX(), GameScreen.battle.enemyArmy.getBase().getY());
     }
     
     public static Plane createEnemyPlane(float x, float y) {
@@ -81,11 +89,6 @@ public class Factory {
     public static Soldier createSoldier(float x, float y) {
         return new Soldier(Assets.soldierFrames, soldierRange, soldierDamage, soldierHealth, soldierVelX, soldierVelY, x, y);
     }
-
-    public static Soldier createEnemySoldier(float x, float y) {
-        return new Soldier(Assets.soldierFrames, soldierRange, soldierDamage, soldierHealth, soldierVelX, soldierVelY, x, y);
-    }
-    
     public static float getPlayerHealth() {
         return playerHealth;
     }
@@ -302,4 +305,91 @@ public class Factory {
         Factory.tankShellVelY = tankShellVelY;
     }
 
+    public static float getEnemySoldierHealth() {
+        return enemySoldierHealth;
+    }
+
+    public static void setEnemySoldierHealth(float enemySoldierHealth) {
+        Factory.enemySoldierHealth = enemySoldierHealth;
+    }
+
+    public static float getEnemySoldierDamage() {
+        return enemySoldierDamage;
+    }
+
+    public static void setEnemySoldierDamage(float enemySoldierDamage) {
+        Factory.enemySoldierDamage = enemySoldierDamage;
+    }
+
+    public static float getEnemySoldierVelX() {
+        return enemySoldierVelX;
+    }
+
+    public static void setEnemySoldierVelX(float enemySoldierVelX) {
+        Factory.enemySoldierVelX = enemySoldierVelX;
+    }
+
+    public static float getEnemySoldierVelY() {
+        return enemySoldierVelY;
+    }
+
+    public static void setEnemySoldierVelY(float enemySoldierVelY) {
+        Factory.enemySoldierVelY = enemySoldierVelY;
+    }
+
+    public static float getEnemySoldierRange() {
+        return enemySoldierRange;
+    }
+
+    public static void setEnemySoldierRange(float enemySoldierRange) {
+        Factory.enemySoldierRange = enemySoldierRange;
+    }
+
+    public static float getEnemyTankHealth() {
+        return enemyTankHealth;
+    }
+
+    public static void setEnemyTankHealth(float enemyTankHealth) {
+        Factory.enemyTankHealth = enemyTankHealth;
+    }
+
+    public static float getEnemyTankDamage() {
+        return enemyTankDamage;
+    }
+
+    public static void setEnemyTankDamage(float enemyTankDamage) {
+        Factory.enemyTankDamage = enemyTankDamage;
+    }
+
+    public static float getEnemyTankCost() {
+        return enemyTankCost;
+    }
+
+    public static void setEnemyTankCost(float enemyTankCost) {
+        Factory.enemyTankCost = enemyTankCost;
+    }
+
+    public static float getEnemyTankVelX() {
+        return enemyTankVelX;
+    }
+
+    public static void setEnemyTankVelX(float enemyTankVelX) {
+        Factory.enemyTankVelX = enemyTankVelX;
+    }
+
+    public static float getEnemyTankVelY() {
+        return enemyTankVelY;
+    }
+
+    public static void setEnemyTankVelY(float enemyTankVelY) {
+        Factory.enemyTankVelY = enemyTankVelY;
+    }
+
+    public static float getEnemyTankRange() {
+        return enemyTankRange;
+    }
+
+    public static void setEnemyTankRange(float enemyTankRange) {
+        Factory.enemyTankRange = enemyTankRange;
+    }
 }

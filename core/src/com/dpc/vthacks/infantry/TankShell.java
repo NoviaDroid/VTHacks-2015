@@ -1,10 +1,12 @@
 package com.dpc.vthacks.infantry;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.Pool.Poolable;
 import com.dpc.vthacks.App;
+import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.gameobject.DynamicGameObject;
 
-public class TankShell extends DynamicGameObject {
+public class TankShell extends DynamicGameObject implements Poolable {
     private float targetX, targetY;
     
     public TankShell(TextureRegion region, float velX, float velY, float targetX, float targetY, float x, float y) {
@@ -39,6 +41,14 @@ public class TankShell extends DynamicGameObject {
 
     public void setTargetY(float targetY) {
         this.targetY = targetY;
+    }
+
+    @Override
+    public void reset() {
+        setPosition(0, 0);
+        setRegion(Assets.tankShell);
+        targetX = getX();
+        targetY = getY();
     }
  
 }

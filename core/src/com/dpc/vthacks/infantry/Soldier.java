@@ -11,7 +11,8 @@ public class Soldier extends Unit {
     public Soldier(AtlasRegion[] regions, float range, float damage, float health, float velX, float velY, float x, float y) {
         super(regions[0], range, damage, health, velX, velY, x, y);
         
-        animation = new SpriteAnimation(Assets.soldierFrames, 0.1f);
+        animation = new SpriteAnimation(Assets.enemySoldierFrames, 0.1f);
+
         setSize(getWidth() * 2, getHeight() * 2);
     }
 

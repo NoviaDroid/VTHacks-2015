@@ -11,10 +11,10 @@ import com.dpc.vthacks.screens.GameScreen;
 
 public class Bomb extends DynamicGameObject implements Poolable {
     private static final int TARGET_FALL_ROTATION = -90;
-    private boolean isDead;
-    private SpriteAnimation explosion;
     private final int EXP_WIDTH, EXP_HEIGHT;
     private final int N_WIDTH, N_HEIGHT;
+    private boolean isDead;
+    private SpriteAnimation explosion;
     
     public Bomb(float velX, float velY, float x, float y) {
         super(Assets.bomb, velX, velY, x, y);

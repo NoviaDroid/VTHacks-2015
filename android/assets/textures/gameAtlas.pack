@@ -136,23 +136,30 @@ tank1
   orig: 119, 51
   offset: 0, 0
   index: -1
-Barrack
+barrack
   rotate: false
   xy: 395, 181
   size: 123, 30
   orig: 123, 30
   offset: 0, 0
   index: -1
+Enemy Barrack
+  rotate: false
+  xy: 612, 315
+  size: 123, 30
+  orig: 123, 30
+  offset: 0, 0
+  index: -1
 tank2
   rotate: false
-  xy: 831, 618
+  xy: 737, 294
   size: 119, 51
   orig: 119, 51
   offset: 0, 0
   index: -1
 tank3
   rotate: false
-  xy: 831, 565
+  xy: 831, 618
   size: 119, 51
   orig: 119, 51
   offset: 0, 0
@@ -173,7 +180,7 @@ Explosion2
   index: -1
 Explosion3
   rotate: false
-  xy: 831, 504
+  xy: 831, 557
   size: 53, 59
   orig: 53, 59
   offset: 0, 0
@@ -187,7 +194,7 @@ Explosion4
   index: -1
 Explosion5
   rotate: false
-  xy: 831, 443
+  xy: 831, 496
   size: 53, 59
   orig: 53, 59
   offset: 0, 0
@@ -236,14 +243,14 @@ ETroop Running3
   index: -1
 ETroop Running4
   rotate: false
-  xy: 886, 528
+  xy: 886, 581
   size: 24, 35
   orig: 24, 35
   offset: 0, 0
   index: -1
 troopRunning1
   rotate: false
-  xy: 831, 406
+  xy: 831, 459
   size: 24, 35
   orig: 24, 35
   offset: 0, 0
@@ -264,14 +271,14 @@ troopRunning3
   index: -1
 troopRunnning4
   rotate: false
-  xy: 886, 491
+  xy: 886, 544
   size: 24, 35
   orig: 24, 35
   offset: 0, 0
   index: -1
 building3
   rotate: false
-  xy: 912, 529
+  xy: 912, 582
   size: 24, 34
   orig: 24, 34
   offset: 0, 0
@@ -285,35 +292,35 @@ ETroop1
   index: -1
 ETroop2
   rotate: false
-  xy: 857, 411
+  xy: 831, 427
   size: 21, 30
   orig: 21, 30
   offset: 0, 0
   index: -1
 ETroop3
   rotate: false
-  xy: 886, 459
+  xy: 857, 464
   size: 21, 30
   orig: 21, 30
   offset: 0, 0
   index: -1
 troopStationary1
   rotate: false
-  xy: 912, 497
+  xy: 886, 512
   size: 21, 30
   orig: 21, 30
   offset: 0, 0
   index: -1
 troopStationary2
   rotate: false
-  xy: 196, 36
+  xy: 912, 550
   size: 21, 30
   orig: 21, 30
   offset: 0, 0
   index: -1
 troopStationary3
   rotate: false
-  xy: 219, 36
+  xy: 196, 36
   size: 21, 30
   orig: 21, 30
   offset: 0, 0
@@ -327,7 +334,7 @@ bomb
   index: -1
 ETank Shell
   rotate: false
-  xy: 612, 337
+  xy: 550, 225
   size: 27, 8
   orig: 27, 8
   offset: 0, 0

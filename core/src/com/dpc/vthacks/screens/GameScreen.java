@@ -23,6 +23,8 @@ import com.dpc.vthacks.App;
 import com.dpc.vthacks.GameCamera;
 import com.dpc.vthacks.Road;
 import com.dpc.vthacks.army.Army;
+import com.dpc.vthacks.army.Base;
+import com.dpc.vthacks.army.Battle;
 import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.data.JSONManager;
@@ -45,7 +47,7 @@ public class GameScreen implements Screen {
     private Sprite[] skyline;
     private FPSLogger logger;
     private Stage stage;
-    private Army myArmy, enemyArmy;
+    public static Battle battle;
     
     public GameScreen() {
         levelWidth = MathUtils.random(3400, 4200);
@@ -211,6 +213,15 @@ public class GameScreen implements Screen {
                
         gameCamera.position.y = road.getY();
         
+        Base enemyBase = new Base(Assets.enemyBase);
+        enemyBase.setPosition(levelWidth - (Assets.playerBase.getRegionWidth() * 3), 0);
+        
+        Base playerBase = new Base(Assets.playerBase);
+        playerBase.setPosition(0, 0);
+        
+        battle = new Battle(new Army(playerBase), new Army(enemyBase));
+        
+        battle.enemyArmy.add(Factory.createEnemyTank());
         
         TextButtonStyle prop = new TextButtonStyle();
         prop.font = new BitmapFont();
@@ -222,7 +233,7 @@ public class GameScreen implements Screen {
         tankButton.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                myArmy.add(Factory.tankPool.obtain());
+                battle.myArmy.add(Factory.tankPool.obtain());
                 return false;
             }
         });
@@ -234,16 +245,13 @@ public class GameScreen implements Screen {
         soldierButton.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                myArmy.add(Factory.soldierPool.obtain());
+                battle.myArmy.add(Factory.soldierPool.obtain());
                 return false;
             }
         });
         
         stage.addActor(tankButton);
         stage.addActor(soldierButton);
-        
-        myArmy = new Army();
-        enemyArmy = new Army();
         
         mplexer.addProcessor(stage);
         
@@ -333,8 +341,7 @@ public class GameScreen implements Screen {
         updatePlayer(delta);
         checkForCollisions();
         updateCamera();
-        myArmy.update(delta);
-        enemyArmy.update(delta);
+        battle.update(delta);
         
         logger.log();
     }
@@ -360,7 +367,7 @@ public class GameScreen implements Screen {
         
         player.render();
 
-        myArmy.render();
+        battle.render();
         
         App.batch.end();
 
@@ -417,7 +424,7 @@ public class GameScreen implements Screen {
         Assets.unloadGameTextures();
         player.dispose();
         stage.dispose();
-        myArmy.dispose();
+        battle.dispose();
         Sounds.dispose();
         
         for(Sprite s : backgroundElements) {

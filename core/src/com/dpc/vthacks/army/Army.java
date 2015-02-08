@@ -1,15 +1,24 @@
 package com.dpc.vthacks.army;
 
 import com.badlogic.gdx.utils.Array;
+import com.dpc.vthacks.App;
+import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.infantry.Unit;
 
 public class Army {
     private Array<Unit> units;
+    private Base base;
     
-    public Army() {
+    public Army(Base base) {
+        this.base = base;
+        
         units = new Array<Unit>();
     }
 
+    public Base getBase() {
+        return base;
+    }
+    
     public Array<Unit> getUnits() {
         return units;
     }
@@ -23,6 +32,8 @@ public class Army {
     }
     
     public void render() {
+        base.draw();
+        
         for(Unit u : units) {
             u.render();
         }
@@ -38,12 +49,6 @@ public class Army {
         for(Unit u : units) {
             u.update(delta);
             u.addVel();
-        }
-        
-        for(Unit u1 : units) {
-            for(Unit u : units) {
-                
-            }
         }
     }
 }
