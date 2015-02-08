@@ -28,7 +28,7 @@ public class TankShell extends DynamicGameObject implements Poolable {
         
         this.targetX = targetX;
         this.targetY = targetY;
-        animation = new SpriteAnimation(Assets.explosionFrames, 0.1f);
+        animation = new SpriteAnimation(Assets.explosionFrames, 0.25f);
         
    //     setSize(region.getRegionWidth() * 2f, region.getRegionHeight() * 2f);
     }

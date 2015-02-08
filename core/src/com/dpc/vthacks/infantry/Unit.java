@@ -36,6 +36,10 @@ public abstract class Unit extends DynamicGameObject {
         return range;
     }
 
+    public void takeDamage(float damage) {
+        setHealth(getHealth() - damage);
+    }
+    
     public void setRange(float range) {
         this.range = range;
     }

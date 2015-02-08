@@ -19,6 +19,12 @@ public class Soldier extends Unit {
     @Override
     public void update(float delta) {
         setRegion(animation.update(delta));
+
+
+        
+        if(getHealth() <= 0) {
+            parentArmy.getUnits().removeValue(this, false);
+        }
     }
 
     @Override

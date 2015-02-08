@@ -14,10 +14,13 @@ public class Bomb extends DynamicGameObject implements Poolable {
     private final int EXP_WIDTH, EXP_HEIGHT;
     private final int N_WIDTH, N_HEIGHT;
     private boolean isDead;
+    private float damage;
     private SpriteAnimation explosion;
     
     public Bomb(float velX, float velY, float x, float y) {
         super(Assets.bomb, velX, velY, x, y);
+        
+        damage = 60;
         
         N_WIDTH = getRegionWidth();
         N_HEIGHT = getRegionHeight();
@@ -57,6 +60,10 @@ public class Bomb extends DynamicGameObject implements Poolable {
         }
     }
 
+    public float getDamage() {
+        return damage;
+    }
+    
     @Override
     public void reset() {
         isDead = false;

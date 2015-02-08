@@ -30,6 +30,7 @@ import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.data.JSONManager;
 import com.dpc.vthacks.data.Sounds;
 import com.dpc.vthacks.factories.Factory;
+import com.dpc.vthacks.infantry.Soldier;
 import com.dpc.vthacks.input.InputSystem;
 import com.dpc.vthacks.plane.Bomb;
 import com.dpc.vthacks.plane.Plane;
@@ -210,10 +211,10 @@ public class GameScreen implements Screen {
         gameCamera.position.y = road.getY();
         
         Base enemyBase = new Base(Assets.enemyBase);
-        enemyBase.setPosition(levelWidth - (Assets.playerBase.getRegionWidth() * 3), 0);
+        enemyBase.setPosition(levelWidth - (Assets.playerBase.getRegionWidth() * 3), 10);
         
         Base playerBase = new Base(Assets.playerBase);
-        playerBase.setPosition(0, 0);
+        playerBase.setPosition(0, 10);
         
         battle = new Battle(new Army(playerBase), new Army(enemyBase));
         
@@ -234,9 +235,6 @@ public class GameScreen implements Screen {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 battle.myArmy.add(Factory.tankPool.obtain());
-                battle.enemyArmy.add(Factory.enemyTankPool.obtain());
-                battle.enemyArmy.add(Factory.enemySoldierPool.obtain());
-                battle.enemyArmy.add(Factory.enemySoldierPool.obtain());
                 return false;
             }
         });
@@ -249,7 +247,6 @@ public class GameScreen implements Screen {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 battle.myArmy.add(Factory.soldierPool.obtain());
-                battle.enemyArmy.add(Factory.enemySoldierPool.obtain());
                 return false;
             }
         });
@@ -260,6 +257,12 @@ public class GameScreen implements Screen {
         mplexer.addProcessor(stage);
         
         Gdx.input.setInputProcessor(mplexer);
+        
+        Soldier s = Factory.soldierPool.obtain();
+        s.setX(15000);
+        s.setY(15000);
+        
+        battle.myArmy.add(s);
     }
 
     private void updatePlayer(float delta) {
@@ -332,7 +335,7 @@ public class GameScreen implements Screen {
                 int padding = 8;
                 
                 float x = 0;
-                float y = MathUtils.random((rh * 0.5f) - padding, (rh * 2f) + padding);
+                float y = rh * 0.5f;
                 int w = levelWidth;
                 float h = MathUtils.random(rh * 0.5f, rh);
                 
@@ -346,6 +349,15 @@ public class GameScreen implements Screen {
         checkForCollisions();
         updateCamera();
         battle.update(delta);
+        
+        if(Math.random() < 0.05f) {
+            battle.enemyArmy.add(Factory.enemyTankPool.obtain());
+        }
+        
+        if(Math.random() < 0.005) {
+            Soldier s = (Factory.enemySoldierPool.obtain());
+            s.parentArmy = battle.enemyArmy;
+        }
         
         logger.log();
     }
@@ -380,7 +392,7 @@ public class GameScreen implements Screen {
         
 //        App.debugRenderer.setProjectionMatrix(gameCamera.combined);
 //        App.debugRenderer.setColor(Color.RED);
-//        App.debugRenderer.begin(ShapeType.Filled);
+//        App.debugRenderer.begin(ShapeType.Line);
 //        
 //        App.debugRenderer.rect(player.getBoundingRectangle().x,
 //                               player.getBoundingRectangle().y,
@@ -397,6 +409,20 @@ public class GameScreen implements Screen {
 //                                   r.getBoundingRectangle().y,
 //                                   r.getBoundingRectangle().width,
 //                                   r.getBoundingRectangle().height);
+//        }
+//        
+//        for(Unit r : battle.enemyArmy.getUnits()) {
+//            App.debugRenderer.rect(r.getBoundingRectangle().x,
+//                    r.getBoundingRectangle().y,
+//                    r.getBoundingRectangle().width,
+//                    r.getBoundingRectangle().height);
+//        }
+//        
+//        for(Unit r : battle.myArmy.getUnits()) {
+//            App.debugRenderer.rect(r.getBoundingRectangle().x,
+//                    r.getBoundingRectangle().y,
+//                    r.getBoundingRectangle().width,
+//                    r.getBoundingRectangle().height);
 //        }
 //        
 //        App.debugRenderer.end();

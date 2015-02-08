@@ -27,8 +27,10 @@ public class Tank extends Unit {
         if(shell != null) {
             shell.update(delta);
         }
-        else {
-            
+
+        
+        if(getHealth() <= 0) {
+            parentArmy.getUnits().removeValue(this, false);
         }
     }
 
@@ -54,7 +56,7 @@ public class Tank extends Unit {
     
     @Override
     public void takeDamage(Unit attacker) {
-        
+        setHealth(getHealth() - attacker.getDamage());
     }
     
     public void dispose() {
