@@ -81,7 +81,7 @@ public class Factory {
     }
     
     public static TankShell createTankShell(float x, float y) {
-        return new TankShell(Assets.tankShell, tankShellVelX, tankShellVelY, x, y, x, y);
+        return new TankShell(Assets.tankShell,null, tankShellVelX, tankShellVelY, x, y, x, y);
     }
     
     public static Soldier createEnemySoldier() {
@@ -89,24 +89,35 @@ public class Factory {
     }
     
     public static Plane createPlayer(float x, float y) {
-        return new Plane(Assets.plane, playerRange, playerDamage, playerHealth, playerVelX, playerVelY, x, y);
+        Plane plane = new Plane(Assets.plane, playerRange, playerDamage, playerHealth, playerVelX, playerVelY, x, y);
+        plane.parentArmy = GameScreen.battle.myArmy;
+        return plane;
     }
     
     public static Tank createTank(float x, float y) {
-        return new Tank(Assets.tankFrames, tankRange, tankDamage, tankHealth, tankVelX, tankVelY, x, y);
+        Tank t = new Tank(Assets.tankFrames, tankRange, tankDamage, tankHealth, tankVelX, tankVelY, x, y);
+        t.parentArmy = GameScreen.battle.myArmy;
+        return t;
     }
     
     public static Tank createEnemyTank() {
-        return new Tank(Assets.enemyTankFrames, enemyTankRange, enemyTankDamage, enemyTankHealth, enemyTankVelX, enemyTankVelY, GameScreen.battle.enemyArmy.getBase().getX(), GameScreen.battle.enemyArmy.getBase().getY());
+        Tank t = new Tank(Assets.enemyTankFrames, enemyTankRange, enemyTankDamage, enemyTankHealth, enemyTankVelX, enemyTankVelY, GameScreen.battle.enemyArmy.getBase().getX(), GameScreen.battle.enemyArmy.getBase().getY());
+        t.parentArmy = GameScreen.battle.enemyArmy;
+        return t;
     }
     
     public static Plane createEnemyPlane(float x, float y) {
-        return new Plane(Assets.plane, enemyRange, enemyDamage, enemyHealth, enemyVelX, enemyVelY, x, y);
+        Plane t = new Plane(Assets.plane, enemyRange, enemyDamage, enemyHealth, enemyVelX, enemyVelY, x, y);
+        t.parentArmy = GameScreen.battle.enemyArmy;
+        return t;
     }
     
     public static Soldier createSoldier(float x, float y) {
-        return new Soldier(Assets.soldierFrames, soldierRange, soldierDamage, soldierHealth, soldierVelX, soldierVelY, x, y);
+        Soldier s =  new Soldier(Assets.soldierFrames, soldierRange, soldierDamage, soldierHealth, soldierVelX, soldierVelY, x, y);
+        s.parentArmy = GameScreen.battle.myArmy;
+        return s;
     }
+    
     public static float getPlayerHealth() {
         return playerHealth;
     }

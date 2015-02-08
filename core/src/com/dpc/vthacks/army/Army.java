@@ -1,8 +1,6 @@
 package com.dpc.vthacks.army;
 
 import com.badlogic.gdx.utils.Array;
-import com.dpc.vthacks.App;
-import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.infantry.Unit;
 
 public class Army {
@@ -48,7 +46,10 @@ public class Army {
     public void update(float delta) {
         for(Unit u : units) {
             u.update(delta);
-            u.addVel();
+            
+            if(u.moving) {
+                u.addVel();
+            }
         }
     }
 }

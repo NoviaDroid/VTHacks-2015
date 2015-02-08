@@ -2,16 +2,20 @@ package com.dpc.vthacks.infantry;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.dpc.vthacks.MathUtil;
+import com.dpc.vthacks.army.Army;
 import com.dpc.vthacks.gameobject.DynamicGameObject;
 
 public abstract class Unit extends DynamicGameObject {
     private float damage, health, range;
-
+    public boolean moving;
+    public Army parentArmy;
+    
     public Unit(TextureRegion region, float range, float damage, float health, float velX, float velY, float x, float y) {
         super(region, velX, velY, x, y);
         this.range = range;
         this.health = health;
         this.damage = damage;
+        moving = true;
     }
 
     @Override
@@ -24,8 +28,10 @@ public abstract class Unit extends DynamicGameObject {
     
     public abstract void takeDamage(Unit attacker);
     
-    public abstract void move();
-     
+    public void stop() {
+        moving = false;
+    }
+    
     public float getRange() {
         return range;
     }
@@ -51,7 +57,6 @@ public abstract class Unit extends DynamicGameObject {
     }
 
     public boolean inRange(Unit u1) {
-        System.out.println(MathUtil.dst(getX(), getY(), u1.getX(), u1.getY()));
         return MathUtil.dst(getX(), getY(), u1.getX(), u1.getY()) <= range;
     }
 }

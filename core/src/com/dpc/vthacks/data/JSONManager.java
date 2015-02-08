@@ -17,6 +17,7 @@ public class JSONManager {
         JsonValue root = reader.parse(handle);
         
         JsonValue tank = root.getChild("tank");
+        JsonValue soldier = root.getChild("soldier");
         JsonValue player = root.getChild("player");
         JsonValue enemyPlane = root.getChild("enemy plane");
         JsonValue bomb = root.getChild("bomb");
@@ -28,7 +29,9 @@ public class JSONManager {
         Factory.setEnemyHealth(enemyPlane.getInt("health"));
         Factory.setEnemyVelX(enemyPlane.getFloat("velX"));
         Factory.setEnemyVelY(enemyPlane.getFloat("velY"));
+        Factory.setEnemyRange(enemyPlane.getFloat("range"));
         
+        Factory.setPlayerRange(player.getFloat("range"));
         Factory.setPlayerDamage(player.getFloat("damage"));
         Factory.setPlayerHealth(player.getFloat("health"));
         Factory.setPlayerVelX(player.getFloat("velX"));
@@ -39,14 +42,15 @@ public class JSONManager {
         Factory.setTankHealth(tank.getInt("health"));
         Factory.setTankVelX(tank.getFloat("velX"));
         Factory.setTankVelY(tank.getFloat("velY"));
+        Factory.setTankRange(tank.getFloat("range"));
         
-        Factory.setSoldierCost(tank.getInt("cost"));
-        Factory.setSoldierDamage(tank.getFloat("damage"));
-        Factory.setSoldierHealth(tank.getInt("health"));
-        Factory.setSoldierRange(tank.getFloat("range"));
-        Factory.setSoldierVelX(tank.getFloat("velX"));
-        Factory.setSoldierVelY(tank.getFloat("velY"));
-        
+        Factory.setSoldierCost(soldier.getInt("cost"));
+        Factory.setSoldierDamage(soldier.getFloat("damage"));
+        Factory.setSoldierHealth(soldier.getInt("health"));
+        Factory.setSoldierRange(soldier.getFloat("range"));
+        Factory.setSoldierVelX(soldier.getFloat("velX"));
+        Factory.setSoldierVelY(soldier.getFloat("velY"));
+
         Factory.setBombDamage(bomb.getFloat("damage"));
         Factory.setBombVelX(bomb.getFloat("velX"));
         Factory.setBombVelY(bomb.getFloat("velY"));
@@ -58,6 +62,7 @@ public class JSONManager {
         Factory.setEnemySoldierHealth(enemySoldier.getInt("health"));
         Factory.setEnemySoldierVelX(enemySoldier.getFloat("velX"));
         Factory.setEnemySoldierVelY(enemySoldier.getFloat("velY"));
+        Factory.setEnemySoldierRange(enemySoldier.getFloat("range"));
         
         Factory.setEnemyTankDamage(enemyTank.getFloat("damage"));
         Factory.setEnemyTankHealth(enemyTank.getInt("health"));

@@ -67,9 +67,6 @@ public class GameScreen implements Screen {
         
         gameCamera = new GameCamera();
         
-        player = Factory.createPlayer((AppData.width * 0.5f) - (Assets.plane.getRegionWidth() * 0.5f), 
-                                      (AppData.height * 0.5f) - (Assets.plane.getRegionHeight() * 0.5f));
-        
         backgroundElements = new Array<Sprite>();
         
         background = new Sprite(Assets.background);
@@ -113,7 +110,6 @@ public class GameScreen implements Screen {
         }
        
         InputSystem.initialize();
-        InputSystem.register(player);
         
         InputMultiplexer mplexer = new InputMultiplexer();
         
@@ -222,6 +218,11 @@ public class GameScreen implements Screen {
         battle = new Battle(new Army(playerBase), new Army(enemyBase));
         
         
+        player = Factory.createPlayer((AppData.width * 0.5f) - (Assets.plane.getRegionWidth() * 0.5f), 
+                                      (AppData.height * 0.5f) - (Assets.plane.getRegionHeight() * 0.5f));
+        
+        InputSystem.register(player);
+        
         TextButtonStyle prop = new TextButtonStyle();
         prop.font = new BitmapFont();
         
@@ -234,6 +235,7 @@ public class GameScreen implements Screen {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 battle.myArmy.add(Factory.tankPool.obtain());
                 battle.enemyArmy.add(Factory.enemyTankPool.obtain());
+                battle.enemyArmy.add(Factory.enemySoldierPool.obtain());
                 battle.enemyArmy.add(Factory.enemySoldierPool.obtain());
                 return false;
             }

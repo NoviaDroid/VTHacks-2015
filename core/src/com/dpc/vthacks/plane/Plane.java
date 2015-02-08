@@ -67,11 +67,6 @@ public class Plane extends Unit implements InputListener {
     public void takeDamage(Unit attacker) {
         
     }
-
-    @Override
-    public void move() {
-        
-    }
     
     @Override
     public void onInputEvent(int event) {

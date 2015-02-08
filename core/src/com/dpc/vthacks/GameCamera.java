@@ -11,7 +11,7 @@ public class GameCamera extends OrthographicCamera {
     public void resize(int width, int height) {
         setToOrtho(false, width, height);
         position.set(AppData.width * 0.5f, AppData.height * 0.5f, 0);
-        zoom = 6;
+
         update();
     }
 }

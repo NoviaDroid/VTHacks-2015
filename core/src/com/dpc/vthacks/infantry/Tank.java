@@ -4,17 +4,19 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.dpc.vthacks.App;
 import com.dpc.vthacks.SpriteAnimation;
+import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.factories.Factory;
 
 public class Tank extends Unit {
     private SpriteAnimation animation;
-    private TankShell shell;
+    public TankShell shell;
     
     public Tank(AtlasRegion[] regions, float range, float damage, float health, float velX, float velY, float x, float y) {
         super(regions[0], range, damage, health, velX, velY, x, y);
         
         animation = new SpriteAnimation(regions, 0.25f);
-       
+        shell = null;
+        
         setSize(getWidth() * 2, getHeight() * 2);
     }
 
@@ -24,6 +26,9 @@ public class Tank extends Unit {
         
         if(shell != null) {
             shell.update(delta);
+        }
+        else {
+            
         }
     }
 
@@ -38,23 +43,20 @@ public class Tank extends Unit {
 
     @Override
     public void attack(Unit enemy) {
-        shell = Factory.tankShellPool.obtain();
-        shell.setRotation(MathUtils.atan2(enemy.getY() - getY(), enemy.getX() - getX()));
+        // TODO: FIX THIS 
+        shell = Factory.createTankShell(getX() + (getWidth() * 0.5f), getY() + (getHeight() * 0.75f));
+        shell.parentTank = this;
+        shell.setOrigin(Assets.tankShell.getRegionWidth() * 0.5f , Assets.tankShell.getRegionHeight() * 0.5f);
+        shell.setRotation(MathUtils.atan2(enemy.getY() - getY(), enemy.getX() - getX()) * MathUtils.degreesToRadians);
         shell.setTargetX(enemy.getX());
-        shell.setTargetY(enemy.getY());
+        shell.setTargetY(enemy.getY() + (enemy.getHeight() * 0.5f));
     }
-
-    @Override
-    public void move() {
-        addVel();
-    }
-
+    
     @Override
     public void takeDamage(Unit attacker) {
         
     }
     
     public void dispose() {
-        shell.dispose();
     }
 }
