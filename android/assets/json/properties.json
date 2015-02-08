@@ -55,7 +55,7 @@
   "enemy tank": [{
     "health": "140",
     "damage": "25",
-    "velX": "3",
+    "velX": "-3",
     "velY": "0",
     "range": "40"
   }]

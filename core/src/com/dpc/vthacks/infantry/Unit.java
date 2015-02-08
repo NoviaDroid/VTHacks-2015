@@ -51,6 +51,7 @@ public abstract class Unit extends DynamicGameObject {
     }
 
     public boolean inRange(Unit u1) {
+        System.out.println(MathUtil.dst(getX(), getY(), u1.getX(), u1.getY()));
         return MathUtil.dst(getX(), getY(), u1.getX(), u1.getY()) <= range;
     }
 }

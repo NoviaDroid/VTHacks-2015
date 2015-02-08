@@ -221,7 +221,6 @@ public class GameScreen implements Screen {
         
         battle = new Battle(new Army(playerBase), new Army(enemyBase));
         
-        battle.enemyArmy.add(Factory.createEnemyTank());
         
         TextButtonStyle prop = new TextButtonStyle();
         prop.font = new BitmapFont();
@@ -234,6 +233,8 @@ public class GameScreen implements Screen {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 battle.myArmy.add(Factory.tankPool.obtain());
+                battle.enemyArmy.add(Factory.enemyTankPool.obtain());
+                battle.enemyArmy.add(Factory.enemySoldierPool.obtain());
                 return false;
             }
         });
@@ -246,6 +247,7 @@ public class GameScreen implements Screen {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 battle.myArmy.add(Factory.soldierPool.obtain());
+                battle.enemyArmy.add(Factory.enemySoldierPool.obtain());
                 return false;
             }
         });

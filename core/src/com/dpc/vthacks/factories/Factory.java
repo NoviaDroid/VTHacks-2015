@@ -58,6 +58,24 @@ public class Factory {
         
     };
     
+    public static final Pool<Tank> enemyTankPool = new Pool<Tank>(NUMBER_OF_BOMBS) {
+
+        @Override
+        protected Tank newObject() {
+            return Factory.createEnemyTank();
+        }
+        
+    };
+    
+    public static final Pool<Soldier> enemySoldierPool = new Pool<Soldier>(NUMBER_OF_BOMBS) {
+
+        @Override
+        protected Soldier newObject() {
+            return Factory.createEnemySoldier();
+        }
+        
+    };
+    
     public static Bomb createBomb(float x, float y) {
         return new Bomb(bombVelX, bombVelY, x, y);
     }
@@ -67,7 +85,7 @@ public class Factory {
     }
     
     public static Soldier createEnemySoldier() {
-        return new Soldier(Assets.enemySoldierFrames, enemySoldierRange, enemySoldierDamage, enemySoldierHealth, enemySoldierVelX, enemySoldierVelY, GameScreen.battle.myArmy.getBase().getX(), GameScreen.battle.enemyArmy.getBase().getY());
+        return new Soldier(Assets.enemySoldierFrames, enemySoldierRange, enemySoldierDamage, enemySoldierHealth, enemySoldierVelX, enemySoldierVelY, GameScreen.battle.enemyArmy.getBase().getX(), GameScreen.battle.enemyArmy.getBase().getY());
     }
     
     public static Plane createPlayer(float x, float y) {
@@ -79,7 +97,7 @@ public class Factory {
     }
     
     public static Tank createEnemyTank() {
-        return new Tank(Assets.enemyTankFrames, tankRange, tankDamage, tankHealth, tankVelX, tankVelY, GameScreen.battle.enemyArmy.getBase().getX(), GameScreen.battle.enemyArmy.getBase().getY());
+        return new Tank(Assets.enemyTankFrames, enemyTankRange, enemyTankDamage, enemyTankHealth, enemyTankVelX, enemyTankVelY, GameScreen.battle.enemyArmy.getBase().getX(), GameScreen.battle.enemyArmy.getBase().getY());
     }
     
     public static Plane createEnemyPlane(float x, float y) {
