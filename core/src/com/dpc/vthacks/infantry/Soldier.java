@@ -24,7 +24,7 @@ public class Soldier extends Unit {
     @Override
     public void update(float delta) {
         setRegion(animation.update(delta));
-
+        
         if(getHealth() <= 0) {
             parentArmy.getUnits().removeValue(this, false);
         }
@@ -38,15 +38,15 @@ public class Soldier extends Unit {
     public void render() {
         draw(App.batch);
         
-        for(Bullet b : bullets) {
-            b.render();
-        }
+//        for(Bullet b : bullets) {
+//            b.render();
+//        }
     }
 
     @Override
     public void attack(Unit enemy) {
-        Sounds.shot.play();
-             
+        Sounds.playShot();
+
         Bullet bullet = Factory.bulletPool.obtain();
         bullet.setX(getX() + getWidth() * 0.5f);
         bullet.setY(getY() + getHeight() * 0.5f);

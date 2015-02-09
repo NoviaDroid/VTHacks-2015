@@ -13,6 +13,10 @@ public class Sounds {
         shot = Gdx.audio.newSound(Gdx.files.internal("sounds/shot.wav"));
     }
     
+    public static void playShot() {
+        shot.play(0.15f);
+    }
+    
     public static void dispose() {
         explosion.dispose();
         shot.dispose();

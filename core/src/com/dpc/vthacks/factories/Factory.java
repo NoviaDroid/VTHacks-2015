@@ -96,7 +96,7 @@ public class Factory {
     }
     
     public static TankShell createTankShell(float x, float y) {
-        return new TankShell(Assets.tankShell,null, tankShellVelX, tankShellVelY, x, y, x, y);
+        return new TankShell(Assets.tankShell, tankShellVelX, tankShellVelY, x, y);
     }
     
     public static Soldier createEnemySoldier() {

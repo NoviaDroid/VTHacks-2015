@@ -5,11 +5,9 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.input.GestureDetector.GestureListener;
 import com.badlogic.gdx.math.MathUtils;
@@ -33,7 +31,7 @@ import com.dpc.vthacks.data.JSONManager;
 import com.dpc.vthacks.data.Sounds;
 import com.dpc.vthacks.factories.Factory;
 import com.dpc.vthacks.infantry.Soldier;
-import com.dpc.vthacks.infantry.Unit;
+import com.dpc.vthacks.infantry.Tank;
 import com.dpc.vthacks.input.InputSystem;
 import com.dpc.vthacks.plane.Bomb;
 import com.dpc.vthacks.plane.Plane;
@@ -49,7 +47,6 @@ public class GameScreen implements Screen {
     private Road road;
     private Array<Sprite> backgroundElements;
     private GameCamera gameCamera;
-    private static Plane player;
     private Sprite background;
     private Sprite[] skyline;
     private FPSLogger logger;
@@ -128,7 +125,13 @@ public class GameScreen implements Screen {
                 if(keycode == Keys.B) {
                     InputSystem.dispatchEvent(InputSystem.B);
                 }
-
+                else if(keycode == Keys.A) {
+                    gameCamera.position.x -= 100;
+                }
+                else if(keycode == Keys.D) {
+                    gameCamera.position.x += 100;
+                }
+                
                 return false;
             }
             
@@ -166,7 +169,6 @@ public class GameScreen implements Screen {
 
             @Override
             public boolean touchDown(float x, float y, int pointer, int button) {
-
                 
                 return false;
             }
@@ -219,18 +221,18 @@ public class GameScreen implements Screen {
         gameCamera.position.y = road.getY();
         
         Base enemyBase = new Base(Assets.enemyBase);
-        enemyBase.setPosition(levelWidth - (Assets.playerBase.getRegionWidth() * 3), 10);
+        enemyBase.setPosition(levelWidth - (Assets.playerBase.getRegionWidth() * 3), 25);
         
         Base playerBase = new Base(Assets.playerBase);
-        playerBase.setPosition(0, 10);
+        playerBase.setPosition(0, 25);
         
         battle = new Battle(new Army(playerBase), new Army(enemyBase));
         
         
-        player = Factory.createPlayer((AppData.width * 0.5f) - (Assets.plane.getRegionWidth() * 0.5f), 
+        battle.player = Factory.createPlayer((AppData.width * 0.5f) - (Assets.plane.getRegionWidth() * 0.5f), 
                                       (AppData.height * 0.5f) - (Assets.plane.getRegionHeight() * 0.5f));
         
-        InputSystem.register(player);
+        InputSystem.register(battle.player);
         
         TextButtonStyle prop = new TextButtonStyle();
         prop.font = new BitmapFont();
@@ -242,7 +244,10 @@ public class GameScreen implements Screen {
         tankButton.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                battle.myArmy.add(Factory.tankPool.obtain());
+                Tank t = Factory.tankPool.obtain();
+
+                
+                battle.myArmy.add(t);
                 return false;
             }
         });
@@ -275,33 +280,33 @@ public class GameScreen implements Screen {
 
     private void updatePlayer(float delta) {
      // If at the edge of the screen, turn around
-        if(player.getX() + player.getWidth() >= levelWidth) {
-            player.setX(levelWidth - player.getWidth() - 1);
+        if(battle.player.getX() + battle.player.getWidth() >= levelWidth) {
+            battle.player.setX(levelWidth - battle.player.getWidth() - 1);
             
             // Flip the plane
             Assets.plane.flip(true, false);
-            player.setRegion(Assets.plane);
+            battle.player.setRegion(Assets.plane);
             
             // Now set the gravity on the x axis
             gravity.x = -xGrav;
         }
-        else if(player.getX() <= 0) {
-            player.setX(1);
+        else if(battle.player.getX() <= 0) {
+            battle.player.setX(1);
             
             // Flip the plane
             Assets.plane.flip(true, false);
-            player.setRegion(Assets.plane);
+            battle.player.setRegion(Assets.plane);
             
             // Now set the gravity on the x axis
             gravity.x = xGrav;
         }
         
-        player.applyVel(gravity); // Apply gravity to the player
-        player.update(delta);
+        battle.player.applyVel(gravity); // Apply gravity to the player
+        battle.player.update(delta);
     }
     
     private void updateCamera() {
-        gameCamera.position.set(player.getX(), gameCamera.position.y, 0);
+        gameCamera.position.set(battle.player.getX(), gameCamera.position.y, 0);
         
         boolean wasClamped = false;
         
@@ -330,11 +335,11 @@ public class GameScreen implements Screen {
     }
     
     public void checkForCollisions() {
-        if(player.getBoundingRectangle().overlaps(road)) {
-            player.setY(road.getY() + road.getHeight());
+        if(battle.player.getBoundingRectangle().overlaps(road)) {
+            battle.player.setY(road.getY() + road.getHeight());
         }
         
-        for(Bomb b : player.getBombs()) {
+        for(Bomb b : battle.player.getBombs()) {
             if(road.overlaps(b.getBoundingRectangle())) {
                 b.setY(road.getY() + road.getHeight());
                 b.triggerExplosion();
@@ -351,10 +356,10 @@ public class GameScreen implements Screen {
             }
         }
         
-        if(player.getBoundingRectangle().overlaps(road)) {
+        if(battle.player.getBoundingRectangle().overlaps(road)) {
             Bomb b = Factory.bombPool.obtain();
-            b.setX(player.getX());
-            b.setY(player.getY());
+            b.setX(battle.player.getX());
+            b.setY(battle.player.getY());
         }
     }
     
@@ -377,7 +382,7 @@ public class GameScreen implements Screen {
             battle.enemyArmy.add(s);
         }
         
-        logger.log();
+       // logger.log();
     }
     
     @Override
@@ -399,7 +404,7 @@ public class GameScreen implements Screen {
         
         road.render();
         
-        player.render();
+        battle.player.render();
 
         battle.render();
         
@@ -407,6 +412,18 @@ public class GameScreen implements Screen {
 
         stage.draw();
         
+//      App.debugRenderer.setProjectionMatrix(gameCamera.combined);
+//      App.debugRenderer.setColor(Color.RED);
+//      App.debugRenderer.begin(ShapeType.Line);
+//        
+//      for(Unit u : battle.myArmy.getUnits()) {
+//              App.debugRenderer.rect(u.getX(),
+//            u.getY(),
+//            u.getRange(), 
+//            u.getRange());
+//      }
+//      
+//      App.debugRenderer.end();
         
 //        App.debugRenderer.setProjectionMatrix(gameCamera.combined);
 //        App.debugRenderer.setColor(Color.RED);
@@ -484,7 +501,7 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         Assets.unloadGameTextures();
-        player.dispose();
+        battle.player.dispose();
         stage.dispose();
         battle.dispose();
         Sounds.dispose();
@@ -495,6 +512,6 @@ public class GameScreen implements Screen {
     }
 
     public static Plane getPlayer() {
-        return player;
+        return battle.player;
     }
 }

@@ -10,10 +10,12 @@ import com.dpc.vthacks.infantry.Soldier;
 import com.dpc.vthacks.infantry.Tank;
 import com.dpc.vthacks.infantry.Unit;
 import com.dpc.vthacks.plane.Bomb;
+import com.dpc.vthacks.plane.Plane;
 import com.dpc.vthacks.screens.GameScreen;
 
 public class Battle {
     public Army myArmy, enemyArmy;
+    public Plane player;
     
     public Battle(Army myArmy, Army enemyArmy) {
         this.myArmy = myArmy;
@@ -29,43 +31,39 @@ public class Battle {
             GameScreen.triggerGameOver();
         }
 
+        checkCollisions();
+    }
+    
+    private void checkCollisions() {
         // TODO: DONT cheat :D . Take out the hidden unit
         for(Unit u : myArmy.getUnits()) {
             for(Unit u1 : enemyArmy.getUnits()) {
-                
-                
-                if(u.getBoundingRectangle().overlaps(enemyArmy.getBase().getBoundingRectangle())) {
-                    enemyArmy.getBase().loseLife(0.025f);                  
-                }
-                
-                if(u1.getBoundingRectangle().overlaps(myArmy.getBase().getBoundingRectangle())) {
-                    myArmy.getBase().loseLife(0.025f);                
-                }
-                
-                if(MathUtil.dst(u.getX(), u.getY(), u1.getX(), u1.getY()) <= u.getRange()) {
-                    if(u.moving) {
-                        u.stop();                    
-                        u.attack(u1);
-                        u.moving = true;
-                    }
 
+                if(MathUtil.dst(u.getX(), u.getY(), u1.getX(), u1.getY()) <= u.getRange()) {
+                    u.moving = false;                    
+                    
+                    u.attack(u1);
+                    u.setAttacking(true);
+                }
+                else {
+                    u.moving = true;
+                    u.setAttacking(false);
                 }
                 
-                if(MathUtil.dst(u.getX(), u.getY(), u1.getX(), u1.getY()) <= u1.getRange()) {
-                    if(u1.moving) {
-                        u1.stop();                    
-                        u1.attack(u);
-                        u1.moving = true;
-                    }
+                if(MathUtil.dst(u1.getX(), u1.getY(), u.getX(), u.getY()) <= u1.getRange()) {
+                    u1.moving = false;                    
                     
+                    u1.attack(u);
+                    u1.setAttacking(true);
+                }
+                else {
+                    u1.moving = true;
+                    u1.setAttacking(false);
                 }
                 
                 Array<Bomb> bombs = GameScreen.getPlayer().getBombs();
-                Iterator<Bomb> iterator = bombs.iterator();
                 
-                while(iterator.hasNext()) {
-                    Bomb b = iterator.next();
-                    
+                for(Bomb b : bombs) {
                     if(!b.isAlive()) {
                         if(b.getBoundingRectangle().overlaps(enemyArmy.getBase().getBoundingRectangle())) {
                             enemyArmy.getBase().loseLife(1);
@@ -100,7 +98,6 @@ public class Battle {
                             u1.takeDamage(s.getDamage());
                             Factory.bulletPool.free(b);
                             it.remove();
-                            s.moving = true;
                         }
                     }
                 }
@@ -119,7 +116,6 @@ public class Battle {
                             u.takeDamage(s.getDamage());
                             Factory.bulletPool.free(b);
                             it.remove();
-                            s.moving = true;
                         }
                     }
                 }
@@ -130,10 +126,8 @@ public class Battle {
                     if(t.shell != null) {
                         if (t.shell.getBoundingRectangle().overlaps(u1.getBoundingRectangle())) {
                             
-                                t.shell.triggerExplosion();
-                                u1.takeDamage(u);
-                                u.moving = true;
-                            
+                            //t.shell.triggerExplosion();
+                            u1.takeDamage(u);
                         }
                     }
                 }
@@ -144,9 +138,8 @@ public class Battle {
                     if(t.shell != null) {
                         if (t.shell.getBoundingRectangle().overlaps(u.getBoundingRectangle())) {
                   
-                                t.shell.triggerExplosion();
+                                //t.shell.triggerExplosion();
                                 u.takeDamage(u1);
-                                u1.moving = true;
                             
                         }
                     }

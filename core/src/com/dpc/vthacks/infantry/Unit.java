@@ -8,6 +8,7 @@ import com.dpc.vthacks.gameobject.DynamicGameObject;
 public abstract class Unit extends DynamicGameObject {
     private float damage, health, range;
     public boolean moving;
+    private boolean isAttacking;
     public Army parentArmy;
     
     public Unit(TextureRegion region, float range, float damage, float health, float velX, float velY, float x, float y) {
@@ -28,14 +29,18 @@ public abstract class Unit extends DynamicGameObject {
     
     public abstract void takeDamage(Unit attacker);
     
-    public void stop() {
-        moving = false;
-    }
-    
     public float getRange() {
         return range;
     }
 
+    public void setAttacking(boolean isAttacking) {
+        this.isAttacking = isAttacking;
+    }
+    
+    public boolean isAttacking() {
+        return isAttacking;
+    }
+    
     public void takeDamage(float damage) {
         setHealth(getHealth() - damage);
     }
