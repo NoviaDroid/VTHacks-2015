@@ -17,10 +17,9 @@ public class Bomb extends DynamicGameObject implements Poolable {
     private float damage;
     private SpriteAnimation explosion;
     
-    public Bomb(float velX, float velY, float x, float y) {
+    public Bomb(float damage, float velX, float velY, float x, float y) {
         super(Assets.bomb, velX, velY, x, y);
-        
-        damage = 60;
+        this.damage = damage;
         
         N_WIDTH = getRegionWidth();
         N_HEIGHT = getRegionHeight();
@@ -42,8 +41,8 @@ public class Bomb extends DynamicGameObject implements Poolable {
             }
             
             // Apply gravity
-            applyVel(GameScreen.gravity.cpy().sub(0, getVelY()));
-            addVel();
+            applyVel(GameScreen.gravity.cpy().sub(GameScreen.gravity.x, getVelY()));
+           // addVel();
             
             // Gradually rotate the bomb
             setRotation(getRotation() + (TARGET_FALL_ROTATION - getRotation()) * delta * 2);
@@ -54,8 +53,7 @@ public class Bomb extends DynamicGameObject implements Poolable {
             }
             
             setRegion(explosion.update(delta));
-            setRotation(0);
-            
+
             // If we are done, enough with this object.
             if(explosion.getAnimation().isAnimationFinished(explosion.getStateTime())) {
                 Factory.bombPool.free(this);
@@ -72,6 +70,7 @@ public class Bomb extends DynamicGameObject implements Poolable {
     public void reset() {
         isDead = false;
         setRegion(Assets.bomb);
+        setRotation(0);
         setPosition(0, 0);
         explosion = new SpriteAnimation(Assets.explosionFrames, 0.1f);
         setRotation(0);
@@ -81,6 +80,8 @@ public class Bomb extends DynamicGameObject implements Poolable {
     public void triggerExplosion() {
         if(!isDead) {
             Sounds.explosion.play();
+            setRotation(0);
+            setPosition(getX() - (getWidth() * 0.5f), getY() - (getHeight() * 0.5f));
         }
         
         isDead = true;

@@ -18,7 +18,7 @@ public class Soldier extends Unit {
         animation = new SpriteAnimation(regions, 0.1f);
         bullets = new Array<Bullet>();
         
-        setSize(getWidth() * 2, getHeight() * 2);
+        setSize(getWidth() * 3, getHeight() * 3);
     }
 
     @Override

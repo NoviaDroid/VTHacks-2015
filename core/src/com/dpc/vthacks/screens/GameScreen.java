@@ -41,7 +41,7 @@ import com.dpc.vthacks.plane.Plane;
 public class GameScreen implements Screen {
     private static boolean gameOver;
   
-    private static final float xGrav = 7;
+    private static final float xGrav = 12;
     public static final Vector2 gravity = new Vector2(xGrav, -9.807f);
     private static int levelWidth;
     private float generationRandThresh;
@@ -343,7 +343,7 @@ public class GameScreen implements Screen {
                 int padding = 8;
                 
                 float x = 0;
-                float y = rh * 0.5f;
+                float y = 0;
                 int w = levelWidth;
                 float h = MathUtils.random(rh * 0.5f, rh);
                 
@@ -362,6 +362,7 @@ public class GameScreen implements Screen {
         updatePlayer(delta);
         checkForCollisions();
         updateCamera();
+        
         battle.update(delta);
         
         generationRandThresh += 0.000001f;

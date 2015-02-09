@@ -30,6 +30,10 @@ public abstract class DynamicGameObject extends GameObject {
         addPos(vel.x, vel.y);
     }
     
+    public void setVelX(float velX) {
+        this.velX = velX;
+    }
+    
     public void setVel(float velX, float velY) {
         this.velX = velX;
         this.velY = velY;

@@ -92,7 +92,7 @@ public class Factory {
     }
     
     public static Bomb createBomb(float x, float y) {
-        return new Bomb(bombVelX, bombVelY, x, y);
+        return new Bomb(bombDamage, bombVelX, bombVelY, x, y);
     }
     
     public static TankShell createTankShell(float x, float y) {

@@ -35,11 +35,11 @@ public class Battle {
                 
                 
                 if(u.getBoundingRectangle().overlaps(enemyArmy.getBase().getBoundingRectangle())) {
-                    enemyArmy.getBase().loseLife(0.025f);                    System.out.println("losing");
+                    enemyArmy.getBase().loseLife(0.025f);                  
                 }
                 
                 if(u1.getBoundingRectangle().overlaps(myArmy.getBase().getBoundingRectangle())) {
-                    myArmy.getBase().loseLife(0.025f);                    System.out.println("losing");
+                    myArmy.getBase().loseLife(0.025f);                
                 }
                 
                 if(MathUtil.dst(u.getX(), u.getY(), u1.getX(), u1.getY()) <= u.getRange()) {
@@ -69,7 +69,6 @@ public class Battle {
                     if(!b.isAlive()) {
                         if(b.getBoundingRectangle().overlaps(enemyArmy.getBase().getBoundingRectangle())) {
                             enemyArmy.getBase().loseLife(1);
-                            System.out.println("life: " + enemyArmy.getBase().getHealth());
                             b.triggerExplosion();
                         }
     
@@ -98,10 +97,10 @@ public class Battle {
                         Bullet b = it.next();
                         
                         if(b.getBoundingRectangle().overlaps(u1.getBoundingRectangle())) {
-                            u1.takeDamage(100);
+                            u1.takeDamage(s.getDamage());
                             Factory.bulletPool.free(b);
                             it.remove();
-                            u.moving = true;
+                            s.moving = true;
                         }
                     }
                 }
@@ -117,10 +116,10 @@ public class Battle {
                         Bullet b = it.next();
                         
                         if(b.getBoundingRectangle().overlaps(u.getBoundingRectangle())) {
-                            u.takeDamage(100);
+                            u.takeDamage(s.getDamage());
                             Factory.bulletPool.free(b);
                             it.remove();
-                            u1.moving = true;
+                            s.moving = true;
                         }
                     }
                 }
