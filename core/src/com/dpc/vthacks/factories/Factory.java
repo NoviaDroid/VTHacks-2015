@@ -1,7 +1,6 @@
 package com.dpc.vthacks.factories;
 
 import com.badlogic.gdx.utils.Pool;
-import com.dpc.vthacks.App;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.infantry.Bullet;
 import com.dpc.vthacks.infantry.Soldier;
@@ -100,36 +99,36 @@ public class Factory {
     }
     
     public static Soldier createEnemySoldier() {
-        return new Soldier(Assets.enemySoldierFrames, enemySoldierRange, enemySoldierDamage, enemySoldierHealth, enemySoldierVelX, enemySoldierVelY, GameScreen.battle.enemyArmy.getBase().getX(), GameScreen.battle.enemyArmy.getBase().getY());
+        return new Soldier(Assets.getEnemySoldierFrames(), enemySoldierRange, enemySoldierDamage, enemySoldierHealth, enemySoldierVelX, enemySoldierVelY, GameScreen.battle.getEnemyArmy().getBase().getX(), GameScreen.battle.getEnemyArmy().getBase().getY());
     }
     
     public static Plane createPlayer(float x, float y) {
         Plane plane = new Plane(Assets.plane, playerRange, playerDamage, playerHealth, playerVelX, playerVelY, x, y);
-        plane.parentArmy = GameScreen.battle.myArmy;
+        plane.setParentArmy(GameScreen.battle.getMyArmy());
         return plane;
     }
     
     public static Tank createTank(float x, float y) {
-        Tank t = new Tank(Assets.tankFrames, tankRange, tankDamage, tankHealth, tankVelX, tankVelY, x, y);
-        t.parentArmy = GameScreen.battle.myArmy;
+        Tank t = new Tank(Assets.getTankFrames(), tankRange, tankDamage, tankHealth, tankVelX, tankVelY, x, y);
+        t.setParentArmy(GameScreen.battle.getMyArmy());
         return t;
     }
     
     public static Tank createEnemyTank() {
-        Tank t = new Tank(Assets.enemyTankFrames, enemyTankRange, enemyTankDamage, enemyTankHealth, enemyTankVelX, enemyTankVelY, GameScreen.battle.enemyArmy.getBase().getX(), GameScreen.battle.enemyArmy.getBase().getY());
-        t.parentArmy = GameScreen.battle.enemyArmy;
+        Tank t = new Tank(Assets.getEnemyTankFrames(), enemyTankRange, enemyTankDamage, enemyTankHealth, enemyTankVelX, enemyTankVelY, GameScreen.battle.getEnemyArmy().getBase().getX(), GameScreen.battle.getEnemyArmy().getBase().getY());
+        t.setParentArmy(GameScreen.battle.getEnemyArmy());
         return t;
     }
     
     public static Plane createEnemyPlane(float x, float y) {
         Plane t = new Plane(Assets.plane, enemyRange, enemyDamage, enemyHealth, enemyVelX, enemyVelY, x, y);
-        t.parentArmy = GameScreen.battle.enemyArmy;
+        t.setParentArmy(GameScreen.battle.getEnemyArmy());
         return t;
     }
     
     public static Soldier createSoldier(float x, float y) {
-        Soldier s =  new Soldier(Assets.soldierFrames, soldierRange, soldierDamage, soldierHealth, soldierVelX, soldierVelY, x, y);
-        s.parentArmy = GameScreen.battle.myArmy;
+        Soldier s =  new Soldier(Assets.getSoldierFrames(), soldierRange, soldierDamage, soldierHealth, soldierVelX, soldierVelY, x, y);
+        s.setParentArmy(GameScreen.battle.getMyArmy());
         return s;
     }
     

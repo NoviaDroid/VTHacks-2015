@@ -1,6 +1,7 @@
 package com.dpc.vthacks.infantry;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.dpc.vthacks.App;
 import com.dpc.vthacks.gameobject.DynamicGameObject;
 

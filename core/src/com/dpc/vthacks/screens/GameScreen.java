@@ -5,9 +5,11 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.input.GestureDetector.GestureListener;
 import com.badlogic.gdx.math.MathUtils;
@@ -32,6 +34,7 @@ import com.dpc.vthacks.data.Sounds;
 import com.dpc.vthacks.factories.Factory;
 import com.dpc.vthacks.infantry.Soldier;
 import com.dpc.vthacks.infantry.Tank;
+import com.dpc.vthacks.infantry.Unit;
 import com.dpc.vthacks.input.InputSystem;
 import com.dpc.vthacks.plane.Bomb;
 import com.dpc.vthacks.plane.Plane;
@@ -85,14 +88,14 @@ public class GameScreen implements Screen {
         road.setTexWidth(levelWidth);
         road.setTexHeight(rh * 5);
         
-        skyline = new Sprite[Assets.skylines.length];
+        skyline = new Sprite[Assets.getSkylines().length];
         
-        skyline[0] = new Sprite(Assets.skylines[0]);
+        skyline[0] = new Sprite(Assets.getSkylines()[0]);
         skyline[0].setX(0);
         skyline[0].setY(road.getY() + road.getHeight());
         skyline[0].setSize(levelWidth, AppData.height);
 
-        skyline[1] = new Sprite(Assets.skylines[1]);
+        skyline[1] = new Sprite(Assets.getSkylines()[1]);
         skyline[1].setX(0);
         skyline[1].setY(road.getY() + road.getHeight());
         skyline[1].setSize(levelWidth, AppData.height);
@@ -104,11 +107,11 @@ public class GameScreen implements Screen {
         float lastBuildingEnd = 0;
         
         for(int i = 0; i < 30; i++) {
-            Sprite s = new Sprite(Assets.buildings[MathUtils.random(Assets.buildings.length - 1)]);
+            Sprite s = new Sprite(Assets.getBuildings()[MathUtils.random(Assets.getBuildings().length - 1)]);
             s.setX(lastBuildingEnd);
             s.setY(road.getY() + road.getHeight());
-            s.setSize(Assets.buildings[i % Assets.buildings.length].getRegionWidth() * 3,
-                      Assets.buildings[i % Assets.buildings.length].getRegionHeight() * 3);
+            s.setSize(Assets.getBuildings()[i % Assets.getBuildings().length].getRegionWidth() * 3,
+                      Assets.getBuildings()[i % Assets.getBuildings().length].getRegionHeight() * 3);
             
             backgroundElements.add(s);
             
@@ -131,6 +134,9 @@ public class GameScreen implements Screen {
                 else if(keycode == Keys.D) {
                     gameCamera.position.x += 100;
                 }
+                else if(keycode == Keys.UP) {
+                    InputSystem.dispatchEvent(InputSystem.TOUCH_DOWN);
+                }
                 
                 return false;
             }
@@ -139,6 +145,9 @@ public class GameScreen implements Screen {
             public boolean keyUp(int keycode) {
                 if(keycode == Keys.B) {
                     InputSystem.dispatchEvent(InputSystem.B_UP);
+                }
+                else if(keycode == Keys.UP) {
+                    InputSystem.dispatchEvent(InputSystem.TOUCH_UP);    
                 }
                 
                 return false;
@@ -229,10 +238,10 @@ public class GameScreen implements Screen {
         battle = new Battle(new Army(playerBase), new Army(enemyBase));
         
         
-        battle.player = Factory.createPlayer((AppData.width * 0.5f) - (Assets.plane.getRegionWidth() * 0.5f), 
-                                      (AppData.height * 0.5f) - (Assets.plane.getRegionHeight() * 0.5f));
+        battle.setPlayer(Factory.createPlayer((AppData.width * 0.5f) - (Assets.plane.getRegionWidth() * 0.5f), 
+                                      (AppData.height * 0.5f) - (Assets.plane.getRegionHeight() * 0.5f)));
         
-        InputSystem.register(battle.player);
+        InputSystem.register(battle.getPlayer());
         
         TextButtonStyle prop = new TextButtonStyle();
         prop.font = new BitmapFont();
@@ -247,7 +256,7 @@ public class GameScreen implements Screen {
                 Tank t = Factory.tankPool.obtain();
 
                 
-                battle.myArmy.add(t);
+                battle.getMyArmy().add(t);
                 return false;
             }
         });
@@ -259,7 +268,7 @@ public class GameScreen implements Screen {
         soldierButton.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                battle.myArmy.add(Factory.soldierPool.obtain());
+                battle.getMyArmy().add(Factory.soldierPool.obtain());
                 return false;
             }
         });
@@ -275,38 +284,38 @@ public class GameScreen implements Screen {
         s.setX(15000);
         s.setY(15000);
         
-        battle.myArmy.add(s);
+        battle.getMyArmy().add(s);
     }
 
     private void updatePlayer(float delta) {
      // If at the edge of the screen, turn around
-        if(battle.player.getX() + battle.player.getWidth() >= levelWidth) {
-            battle.player.setX(levelWidth - battle.player.getWidth() - 1);
+        if(battle.getPlayer().getX() + battle.getPlayer().getWidth() >= levelWidth) {
+            battle.getPlayer().setX(levelWidth - battle.getPlayer().getWidth() - 1);
             
             // Flip the plane
             Assets.plane.flip(true, false);
-            battle.player.setRegion(Assets.plane);
+            battle.getPlayer().setRegion(Assets.plane);
             
             // Now set the gravity on the x axis
             gravity.x = -xGrav;
         }
-        else if(battle.player.getX() <= 0) {
-            battle.player.setX(1);
+        else if(battle.getPlayer().getX() <= 0) {
+            battle.getPlayer().setX(1);
             
             // Flip the plane
             Assets.plane.flip(true, false);
-            battle.player.setRegion(Assets.plane);
+            battle.getPlayer().setRegion(Assets.plane);
             
             // Now set the gravity on the x axis
             gravity.x = xGrav;
         }
         
-        battle.player.applyVel(gravity); // Apply gravity to the player
-        battle.player.update(delta);
+        battle.getPlayer().applyVel(gravity); // Apply gravity to the player
+        battle.getPlayer().update(delta);
     }
     
     private void updateCamera() {
-        gameCamera.position.set(battle.player.getX(), gameCamera.position.y, 0);
+        gameCamera.position.set(battle.getPlayer().getX(), gameCamera.position.y, 0);
         
         boolean wasClamped = false;
         
@@ -335,11 +344,11 @@ public class GameScreen implements Screen {
     }
     
     public void checkForCollisions() {
-        if(battle.player.getBoundingRectangle().overlaps(road)) {
-            battle.player.setY(road.getY() + road.getHeight());
+        if(battle.getPlayer().getBoundingRectangle().overlaps(road)) {
+            battle.getPlayer().setY(road.getY() + road.getHeight());
         }
         
-        for(Bomb b : battle.player.getBombs()) {
+        for(Bomb b : battle.getPlayer().getBombs()) {
             if(road.overlaps(b.getBoundingRectangle())) {
                 b.setY(road.getY() + road.getHeight());
                 b.triggerExplosion();
@@ -356,10 +365,10 @@ public class GameScreen implements Screen {
             }
         }
         
-        if(battle.player.getBoundingRectangle().overlaps(road)) {
+        if(battle.getPlayer().getBoundingRectangle().overlaps(road)) {
             Bomb b = Factory.bombPool.obtain();
-            b.setX(battle.player.getX());
-            b.setY(battle.player.getY());
+            b.setX(battle.getPlayer().getX());
+            b.setY(battle.getPlayer().getY());
         }
     }
     
@@ -373,16 +382,19 @@ public class GameScreen implements Screen {
         generationRandThresh += 0.000001f;
         
         if(Math.random() < generationRandThresh) {
-            battle.enemyArmy.add(Factory.enemyTankPool.obtain());
+            battle.getEnemyArmy().add(Factory.enemyTankPool.obtain());
+            battle.getMyArmy().add(Factory.tankPool.obtain());
         }
         
         if(Math.random() < generationRandThresh) {
             Soldier s = (Factory.enemySoldierPool.obtain());
-            s.parentArmy = battle.enemyArmy;
-            battle.enemyArmy.add(s);
+            s.setParentArmy(battle.getEnemyArmy());
+            battle.getEnemyArmy().add(s);
+            
+            Soldier sa = (Factory.soldierPool.obtain());
+            s.setParentArmy(battle.getMyArmy());
+            battle.getMyArmy().add(sa);
         }
-        
-       // logger.log();
     }
     
     @Override
@@ -404,7 +416,7 @@ public class GameScreen implements Screen {
         
         road.render();
         
-        battle.player.render();
+        battle.getPlayer().render();
 
         battle.render();
         
@@ -412,65 +424,60 @@ public class GameScreen implements Screen {
 
         stage.draw();
         
-//      App.debugRenderer.setProjectionMatrix(gameCamera.combined);
-//      App.debugRenderer.setColor(Color.RED);
-//      App.debugRenderer.begin(ShapeType.Line);
-//        
-//      for(Unit u : battle.myArmy.getUnits()) {
-//              App.debugRenderer.rect(u.getX(),
-//            u.getY(),
-//            u.getRange(), 
-//            u.getRange());
-//      }
-//      
-//      App.debugRenderer.end();
+       App.debugRenderer.setProjectionMatrix(gameCamera.combined);
+       App.debugRenderer.setColor(Color.RED);
+       App.debugRenderer.begin(ShapeType.Line);
         
-//        App.debugRenderer.setProjectionMatrix(gameCamera.combined);
-//        App.debugRenderer.setColor(Color.RED);
-//        App.debugRenderer.begin(ShapeType.Line);
-//        
-//        App.debugRenderer.rect(player.getBoundingRectangle().x,
-//                               player.getBoundingRectangle().y,
-//                               player.getBoundingRectangle().width, 
-//                               player.getBoundingRectangle().height);
-//        
-//        App.debugRenderer.rect(road.x,
-//                               road.y,
-//                               road.width,
-//                               road.height);
-//        
-//        for(Bomb r : player.getBombs()) {
-//            App.debugRenderer.rect(r.getBoundingRectangle().x,
-//                                   r.getBoundingRectangle().y,
-//                                   r.getBoundingRectangle().width,
-//                                   r.getBoundingRectangle().height);
-//        }
-//        
-//        for(Unit r : battle.enemyArmy.getUnits()) {
-//            App.debugRenderer.rect(r.getBoundingRectangle().x,
-//                    r.getBoundingRectangle().y,
-//                    r.getBoundingRectangle().width,
-//                    r.getBoundingRectangle().height);
-//        }
-//        
-//        for(Unit r : battle.myArmy.getUnits()) {
-//            App.debugRenderer.rect(r.getBoundingRectangle().x,
-//                    r.getBoundingRectangle().y,
-//                    r.getBoundingRectangle().width,
-//                    r.getBoundingRectangle().height);
-//        }
-//        
-//        App.debugRenderer.rect(battle.myArmy.getBase().getBoundingRectangle().x,
-//                battle.myArmy.getBase().getBoundingRectangle().y,
-//                battle.myArmy.getBase().getBoundingRectangle().width,
-//                battle.myArmy.getBase().getBoundingRectangle().height);
-//        
-//        App.debugRenderer.rect(battle.enemyArmy.getBase().getBoundingRectangle().x,
-//                battle.enemyArmy.getBase().getBoundingRectangle().y,
-//                battle.enemyArmy.getBase().getBoundingRectangle().width,
-//                battle.enemyArmy.getBase().getBoundingRectangle().height);
-//        
-//        App.debugRenderer.end();
+      for(Unit u : battle.getMyArmy().getUnits()) {
+              App.debugRenderer.rect(u.getX(),
+            u.getY(),
+            u.getRange(), 
+            u.getRange());
+      }
+      
+        App.debugRenderer.end();
+
+        App.debugRenderer.setProjectionMatrix(gameCamera.combined);
+        App.debugRenderer.setColor(Color.RED);
+        App.debugRenderer.begin(ShapeType.Line);
+
+        App.debugRenderer.rect(battle.getPlayer().getBoundingRectangle().x,
+                battle.getPlayer().getBoundingRectangle().y,
+                battle.getPlayer().getBoundingRectangle().width,
+                battle.getPlayer().getBoundingRectangle().height);
+
+        App.debugRenderer.rect(road.x, road.y, road.width, road.height);
+
+        for (Bomb r : battle.getPlayer().getBombs()) {
+            App.debugRenderer.rect(r.getBoundingRectangle().x,
+                    r.getBoundingRectangle().y, r.getBoundingRectangle().width,
+                    r.getBoundingRectangle().height);
+        }
+
+        for (Unit r : battle.getMyArmy().getUnits()) {
+            App.debugRenderer.rect(r.getBoundingRectangle().x,
+                    r.getBoundingRectangle().y, r.getBoundingRectangle().width,
+                    r.getBoundingRectangle().height);
+        }
+
+        for (Unit r : battle.getEnemyArmy().getUnits()) {
+            App.debugRenderer.rect(r.getBoundingRectangle().x,
+                    r.getBoundingRectangle().y, r.getBoundingRectangle().width,
+                    r.getBoundingRectangle().height);
+        }
+        
+        App.debugRenderer.rect(
+                battle.getMyArmy().getBase().getBoundingRectangle().x, battle.getMyArmy()
+                        .getBase().getBoundingRectangle().y, battle.getMyArmy()
+                        .getBase().getBoundingRectangle().width, battle.getMyArmy()
+                        .getBase().getBoundingRectangle().height);
+        App.debugRenderer.rect(battle.getEnemyArmy().getBase()
+                .getBoundingRectangle().x, battle.getEnemyArmy().getBase()
+                .getBoundingRectangle().y, battle.getEnemyArmy().getBase()
+                .getBoundingRectangle().width, battle.getEnemyArmy().getBase()
+                .getBoundingRectangle().height);
+
+        App.debugRenderer.end();
     }
 
     public static void triggerGameOver() {
@@ -501,7 +508,7 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         Assets.unloadGameTextures();
-        battle.player.dispose();
+        battle.getPlayer().dispose();
         stage.dispose();
         battle.dispose();
         Sounds.dispose();
@@ -512,6 +519,6 @@ public class GameScreen implements Screen {
     }
 
     public static Plane getPlayer() {
-        return battle.player;
+        return battle.getPlayer();
     }
 }

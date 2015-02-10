@@ -6,7 +6,7 @@ import com.dpc.vthacks.App;
 import com.dpc.vthacks.gameobject.DynamicGameObject;
 
 public class TankShell extends DynamicGameObject implements Poolable {
-    public Tank parentTank;
+    private Tank parentTank;
     
     public TankShell(TextureRegion region, float velX, float velY, float x, float y) {
         super(region, velX, velY, x, y);
@@ -24,6 +24,14 @@ public class TankShell extends DynamicGameObject implements Poolable {
 
     @Override
     public void reset() {
+    }
+
+    public Tank getParentTank() {
+        return parentTank;
+    }
+
+    public void setParentTank(Tank parentTank) {
+        this.parentTank = parentTank;
     }
  
 }
