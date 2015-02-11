@@ -10,65 +10,63 @@ import com.dpc.vthacks.infantry.Soldier;
 import com.dpc.vthacks.infantry.Tank;
 import com.dpc.vthacks.infantry.Unit;
 import com.dpc.vthacks.plane.Bomb;
+import com.dpc.vthacks.plane.Plane;
 import com.dpc.vthacks.screens.GameScreen;
 
 public class Battle {
-    public Army myArmy, enemyArmy;
+    private Army myArmy, enemyArmy;
+    private Plane player;
     
     public Battle(Army myArmy, Army enemyArmy) {
-        this.myArmy = myArmy;
-        this.enemyArmy = enemyArmy;
+        this.setMyArmy(myArmy);
+        this.setEnemyArmy(enemyArmy);
     }
     
     
     public void update(float delta) {
-        myArmy.update(delta);
-        enemyArmy.update(delta);
+        getMyArmy().update(delta);
+        getEnemyArmy().update(delta);
         
-        if(myArmy.getBase().getHealth() <= 0 || enemyArmy.getBase().getHealth() <= 0) {
+        if(getMyArmy().getBase().getHealth() <= 0 || getEnemyArmy().getBase().getHealth() <= 0) {
             GameScreen.triggerGameOver();
         }
-
+        
+        checkCollisions();
+    }
+    
+    private void checkCollisions() {
         // TODO: DONT cheat :D . Take out the hidden unit
-        for(Unit u : myArmy.getUnits()) {
-            for(Unit u1 : enemyArmy.getUnits()) {
-                
-                
-                if(u.getBoundingRectangle().overlaps(enemyArmy.getBase().getBoundingRectangle())) {
-                    enemyArmy.getBase().loseLife(0.025f);                  
-                }
-                
-                if(u1.getBoundingRectangle().overlaps(myArmy.getBase().getBoundingRectangle())) {
-                    myArmy.getBase().loseLife(0.025f);                
-                }
-                
-                if(MathUtil.dst(u.getX(), u.getY(), u1.getX(), u1.getY()) <= u.getRange()) {
-                    if(u.moving) {
-                        u.stop();                    
-                        u.attack(u1);
-                        u.moving = true;
-                    }
+        for(Unit u : getMyArmy().getUnits()) {
+            for(Unit u1 : getEnemyArmy().getUnits()) {
 
+                if(MathUtil.dst(u.getX(), u.getY(), u1.getX(), u1.getY()) <= u.getRange()) {
+                    u.setMoving(false);                    
+                    
+                   u.attack(u1);
+                    u.setAttacking(true);
+                }
+                else {
+                    u.setMoving(true);
+                    u.setAttacking(false);
                 }
                 
-                if(MathUtil.dst(u.getX(), u.getY(), u1.getX(), u1.getY()) <= u1.getRange()) {
-                    if(u1.moving) {
-                        u1.stop();                    
-                        u1.attack(u);
-                        u1.moving = true;
-                    }
+                if(MathUtil.dst(u1.getX(), u1.getY(), u.getX(), u.getY()) <= u1.getRange()) {
+                    u1.setMoving(false);                    
                     
+                    u1.attack(u);
+                    u1.setAttacking(true);
+                }
+                else {
+                    u1.setMoving(true);
+                    u1.setAttacking(false);
                 }
                 
                 Array<Bomb> bombs = GameScreen.getPlayer().getBombs();
-                Iterator<Bomb> iterator = bombs.iterator();
                 
-                while(iterator.hasNext()) {
-                    Bomb b = iterator.next();
-                    
+                for(Bomb b : bombs) {
                     if(!b.isAlive()) {
-                        if(b.getBoundingRectangle().overlaps(enemyArmy.getBase().getBoundingRectangle())) {
-                            enemyArmy.getBase().loseLife(1);
+                        if(b.getBoundingRectangle().overlaps(getEnemyArmy().getBase().getBoundingRectangle())) {
+                            getEnemyArmy().getBase().loseLife(1);
                             b.triggerExplosion();
                         }
     
@@ -100,7 +98,6 @@ public class Battle {
                             u1.takeDamage(s.getDamage());
                             Factory.bulletPool.free(b);
                             it.remove();
-                            s.moving = true;
                         }
                     }
                 }
@@ -119,7 +116,6 @@ public class Battle {
                             u.takeDamage(s.getDamage());
                             Factory.bulletPool.free(b);
                             it.remove();
-                            s.moving = true;
                         }
                     }
                 }
@@ -127,13 +123,11 @@ public class Battle {
                 if(u instanceof Tank) {
                     Tank t = (Tank) u;
                     
-                    if(t.shell != null) {
-                        if (t.shell.getBoundingRectangle().overlaps(u1.getBoundingRectangle())) {
+                    if(t.getShell() != null) {
+                        if (t.getShell().getBoundingRectangle().overlaps(u1.getBoundingRectangle())) {
                             
-                                t.shell.triggerExplosion();
-                                u1.takeDamage(u);
-                                u.moving = true;
-                            
+                            //t.shell.triggerExplosion();
+                            u1.takeDamage(u);
                         }
                     }
                 }
@@ -141,12 +135,11 @@ public class Battle {
                 if(u1 instanceof Tank) {
                     Tank t = (Tank) u1;
                     
-                    if(t.shell != null) {
-                        if (t.shell.getBoundingRectangle().overlaps(u.getBoundingRectangle())) {
+                    if(t.getShell() != null) {
+                        if (t.getShell().getBoundingRectangle().overlaps(u.getBoundingRectangle())) {
                   
-                                t.shell.triggerExplosion();
+                                //t.shell.triggerExplosion();
                                 u.takeDamage(u1);
-                                u1.moving = true;
                             
                         }
                     }
@@ -156,12 +149,42 @@ public class Battle {
     }
     
     public void render() {
-        myArmy.render();
-        enemyArmy.render();
+        getMyArmy().render();
+        getEnemyArmy().render();
     }
     
     public void dispose() {
-        myArmy.dispose();
-        enemyArmy.dispose();
+        getMyArmy().dispose();
+        getEnemyArmy().dispose();
+    }
+
+
+    public Plane getPlayer() {
+        return player;
+    }
+
+
+    public void setPlayer(Plane player) {
+        this.player = player;
+    }
+
+
+    public Army getMyArmy() {
+        return myArmy;
+    }
+
+
+    public void setMyArmy(Army myArmy) {
+        this.myArmy = myArmy;
+    }
+
+
+    public Army getEnemyArmy() {
+        return enemyArmy;
+    }
+
+
+    public void setEnemyArmy(Army enemyArmy) {
+        this.enemyArmy = enemyArmy;
     }
 }

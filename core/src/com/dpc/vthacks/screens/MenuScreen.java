@@ -19,7 +19,7 @@ public class MenuScreen implements Screen {
     
     @Override
     public void show() {
-        Assets.loadSkins();
+        Assets.loadMenu();
         
         camera = new GameCamera();
         
@@ -56,7 +56,7 @@ public class MenuScreen implements Screen {
 
     @Override
     public void resume() {
-        Assets.loadSkins();
+        Assets.loadMenu();
     }
 
     @Override

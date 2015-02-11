@@ -7,15 +7,15 @@ import com.dpc.vthacks.gameobject.DynamicGameObject;
 
 public abstract class Unit extends DynamicGameObject {
     private float damage, health, range;
-    public boolean moving;
-    public Army parentArmy;
+    private boolean isAttacking, moving;
+    private Army parentArmy;
     
     public Unit(TextureRegion region, float range, float damage, float health, float velX, float velY, float x, float y) {
         super(region, velX, velY, x, y);
         this.range = range;
         this.health = health;
         this.damage = damage;
-        moving = true;
+        setMoving(true);
     }
 
     @Override
@@ -28,14 +28,18 @@ public abstract class Unit extends DynamicGameObject {
     
     public abstract void takeDamage(Unit attacker);
     
-    public void stop() {
-        moving = false;
-    }
-    
     public float getRange() {
         return range;
     }
 
+    public void setAttacking(boolean isAttacking) {
+        this.isAttacking = isAttacking;
+    }
+    
+    public boolean isAttacking() {
+        return isAttacking;
+    }
+    
     public void takeDamage(float damage) {
         setHealth(getHealth() - damage);
     }
@@ -62,5 +66,21 @@ public abstract class Unit extends DynamicGameObject {
 
     public boolean inRange(Unit u1) {
         return MathUtil.dst(getX(), getY(), u1.getX(), u1.getY()) <= range;
+    }
+
+    public Army getParentArmy() {
+        return parentArmy;
+    }
+
+    public void setParentArmy(Army parentArmy) {
+        this.parentArmy = parentArmy;
+    }
+
+    public boolean isMoving() {
+        return moving;
+    }
+
+    public void setMoving(boolean moving) {
+        this.moving = moving;
     }
 }

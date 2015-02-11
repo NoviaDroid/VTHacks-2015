@@ -23,10 +23,10 @@ public class Bomb extends DynamicGameObject implements Poolable {
         
         N_WIDTH = getRegionWidth();
         N_HEIGHT = getRegionHeight();
-        EXP_WIDTH = Assets.explosionFrames[0].getRegionWidth() * 5;
-        EXP_HEIGHT = Assets.explosionFrames[0].getRegionHeight() * 5;
+        EXP_WIDTH = Assets.getExplosionFrames()[0].getRegionWidth() * 5;
+        EXP_HEIGHT = Assets.getExplosionFrames()[0].getRegionHeight() * 5;
         
-        explosion = new SpriteAnimation(Assets.explosionFrames, 0.1f);
+        explosion = new SpriteAnimation(Assets.getExplosionFrames(), 0.1f);
     }
 
     public boolean isAlive() {
@@ -72,14 +72,14 @@ public class Bomb extends DynamicGameObject implements Poolable {
         setRegion(Assets.bomb);
         setRotation(0);
         setPosition(0, 0);
-        explosion = new SpriteAnimation(Assets.explosionFrames, 0.1f);
+        explosion = new SpriteAnimation(Assets.getExplosionFrames(), 0.1f);
         setRotation(0);
         setSize(N_WIDTH, N_HEIGHT);
     }
     
     public void triggerExplosion() {
         if(!isDead) {
-            Sounds.explosion.play();
+            Sounds.playExplosion();
             setRotation(0);
             setPosition(getX() - (getWidth() * 0.5f), getY() - (getHeight() * 0.5f));
         }

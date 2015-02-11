@@ -2,9 +2,7 @@ package com.dpc.vthacks.plane;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Pool;
 import com.dpc.vthacks.App;
-import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.factories.Factory;
 import com.dpc.vthacks.infantry.Unit;
 import com.dpc.vthacks.input.InputListener;
@@ -12,14 +10,10 @@ import com.dpc.vthacks.input.InputSystem;
 
 public class Plane extends Unit implements InputListener {
     private static final float PLUMMIT_TIME = 0.05f; // If no positive force applied in this time, plane will plummit
+    private static final int FALL_ROTATION = -5, RISE_ROTATION = 15, FALL_DELTA_FACTOR = 4, RISE_DELTA_FACTOR = 2;
     private boolean rising;
-    private static final int FALL_ROTATION = -5, 
-                             RISE_ROTATION = 15, 
-                             FALL_DELTA_FACTOR = 4, 
-                             RISE_DELTA_FACTOR = 2;
+    private int targetRotation;
     private float plummitTimer;
-    private int ammo;
-    private int targetRotation; // Current rotation that is being lerped to
     private Array<Bomb> bombs;
     
     public Plane(TextureRegion region, float range, float damage, float health, float velX, float velY, float x, float y) {
@@ -82,15 +76,9 @@ public class Plane extends Unit implements InputListener {
             
             bombs.add(b);
         }
-        else if(event == InputSystem.B_UP) {
-
-        }
         else if(event == InputSystem.TOUCH_UP) {
             rising = false;
             targetRotation = FALL_ROTATION;
-        }
-        else if(event == InputSystem.TOUCH_DRAGGED) {
-            
         }
     }
     

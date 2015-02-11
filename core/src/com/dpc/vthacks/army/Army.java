@@ -47,7 +47,7 @@ public class Army {
         for(Unit u : units) {
             u.update(delta);
             
-            if(u.moving) {
+            if(u.isMoving()) {
                 u.addVel();
             }
         }

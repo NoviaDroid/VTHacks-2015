@@ -5,7 +5,7 @@
     "damage": "30",
     "velX": "6",
     "velY": "0",
-    "range": "400"
+    "range": "600"
   }],
   
   "enemy plane": [{
@@ -26,10 +26,10 @@
   
   "soldier": [{
     "cost": "50",
-    "damage": "15",
-    "health": "100",
-    "range": "15",
-    "velX": "6",
+    "damage": "1",
+    "health": "50",
+    "range": "150",
+    "velX": "3",
     "velY": "0"
   }],
   
@@ -40,16 +40,16 @@
   }],
   
   "tank shell": [{
-  	"velX": "15",
+  	"velX": "50",
   	"velY": "14"
   }],
   
   "enemy soldier": [{
-  	"velX": "-4",
+  	"velX": "-3",
   	"velY": "0",
-  	"damage": "12",
-  	"range": "11",
-  	"health": "100"
+  	"damage": "1",
+  	"range": "150",
+  	"health": "50"
   }],
   
   "enemy tank": [{

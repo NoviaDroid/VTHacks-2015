@@ -26,7 +26,7 @@ public class Soldier extends Unit {
         setRegion(animation.update(delta));
 
         if(getHealth() <= 0) {
-            parentArmy.getUnits().removeValue(this, false);
+            getParentArmy().getUnits().removeValue(this, false);
         }
         
         for(Bullet b : bullets) {
@@ -38,23 +38,23 @@ public class Soldier extends Unit {
     public void render() {
         draw(App.batch);
         
-        for(Bullet b : bullets) {
-            b.render();
-        }
+//        for(Bullet b : bullets) {
+//            b.render();
+//        }
     }
 
     @Override
     public void attack(Unit enemy) {
-        Sounds.shot.play();
+        Sounds.playShot();
              
         Bullet bullet = Factory.bulletPool.obtain();
         bullet.setX(getX() + getWidth() * 0.5f);
         bullet.setY(getY() + getHeight() * 0.5f);
 
-        if(parentArmy.equals(GameScreen.battle.enemyArmy)) {
+        if(getParentArmy().equals(GameScreen.battle.getEnemyArmy())) {
             bullet.setVel(-20, 0);
         }
-        else if(parentArmy.equals(GameScreen.battle.myArmy)) {
+        else if(getParentArmy().equals(GameScreen.battle.getMyArmy())) {
             bullet.setVel(20, 0);
         }
         

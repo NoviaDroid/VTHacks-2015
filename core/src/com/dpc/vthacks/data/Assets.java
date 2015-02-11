@@ -10,64 +10,71 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class Assets {
     private static TextureAtlas skinAtlas, gameAtlas;
     public static TextureRegion plane, bomb, road, background, tankShell, menuBackground, enemyBase, playerBase, healthbar, bullet;
-    public static TextureRegion[] buildings;
-    public static TextureRegion[] skylines;
-    public static AtlasRegion[] tankFrames;
-    public static AtlasRegion[] soldierFrames;
-    public static AtlasRegion[] enemySoldierFrames;
-    public static AtlasRegion[] enemyTankFrames;
-    public static AtlasRegion[] explosionFrames;
+    private static TextureRegion[] buildings;
+    private static TextureRegion[] skylines;
+    private static AtlasRegion[] tankFrames;
+    private static AtlasRegion[] soldierFrames;
+    private static AtlasRegion[] enemySoldierFrames;
+    private static AtlasRegion[] enemyTankFrames;
+    private static AtlasRegion[] explosionFrames;
     
     public static void loadSkins() {
-       // skinAtlas = new TextureAtlas(Gdx.files.internal("textures/SkinPack.pack"));
+        skinAtlas = new TextureAtlas(Gdx.files.internal("textures/SkinPack.pack"));
+    }
+    
+    public static TextureAtlas getSkins() {
+        return skinAtlas;
+    }
+    
+    public static void loadMenu() {
         menuBackground = new TextureRegion(new Texture(Gdx.files.internal("textures/MenuScreen.png")));
     }
 
     public static void loadGameTextures(AssetManager manager) {
         gameAtlas = new TextureAtlas(Gdx.files.internal("textures/gameAtlas.pack"));
         
-        buildings = new TextureRegion[6];
+        setBuildings(new TextureRegion[6]);
         
-        skylines = new TextureRegion[2];
+        setSkylines(new TextureRegion[2]);
         
-        tankFrames = new AtlasRegion[3];
+        setTankFrames(new AtlasRegion[3]);
         
-        soldierFrames = new AtlasRegion[3];
+        setSoldierFrames(new AtlasRegion[3]);
         
-        enemySoldierFrames = new AtlasRegion[4];
+        setEnemySoldierFrames(new AtlasRegion[4]);
         
-        enemyTankFrames = new AtlasRegion[3];
+        setEnemyTankFrames(new AtlasRegion[3]);
         
-        explosionFrames = new AtlasRegion[5];
+        setExplosionFrames(new AtlasRegion[5]);
         
         for(int i = 0; i < 5; i++) {
-            explosionFrames[i] = gameAtlas.findRegion("Explosion" + (i + 1));
+            getExplosionFrames()[i] = gameAtlas.findRegion("Explosion" + (i + 1));
         }
         
         for(int i = 0; i < 5; i++) {
-            buildings[i] = gameAtlas.findRegion("building" + (i + 1));
+            getBuildings()[i] = gameAtlas.findRegion("building" + (i + 1));
         }
         
-        buildings[5] = gameAtlas.findRegion("Apartment");
+        getBuildings()[5] = gameAtlas.findRegion("Apartment");
         
         for(int i = 0; i < 2; i++) {
-            skylines[i] = gameAtlas.findRegion("skyline" + (i + 1));
+            getSkylines()[i] = gameAtlas.findRegion("skyline" + (i + 1));
         }
         
         for(int i = 0; i < 3; i++) {
-            tankFrames[i] = gameAtlas.findRegion("tank" + (i + 1));
+            getTankFrames()[i] = gameAtlas.findRegion("tank" + (i + 1));
         }
         
         for(int i = 0; i < 3; i++) {
-            soldierFrames[i] = gameAtlas.findRegion("troopRunning" + (i + 1));
+            getSoldierFrames()[i] = gameAtlas.findRegion("troopRunning" + (i + 1));
         }
         
         for(int i = 0; i < 4; i++) {
-            enemySoldierFrames[i] = gameAtlas.findRegion("ETroop Running" + (i + 1));
+            getEnemySoldierFrames()[i] = gameAtlas.findRegion("ETroop Running" + (i + 1));
         }
         
         for(int i = 0; i < 3; i++) {
-            enemyTankFrames[i] = gameAtlas.findRegion("ETank" + (i + 1));
+            getEnemyTankFrames()[i] = gameAtlas.findRegion("ETank" + (i + 1));
         }
 
         healthbar = gameAtlas.findRegion("healthbar");
@@ -99,28 +106,84 @@ public class Assets {
         bullet.getTexture().dispose();
         healthbar.getTexture().dispose();
         
-        for(TextureRegion t : explosionFrames) {
+        for(TextureRegion t : getExplosionFrames()) {
             t.getTexture().dispose();
         }
         
-        for(TextureRegion b : enemyTankFrames) {
+        for(TextureRegion b : getEnemyTankFrames()) {
             b.getTexture().dispose();
         }
         
-        for(TextureRegion b : soldierFrames) {
+        for(TextureRegion b : getSoldierFrames()) {
             b.getTexture().dispose();
         }
         
-        for(TextureRegion b : buildings) {
+        for(TextureRegion b : getBuildings()) {
             b.getTexture().dispose();
         }
         
-        for(TextureRegion s : skylines) {
+        for(TextureRegion s : getSkylines()) {
             s.getTexture().dispose();
         }
         
-        for(TextureRegion t : tankFrames) {
+        for(TextureRegion t : getTankFrames()) {
             t.getTexture().dispose();
         }
+    }
+
+    public static AtlasRegion[] getExplosionFrames() {
+        return explosionFrames;
+    }
+
+    public static void setExplosionFrames(AtlasRegion[] explosionFrames) {
+        Assets.explosionFrames = explosionFrames;
+    }
+
+    public static AtlasRegion[] getEnemyTankFrames() {
+        return enemyTankFrames;
+    }
+
+    public static void setEnemyTankFrames(AtlasRegion[] enemyTankFrames) {
+        Assets.enemyTankFrames = enemyTankFrames;
+    }
+
+    public static AtlasRegion[] getEnemySoldierFrames() {
+        return enemySoldierFrames;
+    }
+
+    public static void setEnemySoldierFrames(AtlasRegion[] enemySoldierFrames) {
+        Assets.enemySoldierFrames = enemySoldierFrames;
+    }
+
+    public static AtlasRegion[] getSoldierFrames() {
+        return soldierFrames;
+    }
+
+    public static void setSoldierFrames(AtlasRegion[] soldierFrames) {
+        Assets.soldierFrames = soldierFrames;
+    }
+
+    public static AtlasRegion[] getTankFrames() {
+        return tankFrames;
+    }
+
+    public static void setTankFrames(AtlasRegion[] tankFrames) {
+        Assets.tankFrames = tankFrames;
+    }
+
+    public static TextureRegion[] getSkylines() {
+        return skylines;
+    }
+
+    public static void setSkylines(TextureRegion[] skylines) {
+        Assets.skylines = skylines;
+    }
+
+    public static TextureRegion[] getBuildings() {
+        return buildings;
+    }
+
+    public static void setBuildings(TextureRegion[] buildings) {
+        Assets.buildings = buildings;
     }
 }
