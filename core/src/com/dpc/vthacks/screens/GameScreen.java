@@ -5,22 +5,18 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.input.GestureDetector.GestureListener;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.dpc.vthacks.App;
 import com.dpc.vthacks.GameCamera;
 import com.dpc.vthacks.Road;
@@ -34,7 +30,7 @@ import com.dpc.vthacks.data.Sounds;
 import com.dpc.vthacks.factories.Factory;
 import com.dpc.vthacks.infantry.Soldier;
 import com.dpc.vthacks.infantry.Tank;
-import com.dpc.vthacks.infantry.Unit;
+import com.dpc.vthacks.input.GameToolbar;
 import com.dpc.vthacks.input.InputSystem;
 import com.dpc.vthacks.plane.Bomb;
 import com.dpc.vthacks.plane.Plane;
@@ -53,7 +49,7 @@ public class GameScreen implements Screen {
     private Sprite background;
     private Sprite[] skyline;
     private FPSLogger logger;
-    private Stage stage;
+    private GameToolbar toolbar;
     public static Battle battle;
     
     public GameScreen() {
@@ -71,9 +67,7 @@ public class GameScreen implements Screen {
         Sounds.load();
         
         generationRandThresh = START_GEN_RAND_THRESH;
-        
-        stage = new Stage(new StretchViewport(AppData.width, AppData.height), App.batch);
-        
+
         gameCamera = new GameCamera();
         
         backgroundElements = new Array<Sprite>();
@@ -120,7 +114,49 @@ public class GameScreen implements Screen {
        
         InputSystem.initialize();
         
-        InputMultiplexer mplexer = new InputMultiplexer();
+        InputMultiplexer mplexer = new InputMultiplexer(); 
+               
+        gameCamera.position.y = road.getY();
+        
+        Base enemyBase = new Base(Assets.enemyBase);
+        enemyBase.setPosition(levelWidth - (Assets.playerBase.getRegionWidth() * 3), 25);
+        
+        Base playerBase = new Base(Assets.playerBase);
+        playerBase.setPosition(0, 25);
+        
+        battle = new Battle(new Army(playerBase), new Army(enemyBase));
+        
+        
+        battle.setPlayer(Factory.createPlayer((AppData.width * 0.5f) - (Assets.plane.getRegionWidth() * 0.5f), 
+                                      (AppData.height * 0.5f) - (Assets.plane.getRegionHeight() * 0.5f)));
+        
+        InputSystem.register(battle.getPlayer());
+        
+        toolbar = new GameToolbar() {
+            @Override
+            public void bombButtonTouchDown() {
+                InputSystem.dispatchEvent(InputSystem.B);
+            }
+            
+            @Override
+            public void strafeButtonTouchDown() {
+
+            }
+            
+            @Override
+            public void tankButtonTouchDown() {
+                Tank t = Factory.tankPool.obtain();
+
+                battle.getMyArmy().add(t);
+            }
+            
+            @Override
+            public void soldierButtonTouchDown() {
+                battle.getMyArmy().add(Factory.soldierPool.obtain());
+            }
+        };
+        
+        mplexer.addProcessor(toolbar.getStage());
         
         mplexer.addProcessor(new InputAdapter() {
             @Override
@@ -226,57 +262,6 @@ public class GameScreen implements Screen {
             }
             
         }));
-               
-        gameCamera.position.y = road.getY();
-        
-        Base enemyBase = new Base(Assets.enemyBase);
-        enemyBase.setPosition(levelWidth - (Assets.playerBase.getRegionWidth() * 3), 25);
-        
-        Base playerBase = new Base(Assets.playerBase);
-        playerBase.setPosition(0, 25);
-        
-        battle = new Battle(new Army(playerBase), new Army(enemyBase));
-        
-        
-        battle.setPlayer(Factory.createPlayer((AppData.width * 0.5f) - (Assets.plane.getRegionWidth() * 0.5f), 
-                                      (AppData.height * 0.5f) - (Assets.plane.getRegionHeight() * 0.5f)));
-        
-        InputSystem.register(battle.getPlayer());
-        
-        TextButtonStyle prop = new TextButtonStyle();
-        prop.font = new BitmapFont();
-        
-        TextButton tankButton = new TextButton("Tank", prop);
-  
-        tankButton.setPosition(0, 0);
-        
-        tankButton.addListener(new InputListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                Tank t = Factory.tankPool.obtain();
-
-                
-                battle.getMyArmy().add(t);
-                return false;
-            }
-        });
-        
-        TextButton soldierButton = new TextButton("Soldier", prop);
-        
-        soldierButton.setPosition(tankButton.getX() + tankButton.getWidth() + 5, 0);
-        
-        soldierButton.addListener(new InputListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                battle.getMyArmy().add(Factory.soldierPool.obtain());
-                return false;
-            }
-        });
-        
-        stage.addActor(tankButton);
-        stage.addActor(soldierButton);
-        
-        mplexer.addProcessor(stage);
         
         Gdx.input.setInputProcessor(mplexer);
         
@@ -421,8 +406,8 @@ public class GameScreen implements Screen {
         battle.render();
         
         App.batch.end();
-
-        stage.draw();
+        
+        toolbar.draw();
         
 //        App.debugRenderer.setProjectionMatrix(gameCamera.combined);
 //        App.debugRenderer.setColor(Color.GREEN);
@@ -521,7 +506,7 @@ public class GameScreen implements Screen {
     public void dispose() {
         Assets.unloadGameTextures();
         battle.getPlayer().dispose();
-        stage.dispose();
+        toolbar.dispose();
         battle.dispose();
         Sounds.dispose();
         
