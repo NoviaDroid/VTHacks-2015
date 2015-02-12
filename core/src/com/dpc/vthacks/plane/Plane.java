@@ -5,10 +5,8 @@ import com.badlogic.gdx.utils.Array;
 import com.dpc.vthacks.App;
 import com.dpc.vthacks.factories.Factory;
 import com.dpc.vthacks.infantry.Unit;
-import com.dpc.vthacks.input.InputListener;
-import com.dpc.vthacks.input.InputSystem;
 
-public class Plane extends Unit implements InputListener {
+public class Plane extends Unit {
     private static final float PLUMMIT_TIME = 0.05f; // If no positive force applied in this time, plane will plummit
     private static final int FALL_ROTATION = -5, RISE_ROTATION = 15, FALL_DELTA_FACTOR = 4, RISE_DELTA_FACTOR = 2;
     private boolean rising;
@@ -62,26 +60,29 @@ public class Plane extends Unit implements InputListener {
         
     }
     
-    @Override
-    public void onInputEvent(int event) {
-        if(event == InputSystem.TOUCH_DOWN) {
-            rising = true;
-            targetRotation = RISE_ROTATION;
-            plummitTimer = 0;
-        }
-        else if(event == InputSystem.B) {
-            Bomb b = Factory.bombPool.obtain();
-            b.setX(getX() + (getWidth() * 0.5f));
-            b.setY(getY());
-            
-            bombs.add(b);
-        }
-        else if(event == InputSystem.TOUCH_UP) {
-            rising = false;
-            targetRotation = FALL_ROTATION;
-        }
+    public void strafe() {
+        
     }
     
+    public void increaseElevation() {
+        rising = true;
+        targetRotation = RISE_ROTATION;
+        plummitTimer = 0;    
+    }
+    
+    public void releaseBomb() {
+        Bomb b = Factory.bombPool.obtain();
+        b.setX(getX() + (getWidth() * 0.5f));
+        b.setY(getY());
+        
+        bombs.add(b);
+    }
+    
+    public void decreaseElevation() {
+        rising = false;
+        targetRotation = FALL_ROTATION;
+    }
+   
     public Array<Bomb> getBombs() {
         return bombs;
     }

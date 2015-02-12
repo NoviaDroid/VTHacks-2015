@@ -1,21 +1,14 @@
 package com.dpc.vthacks.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.FPSLogger;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.input.GestureDetector;
-import com.badlogic.gdx.input.GestureDetector.GestureListener;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.utils.Array;
 import com.dpc.vthacks.App;
 import com.dpc.vthacks.GameCamera;
@@ -31,18 +24,19 @@ import com.dpc.vthacks.factories.Factory;
 import com.dpc.vthacks.infantry.Soldier;
 import com.dpc.vthacks.infantry.Tank;
 import com.dpc.vthacks.input.GameToolbar;
-import com.dpc.vthacks.input.InputSystem;
 import com.dpc.vthacks.plane.Bomb;
 import com.dpc.vthacks.plane.Plane;
 
 public class GameScreen implements Screen {
-    private static boolean gameOver;
-  
+    private static final float START_GEN_RAND_THRESH = 0.010f;
     private static final float xGrav = 12;
     public static final Vector2 gravity = new Vector2(xGrav, -9.807f);
+    
+    private static boolean gameOver;
+    public static Battle battle;
     private static int levelWidth;
     private float generationRandThresh;
-    private static final float START_GEN_RAND_THRESH = 0.010f;
+    
     private Road road;
     private Array<Sprite> backgroundElements;
     private GameCamera gameCamera;
@@ -50,7 +44,6 @@ public class GameScreen implements Screen {
     private Sprite[] skyline;
     private FPSLogger logger;
     private GameToolbar toolbar;
-    public static Battle battle;
     
     public GameScreen() {
         levelWidth = MathUtils.random(3400, 4200);
@@ -112,8 +105,6 @@ public class GameScreen implements Screen {
             lastBuildingEnd = s.getX() + s.getWidth();
         }
        
-        InputSystem.initialize();
-        
         InputMultiplexer mplexer = new InputMultiplexer(); 
                
         gameCamera.position.y = road.getY();
@@ -129,18 +120,16 @@ public class GameScreen implements Screen {
         
         battle.setPlayer(Factory.createPlayer((AppData.width * 0.5f) - (Assets.plane.getRegionWidth() * 0.5f), 
                                       (AppData.height * 0.5f) - (Assets.plane.getRegionHeight() * 0.5f)));
-        
-        InputSystem.register(battle.getPlayer());
-        
+
         toolbar = new GameToolbar() {
             @Override
             public void bombButtonTouchDown() {
-                InputSystem.dispatchEvent(InputSystem.B);
+                battle.getPlayer().releaseBomb();
             }
             
             @Override
             public void strafeButtonTouchDown() {
-
+                battle.getPlayer().strafe();
             }
             
             @Override
@@ -162,16 +151,7 @@ public class GameScreen implements Screen {
             @Override
             public boolean keyDown(int keycode) {
                 if(keycode == Keys.B) {
-                    InputSystem.dispatchEvent(InputSystem.B);
-                }
-                else if(keycode == Keys.A) {
-                    gameCamera.position.x -= 100;
-                }
-                else if(keycode == Keys.D) {
-                    gameCamera.position.x += 100;
-                }
-                else if(keycode == Keys.UP) {
-                    InputSystem.dispatchEvent(InputSystem.TOUCH_DOWN);
+                    battle.getPlayer().releaseBomb();
                 }
                 
                 return false;
@@ -179,89 +159,27 @@ public class GameScreen implements Screen {
             
             @Override
             public boolean keyUp(int keycode) {
-                if(keycode == Keys.B) {
-                    InputSystem.dispatchEvent(InputSystem.B_UP);
-                }
-                else if(keycode == Keys.UP) {
-                    InputSystem.dispatchEvent(InputSystem.TOUCH_UP);    
-                }
-                
                 return false;
             }
             
             @Override
             public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-                
+                battle.getPlayer().increaseElevation();
                 return false;
             }
 
             @Override
             public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-                InputSystem.dispatchEvent(InputSystem.TOUCH_UP);
-                
+                battle.getPlayer().decreaseElevation();
                 return false;
             }
 
             @Override
             public boolean touchDragged(int screenX, int screenY, int pointer) {
-                InputSystem.dispatchEvent(InputSystem.TOUCH_DRAGGED);
-                
+
                 return false;
             }
         });
-        
-        mplexer.addProcessor(new GestureDetector(20, 0.5f, 0.03f, 0.15f, new GestureListener() {
-
-            @Override
-            public boolean touchDown(float x, float y, int pointer, int button) {
-                
-                return false;
-            }
-
-            @Override
-            public boolean tap(float x, float y, int count, int button) {
-                
-                return false;
-            }
-
-            @Override
-            public boolean longPress(float x, float y) {
-                InputSystem.dispatchEvent(InputSystem.TOUCH_DOWN);
-                return false;
-            }
-
-            @Override
-            public boolean fling(float velocityX, float velocityY, int button) {
-                
-                return false;
-            }
-
-            @Override
-            public boolean pan(float x, float y, float deltaX, float deltaY) {
-                
-                return false;
-            }
-
-            @Override
-            public boolean panStop(float x, float y, int pointer, int button) {
-                
-                return false;
-            }
-
-            @Override
-            public boolean zoom(float initialDistance, float distance) {
-                
-                return false;
-            }
-
-            @Override
-            public boolean pinch(Vector2 initialPointer1,
-                    Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2) {
-                
-                return false;
-            }
-            
-        }));
         
         Gdx.input.setInputProcessor(mplexer);
         
@@ -386,6 +304,8 @@ public class GameScreen implements Screen {
     public void render(float delta) {
         update(delta);
         
+        logger.log();
+        
         App.batch.setProjectionMatrix(gameCamera.combined);
         App.batch.begin();
         
@@ -503,10 +423,10 @@ public class GameScreen implements Screen {
     }
 
     @Override
-    public void dispose() {
+    public void dispose() {        
+        toolbar.dispose();
         Assets.unloadGameTextures();
         battle.getPlayer().dispose();
-        toolbar.dispose();
         battle.dispose();
         Sounds.dispose();
         
