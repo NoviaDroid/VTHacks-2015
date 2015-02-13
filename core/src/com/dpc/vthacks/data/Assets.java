@@ -78,14 +78,16 @@ public class Assets {
         }
 
         healthbar = gameAtlas.findRegion("healthbar");
-        bullet = gameAtlas.findRegion("Bullet");
-        playerBase = gameAtlas.findRegion("barrack");
+        bullet = gameAtlas.findRegion("bullet");
+        playerBase = gameAtlas.findRegion("Enemy Barrack");
         enemyBase = gameAtlas.findRegion("Enemy Barrack");      
         tankShell = gameAtlas.findRegion("ETank Shell");
         background = gameAtlas.findRegion("background");
         plane = gameAtlas.findRegion("plane");
         bomb = gameAtlas.findRegion("bomb");
         road = gameAtlas.findRegion("road");
+        
+        plane.flip(true, false);
     }
     
     public static void unloadSkins() {

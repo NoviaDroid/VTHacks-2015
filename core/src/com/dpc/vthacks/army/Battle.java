@@ -66,7 +66,7 @@ public class Battle {
                 for(Bomb b : bombs) {
                     if(!b.isAlive()) {
                         if(b.getBoundingRectangle().overlaps(getEnemyArmy().getBase().getBoundingRectangle())) {
-                            getEnemyArmy().getBase().loseLife(1);
+                            getEnemyArmy().getBase().loseLife(4);
                             b.triggerExplosion();
                         }
     
