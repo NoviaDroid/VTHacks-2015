@@ -20,7 +20,7 @@ public class Sounds {
     }
     
     public static void playShot() {
-        shot.setVolume((float) Math.random());
+        shot.setVolume((float) Math.random() + 0.15f);
         
         if(!shot.isPlaying()) {
             shot.play();
