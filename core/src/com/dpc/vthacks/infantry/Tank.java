@@ -1,19 +1,18 @@
 package com.dpc.vthacks.infantry;
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
-import com.badlogic.gdx.math.MathUtils;
 import com.dpc.vthacks.App;
 import com.dpc.vthacks.SpriteAnimation;
-import com.dpc.vthacks.data.Assets;
-import com.dpc.vthacks.factories.Factory;
+import com.dpc.vthacks.screens.GameScreen;
 
 public class Tank extends Unit {
     private SpriteAnimation animation;
     private TankShell shell;
-    private static int killExp;
+    private static int killExp, killMoney;
+    private int cost;
     
-    public Tank(AtlasRegion[] regions, float range, float damage, float health, float velX, float velY, float x, float y) {
-        super(regions[0], range, damage, health, velX, velY, x, y);
+    public Tank(AtlasRegion[] regions, float range, float damage, float health, float maxHealth, float velX, float velY, float x, float y) {
+        super(regions[0], range, damage, health, maxHealth, velX, velY, x, y);
         
         animation = new SpriteAnimation(regions, 0.25f);
         setShell(null);
@@ -32,6 +31,13 @@ public class Tank extends Unit {
         
         if(getHealth() <= 0) {
             //Factory.tankPool.free(this);
+            
+            // Reward the player with the kill
+            if(getParentArmy().equals(GameScreen.battle.getEnemyArmy())) {
+                GameScreen.battle.getPlayer().addExperience(killExp);
+                GameScreen.battle.getPlayer().addMoney(killMoney);
+            }
+            
             getParentArmy().getUnits().removeValue(this, false);
         }
     }
@@ -71,7 +77,22 @@ public class Tank extends Unit {
     }
 
     public static void setKillExp(int killExp) {
-        killExp = killExp;
+        Tank.killExp = killExp;
     }
 
+    public static int getKillMoney() {
+        return killMoney;
+    }
+    
+    public static void setKillMoney(int killMoney) {
+        Tank.killMoney = killMoney;
+    }
+    
+    public int getCost() {
+        return cost;
+    }
+    
+    public void setCost(int cost) {
+        this.cost = cost;
+    }
 }

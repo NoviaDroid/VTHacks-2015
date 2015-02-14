@@ -33,12 +33,14 @@ public class JSONManager {
         Factory.setEnemyVelX(enemyPlane.getFloat("velX"));
         Factory.setEnemyVelY(enemyPlane.getFloat("velY"));
         Factory.setEnemyRange(enemyPlane.getFloat("range"));
+        Factory.setEnemyMaxHealth(enemyPlane.getInt("max health"));
         
         Factory.setPlayerRange(player.getFloat("range"));
         Factory.setPlayerDamage(player.getFloat("damage"));
         Factory.setPlayerHealth(player.getFloat("health"));
         Factory.setPlayerVelX(player.getFloat("velX"));
         Factory.setPlayerVelY(player.getFloat("velY"));
+        Factory.setPlayerMaxHealth(player.getInt("max health"));
         
         Factory.setTankCost(tank.getInt("cost"));
         Factory.setTankDamage(tank.getFloat("damage"));
@@ -46,6 +48,7 @@ public class JSONManager {
         Factory.setTankVelX(tank.getFloat("velX"));
         Factory.setTankVelY(tank.getFloat("velY"));
         Factory.setTankRange(tank.getFloat("range"));
+        Factory.setTankMaxHealth(tank.getInt("max health"));
         
         Factory.setSoldierCost(soldier.getInt("cost"));
         Factory.setSoldierDamage(soldier.getFloat("damage"));
@@ -53,7 +56,8 @@ public class JSONManager {
         Factory.setSoldierRange(soldier.getFloat("range"));
         Factory.setSoldierVelX(soldier.getFloat("velX"));
         Factory.setSoldierVelY(soldier.getFloat("velY"));
-
+        Factory.setSoldierMaxHealth(soldier.getInt("max health"));
+        
         Factory.setBombDamage(bomb.getFloat("damage"));
         Factory.setBombVelX(bomb.getFloat("velX"));
         Factory.setBombVelY(bomb.getFloat("velY"));
@@ -66,14 +70,18 @@ public class JSONManager {
         Factory.setEnemySoldierVelX(enemySoldier.getFloat("velX"));
         Factory.setEnemySoldierVelY(enemySoldier.getFloat("velY"));
         Factory.setEnemySoldierRange(enemySoldier.getFloat("range"));
+        Factory.setEnemySoldierMaxHealth(enemySoldier.getInt("max health"));
         
         Factory.setEnemyTankDamage(enemyTank.getFloat("damage"));
         Factory.setEnemyTankHealth(enemyTank.getInt("health"));
         Factory.setEnemyTankRange(enemyTank.getFloat("range"));
         Factory.setEnemyTankVelX(enemyTank.getFloat("velX"));
         Factory.setEnemyTankVelY(enemyTank.getFloat("velY"));
+        Factory.setEnemyTankMaxHealth(enemyTank.getInt("max health"));
         
         Soldier.setKillExp(enemySoldier.getInt("kill exp"));
+        Soldier.setKillMoney(enemySoldier.getInt("kill money"));
         Tank.setKillExp(enemyTank.getInt("kill exp"));
+        Tank.setKillMoney(enemyTank.getInt("kill money"));
     }
 }

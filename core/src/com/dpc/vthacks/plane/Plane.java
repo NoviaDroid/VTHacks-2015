@@ -5,19 +5,22 @@ import com.badlogic.gdx.utils.Array;
 import com.dpc.vthacks.App;
 import com.dpc.vthacks.factories.Factory;
 import com.dpc.vthacks.infantry.Unit;
+import com.dpc.vthacks.input.GameToolbar;
 
 public class Plane extends Unit {
     private static final float PLUMMIT_TIME = 0.05f; // If no positive force applied in this time, plane will plummit
     private static final int FALL_ROTATION = -5, RISE_ROTATION = 15, FALL_DELTA_FACTOR = 4, RISE_DELTA_FACTOR = 2;
-    private int targetRotation, experience;
+    private int targetRotation, money, level;
+    private float experience;
+    private static float goalExperience = 100;
     private boolean rising;
     private float plummitTimer;
     private Array<Bomb> bombs;
     
-    public Plane(TextureRegion region, float range, float damage, float health, float velX, float velY, float x, float y) {
-        super(region, range, damage, health, velX, velY, x, y);
+    public Plane(TextureRegion region, float range, float damage, float health, float maxHealth, float velX, float velY, float x, float y) {
+        super(region, range, damage, health, maxHealth, velX, velY, x, y);
         
-        bombs = new Array<Bomb>(45);
+        bombs = new Array<Bomb>(45);    
     }
 
     @Override
@@ -57,15 +60,52 @@ public class Plane extends Unit {
 
     @Override
     public void takeDamage(Unit attacker) {
+        setHealth(getHealth() - attacker.getDamage());
+        GameToolbar.setHealth(getHealth());
+    }
+    
+    public void onLevelReached() {
         
     }
     
     public void strafe() {
         
     }
+
+    public static int getGoalExp() {
+        return (int) goalExperience;
+    }
     
-    public void addExperience(int ammount) {
+    public void addExperience(int amount) {
+        // Check for a level ups
+        if(experience >= goalExperience) {
+            experience = 1;
+            level++;
+            goalExperience = (float) Math.pow(level, 4) + 100;
+            return;
+        }
+        else {
+            experience += amount;
+        }
         
+        GameToolbar.setExperience((int) experience);
+    }
+    
+    public void takeMoney(int amount) {
+        money -= amount;
+    }
+    
+    public void addMoney(int amount) {
+        money += amount;
+        GameToolbar.setMoney(money);
+    }
+    
+    public int getMoney() {
+        return money;
+    }
+    
+    public int getExperience() {
+        return (int) experience;
     }
     
     public void increaseElevation() {

@@ -5,7 +5,8 @@
     "damage": "30",
     "velX": "6",
     "velY": "0",
-    "range": "600"
+    "range": "600",
+    "max health": "250"
   }],
   
   "enemy plane": [{
@@ -14,15 +15,18 @@
     "velX": "14",
     "velY": "14",
     "range": "480",
-    "kill exp": "45"
+    "kill exp": "70"
+    "kill money": "25"
+    "max health": "100"
   }],
   
   "player": [{
-    "health": "200",
+    "health": "250",
     "damage": "50",
     "velX": "0", 
     "velY": "14",
     "range": "480"
+    "max health": "250"
   }],
   
   "soldier": [{
@@ -31,7 +35,8 @@
     "health": "50",
     "range": "150",
     "velX": "3",
-    "velY": "0"
+    "velY": "0", 
+    "max health": "80"
   }],
   
   "bomb": [{
@@ -51,7 +56,9 @@
   	"damage": "1",
   	"range": "150",
   	"health": "50",
-    "kill exp": "15"
+    "kill exp": "10"
+    "kill money": "5"
+    "max health": "80"
   }],
   
   "enemy tank": [{
@@ -60,6 +67,8 @@
     "velX": "-6",
     "velY": "0",
     "range": "400",
-    "kill exp": "30"
+    "kill exp": "40",
+    "kill money": "15",
+    "max health": "150"
   }]
 }
