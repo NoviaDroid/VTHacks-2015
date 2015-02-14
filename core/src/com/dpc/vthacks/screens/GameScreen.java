@@ -5,15 +5,14 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.dpc.vthacks.App;
 import com.dpc.vthacks.GameCamera;
+import com.dpc.vthacks.GfxHelper;
 import com.dpc.vthacks.Road;
 import com.dpc.vthacks.army.Army;
 import com.dpc.vthacks.army.Base;
@@ -25,7 +24,6 @@ import com.dpc.vthacks.data.Sounds;
 import com.dpc.vthacks.factories.Factory;
 import com.dpc.vthacks.infantry.Soldier;
 import com.dpc.vthacks.infantry.Tank;
-import com.dpc.vthacks.infantry.Unit;
 import com.dpc.vthacks.input.GameToolbar;
 import com.dpc.vthacks.plane.Bomb;
 import com.dpc.vthacks.plane.Plane;
@@ -73,7 +71,7 @@ public class GameScreen implements Screen {
         
         int rh = Assets.road.getRegionHeight();
         
-        road = new Road(0, rh, levelWidth, rh);
+        road = new Road(0, 0, levelWidth, rh);
         
         road.setTexWidth(levelWidth);
         road.setTexHeight(rh * 3);
@@ -100,8 +98,8 @@ public class GameScreen implements Screen {
             Sprite s = new Sprite(Assets.getBuildings()[MathUtils.random(Assets.getBuildings().length - 1)]);
             s.setX(lastBuildingEnd);
             s.setY(road.getY() + road.getHeight());
-            s.setSize(Assets.getBuildings()[i % Assets.getBuildings().length].getRegionWidth() * 3,
-                      Assets.getBuildings()[i % Assets.getBuildings().length].getRegionHeight() * 3);
+            s.setSize(Assets.getBuildings()[i % Assets.getBuildings().length].getRegionWidth() * 2,
+                      Assets.getBuildings()[i % Assets.getBuildings().length].getRegionHeight() * 2);
             
             backgroundElements.add(s);
             
@@ -113,10 +111,10 @@ public class GameScreen implements Screen {
         gameCamera.position.y = road.getY();
         
         Base enemyBase = new Base(Assets.enemyBase);
-        enemyBase.setPosition(levelWidth - (Assets.playerBase.getRegionWidth() * 3), 25);
+        enemyBase.setPosition(levelWidth - (Assets.playerBase.getRegionWidth() * 3), 0);
         
         Base playerBase = new Base(Assets.playerBase);
-        playerBase.setPosition(0, 25);
+        playerBase.setPosition(0, 0);
         
         battle = new Battle(new Army(playerBase), new Army(enemyBase));
         
@@ -148,6 +146,8 @@ public class GameScreen implements Screen {
                 battle.getMyArmy().add(Factory.soldierPool.obtain());
             }
         };
+        
+        //road.setY(toolbar.getTop());
         
         mplexer.addProcessor(toolbar.getStage());
         
@@ -199,6 +199,9 @@ public class GameScreen implements Screen {
         s.setY(15000);
         
         battle.getMyArmy().add(s);
+
+        //GfxHelper.oldX = AppData.width;
+        //GfxHelper.oldY = AppData.height;
     }
 
     private void updatePlayer(float delta) {
@@ -267,11 +270,11 @@ public class GameScreen implements Screen {
                 b.setY(road.getY() + road.getHeight());
                 b.triggerExplosion();
                 
-                int rh = Assets.road.getRegionHeight();
+                int rh = (int) road.getHeight();
                 int padding = 8;
                 
                 float x = 0;
-                float y = 0;
+                float y = road.getY();
                 int w = levelWidth;
                 float h = MathUtils.random(rh * 0.5f, rh);
                 
@@ -340,72 +343,72 @@ public class GameScreen implements Screen {
         
         toolbar.draw();
         
-        App.debugRenderer.setProjectionMatrix(gameCamera.combined);
-        App.debugRenderer.setColor(Color.GREEN);
-        App.debugRenderer.begin(ShapeType.Line);
-
-        for (Unit u : battle.getMyArmy().getUnits()) {
-            App.debugRenderer.rect(u.getX(), u.getY(), u.getRange(),
-                    u.getRange());
-        }
-      
-        App.debugRenderer.setColor(Color.RED);
-        
-        for (Unit u : battle.getEnemyArmy().getUnits()) {
-            App.debugRenderer.rect(u.getX(), u.getY(), u.getRange(),
-                    u.getRange());
-        }
-        
-        App.debugRenderer.end();
-
-        App.debugRenderer.setProjectionMatrix(gameCamera.combined);
-        App.debugRenderer.setColor(Color.GREEN);
-        App.debugRenderer.begin(ShapeType.Line);
-
-        App.debugRenderer.rect(battle.getPlayer().getBoundingRectangle().x,
-                battle.getPlayer().getBoundingRectangle().y,
-                battle.getPlayer().getBoundingRectangle().width,
-                battle.getPlayer().getBoundingRectangle().height);
-
-        App.debugRenderer.setColor(Color.PURPLE);
-        
-        App.debugRenderer.rect(road.x, road.y, road.width, road.height);
-        
-        App.debugRenderer.setColor(Color.GREEN);
-        
-        for (Bomb r : battle.getPlayer().getBombs()) {
-            App.debugRenderer.rect(r.getBoundingRectangle().x,
-                    r.getBoundingRectangle().y, r.getBoundingRectangle().width,
-                    r.getBoundingRectangle().height);
-        }
-
-        for (Unit r : battle.getMyArmy().getUnits()) {
-            App.debugRenderer.rect(r.getBoundingRectangle().x,
-                    r.getBoundingRectangle().y, r.getBoundingRectangle().width,
-                    r.getBoundingRectangle().height);
-        }
-
-        App.debugRenderer.setColor(Color.RED);
-        
-        App.debugRenderer.rect(
-                battle.getMyArmy().getBase().getBoundingRectangle().x, battle.getMyArmy()
-                        .getBase().getBoundingRectangle().y, battle.getMyArmy()
-                        .getBase().getBoundingRectangle().width, battle.getMyArmy()
-                        .getBase().getBoundingRectangle().height);
-        
-        for (Unit r : battle.getEnemyArmy().getUnits()) {
-            App.debugRenderer.rect(r.getBoundingRectangle().x,
-                    r.getBoundingRectangle().y, r.getBoundingRectangle().width,
-                    r.getBoundingRectangle().height);
-        }
-        
-        App.debugRenderer.rect(battle.getEnemyArmy().getBase()
-                .getBoundingRectangle().x, battle.getEnemyArmy().getBase()
-                .getBoundingRectangle().y, battle.getEnemyArmy().getBase()
-                .getBoundingRectangle().width, battle.getEnemyArmy().getBase()
-                .getBoundingRectangle().height);
-
-        App.debugRenderer.end();
+//        App.debugRenderer.setProjectionMatrix(gameCamera.combined);
+//        App.debugRenderer.setColor(Color.GREEN);
+//        App.debugRenderer.begin(ShapeType.Line);
+//
+//        for (Unit u : battle.getMyArmy().getUnits()) {
+//            App.debugRenderer.rect(u.getX(), u.getY(), u.getRange(),
+//                    u.getRange());
+//        }
+//      
+//        App.debugRenderer.setColor(Color.RED);
+//        
+//        for (Unit u : battle.getEnemyArmy().getUnits()) {
+//            App.debugRenderer.rect(u.getX(), u.getY(), u.getRange(),
+//                    u.getRange());
+//        }
+//        
+//        App.debugRenderer.end();
+//
+//        App.debugRenderer.setProjectionMatrix(gameCamera.combined);
+//        App.debugRenderer.setColor(Color.GREEN);
+//        App.debugRenderer.begin(ShapeType.Line);
+//
+//        App.debugRenderer.rect(battle.getPlayer().getBoundingRectangle().x,
+//                battle.getPlayer().getBoundingRectangle().y,
+//                battle.getPlayer().getBoundingRectangle().width,
+//                battle.getPlayer().getBoundingRectangle().height);
+//
+//        App.debugRenderer.setColor(Color.PURPLE);
+//        
+//        App.debugRenderer.rect(road.x, road.y, road.width, road.height);
+//        
+//        App.debugRenderer.setColor(Color.GREEN);
+//        
+//        for (Bomb r : battle.getPlayer().getBombs()) {
+//            App.debugRenderer.rect(r.getBoundingRectangle().x,
+//                    r.getBoundingRectangle().y, r.getBoundingRectangle().width,
+//                    r.getBoundingRectangle().height);
+//        }
+//
+//        for (Unit r : battle.getMyArmy().getUnits()) {
+//            App.debugRenderer.rect(r.getBoundingRectangle().x,
+//                    r.getBoundingRectangle().y, r.getBoundingRectangle().width,
+//                    r.getBoundingRectangle().height);
+//        }
+//
+//        App.debugRenderer.setColor(Color.RED);
+//        
+//        App.debugRenderer.rect(
+//                battle.getMyArmy().getBase().getBoundingRectangle().x, battle.getMyArmy()
+//                        .getBase().getBoundingRectangle().y, battle.getMyArmy()
+//                        .getBase().getBoundingRectangle().width, battle.getMyArmy()
+//                        .getBase().getBoundingRectangle().height);
+//        
+//        for (Unit r : battle.getEnemyArmy().getUnits()) {
+//            App.debugRenderer.rect(r.getBoundingRectangle().x,
+//                    r.getBoundingRectangle().y, r.getBoundingRectangle().width,
+//                    r.getBoundingRectangle().height);
+//        }
+//        
+//        App.debugRenderer.rect(battle.getEnemyArmy().getBase()
+//                .getBoundingRectangle().x, battle.getEnemyArmy().getBase()
+//                .getBoundingRectangle().y, battle.getEnemyArmy().getBase()
+//                .getBoundingRectangle().width, battle.getEnemyArmy().getBase()
+//                .getBoundingRectangle().height);
+//
+//        App.debugRenderer.end();
     }
 
     public static void triggerGameOver() {
@@ -416,6 +419,16 @@ public class GameScreen implements Screen {
     public void resize(int width, int height) {
         AppData.onResize(width, height);
         gameCamera.resize(width, height);
+        background.setSize(levelWidth, height);
+        toolbar.onResize(width, height);
+        
+        skyline[0].setX(0);
+        skyline[0].setY(road.getY() + road.getHeight());
+        skyline[0].setSize(levelWidth, AppData.height);
+
+        skyline[1].setX(0);
+        skyline[1].setY(road.getY() + road.getHeight());
+        skyline[1].setSize(levelWidth, AppData.height);
     }
 
     @Override

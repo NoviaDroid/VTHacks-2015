@@ -1,31 +1,122 @@
 package com.dpc.vthacks.input;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
 
 public class GameToolbar {
     private Stage stage;
-    private Button bombButton, strafeButton, soldierButton, tankButton;
+    private Actor healthBar, experienceBar;
+    private Drawable background;
+    private Button bombButton, strafeButton, soldierButton, tankButton, towerButton,
+                   tankUpgradeButton, towerUpgradeButton, soldierUpgradeButton;
+    
+    private final Color BATCH_COLOR;
     
     public GameToolbar() {
         Assets.loadSkins();
         
-        stage = new Stage(new StretchViewport(AppData.width, AppData.height));
-        
         Skin skin = new Skin();
         skin.addRegions(Assets.getSkins());
         
-        bombButton = new ImageButton(skin.getDrawable("BombButton"));
-        strafeButton = new ImageButton(skin.getDrawable("StrafeButton"));
-        soldierButton = new ImageButton(skin.getDrawable("BombButton"));
-        tankButton = new ImageButton(skin.getDrawable("StrafeButton"));
+        background = skin.getDrawable("Bomb Icon");
+        
+        bombButton = new ImageButton(skin.getDrawable("Bomb Icon"), skin.getDrawable("Bomb Icon Hover"));   
+        strafeButton = new ImageButton(skin.getDrawable("Bomb Icon"));
+        soldierButton = new ImageButton(skin.getDrawable("Troop Button"), skin.getDrawable("Troop Button Hover"));
+        towerButton = new ImageButton(skin.getDrawable("Bomb Icon"));
+        tankButton = new ImageButton(skin.getDrawable("Tank Button"), skin.getDrawable("Tank Button Hover"));
+        tankUpgradeButton = new ImageButton(skin.getDrawable("Bomb Icon"));
+        towerUpgradeButton = new ImageButton(skin.getDrawable("Bomb Icon"));
+        soldierUpgradeButton = new ImageButton(skin.getDrawable("Bomb Icon"));
+        
+        soldierUpgradeButton.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                bombButtonTouchDown();
+                return true;
+            }
+            
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                bombButtonTouchUp();
+            }
+        });
+        
+        towerUpgradeButton.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                bombButtonTouchDown();
+                return true;
+            }
+            
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                bombButtonTouchUp();
+            }
+        });
+        
+        tankUpgradeButton.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                bombButtonTouchDown();
+                return true;
+            }
+            
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                bombButtonTouchUp();
+            }
+        });
+        
+        tankButton.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                bombButtonTouchDown();
+                return true;
+            }
+            
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                bombButtonTouchUp();
+            }
+        });
+        
+        towerButton.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                bombButtonTouchDown();
+                return true;
+            }
+            
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                bombButtonTouchUp();
+            }
+        });
+        
+        soldierButton.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                bombButtonTouchDown();
+                return true;
+            }
+            
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                bombButtonTouchUp();
+            }
+        });
         
         bombButton.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
             @Override
@@ -39,6 +130,7 @@ public class GameToolbar {
                 bombButtonTouchUp();
             }
         });
+        
         strafeButton.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -52,25 +144,84 @@ public class GameToolbar {
             }
         });
 
+        healthBar = new Actor();
+        healthBar.setWidth(Assets.healthbar.getRegionWidth());
+        healthBar.setHeight(Assets.healthbar.getRegionHeight());
+        healthBar.setBounds(0, 0, healthBar.getWidth(), healthBar.getHeight());
         
-        Table t = new Table();
+        experienceBar = new Actor();
+        experienceBar.setWidth(Assets.healthbar.getRegionWidth());
+        experienceBar.setHeight(Assets.healthbar.getRegionHeight());
+        experienceBar.setBounds(0, 0, experienceBar.getWidth(), experienceBar.getHeight());
         
-        t.setBounds(5, 5, bombButton.getWidth() + strafeButton.getWidth(), bombButton.getHeight());
+        stage = new Stage(new StretchViewport(AppData.width, AppData.height)) {
+            @Override
+            public void draw() {
+                super.draw();
+                
+                getBatch().setProjectionMatrix(getCamera().combined);
+                getBatch().begin();
+                getBatch().draw(Assets.healthbar, healthBar.getX(), healthBar.getY(), healthBar.getWidth(), healthBar.getHeight());
 
-        t.add(bombButton).pad(5);
-        t.add(strafeButton).pad(5);
+                getBatch().setColor(Color.GRAY);
+                getBatch().draw(Assets.healthbar, experienceBar.getX(), experienceBar.getY(), experienceBar.getWidth(), experienceBar.getHeight());
+                getBatch().setColor(BATCH_COLOR);
+                
+                getBatch().end();
+            }
+        };
+
+        // hGroup.addActor(soldierButton);
+        // hGroup.addActor(tankButton);
+        // hGroup.addActor(tankUpgradeButton);
+        // hGroup.addActor(towerUpgradeButton);
+        // hGroup.addActor(soldierUpgradeButton);
+        // hGroup.addActor(vGroup);
+
+        int padding = 5;
         
-        stage.addActor(t);
+        bombButton.setPosition(0, padding);
+        strafeButton.setPosition(bombButton.getWidth() + padding, padding);
+        tankButton.setPosition(strafeButton.getWidth() + padding, padding);
+        soldierButton.setPosition(tankButton.getX() + tankButton.getWidth() + padding, padding);
+        tankUpgradeButton.setPosition(soldierButton.getX() + soldierButton.getWidth() + padding, padding);
+        towerUpgradeButton.setPosition(tankUpgradeButton.getX() + tankUpgradeButton.getWidth() + padding, padding);
+        soldierUpgradeButton.setPosition(towerUpgradeButton.getX() + towerUpgradeButton.getWidth() + padding, padding);
+        healthBar.setPosition(soldierUpgradeButton.getX() + soldierUpgradeButton.getWidth() + padding, (70 * 0.5f) - (healthBar.getHeight() * 0.75f) + (healthBar.getHeight() * 0.5f));
+        experienceBar.setPosition(healthBar.getX(), healthBar.getY() - (healthBar.getHeight() * 0.75f) - (healthBar.getHeight() * 0.5f));
+        
+        healthBar.setWidth(AppData.width / 10);
+        //healthBar.setWidth(AppData.width - (soldierUpgradeButton.getX() + soldierUpgradeButton.getWidth() + padding));
+        
+        stage.addActor(bombButton);
+        stage.addActor(strafeButton);
+        stage.addActor(tankButton);
+        stage.addActor(soldierButton);
+        stage.addActor(tankUpgradeButton);
+        stage.addActor(towerUpgradeButton);
+        stage.addActor(soldierUpgradeButton);
+        
+        BATCH_COLOR = stage.getBatch().getColor();
     }
     
     public void draw() {
+        //stage.draw();
+//        stage.getBatch().begin();
+//        background.draw(stage.getBatch(), 0, 0, AppData.width, 70);
+//        stage.getBatch().end();
+//        
         stage.draw();
+    }
+    
+    public void onResize(int w, int h) {
+        stage.getViewport().update(w, h, true);
+        ((OrthographicCamera) stage.getCamera()).update();
     }
     
     public void dispose() {
         stage.dispose();
     }
-    
+
     public void soldierButtonTouchDown() {
         
     }

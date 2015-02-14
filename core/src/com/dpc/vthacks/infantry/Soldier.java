@@ -11,6 +11,7 @@ import com.dpc.vthacks.screens.GameScreen;
 public class Soldier extends Unit {
     private SpriteAnimation animation;
     private Array<Bullet> bullets;
+    private static int killExp;
     
     public Soldier(AtlasRegion[] regions, float range, float damage, float health, float velX, float velY, float x, float y) {
         super(regions[0], range, damage, health, velX, velY, x, y);
@@ -71,4 +72,13 @@ public class Soldier extends Unit {
     public Array<Bullet> getBullets() {
         return bullets;
     }
+    
+    public static int getKillExp() {
+        return killExp;
+    }
+
+    public static void setKillExp(int killExp) {
+        killExp = killExp;
+    }
+
 }

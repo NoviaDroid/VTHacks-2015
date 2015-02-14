@@ -1,0 +1,556 @@
+
+gamePack.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+background
+  rotate: false
+  xy: 1, 822
+  size: 828, 201
+  orig: 828, 201
+  offset: 0, 0
+  index: -1
+skyline1
+  rotate: false
+  xy: 1, 619
+  size: 828, 201
+  orig: 828, 201
+  offset: 0, 0
+  index: -1
+skyline2
+  rotate: false
+  xy: 1, 416
+  size: 828, 201
+  orig: 828, 201
+  offset: 0, 0
+  index: -1
+ETankfire
+  rotate: false
+  xy: 1, 310
+  size: 195, 104
+  orig: 195, 104
+  offset: 0, 0
+  index: -1
+ETankfire1
+  rotate: false
+  xy: 1, 204
+  size: 195, 104
+  orig: 195, 104
+  offset: 0, 0
+  index: -1
+ETankfire2
+  rotate: false
+  xy: 198, 310
+  size: 195, 104
+  orig: 195, 104
+  offset: 0, 0
+  index: -1
+ETankfire3
+  rotate: false
+  xy: 1, 98
+  size: 195, 104
+  orig: 195, 104
+  offset: 0, 0
+  index: -1
+ETankfire4
+  rotate: false
+  xy: 198, 204
+  size: 195, 104
+  orig: 195, 104
+  offset: 0, 0
+  index: -1
+ETankfire5
+  rotate: false
+  xy: 395, 310
+  size: 195, 104
+  orig: 195, 104
+  offset: 0, 0
+  index: -1
+ETankfire6
+  rotate: false
+  xy: 198, 98
+  size: 195, 104
+  orig: 195, 104
+  offset: 0, 0
+  index: -1
+Tankfire
+  rotate: false
+  xy: 395, 204
+  size: 195, 104
+  orig: 195, 104
+  offset: 0, 0
+  index: -1
+Tankfire1
+  rotate: false
+  xy: 592, 310
+  size: 195, 104
+  orig: 195, 104
+  offset: 0, 0
+  index: -1
+Tankfire2
+  rotate: false
+  xy: 395, 98
+  size: 195, 104
+  orig: 195, 104
+  offset: 0, 0
+  index: -1
+Tankfire3
+  rotate: false
+  xy: 592, 204
+  size: 195, 104
+  orig: 195, 104
+  offset: 0, 0
+  index: -1
+Tankfire4
+  rotate: false
+  xy: 592, 98
+  size: 195, 104
+  orig: 195, 104
+  offset: 0, 0
+  index: -1
+road
+  rotate: false
+  xy: 1, 31
+  size: 215, 65
+  orig: 215, 65
+  offset: 0, 0
+  index: -1
+healthbar
+  rotate: false
+  xy: 218, 76
+  size: 245, 20
+  orig: 245, 20
+  offset: 0, 0
+  index: -1
+EPlaneFiring1
+  rotate: false
+  xy: 831, 958
+  size: 171, 65
+  orig: 171, 65
+  offset: 0, 0
+  index: -1
+EPlaneFiring2
+  rotate: false
+  xy: 831, 891
+  size: 171, 65
+  orig: 171, 65
+  offset: 0, 0
+  index: -1
+EPlaneFiring3
+  rotate: false
+  xy: 831, 824
+  size: 171, 65
+  orig: 171, 65
+  offset: 0, 0
+  index: -1
+PlaneFiring
+  rotate: false
+  xy: 831, 757
+  size: 163, 65
+  orig: 163, 65
+  offset: 0, 0
+  index: -1
+PlaneFiring1
+  rotate: false
+  xy: 831, 690
+  size: 163, 65
+  orig: 163, 65
+  offset: 0, 0
+  index: -1
+PlaneFiring2
+  rotate: false
+  xy: 831, 623
+  size: 163, 65
+  orig: 163, 65
+  offset: 0, 0
+  index: -1
+enemyPlane1
+  rotate: false
+  xy: 831, 556
+  size: 153, 65
+  orig: 153, 65
+  offset: 0, 0
+  index: -1
+EPlane1
+  rotate: false
+  xy: 831, 556
+  size: 153, 65
+  orig: 153, 65
+  offset: 0, 0
+  index: -1
+EPlanewithPilot
+  rotate: false
+  xy: 831, 489
+  size: 153, 65
+  orig: 153, 65
+  offset: 0, 0
+  index: -1
+plane
+  rotate: false
+  xy: 831, 422
+  size: 153, 65
+  orig: 153, 65
+  offset: 0, 0
+  index: -1
+planeLatchOpen
+  rotate: false
+  xy: 218, 9
+  size: 153, 65
+  orig: 153, 65
+  offset: 0, 0
+  index: -1
+PlanewithPilot
+  rotate: false
+  xy: 465, 31
+  size: 153, 65
+  orig: 153, 65
+  offset: 0, 0
+  index: -1
+ETank1
+  rotate: false
+  xy: 620, 45
+  size: 119, 51
+  orig: 119, 51
+  offset: 0, 0
+  index: -1
+building4
+  rotate: false
+  xy: 789, 289
+  size: 84, 125
+  orig: 84, 125
+  offset: 0, 0
+  index: -1
+building5
+  rotate: false
+  xy: 789, 162
+  size: 85, 125
+  orig: 85, 125
+  offset: 0, 0
+  index: -1
+ETank2
+  rotate: false
+  xy: 875, 369
+  size: 119, 51
+  orig: 119, 51
+  offset: 0, 0
+  index: -1
+ETank3
+  rotate: false
+  xy: 875, 316
+  size: 119, 51
+  orig: 119, 51
+  offset: 0, 0
+  index: -1
+Tankfire5
+  rotate: false
+  xy: 789, 56
+  size: 195, 104
+  orig: 195, 104
+  offset: 0, 0
+  index: -1
+tank1
+  rotate: false
+  xy: 876, 263
+  size: 119, 51
+  orig: 119, 51
+  offset: 0, 0
+  index: -1
+tank2
+  rotate: false
+  xy: 876, 210
+  size: 119, 51
+  orig: 119, 51
+  offset: 0, 0
+  index: -1
+EBarrack
+  rotate: false
+  xy: 876, 178
+  size: 123, 30
+  orig: 123, 30
+  offset: 0, 0
+  index: -1
+Enemy Barrack
+  rotate: false
+  xy: 620, 13
+  size: 123, 30
+  orig: 123, 30
+  offset: 0, 0
+  index: -1
+Explosion1
+  rotate: false
+  xy: 373, 15
+  size: 53, 59
+  orig: 53, 59
+  offset: 0, 0
+  index: -1
+tank3
+  rotate: false
+  xy: 745, 3
+  size: 119, 51
+  orig: 119, 51
+  offset: 0, 0
+  index: -1
+Apartment
+  rotate: false
+  xy: 428, 23
+  size: 32, 51
+  orig: 32, 51
+  offset: 0, 0
+  index: -1
+ETroop2Running1
+  rotate: false
+  xy: 986, 585
+  size: 37, 36
+  orig: 37, 36
+  offset: 0, 0
+  index: -1
+ETroop2Running2
+  rotate: false
+  xy: 986, 547
+  size: 37, 36
+  orig: 37, 36
+  offset: 0, 0
+  index: -1
+ETroop2Running3
+  rotate: false
+  xy: 986, 509
+  size: 37, 36
+  orig: 37, 36
+  offset: 0, 0
+  index: -1
+ETroop2Running4
+  rotate: false
+  xy: 986, 471
+  size: 37, 36
+  orig: 37, 36
+  offset: 0, 0
+  index: -1
+ETroopTier2Idle1
+  rotate: false
+  xy: 986, 433
+  size: 37, 36
+  orig: 37, 36
+  offset: 0, 0
+  index: -1
+BombButton
+  rotate: false
+  xy: 866, 16
+  size: 38, 38
+  orig: 38, 38
+  offset: 0, 0
+  index: -1
+ETroopTier2Idle2
+  rotate: false
+  xy: 741, 60
+  size: 37, 36
+  orig: 37, 36
+  offset: 0, 0
+  index: -1
+ETroopTier2Idle3
+  rotate: false
+  xy: 906, 18
+  size: 37, 36
+  orig: 37, 36
+  offset: 0, 0
+  index: -1
+bomb
+  rotate: false
+  xy: 373, 1
+  size: 32, 12
+  orig: 32, 12
+  offset: 0, 0
+  index: -1
+ETroop Running1
+  rotate: false
+  xy: 945, 19
+  size: 24, 35
+  orig: 24, 35
+  offset: 0, 0
+  index: -1
+ETroop Running3
+  rotate: false
+  xy: 945, 19
+  size: 24, 35
+  orig: 24, 35
+  offset: 0, 0
+  index: -1
+ETroop Running2
+  rotate: false
+  xy: 996, 396
+  size: 24, 35
+  orig: 24, 35
+  offset: 0, 0
+  index: -1
+ETroop Running4
+  rotate: false
+  xy: 996, 396
+  size: 24, 35
+  orig: 24, 35
+  offset: 0, 0
+  index: -1
+ETroop Running5
+  rotate: false
+  xy: 996, 359
+  size: 24, 35
+  orig: 24, 35
+  offset: 0, 0
+  index: -1
+ETroop Running6
+  rotate: false
+  xy: 996, 322
+  size: 24, 35
+  orig: 24, 35
+  offset: 0, 0
+  index: -1
+troopRunning1
+  rotate: false
+  xy: 997, 285
+  size: 24, 35
+  orig: 24, 35
+  offset: 0, 0
+  index: -1
+troopRunning2
+  rotate: false
+  xy: 997, 248
+  size: 24, 35
+  orig: 24, 35
+  offset: 0, 0
+  index: -1
+troopRunning3
+  rotate: false
+  xy: 997, 211
+  size: 24, 35
+  orig: 24, 35
+  offset: 0, 0
+  index: -1
+ETroop1
+  rotate: false
+  xy: 1001, 179
+  size: 21, 30
+  orig: 21, 30
+  offset: 0, 0
+  index: -1
+troopRunnning4
+  rotate: false
+  xy: 971, 19
+  size: 24, 35
+  orig: 24, 35
+  offset: 0, 0
+  index: -1
+building3
+  rotate: false
+  xy: 996, 788
+  size: 24, 34
+  orig: 24, 34
+  offset: 0, 0
+  index: -1
+ETroop2
+  rotate: false
+  xy: 996, 756
+  size: 21, 30
+  orig: 21, 30
+  offset: 0, 0
+  index: -1
+ETroop3
+  rotate: false
+  xy: 996, 724
+  size: 21, 30
+  orig: 21, 30
+  offset: 0, 0
+  index: -1
+troopStationary1
+  rotate: false
+  xy: 996, 692
+  size: 21, 30
+  orig: 21, 30
+  offset: 0, 0
+  index: -1
+troopStationary2
+  rotate: false
+  xy: 996, 660
+  size: 21, 30
+  orig: 21, 30
+  offset: 0, 0
+  index: -1
+troopStationary3
+  rotate: false
+  xy: 996, 628
+  size: 21, 30
+  orig: 21, 30
+  offset: 0, 0
+  index: -1
+ETank Shell
+  rotate: false
+  xy: 1, 21
+  size: 27, 8
+  orig: 27, 8
+  offset: 0, 0
+  index: -1
+Tank Shell
+  rotate: false
+  xy: 876, 168
+  size: 27, 8
+  orig: 27, 8
+  offset: 0, 0
+  index: -1
+bullet
+  rotate: false
+  xy: 831, 416
+  size: 8, 4
+  orig: 8, 4
+  offset: 0, 0
+  index: -1
+
+gamePack2.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+Tankfire6
+  rotate: false
+  xy: 1, 1
+  size: 195, 104
+  orig: 195, 104
+  offset: 0, 0
+  index: -1
+Explosion2
+  rotate: false
+  xy: 198, 46
+  size: 53, 59
+  orig: 53, 59
+  offset: 0, 0
+  index: -1
+Explosion3
+  rotate: false
+  xy: 253, 46
+  size: 53, 59
+  orig: 53, 59
+  offset: 0, 0
+  index: -1
+Explosion4
+  rotate: false
+  xy: 308, 46
+  size: 53, 59
+  orig: 53, 59
+  offset: 0, 0
+  index: -1
+Explosion5
+  rotate: false
+  xy: 363, 46
+  size: 53, 59
+  orig: 53, 59
+  offset: 0, 0
+  index: -1
+building1
+  rotate: false
+  xy: 418, 43
+  size: 38, 62
+  orig: 38, 62
+  offset: 0, 0
+  index: -1
+building2
+  rotate: false
+  xy: 458, 43
+  size: 38, 62
+  orig: 38, 62
+  offset: 0, 0
+  index: -1
