@@ -31,6 +31,8 @@ public class Assets {
     }
 
     public static void loadGameTextures(AssetManager manager) {
+        manager.load("textures/gameAtlas.pack", TextureAtlas.class);
+        
         gameAtlas = new TextureAtlas(Gdx.files.internal("textures/gameAtlas.pack"));
         
         setBuildings(new TextureRegion[6]);

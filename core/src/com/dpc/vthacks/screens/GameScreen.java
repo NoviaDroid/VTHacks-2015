@@ -378,8 +378,6 @@ public class GameScreen implements Screen {
         App.batch.end();
         
         toolbar.draw();
-        
-        debugRender();
     }
     
     public void debugRender() {
