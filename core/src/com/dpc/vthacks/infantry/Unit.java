@@ -6,14 +6,15 @@ import com.dpc.vthacks.army.Army;
 import com.dpc.vthacks.gameobject.DynamicGameObject;
 
 public abstract class Unit extends DynamicGameObject {
-    private float damage, health, range;
+    private float damage, health, range, maxHealth;
     private boolean isAttacking, moving;
     private Army parentArmy;
+    private int cost;
     
-    public Unit(TextureRegion region, float range, float damage, float health, float velX, float velY, float x, float y) {
+    public Unit(TextureRegion region, float range, float damage, float health, float maxHealth, float velX, float velY, float x, float y) {
         super(region, velX, velY, x, y);
         this.range = range;
-        this.health = health;
+        this.health = maxHealth;
         this.damage = damage;
         setMoving(true);
     }
@@ -82,5 +83,9 @@ public abstract class Unit extends DynamicGameObject {
 
     public void setMoving(boolean moving) {
         this.moving = moving;
+    }
+    
+    public float getMaxHealth() {
+        return maxHealth;
     }
 }

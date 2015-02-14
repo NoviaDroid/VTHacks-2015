@@ -11,14 +11,14 @@ import com.dpc.vthacks.plane.Plane;
 import com.dpc.vthacks.screens.GameScreen;
 
 public class Factory {
-    private static float playerHealth, playerDamage, playerVelX, playerVelY, playerRange;
-    private static float tankHealth, tankDamage, tankCost, tankVelX, tankVelY, tankRange;
-    private static float enemyHealth, enemyDamage, enemyVelX, enemyVelY, enemyRange;
-    private static float enemySoldierHealth, enemySoldierDamage, enemySoldierVelX, enemySoldierVelY, enemySoldierRange;
-    private static float soldierHealth, soldierDamage, soldierVelX, soldierVelY, soldierCost, soldierRange;
+    private static float playerHealth, playerDamage, playerVelX, playerVelY, playerRange, playerMaxHealth;
+    private static float tankHealth, tankDamage, tankCost, tankVelX, tankVelY, tankRange, tankMaxHealth;
+    private static float enemyHealth, enemyMaxHealth, enemyDamage, enemyVelX, enemyVelY, enemyRange;
+    private static float enemySoldierHealth, enemySoldierMaxHealth, enemySoldierDamage, enemySoldierVelX, enemySoldierVelY, enemySoldierRange;
+    private static float soldierHealth, soldierMaxHealth, soldierDamage, soldierVelX, soldierVelY, soldierCost, soldierRange;
     private static float bombDamage, bombVelX, bombVelY;
     private static float tankShellVelX, tankShellVelY;
-    private static float enemyTankHealth, enemyTankDamage, enemyTankCost, enemyTankVelX, enemyTankVelY, enemyTankRange;
+    private static float enemyTankHealth, enemyTankMaxHealth, enemyTankDamage, enemyTankCost, enemyTankVelX, enemyTankVelY, enemyTankRange;
     private static float myArmyX, myArmyY;
     
     private static final int NUMBER_OF_BOMBS = 10;
@@ -104,35 +104,35 @@ public class Factory {
     }
     
     public static Soldier createEnemySoldier() {
-        return new Soldier(Assets.getEnemySoldierFrames(), enemySoldierRange, enemySoldierDamage, enemySoldierHealth, enemySoldierVelX, enemySoldierVelY, GameScreen.battle.getEnemyArmy().getBase().getX(), GameScreen.battle.getEnemyArmy().getBase().getY());
+        return new Soldier(Assets.getEnemySoldierFrames(), enemySoldierRange, enemySoldierDamage, enemySoldierHealth, enemySoldierMaxHealth, enemySoldierVelX, enemySoldierVelY, GameScreen.battle.getEnemyArmy().getBase().getX(), GameScreen.battle.getEnemyArmy().getBase().getY());
     }
     
     public static Plane createPlayer() {
-        Plane plane = new Plane(Assets.plane, playerRange, playerDamage, playerHealth, playerVelX, playerVelY, myArmyX, myArmyY);
+        Plane plane = new Plane(Assets.plane, playerRange, playerDamage, playerHealth, enemyMaxHealth, playerVelX, playerVelY, myArmyX, myArmyY);
         plane.setParentArmy(GameScreen.battle.getMyArmy());
         return plane;
     }
     
     public static Tank createTank() {
-        Tank t = new Tank(Assets.getTankFrames(), tankRange, tankDamage, tankHealth, tankVelX, tankVelY, myArmyX, myArmyY);
+        Tank t = new Tank(Assets.getTankFrames(), tankRange, tankDamage, tankHealth, tankMaxHealth, tankVelX, tankVelY, myArmyX, myArmyY);
         t.setParentArmy(GameScreen.battle.getMyArmy());
         return t;
     }
     
     public static Tank createEnemyTank() {
-        Tank t = new Tank(Assets.getEnemyTankFrames(), enemyTankRange, enemyTankDamage, enemyTankHealth, enemyTankVelX, enemyTankVelY, GameScreen.battle.getEnemyArmy().getBase().getX(), GameScreen.battle.getEnemyArmy().getBase().getY());
+        Tank t = new Tank(Assets.getEnemyTankFrames(), enemyTankRange, enemyTankDamage, enemyTankHealth, enemyTankMaxHealth, enemyTankVelX, enemyTankVelY, GameScreen.battle.getEnemyArmy().getBase().getX(), GameScreen.battle.getEnemyArmy().getBase().getY());
         t.setParentArmy(GameScreen.battle.getEnemyArmy());
         return t;
     }
     
     public static Plane createEnemyPlane(float x, float y) {
-        Plane t = new Plane(Assets.plane, enemyRange, enemyDamage, enemyHealth, enemyVelX, enemyVelY, x, y);
+        Plane t = new Plane(Assets.plane, enemyRange, enemyDamage, enemyHealth, enemyMaxHealth, enemyVelX, enemyVelY, x, y);
         t.setParentArmy(GameScreen.battle.getEnemyArmy());
         return t;
     }
     
     public static Soldier createSoldier() {
-        Soldier s =  new Soldier(Assets.getSoldierFrames(), soldierRange, soldierDamage, soldierHealth, soldierVelX, soldierVelY, myArmyX, myArmyY);;
+        Soldier s =  new Soldier(Assets.getSoldierFrames(), soldierRange, soldierDamage, soldierHealth, soldierMaxHealth, soldierVelX, soldierVelY, myArmyX, myArmyY);;
         s.setParentArmy(GameScreen.battle.getMyArmy());
         return s;
     }
@@ -440,4 +440,69 @@ public class Factory {
     public static void setEnemyTankRange(float enemyTankRange) {
         Factory.enemyTankRange = enemyTankRange;
     }
+
+    public static float getPlayerMaxHealth() {
+        return playerMaxHealth;
+    }
+
+    public static void setPlayerMaxHealth(float playerMaxHealth) {
+        Factory.playerMaxHealth = playerMaxHealth;
+    }
+
+    public static float getTankMaxHealth() {
+        return tankMaxHealth;
+    }
+
+    public static void setTankMaxHealth(float tankMaxHealth) {
+        Factory.tankMaxHealth = tankMaxHealth;
+    }
+
+    public static float getEnemySoldierMaxHealth() {
+        return enemySoldierMaxHealth;
+    }
+
+    public static void setEnemySoldierMaxHealth(float enemySoldierMaxHealth) {
+        Factory.enemySoldierMaxHealth = enemySoldierMaxHealth;
+    }
+
+    public static float getSoldierMaxHealth() {
+        return soldierMaxHealth;
+    }
+
+    public static void setSoldierMaxHealth(float soldierMaxHealth) {
+        Factory.soldierMaxHealth = soldierMaxHealth;
+    }
+
+    public static float getEnemyTankMaxHealth() {
+        return enemyTankMaxHealth;
+    }
+
+    public static void setEnemyTankMaxHealth(float enemyTankMaxHealth) {
+        Factory.enemyTankMaxHealth = enemyTankMaxHealth;
+    }
+
+    public static float getMyArmyX() {
+        return myArmyX;
+    }
+
+    public static void setMyArmyX(float myArmyX) {
+        Factory.myArmyX = myArmyX;
+    }
+
+    public static float getMyArmyY() {
+        return myArmyY;
+    }
+
+    public static void setMyArmyY(float myArmyY) {
+        Factory.myArmyY = myArmyY;
+    }
+
+    public static float getEnemyMaxHealth() {
+        return enemyMaxHealth;
+    }
+
+    public static void setEnemyMaxHealth(float enemyMaxHealth) {
+        Factory.enemyMaxHealth = enemyMaxHealth;
+    }
+
 }

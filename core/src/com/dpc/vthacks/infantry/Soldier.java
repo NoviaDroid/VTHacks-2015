@@ -11,10 +11,10 @@ import com.dpc.vthacks.screens.GameScreen;
 public class Soldier extends Unit {
     private SpriteAnimation animation;
     private Array<Bullet> bullets;
-    private static int killExp;
+    private static int killExp, killMoney;
     
-    public Soldier(AtlasRegion[] regions, float range, float damage, float health, float velX, float velY, float x, float y) {
-        super(regions[0], range, damage, health, velX, velY, x, y);
+    public Soldier(AtlasRegion[] regions, float range, float damage, float health, float maxHealth, float velX, float velY, float x, float y) {
+        super(regions[0], range, damage, health, maxHealth, velX, velY, x, y);
         
         animation = new SpriteAnimation(regions, 0.1f);
         bullets = new Array<Bullet>();
@@ -27,6 +27,12 @@ public class Soldier extends Unit {
         setRegion(animation.update(delta));
 
         if(getHealth() <= 0) {
+            // Reward the player with the kill
+            if(getParentArmy().equals(GameScreen.battle.getEnemyArmy())) {
+                GameScreen.battle.getPlayer().addExperience(killExp);
+                GameScreen.battle.getPlayer().addMoney(killMoney);
+            }
+            
             getParentArmy().getUnits().removeValue(this, false);
         }
         
@@ -77,8 +83,18 @@ public class Soldier extends Unit {
         return killExp;
     }
 
-    public static void setKillExp(int killExp) {
-        killExp = killExp;
+    public static int getKillMoney() {
+        return killMoney;
     }
+    
+    public static void setKillMoney(int killMoney) {
+        Soldier.killMoney = killMoney;
+    }
+    
+    public static void setKillExp(int killExp) {
+        Soldier.killExp = killExp;
+    }
+    
+    
 
 }
