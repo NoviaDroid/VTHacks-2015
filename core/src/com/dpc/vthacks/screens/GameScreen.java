@@ -381,72 +381,72 @@ public class GameScreen implements Screen {
     }
     
     public void debugRender() {
-        App.debugRenderer.setProjectionMatrix(gameCamera.combined);
-        App.debugRenderer.setColor(Color.GREEN);
-        App.debugRenderer.begin(ShapeType.Line);
-
-        for (Unit u : battle.getMyArmy().getUnits()) {
-            App.debugRenderer.rect(u.getX(), u.getY(), u.getRange(),
-                    u.getRange());
-        }
-
-        App.debugRenderer.setColor(Color.RED);
-
-        for (Unit u : battle.getEnemyArmy().getUnits()) {
-            App.debugRenderer.rect(u.getX(), u.getY(), u.getRange(),
-                    u.getRange());
-        }
-
-        App.debugRenderer.end();
-
-        App.debugRenderer.setProjectionMatrix(gameCamera.combined);
-        App.debugRenderer.setColor(Color.GREEN);
-        App.debugRenderer.begin(ShapeType.Line);
-
-        App.debugRenderer.rect(battle.getPlayer().getBoundingRectangle().x,
-                battle.getPlayer().getBoundingRectangle().y, battle.getPlayer()
-                        .getBoundingRectangle().width, battle.getPlayer()
-                        .getBoundingRectangle().height);
-
-        App.debugRenderer.setColor(Color.PURPLE);
-
-        App.debugRenderer.rect(road.x, road.y, road.width, road.height);
-
-        App.debugRenderer.setColor(Color.GREEN);
-
-        for (Bomb r : battle.getPlayer().getBombs()) {
-            App.debugRenderer.rect(r.getBoundingRectangle().x,
-                    r.getBoundingRectangle().y, r.getBoundingRectangle().width,
-                    r.getBoundingRectangle().height);
-        }
-
-        for (Unit r : battle.getMyArmy().getUnits()) {
-            App.debugRenderer.rect(r.getBoundingRectangle().x,
-                    r.getBoundingRectangle().y, r.getBoundingRectangle().width,
-                    r.getBoundingRectangle().height);
-        }
-
-        App.debugRenderer.setColor(Color.RED);
-
-        App.debugRenderer.rect(battle.getMyArmy().getBase()
-                .getBoundingRectangle().x, battle.getMyArmy().getBase()
-                .getBoundingRectangle().y, battle.getMyArmy().getBase()
-                .getBoundingRectangle().width, battle.getMyArmy().getBase()
-                .getBoundingRectangle().height);
-
-        for (Unit r : battle.getEnemyArmy().getUnits()) {
-            App.debugRenderer.rect(r.getBoundingRectangle().x,
-                    r.getBoundingRectangle().y, r.getBoundingRectangle().width,
-                    r.getBoundingRectangle().height);
-        }
-
-        App.debugRenderer.rect(battle.getEnemyArmy().getBase()
-                .getBoundingRectangle().x, battle.getEnemyArmy().getBase()
-                .getBoundingRectangle().y, battle.getEnemyArmy().getBase()
-                .getBoundingRectangle().width, battle.getEnemyArmy().getBase()
-                .getBoundingRectangle().height);
-
-        App.debugRenderer.end();
+//        App.debugRenderer.setProjectionMatrix(gameCamera.combined);
+//        App.debugRenderer.setColor(Color.GREEN);
+//        App.debugRenderer.begin(ShapeType.Line);
+//
+//        for (Unit u : battle.getMyArmy().getUnits()) {
+//            App.debugRenderer.rect(u.getX(), u.getY(), u.getRange(),
+//                    u.getRange());
+//        }
+//
+//        App.debugRenderer.setColor(Color.RED);
+//
+//        for (Unit u : battle.getEnemyArmy().getUnits()) {
+//            App.debugRenderer.rect(u.getX(), u.getY(), u.getRange(),
+//                    u.getRange());
+//        }
+//
+//        App.debugRenderer.end();
+//
+//        App.debugRenderer.setProjectionMatrix(gameCamera.combined);
+//        App.debugRenderer.setColor(Color.GREEN);
+//        App.debugRenderer.begin(ShapeType.Line);
+//
+//        App.debugRenderer.rect(battle.getPlayer().getBoundingRectangle().x,
+//                battle.getPlayer().getBoundingRectangle().y, battle.getPlayer()
+//                        .getBoundingRectangle().width, battle.getPlayer()
+//                        .getBoundingRectangle().height);
+//
+//        App.debugRenderer.setColor(Color.PURPLE);
+//
+//        App.debugRenderer.rect(road.x, road.y, road.width, road.height);
+//
+//        App.debugRenderer.setColor(Color.GREEN);
+//
+//        for (Bomb r : battle.getPlayer().getBombs()) {
+//            App.debugRenderer.rect(r.getBoundingRectangle().x,
+//                    r.getBoundingRectangle().y, r.getBoundingRectangle().width,
+//                    r.getBoundingRectangle().height);
+//        }
+//
+//        for (Unit r : battle.getMyArmy().getUnits()) {
+//            App.debugRenderer.rect(r.getBoundingRectangle().x,
+//                    r.getBoundingRectangle().y, r.getBoundingRectangle().width,
+//                    r.getBoundingRectangle().height);
+//        }
+//
+//        App.debugRenderer.setColor(Color.RED);
+//
+//        App.debugRenderer.rect(battle.getMyArmy().getBase()
+//                .getBoundingRectangle().x, battle.getMyArmy().getBase()
+//                .getBoundingRectangle().y, battle.getMyArmy().getBase()
+//                .getBoundingRectangle().width, battle.getMyArmy().getBase()
+//                .getBoundingRectangle().height);
+//
+//        for (Unit r : battle.getEnemyArmy().getUnits()) {
+//            App.debugRenderer.rect(r.getBoundingRectangle().x,
+//                    r.getBoundingRectangle().y, r.getBoundingRectangle().width,
+//                    r.getBoundingRectangle().height);
+//        }
+//
+//        App.debugRenderer.rect(battle.getEnemyArmy().getBase()
+//                .getBoundingRectangle().x, battle.getEnemyArmy().getBase()
+//                .getBoundingRectangle().y, battle.getEnemyArmy().getBase()
+//                .getBoundingRectangle().width, battle.getEnemyArmy().getBase()
+//                .getBoundingRectangle().height);
+//
+//        App.debugRenderer.end();
     }
 
     public static void triggerGameOver() {
