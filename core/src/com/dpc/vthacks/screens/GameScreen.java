@@ -124,6 +124,27 @@ public class GameScreen implements Screen {
 
         Factory.init();
         toolbar = new GameToolbar() {
+           
+            @Override
+            protected void towerUpgradeButtonTouchedDown() {
+                
+            }
+
+            @Override
+            protected void soldierUpgradeButtonTouchDown() {
+                
+            }
+
+            @Override
+            public void bombButtonTouchUp() {
+                
+            }
+
+            @Override
+            public void strafeButtonTouchUp() {
+                
+            }
+
             @Override
             public void bombButtonTouchDown() {
                 battle.getPlayer().releaseBomb();
