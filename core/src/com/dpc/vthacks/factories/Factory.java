@@ -20,6 +20,7 @@ public class Factory {
     private static float tankShellVelX, tankShellVelY;
     private static float enemyTankHealth, enemyTankDamage, enemyTankCost, enemyTankVelX, enemyTankVelY, enemyTankRange;
     private static float myArmyX, myArmyY;
+    
     private static final int NUMBER_OF_BOMBS = 10;
     
     public static void init() {

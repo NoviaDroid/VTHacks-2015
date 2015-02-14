@@ -5,6 +5,9 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.dpc.vthacks.factories.Factory;
+import com.dpc.vthacks.infantry.Soldier;
+import com.dpc.vthacks.infantry.Tank;
+import com.dpc.vthacks.plane.Plane;
 
 public class JSONManager {
     private static final String PROPERTIES_PATH = "json/properties.json";
@@ -69,5 +72,8 @@ public class JSONManager {
         Factory.setEnemyTankRange(enemyTank.getFloat("range"));
         Factory.setEnemyTankVelX(enemyTank.getFloat("velX"));
         Factory.setEnemyTankVelY(enemyTank.getFloat("velY"));
+        
+        Soldier.setKillExp(enemySoldier.getInt("kill exp"));
+        Tank.setKillExp(enemyTank.getInt("kill exp"));
     }
 }

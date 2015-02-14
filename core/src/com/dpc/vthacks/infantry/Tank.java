@@ -10,6 +10,7 @@ import com.dpc.vthacks.factories.Factory;
 public class Tank extends Unit {
     private SpriteAnimation animation;
     private TankShell shell;
+    private static int killExp;
     
     public Tank(AtlasRegion[] regions, float range, float damage, float health, float velX, float velY, float x, float y) {
         super(regions[0], range, damage, health, velX, velY, x, y);
@@ -64,4 +65,13 @@ public class Tank extends Unit {
     public void setShell(TankShell shell) {
         this.shell = shell;
     }
+    
+    public static int getKillExp() {
+        return killExp;
+    }
+
+    public static void setKillExp(int killExp) {
+        killExp = killExp;
+    }
+
 }

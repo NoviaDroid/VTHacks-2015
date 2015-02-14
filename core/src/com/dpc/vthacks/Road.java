@@ -44,6 +44,6 @@ public class Road extends Rectangle {
 
 
     public void render() {
-        App.batch.draw(region, 0, 0, texWidth, texHeight);
+        App.batch.draw(region, x, y, texWidth, texHeight);
     }
 }

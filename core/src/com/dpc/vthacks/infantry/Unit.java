@@ -63,7 +63,7 @@ public abstract class Unit extends DynamicGameObject {
     public void setDamage(float damage) {
         this.damage = damage;
     }
-
+    
     public boolean inRange(Unit u1) {
         return MathUtil.dst(getX(), getY(), u1.getX(), u1.getY()) <= range;
     }

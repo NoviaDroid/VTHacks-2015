@@ -9,8 +9,8 @@ import com.dpc.vthacks.infantry.Unit;
 public class Plane extends Unit {
     private static final float PLUMMIT_TIME = 0.05f; // If no positive force applied in this time, plane will plummit
     private static final int FALL_ROTATION = -5, RISE_ROTATION = 15, FALL_DELTA_FACTOR = 4, RISE_DELTA_FACTOR = 2;
+    private int targetRotation, experience;
     private boolean rising;
-    private int targetRotation;
     private float plummitTimer;
     private Array<Bomb> bombs;
     
@@ -61,6 +61,10 @@ public class Plane extends Unit {
     }
     
     public void strafe() {
+        
+    }
+    
+    public void addExperience(int ammount) {
         
     }
     

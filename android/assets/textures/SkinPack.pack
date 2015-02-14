@@ -1,19 +1,47 @@
 
-SkinPack.png
+skinPack2.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-BombButton
+Bomb Icon Hover
   rotate: false
   xy: 1, 1
-  size: 64, 64
-  orig: 64, 64
+  size: 38, 38
+  orig: 38, 38
   offset: 0, 0
   index: -1
-StrafeButton
+Bomb Icon
   rotate: false
-  xy: 67, 1
-  size: 64, 64
-  orig: 64, 64
+  xy: 41, 1
+  size: 38, 38
+  orig: 38, 38
+  offset: 0, 0
+  index: -1
+Tank Button Hover
+  rotate: false
+  xy: 81, 1
+  size: 38, 38
+  orig: 38, 38
+  offset: 0, 0
+  index: -1
+Tank Button
+  rotate: false
+  xy: 121, 1
+  size: 38, 38
+  orig: 38, 38
+  offset: 0, 0
+  index: -1
+Troop Button Hover
+  rotate: false
+  xy: 161, 1
+  size: 38, 38
+  orig: 38, 38
+  offset: 0, 0
+  index: -1
+Troop Button
+  rotate: false
+  xy: 201, 1
+  size: 38, 38
+  orig: 38, 38
   offset: 0, 0
   index: -1
