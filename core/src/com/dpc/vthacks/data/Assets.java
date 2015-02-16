@@ -19,7 +19,7 @@ public class Assets {
     private static AtlasRegion[] explosionFrames;
     
     public static void loadSkins() {
-        skinAtlas = new TextureAtlas(Gdx.files.internal("textures/SkinPack.pack"));
+        skinAtlas = new TextureAtlas("skinPack.pack");
     }
     
     public static TextureAtlas getSkins() {
@@ -27,13 +27,11 @@ public class Assets {
     }
     
     public static void loadMenu() {
-        menuBackground = new TextureRegion(new Texture(Gdx.files.internal("textures/MenuScreen.png")));
+        menuBackground = new TextureRegion(new Texture(Gdx.files.internal("MenuScreen.png")));
     }
 
-    public static void loadGameTextures(AssetManager manager) {
-        manager.load("textures/gameAtlas.pack", TextureAtlas.class);
-        
-        gameAtlas = new TextureAtlas(Gdx.files.internal("textures/gameAtlas.pack"));
+    public static void loadGameTextures() {
+        gameAtlas = new TextureAtlas("gameAtlas.pack");
         
         setBuildings(new TextureRegion[6]);
         

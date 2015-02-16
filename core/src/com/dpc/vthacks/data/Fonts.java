@@ -6,21 +6,23 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 
 public class Fonts {
-    private static BitmapFont armalite;
+    private static BitmapFont visitor1;
     
     public static void load() {
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/armalite.ttf"));
         FreeTypeFontParameter parameter = new FreeTypeFontParameter();
-        parameter.size = (int) (16 * Gdx.graphics.getDensity());
-        armalite = generator.generateFont(parameter); 
+        
+        parameter.size = Gdx.graphics.getWidth() * 16 / 800;
+        System.out.println(parameter.size);
+        visitor1 = generator.generateFont(parameter); 
         generator.dispose(); 
     }
     
-    public static BitmapFont getArmalite() {
-        return armalite;
+    public static BitmapFont getVisitor1() {
+        return visitor1;
     }
     
     public static void unload() {
-        armalite.dispose();
+        visitor1.dispose();
     }
 }

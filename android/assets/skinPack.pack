@@ -6,84 +6,84 @@ repeat: none
 Bomb Icon +
   rotate: false
   xy: 1, 1
-  size: 38, 38
-  orig: 38, 38
+  size: 57, 57
+  orig: 57, 57
   offset: 0, 0
   index: -1
 Bomb Icon +Hover
   rotate: false
-  xy: 41, 1
-  size: 38, 38
-  orig: 38, 38
+  xy: 60, 1
+  size: 57, 57
+  orig: 57, 57
   offset: 0, 0
   index: -1
 Bomb Icon Hover
   rotate: false
-  xy: 81, 1
-  size: 38, 38
-  orig: 38, 38
+  xy: 119, 1
+  size: 57, 57
+  orig: 57, 57
   offset: 0, 0
   index: -1
 Bomb Icon
   rotate: false
-  xy: 121, 1
-  size: 38, 38
-  orig: 38, 38
+  xy: 178, 1
+  size: 57, 57
+  orig: 57, 57
   offset: 0, 0
   index: -1
 Soldier Button + Hover
   rotate: false
-  xy: 161, 1
-  size: 38, 38
-  orig: 38, 38
+  xy: 237, 1
+  size: 57, 57
+  orig: 57, 57
   offset: 0, 0
   index: -1
 Soldier Button +
   rotate: false
-  xy: 201, 1
-  size: 38, 38
-  orig: 38, 38
+  xy: 296, 1
+  size: 57, 57
+  orig: 57, 57
   offset: 0, 0
   index: -1
 Tank Button +
   rotate: false
-  xy: 241, 1
-  size: 38, 38
-  orig: 38, 38
+  xy: 355, 1
+  size: 57, 57
+  orig: 57, 57
   offset: 0, 0
   index: -1
 Tank Button +Hover
   rotate: false
-  xy: 281, 1
-  size: 38, 38
-  orig: 38, 38
+  xy: 414, 1
+  size: 57, 57
+  orig: 57, 57
   offset: 0, 0
   index: -1
 Tank Button Hover
   rotate: false
-  xy: 321, 1
-  size: 38, 38
-  orig: 38, 38
+  xy: 473, 1
+  size: 57, 57
+  orig: 57, 57
   offset: 0, 0
   index: -1
 Tank Button
   rotate: false
-  xy: 361, 1
-  size: 38, 38
-  orig: 38, 38
+  xy: 532, 1
+  size: 57, 57
+  orig: 57, 57
   offset: 0, 0
   index: -1
 Troop Button Hover
   rotate: false
-  xy: 401, 1
-  size: 38, 38
-  orig: 38, 38
+  xy: 591, 1
+  size: 57, 57
+  orig: 57, 57
   offset: 0, 0
   index: -1
 Troop Button
   rotate: false
-  xy: 441, 1
-  size: 38, 38
-  orig: 38, 38
+  xy: 650, 1
+  size: 57, 57
+  orig: 57, 57
   offset: 0, 0
   index: -1

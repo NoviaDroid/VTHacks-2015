@@ -5,10 +5,8 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -26,7 +24,6 @@ import com.dpc.vthacks.data.Sounds;
 import com.dpc.vthacks.factories.Factory;
 import com.dpc.vthacks.infantry.Soldier;
 import com.dpc.vthacks.infantry.Tank;
-import com.dpc.vthacks.infantry.Unit;
 import com.dpc.vthacks.input.GameToolbar;
 import com.dpc.vthacks.plane.Bomb;
 import com.dpc.vthacks.plane.Plane;
@@ -50,17 +47,15 @@ public class GameScreen implements Screen {
     private GameToolbar toolbar;
     
     public GameScreen() {
-        levelWidth = MathUtils.random(3400, 4200);
+        levelWidth = MathUtils.random(3200, 3400);
         logger = new FPSLogger();
     }
     
     @Override
     public void show() {
         JSONManager.parseProperties();
-        
+        Assets.loadGameTextures();
         AppData.onResize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        
-        Assets.loadGameTextures(null);
         Sounds.load();
         Fonts.load();
         
@@ -78,36 +73,22 @@ public class GameScreen implements Screen {
         road = new Road(0, 0, levelWidth, rh);
         
         road.setTexWidth(levelWidth);
-        road.setTexHeight(rh * 3);
+        road.setTexHeight(rh * 2);
         
         skyline = new Sprite[Assets.getSkylines().length];
         
         skyline[0] = new Sprite(Assets.getSkylines()[0]);
         skyline[0].setX(0);
         skyline[0].setY(road.getY() + road.getHeight());
-        skyline[0].setSize(levelWidth, AppData.height);
+        skyline[0].setSize(levelWidth, AppData.height * 1f);
 
         skyline[1] = new Sprite(Assets.getSkylines()[1]);
         skyline[1].setX(0);
         skyline[1].setY(road.getY() + road.getHeight());
-        skyline[1].setSize(levelWidth, AppData.height);
+        skyline[1].setSize(levelWidth, AppData.height * 1f);
         
         for(Sprite s : skyline) {
             backgroundElements.add(s);
-        }
-        
-        float lastBuildingEnd = 0;
-        
-        for(int i = 0; i < 30; i++) {
-            Sprite s = new Sprite(Assets.getBuildings()[MathUtils.random(Assets.getBuildings().length - 1)]);
-            s.setX(lastBuildingEnd);
-            s.setY(road.getY() + road.getHeight());
-            s.setSize(Assets.getBuildings()[i % Assets.getBuildings().length].getRegionWidth() * 2,
-                      Assets.getBuildings()[i % Assets.getBuildings().length].getRegionHeight() * 2);
-            
-            backgroundElements.add(s);
-            
-            lastBuildingEnd = s.getX() + s.getWidth();
         }
        
         InputMultiplexer mplexer = new InputMultiplexer(); 
@@ -128,25 +109,9 @@ public class GameScreen implements Screen {
 
         Factory.init();
         toolbar = new GameToolbar() {
-           
-            @Override
-            protected void towerUpgradeButtonTouchedDown() {
-                Sounds.playPress();
-            }
 
             @Override
-            protected void soldierUpgradeButtonTouchDown() {
-                Sounds.playPress();
-            }
-
-            @Override
-            public void bombButtonTouchUp() {
-                
-            }
-
-            @Override
-            public void strafeButtonTouchUp() {
-                
+            protected void towerButtonTouchDown() {
             }
 
             @Override
@@ -168,24 +133,42 @@ public class GameScreen implements Screen {
                     battle.getMyArmy().add(t);
     
                     battle.getPlayer().takeMoney(t.getCost());
-                    
-                    Sounds.playPress();
                 }
             }
             
             @Override
             public void soldierButtonTouchDown() {
                 battle.getMyArmy().add(Factory.soldierPool.obtain());
-                Sounds.playPress();
+
             }
             
             @Override
-            protected void tankUpgradeButtonTouchDown() {
-                Sounds.playPress();
+            public void tankUpgradeButtonTouchDown() {
+
             }
         };
         
-        //road.setY(toolbar.getTop());
+        road.setY(toolbar.getTop());
+        
+        float lastBuildingEnd = 0;
+        
+        for(int i = 0; i < 30; i++) {
+            Sprite s = new Sprite(Assets.getBuildings()[MathUtils.random(Assets.getBuildings().length - 1)]);
+            s.setSize(Assets.getBuildings()[i % Assets.getBuildings().length].getRegionWidth() * 3,
+                      Assets.getBuildings()[i % Assets.getBuildings().length].getRegionHeight() * 3);
+            
+            s.setX(lastBuildingEnd);
+            s.setY(road.getY() + road.getTexHeight());
+       
+            backgroundElements.add(s);
+            
+            lastBuildingEnd = s.getX() + s.getWidth();
+        }
+        
+        playerBase.setY(road.getY());
+        enemyBase.setY(road.getY());
+        
+        Factory.init();
         
         mplexer.addProcessor(toolbar.getStage());
         
@@ -460,13 +443,15 @@ public class GameScreen implements Screen {
         background.setSize(levelWidth, height);
         toolbar.onResize(width, height);
 
+        skyline[0] = new Sprite(Assets.getSkylines()[0]);
         skyline[0].setX(0);
         skyline[0].setY(road.getY() + road.getHeight());
-        skyline[0].setSize(levelWidth, AppData.height);
+        skyline[0].setSize(levelWidth, AppData.height * 1f);
 
+        skyline[1] = new Sprite(Assets.getSkylines()[1]);
         skyline[1].setX(0);
         skyline[1].setY(road.getY() + road.getHeight());
-        skyline[1].setSize(levelWidth, AppData.height);
+        skyline[1].setSize(levelWidth, AppData.height * 1.5f);
     }
 
     @Override
@@ -476,7 +461,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void resume() {
-        Assets.loadGameTextures(null);
+        Assets.loadGameTextures();
     }
 
     @Override

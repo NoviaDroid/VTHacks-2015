@@ -19,8 +19,8 @@ public class AssetLoader {
         
         barBackground = manager.get("textures/loading/barBackground.png");
         progressBar =  manager.get("textures/loading/barForeground.png");
-        
-        Assets.loadGameTextures(manager);
+//        
+//        Assets.loadGameTextures(manager);
     }
     
     public boolean update() {

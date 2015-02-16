@@ -6,15 +6,13 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.dpc.vthacks.App;
 import com.dpc.vthacks.GameCamera;
 import com.dpc.vthacks.data.AppData;
-import com.dpc.vthacks.data.AssetLoader;
 import com.dpc.vthacks.data.Assets;
 
 public class MenuScreen implements Screen {
     private Sprite menu;
     private App context;
     private GameCamera camera;
-    private AssetLoader loader;
-    
+
     public MenuScreen(App app) {
         context = app;
     }
@@ -35,24 +33,13 @@ public class MenuScreen implements Screen {
         App.batch.setProjectionMatrix(camera.combined);
         
         App.batch.begin();
-        
-        if(loader == null) {
-            menu.draw(App.batch);
-        }
-        else {
-            if(loader.update()) {
-                context.setScreen(new GameScreen());
-            }
-            
-            loader.render();
-        }
-        
+
+        menu.draw(App.batch);
+
         App.batch.end();
         
         
         if(Gdx.input.isTouched()) {
-            loader = new AssetLoader();
-            
             context.setScreen(new GameScreen());
         }
     }

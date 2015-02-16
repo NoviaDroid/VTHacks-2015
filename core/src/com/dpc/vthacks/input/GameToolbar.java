@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.data.Fonts;
+import com.dpc.vthacks.data.Sounds;
 import com.dpc.vthacks.plane.Plane;
 import com.dpc.vthacks.screens.GameScreen;
 
@@ -48,19 +49,23 @@ public class GameToolbar {
         soldierUpgradeButton = new ImageButton(skin.getDrawable("Soldier Button +"), skin.getDrawable("Soldier Button + Hover"));
         
         LabelStyle style = new LabelStyle();
-        style.font = Fonts.getArmalite();
+        style.font = Fonts.getVisitor1();
         
         moneyLabel = new Label("Money: 0", style);
         experienceLabel = new Label("Experience: ", style);
         healthLabel = new Label("Health: 100", style);
-        
-        healthLabel.setWidth(100);
-        
+
         soldierUpgradeButton.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 soldierUpgradeButtonTouchDown();
+                Sounds.playPressDown();
                 return true;
+            }
+            
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                Sounds.playPressUp();
             }
         });
         
@@ -68,16 +73,27 @@ public class GameToolbar {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 towerUpgradeButtonTouchedDown();
+                Sounds.playPressDown();
                 return true;
             }
             
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                Sounds.playPressUp();
+            }
         });
         
         tankUpgradeButton.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 tankUpgradeButtonTouchDown();
+                Sounds.playPressDown();
                 return true;
+            }
+            
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                Sounds.playPressUp();
             }
         });
         
@@ -85,7 +101,13 @@ public class GameToolbar {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 tankButtonTouchDown();
+                Sounds.playPressDown();
                 return true;
+            }
+            
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                Sounds.playPressUp();
             }
         });
         
@@ -93,7 +115,13 @@ public class GameToolbar {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 towerButtonTouchDown();
+                Sounds.playPressDown();
                 return true;
+            }
+            
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                Sounds.playPressUp();
             }
         });
         
@@ -101,7 +129,13 @@ public class GameToolbar {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 soldierButtonTouchDown();
+                Sounds.playPressDown();
                 return true;
+            }
+            
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                Sounds.playPressUp();
             }
         });
         
@@ -109,12 +143,14 @@ public class GameToolbar {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 bombButtonTouchDown();
+                Sounds.playPressDown();
                 return true;
             }
             
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 bombButtonTouchUp();
+                Sounds.playPressUp();
             }
         });
         
@@ -122,6 +158,7 @@ public class GameToolbar {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 strafeButtonTouchDown();
+                Sounds.playPressDown();
                 return true;
             }
             
@@ -132,13 +169,13 @@ public class GameToolbar {
         });
 
         healthBar = new Actor();
-        healthBar.setWidth(Assets.healthbar.getRegionWidth());
-        healthBar.setHeight(Assets.healthbar.getRegionHeight());
+        healthBar.setWidth(Assets.healthbar.getRegionWidth() * 0.5f);
+        healthBar.setHeight(Assets.healthbar.getRegionHeight() * 0.5f);
         healthBar.setBounds(0, 0, healthBar.getWidth(), healthBar.getHeight());
         
         experienceBar = new Actor();
         experienceBar.setWidth(0);
-        experienceBar.setHeight(Assets.healthbar.getRegionHeight());
+        experienceBar.setHeight(Assets.healthbar.getRegionHeight() * 0.5f);
         experienceBar.setBounds(0, 0, experienceBar.getWidth(), experienceBar.getHeight());
         
         stage = new Stage(new StretchViewport(AppData.width, AppData.height)) {
@@ -146,9 +183,9 @@ public class GameToolbar {
             public void draw() {
                 super.draw();
        
-                experienceLabel.setPosition(experienceBar.getX() + experienceBar.getWidth() + PADDING, experienceBar.getY());
-               
-                healthLabel.setPosition(healthBar.getX() + healthBar.getWidth() + PADDING, healthBar.getY());
+//                experienceLabel.setPosition(experienceBar.getX() + experienceBar.getWidth() + PADDING, experienceLabel.getY());
+//               
+//                healthLabel.setPosition(healthBar.getX() + healthBar.getWidth() + PADDING, healthLabel.getY());
                 
                 getBatch().setProjectionMatrix(getCamera().combined);
                 getBatch().begin();
@@ -178,10 +215,10 @@ public class GameToolbar {
         soldierUpgradeButton.setPosition(towerUpgradeButton.getX() , PADDING);
         healthBar.setPosition(soldierUpgradeButton.getX() + soldierUpgradeButton.getWidth() + PADDING, (70 * 0.5f) - (healthBar.getHeight() * 0.75f) + (healthBar.getHeight() * 0.5f));
         experienceBar.setPosition(healthBar.getX(), healthBar.getY() - (healthBar.getHeight() * 0.75f) - (healthBar.getHeight() * 0.5f));
-        experienceLabel.setPosition(experienceBar.getX() + experienceBar.getWidth(), experienceBar.getY());
-        healthLabel.setPosition(healthBar.getX() + healthBar.getWidth() + PADDING, healthBar.getY());
-        moneyLabel.setPosition(bombButton.getX(), bombButton.getY() + bombButton.getHeight());
-        
+        experienceLabel.setPosition(soldierUpgradeButton.getX() + soldierUpgradeButton.getWidth() + PADDING, getTop() - experienceLabel.getHeight());
+        healthLabel.setPosition(soldierUpgradeButton.getX() + soldierUpgradeButton.getWidth() + PADDING, experienceLabel.getY() - healthLabel.getHeight());
+        moneyLabel.setPosition(soldierUpgradeButton.getX() + soldierUpgradeButton.getWidth() + PADDING, healthLabel.getY() - moneyLabel.getHeight());
+
         //healthBar.setWidth(AppData.width - (soldierUpgradeButton.getX() + soldierUpgradeButton.getWidth() + PADDING));
         
         stage.addActor(bombButton);
@@ -192,24 +229,34 @@ public class GameToolbar {
         //stage.addActor(towerUpgradeButton);
         stage.addActor(soldierUpgradeButton);
         stage.addActor(moneyLabel);
-        stage.addActor(experienceLabel);
-        stage.addActor(healthLabel);
+        //stage.addActor(experienceLabel);
+        //stage.addActor(healthLabel);
         
         BATCH_COLOR = stage.getBatch().getColor();
     }
-    
-    protected void tankUpgradeButtonTouchDown() {
+   
+    protected void strafeButtonTouchUp() {
+        
     }
-
+    
     protected void towerButtonTouchDown() {
     }
 
     protected void towerUpgradeButtonTouchedDown() {
     }
-
+    
     protected void soldierUpgradeButtonTouchDown() {
     }
 
+    public float getTop() {
+        if(bombButton.getY() + bombButton.getHeight() >= healthLabel.getY() + healthLabel.getHeight()) {
+            return bombButton.getY() + bombButton.getHeight() + PADDING;
+        }
+        else {
+            return experienceLabel.getHeight() + moneyLabel.getHeight() + healthLabel.getHeight();
+        }
+    }
+    
     public void draw() {
         stage.draw();
     }
@@ -221,8 +268,13 @@ public class GameToolbar {
     
     public void dispose() {
         stage.dispose();
+    
     }
-
+    
+    public void tankUpgradeButtonTouchDown() {
+        
+    }
+    
     public void soldierButtonTouchDown() {
         
     }
@@ -238,11 +290,7 @@ public class GameToolbar {
     public void bombButtonTouchDown() {
         
     }
-    
-    public void strafeButtonTouchUp() {
-        
-    }
-    
+   
     public void strafeButtonTouchDown() {
         
     }
@@ -262,6 +310,7 @@ public class GameToolbar {
         experienceBar.setWidth((GameScreen.battle.getPlayer().getExperience() / 
                                (float) GameScreen.battle.getPlayer().getGoalExp()) * 100f);
         
+        experienceLabel.setPosition(experienceLabel.getX(), experienceLabel.getY());
     }
     
     public static void setHealth(float f) {
@@ -270,5 +319,7 @@ public class GameToolbar {
         // Calculate the exp bar width
         healthBar.setWidth((GameScreen.battle.getPlayer().getHealth() / 
                                (float) GameScreen.battle.getPlayer().getMaxHealth()) * 100f);
+        
+        healthLabel.setPosition((AppData.width - healthLabel.getWidth() * 4), healthLabel.getY());
     }
 }
