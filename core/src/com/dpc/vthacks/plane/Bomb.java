@@ -4,7 +4,6 @@ import com.badlogic.gdx.utils.Pool.Poolable;
 import com.dpc.vthacks.App;
 import com.dpc.vthacks.SpriteAnimation;
 import com.dpc.vthacks.data.Assets;
-import com.dpc.vthacks.data.Sounds;
 import com.dpc.vthacks.factories.Factory;
 import com.dpc.vthacks.gameobject.DynamicGameObject;
 import com.dpc.vthacks.screens.GameScreen;
@@ -79,7 +78,7 @@ public class Bomb extends DynamicGameObject implements Poolable {
     
     public void triggerExplosion() {
         if(!isDead) {
-            Sounds.playExplosion();
+            Assets.playExplosion();
             setRotation(0);
             setPosition(getX() - (getWidth() * 0.5f), getY() - (getHeight() * 0.5f));
         }

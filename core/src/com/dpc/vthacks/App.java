@@ -40,6 +40,7 @@ public class App extends Game {
     @Override
     public void pause() {
         super.pause();
+        System.out.println("pause");
     }
 
     @Override
@@ -50,7 +51,6 @@ public class App extends Game {
     @Override
     public void dispose() {
         super.dispose();
-        
         batch.dispose();
         debugRenderer.dispose();
     }

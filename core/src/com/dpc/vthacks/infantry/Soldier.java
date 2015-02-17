@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.utils.Array;
 import com.dpc.vthacks.App;
 import com.dpc.vthacks.SpriteAnimation;
-import com.dpc.vthacks.data.Sounds;
+import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.factories.Factory;
 import com.dpc.vthacks.screens.GameScreen;
 
@@ -52,7 +52,7 @@ public class Soldier extends Unit {
 
     @Override
     public void attack(Unit enemy) {
-        Sounds.playShot();
+        Assets.playShot();
              
         Bullet bullet = Factory.bulletPool.obtain();
         bullet.setX(getX() + getWidth() * 0.5f);

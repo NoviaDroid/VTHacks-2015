@@ -12,7 +12,8 @@ public class MenuScreen implements Screen {
     private Sprite menu;
     private App context;
     private GameCamera camera;
-
+    private boolean loading;
+    
     public MenuScreen(App app) {
         context = app;
     }
@@ -40,7 +41,13 @@ public class MenuScreen implements Screen {
         
         
         if(Gdx.input.isTouched()) {
-            context.setScreen(new GameScreen());
+            Assets.loadLoadingScreenTextures();
+            loading = true;
+        }
+        
+        if(loading && Assets.lsUpdateRender(context)) {
+            Assets.getGameTextures();
+            context.setScreen(new GameScreen(context));
         }
     }
 

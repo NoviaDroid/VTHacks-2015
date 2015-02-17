@@ -6,6 +6,7 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.FPSLogger;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -20,7 +21,6 @@ import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.data.Fonts;
 import com.dpc.vthacks.data.JSONManager;
-import com.dpc.vthacks.data.Sounds;
 import com.dpc.vthacks.factories.Factory;
 import com.dpc.vthacks.infantry.Soldier;
 import com.dpc.vthacks.infantry.Tank;
@@ -33,11 +33,12 @@ public class GameScreen implements Screen {
     private static final float xGrav = 11;
     public static final Vector2 gravity = new Vector2(xGrav, -5.5f);
     
-    private static boolean gameOver;
+    private static boolean gameOver, isLoadingAssets;
     public static Battle battle;
     private static int levelWidth;
     private float generationRandThresh;
     
+    private App context;
     private Road road;
     private Array<Sprite> backgroundElements;
     private GameCamera gameCamera;
@@ -46,7 +47,7 @@ public class GameScreen implements Screen {
     private FPSLogger logger;
     private GameToolbar toolbar;
     
-    public GameScreen() {
+    public GameScreen(App context) {
         levelWidth = MathUtils.random(3200, 3400);
         logger = new FPSLogger();
     }
@@ -54,9 +55,8 @@ public class GameScreen implements Screen {
     @Override
     public void show() {
         JSONManager.parseProperties();
-        Assets.loadGameTextures();
+
         AppData.onResize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        Sounds.load();
         Fonts.load();
         
         generationRandThresh = START_GEN_RAND_THRESH;
@@ -177,6 +177,7 @@ public class GameScreen implements Screen {
             public boolean keyDown(int keycode) {
                 if(keycode == Keys.B) {
                     battle.getPlayer().releaseBomb();
+                    toolbar.bombButtonTouchDown();
                 }
                 else if(keycode == Keys.UP) {
                     battle.getPlayer().increaseElevation();
@@ -271,7 +272,7 @@ public class GameScreen implements Screen {
         
         if(!wasClamped) {
             if(gravity.x <= 0) {
-                skyline[0].setX(skyline[0].getX() + 0.75f);
+                skyline[0].setX(skyline[0].getX() + 15f);
                 skyline[1].setX(skyline[1].getX() + 0.3f);
             }
             else {
@@ -311,27 +312,35 @@ public class GameScreen implements Screen {
     }
     
     public void update(float delta) {
-        updatePlayer(delta);
-        checkForCollisions();
-        updateCamera();
-        
-        battle.update(delta);
-        
-        generationRandThresh += 0.000001f;
-        
-        if(Math.random() < generationRandThresh) {
-            battle.getEnemyArmy().add(Factory.enemyTankPool.obtain());
-            battle.getMyArmy().add(Factory.tankPool.obtain());
-        }
-        
-        if(Math.random() < generationRandThresh) {
-            Soldier s = (Factory.enemySoldierPool.obtain());
-            s.setParentArmy(battle.getEnemyArmy());
-            battle.getEnemyArmy().add(s);
+        if(!isLoadingAssets) {
+            updatePlayer(delta);
+            checkForCollisions();
+            updateCamera();
             
-            Soldier sa = (Factory.soldierPool.obtain());
-            sa.setParentArmy(battle.getMyArmy());
-            battle.getMyArmy().add(sa);
+            battle.update(delta);
+            
+            generationRandThresh += 0.000001f;
+            
+            if(Math.random() < generationRandThresh) {
+                battle.getEnemyArmy().add(Factory.enemyTankPool.obtain());
+                battle.getMyArmy().add(Factory.tankPool.obtain());
+            }
+            
+            if(Math.random() < generationRandThresh) {
+                Soldier s = (Factory.enemySoldierPool.obtain());
+                s.setParentArmy(battle.getEnemyArmy());
+                battle.getEnemyArmy().add(s);
+                
+                Soldier sa = (Factory.soldierPool.obtain());
+                sa.setParentArmy(battle.getMyArmy());
+                battle.getMyArmy().add(sa);
+            }
+        }
+        else {
+            if(Assets.lsUpdateRender(context)) {
+                Assets.getGameTextures();
+                isLoadingAssets = false;
+            }
         }
     }
     
@@ -456,12 +465,11 @@ public class GameScreen implements Screen {
 
     @Override
     public void pause() {
-        dispose();
+
     }
 
     @Override
     public void resume() {
-        Assets.loadGameTextures();
     }
 
     @Override
@@ -470,17 +478,9 @@ public class GameScreen implements Screen {
     }
 
     @Override
-    public void dispose() {        
-        toolbar.dispose();
-        battle.getPlayer().dispose();
-        battle.dispose();
+    public void dispose() {
         Assets.unloadGameTextures();
-        Sounds.dispose();
-        Fonts.unload();
-        
-        for(Sprite s : backgroundElements) {
-            s.getTexture().dispose();
-        }
+        Assets.dispose();
     }
 
     public static Plane getPlayer() {
