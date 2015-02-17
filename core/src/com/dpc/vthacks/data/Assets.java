@@ -2,21 +2,26 @@ package com.dpc.vthacks.data;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.dpc.vthacks.App;
+import com.dpc.vthacks.screens.GameScreen;
 
 public class Assets {
     private static TextureAtlas skinAtlas, gameAtlas;
     public static TextureRegion plane, bomb, road, background, tankShell, menuBackground, enemyBase, playerBase, healthbar, bullet;
-    private static TextureRegion[] buildings;
-    private static TextureRegion[] skylines;
-    private static AtlasRegion[] tankFrames;
-    private static AtlasRegion[] soldierFrames;
-    private static AtlasRegion[] enemySoldierFrames;
-    private static AtlasRegion[] enemyTankFrames;
-    private static AtlasRegion[] explosionFrames;
+    private static TextureRegion[] buildings, skylines;
+    private static AtlasRegion[] tankFrames, soldierFrames, enemySoldierFrames, enemyTankFrames, explosionFrames;
+    private static TextureRegion barBackground, progressBar;
+    private static AssetManager manager = new AssetManager();
+    private static Sound explosion;
+    private static Music pressDown, pressUp, shot;
+    private static float shotTimer;
+    private static int loaded;
     
     public static void loadSkins() {
         skinAtlas = new TextureAtlas("skinPack.pack");
@@ -30,8 +35,64 @@ public class Assets {
         menuBackground = new TextureRegion(new Texture(Gdx.files.internal("MenuScreen.png")));
     }
 
+    public static void loadLoadingScreenTextures() {
+        manager.load("barBackground.png", Texture.class);
+        manager.load("barForeground.png", Texture.class);
+        
+        manager.finishLoading();
+        
+        barBackground = new TextureRegion(manager.get("barBackground.png", Texture.class));
+        progressBar = new TextureRegion(manager.get("barForeground.png", Texture.class));
+        
+        loadGameTextures();
+    }
+    
     public static void loadGameTextures() {
-        gameAtlas = new TextureAtlas("gameAtlas.pack");
+        manager = new AssetManager();
+        manager.load("gameAtlas.pack", TextureAtlas.class);
+        manager.load("sounds/pressDown.wav", Music.class); 
+        manager.load("sounds/pressUp.wav", Music.class);
+        manager.load("sounds/explosion.wav", Sound.class);
+        manager.load("sounds/shot.wav", Music.class);
+    }
+    
+    public static AssetManager getManager() {
+        return manager;
+    }
+    
+    public static boolean lsUpdateRender(App app) {
+        if(manager != null) {
+            if(manager.update()) {
+                return true;
+            }
+            else {
+                App.batch.begin();
+                
+                float x = (AppData.width * 0.5f) - (progressBar.getRegionWidth() * 0.5f);
+                float y = (AppData.height * 0.5f) - (progressBar.getRegionHeight() * 0.5f);
+                
+                App.batch.draw(barBackground, 
+                              x,
+                              y);
+                
+                App.batch.draw(progressBar,
+                              6 + x,
+                              6 + y,
+                              progressBar.getRegionWidth() * manager.getProgress(), progressBar.getRegionHeight());
+                App.batch.end();
+            }
+        }
+        
+        return false;
+    }
+    
+    public static void getGameTextures() {
+        gameAtlas = manager.get("gameAtlas.pack", TextureAtlas.class);
+        
+        pressDown = manager.get("sounds/pressDown.wav", Music.class); 
+        pressUp = manager.get("sounds/pressUp.wav", Music.class); 
+        explosion = manager.get("sounds/explosion.wav", Sound.class); 
+        shot = manager.get("sounds/shot.wav", Music.class);
         
         setBuildings(new TextureRegion[6]);
         
@@ -96,41 +157,8 @@ public class Assets {
     }
     
     public static void unloadGameTextures() {
-        gameAtlas.dispose();
-        plane.getTexture().dispose();
-        road.getTexture().dispose();
-        background.getTexture().dispose();
-        tankShell.getTexture().dispose();
-        
-        playerBase.getTexture().dispose();
-        enemyBase.getTexture().dispose();
-        
-        bullet.getTexture().dispose();
-        healthbar.getTexture().dispose();
-        
-        for(TextureRegion t : getExplosionFrames()) {
-            t.getTexture().dispose();
-        }
-        
-        for(TextureRegion b : getEnemyTankFrames()) {
-            b.getTexture().dispose();
-        }
-        
-        for(TextureRegion b : getSoldierFrames()) {
-            b.getTexture().dispose();
-        }
-        
-        for(TextureRegion b : getBuildings()) {
-            b.getTexture().dispose();
-        }
-        
-        for(TextureRegion s : getSkylines()) {
-            s.getTexture().dispose();
-        }
-        
-        for(TextureRegion t : getTankFrames()) {
-            t.getTexture().dispose();
-        }
+        manager.clear();
+        manager.dispose();
     }
 
     public static AtlasRegion[] getExplosionFrames() {
@@ -187,5 +215,43 @@ public class Assets {
 
     public static void setBuildings(TextureRegion[] buildings) {
         Assets.buildings = buildings;
+    }
+    
+    public static void playExplosion() {
+        explosion.play();
+    }
+    
+    public static void playPressDown() {
+        if(!pressDown.isPlaying()) {
+            pressDown.play();
+        }
+    }
+    
+    public static void playPressUp() {
+        if(!pressUp.isPlaying()) {
+            pressUp.play();
+        }
+    }
+    
+    public static void playShot() {
+        shot.setVolume((float) Math.random() + 0.15f);
+        
+        if(!shot.isPlaying()) {
+            shot.play();
+        }
+        
+        shotTimer += Gdx.graphics.getDeltaTime();
+        
+        if(shotTimer >= 0.75f) {
+            shot.stop();
+            shotTimer = 0;
+        }
+    }
+    
+    public static void dispose() {
+        explosion.dispose();
+        shot.dispose();
+        pressUp.dispose();
+        pressDown.dispose();
     }
 }

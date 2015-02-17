@@ -15,8 +15,6 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.data.Fonts;
-import com.dpc.vthacks.data.Sounds;
-import com.dpc.vthacks.plane.Plane;
 import com.dpc.vthacks.screens.GameScreen;
 
 public class GameToolbar {
@@ -59,13 +57,13 @@ public class GameToolbar {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 soldierUpgradeButtonTouchDown();
-                Sounds.playPressDown();
+                Assets.playPressDown();
                 return true;
             }
             
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                Sounds.playPressUp();
+                Assets.playPressUp();
             }
         });
         
@@ -73,13 +71,13 @@ public class GameToolbar {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 towerUpgradeButtonTouchedDown();
-                Sounds.playPressDown();
+                Assets.playPressDown();
                 return true;
             }
             
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                Sounds.playPressUp();
+                Assets.playPressUp();
             }
         });
         
@@ -87,13 +85,13 @@ public class GameToolbar {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 tankUpgradeButtonTouchDown();
-                Sounds.playPressDown();
+                Assets.playPressDown();
                 return true;
             }
             
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                Sounds.playPressUp();
+                Assets.playPressUp();
             }
         });
         
@@ -101,13 +99,13 @@ public class GameToolbar {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 tankButtonTouchDown();
-                Sounds.playPressDown();
+                Assets.playPressDown();
                 return true;
             }
             
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                Sounds.playPressUp();
+                Assets.playPressUp();
             }
         });
         
@@ -115,13 +113,13 @@ public class GameToolbar {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 towerButtonTouchDown();
-                Sounds.playPressDown();
+                Assets.playPressDown();
                 return true;
             }
             
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                Sounds.playPressUp();
+                Assets.playPressUp();
             }
         });
         
@@ -129,13 +127,13 @@ public class GameToolbar {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 soldierButtonTouchDown();
-                Sounds.playPressDown();
+                Assets.playPressDown();
                 return true;
             }
             
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                Sounds.playPressUp();
+                Assets.playPressUp();
             }
         });
         
@@ -143,14 +141,14 @@ public class GameToolbar {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 bombButtonTouchDown();
-                Sounds.playPressDown();
+                Assets.playPressDown();
                 return true;
             }
             
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 bombButtonTouchUp();
-                Sounds.playPressUp();
+                Assets.playPressUp();
             }
         });
         
@@ -158,7 +156,7 @@ public class GameToolbar {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 strafeButtonTouchDown();
-                Sounds.playPressDown();
+                Assets.playPressDown();
                 return true;
             }
             
@@ -267,8 +265,7 @@ public class GameToolbar {
     }
     
     public void dispose() {
-        stage.dispose();
-    
+
     }
     
     public void tankUpgradeButtonTouchDown() {
