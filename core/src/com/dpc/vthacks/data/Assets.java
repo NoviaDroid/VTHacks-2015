@@ -3,6 +3,7 @@ package com.dpc.vthacks.data;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Music.OnCompletionListener;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -15,11 +16,12 @@ public class Assets {
     private static TextureAtlas skinAtlas, gameAtlas;
     public static TextureRegion plane, bomb, road, background, tankShell, menuBackground, enemyBase, playerBase, healthbar, bullet;
     private static TextureRegion[] buildings, skylines;
-    private static AtlasRegion[] tankFrames, soldierFrames, enemySoldierFrames, enemyTankFrames, explosionFrames;
+    private static AtlasRegion[] tankFrames, soldierFrames, enemySoldierFrames, enemyTankFrames, explosionFrames, planeFiringFrames;
     private static TextureRegion barBackground, progressBar;
     private static AssetManager manager = new AssetManager();
     private static Sound explosion;
-    private static Music pressDown, pressUp, shot;
+    private static Music pressDown, pressUp, shot, strafe;
+    private static Sound strafeEnd;
     private static float shotTimer;
     private static int loaded;
     
@@ -54,6 +56,8 @@ public class Assets {
         manager.load("sounds/pressUp.wav", Music.class);
         manager.load("sounds/explosion.wav", Sound.class);
         manager.load("sounds/shot.wav", Music.class);
+        manager.load("sounds/strafe.wav", Music.class);
+        manager.load("sounds/strafeEnd.wav", Sound.class);
     }
     
     public static AssetManager getManager() {
@@ -91,8 +95,10 @@ public class Assets {
         
         pressDown = manager.get("sounds/pressDown.wav", Music.class); 
         pressUp = manager.get("sounds/pressUp.wav", Music.class); 
+        strafeEnd = manager.get("sounds/strafeEnd.wav", Sound.class);
         explosion = manager.get("sounds/explosion.wav", Sound.class); 
         shot = manager.get("sounds/shot.wav", Music.class);
+        strafe = manager.get("sounds/strafe.wav", Music.class);
         
         setBuildings(new TextureRegion[6]);
         
@@ -107,6 +113,8 @@ public class Assets {
         setEnemyTankFrames(new AtlasRegion[3]);
         
         setExplosionFrames(new AtlasRegion[5]);
+        
+        setPlaneFiringFrames(new AtlasRegion[2]);
         
         for(int i = 0; i < 5; i++) {
             getExplosionFrames()[i] = gameAtlas.findRegion("Explosion" + (i + 1));
@@ -138,15 +146,27 @@ public class Assets {
             getEnemyTankFrames()[i] = gameAtlas.findRegion("ETank" + (i + 1));
         }
 
+        for(int i = 0; i < 2; i++) {
+            planeFiringFrames[i] = gameAtlas.findRegion("PlaneFiring" + (i + 1));
+        }
+        
+        plane = gameAtlas.findRegion("PlaneFiring");
         healthbar = gameAtlas.findRegion("healthbar");
         bullet = gameAtlas.findRegion("bullet");
         playerBase = gameAtlas.findRegion("Enemy Barrack");
         enemyBase = gameAtlas.findRegion("Enemy Barrack");      
         tankShell = gameAtlas.findRegion("ETank Shell");
         background = gameAtlas.findRegion("background");
-        plane = gameAtlas.findRegion("plane");
         bomb = gameAtlas.findRegion("bomb");
         road = gameAtlas.findRegion("road");
+        
+        flipPlayerRegions();
+    }
+    
+    public static void flipPlayerRegions() {
+        for(TextureRegion t : Assets.getPlaneFiringFrames()) {
+            t.flip(true, false);
+        }
         
         plane.flip(true, false);
     }
@@ -154,6 +174,14 @@ public class Assets {
     public static void unloadSkins() {
        // skinAtlas.dispose();
         menuBackground.getTexture().dispose();
+    }
+    
+    public static AtlasRegion[] getPlaneFiringFrames() {
+        return planeFiringFrames;
+    }
+    
+    public static void setPlaneFiringFrames(AtlasRegion[] planeFiringFrames) {
+        Assets.planeFiringFrames = planeFiringFrames;
     }
     
     public static void unloadGameTextures() {
@@ -197,6 +225,14 @@ public class Assets {
         return tankFrames;
     }
 
+    public static TextureRegion getPlane() {
+        return plane;
+    }
+    
+    public static void setPlane(TextureRegion plane) {
+        Assets.plane = plane;
+    }
+    
     public static void setTankFrames(AtlasRegion[] tankFrames) {
         Assets.tankFrames = tankFrames;
     }
@@ -227,10 +263,35 @@ public class Assets {
         }
     }
     
+    public static void playStrafe() {
+        if(!strafe.isPlaying()) {
+            strafe.setOnCompletionListener(GameScreen.battle.getPlayer());
+            strafe.play();
+        }
+    }
+    
+    public static void stopStrafe() {
+        if(strafe.isPlaying()) {
+            strafe.stop();
+        }
+    }
+    
     public static void playPressUp() {
         if(!pressUp.isPlaying()) {
             pressUp.play();
         }
+    }
+    
+    public static Music getStrafe() {
+        return strafe;
+    }
+    
+    public static void playStrafeEnd() {
+        strafeEnd.play();
+    }
+    
+    public static void stopStrafeEnd() {
+        strafeEnd.stop();
     }
     
     public static void playShot() {
@@ -247,9 +308,10 @@ public class Assets {
             shotTimer = 0;
         }
     }
-    
+
     public static void dispose() {
         explosion.dispose();
+        strafe.dispose();
         shot.dispose();
         pressUp.dispose();
         pressDown.dispose();

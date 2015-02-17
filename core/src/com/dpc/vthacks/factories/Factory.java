@@ -108,7 +108,7 @@ public class Factory {
     }
     
     public static Plane createPlayer() {
-        Plane plane = new Plane(Assets.plane, playerRange, playerDamage, playerHealth, enemyMaxHealth, playerVelX, playerVelY, myArmyX, myArmyY);
+        Plane plane = new Plane(Assets.getPlaneFiringFrames(), Assets.getPlane(), playerRange, playerDamage, playerHealth, enemyMaxHealth, playerVelX, playerVelY, myArmyX, myArmyY);
         plane.setParentArmy(GameScreen.battle.getMyArmy());
         return plane;
     }
@@ -126,7 +126,7 @@ public class Factory {
     }
     
     public static Plane createEnemyPlane(float x, float y) {
-        Plane t = new Plane(Assets.plane, enemyRange, enemyDamage, enemyHealth, enemyMaxHealth, enemyVelX, enemyVelY, x, y);
+        Plane t = new Plane(null, null, enemyRange, enemyDamage, enemyHealth, enemyMaxHealth, enemyVelX, enemyVelY, x, y);
         t.setParentArmy(GameScreen.battle.getEnemyArmy());
         return t;
     }
