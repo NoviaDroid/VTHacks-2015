@@ -14,7 +14,7 @@ import com.dpc.vthacks.input.GameToolbar;
 
 public class Plane extends Unit implements OnCompletionListener {
     private static final float PLUMMIT_TIME = 0.05f; // If no positive force applied in this time, plane will plummit
-    private static final int FALL_ROTATION = -5, RISE_ROTATION = 10, FALL_DELTA_FACTOR = 3, RISE_DELTA_FACTOR = 1;
+    private static final int FALL_ROTATION = -10, RISE_ROTATION = 10, FALL_DELTA_FACTOR = 2, RISE_DELTA_FACTOR = 1;
     private int targetRotation, money, level;
     private float experience;
     private static float goalExperience = 100;
