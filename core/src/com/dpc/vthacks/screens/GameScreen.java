@@ -6,8 +6,8 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.FPSLogger;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -34,16 +34,16 @@ public class GameScreen implements Screen {
     public static final Vector2 gravity = new Vector2(xGrav, -5.5f);
     
     private static boolean gameOver, isLoadingAssets;
-    public static Battle battle;
     private static int levelWidth;
     private float generationRandThresh;
     
     private App context;
     private Road road;
-    private Array<Sprite> backgroundElements;
+    public static Battle battle;
     private GameCamera gameCamera;
     private Sprite background;
     private Sprite[] skyline;
+    private Array<Sprite> backgroundElements;
     private FPSLogger logger;
     private GameToolbar toolbar;
     
@@ -85,7 +85,7 @@ public class GameScreen implements Screen {
         skyline[1] = new Sprite(Assets.getSkylines()[1]);
         skyline[1].setX(0);
         skyline[1].setY(road.getY() + road.getHeight());
-        skyline[1].setSize(levelWidth, AppData.height * 1f);
+        skyline[1].setSize(levelWidth, skyline[0].getHeight() * 0.9f);
         
         for(Sprite s : skyline) {
             backgroundElements.add(s);
@@ -111,7 +111,7 @@ public class GameScreen implements Screen {
         toolbar = new GameToolbar() {
 
             @Override
-            protected void towerButtonTouchDown() {
+            public void towerButtonTouchDown() {
             }
 
             @Override
@@ -120,8 +120,20 @@ public class GameScreen implements Screen {
             }
             
             @Override
+            public void strafeButtonTouchUp() {
+                battle.getPlayer().setStrafing(false);
+                
+                if(Assets.getStrafe().isPlaying()) {
+                    Assets.playStrafeEnd();
+                }
+                
+                Assets.stopStrafe();
+            }
+            
+            @Override
             public void strafeButtonTouchDown() {
-                battle.getPlayer().strafe();
+                battle.getPlayer().setStrafing(true);
+                Assets.playStrafe();
             }
             
             @Override
@@ -151,11 +163,14 @@ public class GameScreen implements Screen {
         road.setY(toolbar.getTop());
         
         float lastBuildingEnd = 0;
+        TextureRegion building;
         
-        for(int i = 0; i < 30; i++) {
-            Sprite s = new Sprite(Assets.getBuildings()[MathUtils.random(Assets.getBuildings().length - 1)]);
-            s.setSize(Assets.getBuildings()[i % Assets.getBuildings().length].getRegionWidth() * 3,
-                      Assets.getBuildings()[i % Assets.getBuildings().length].getRegionHeight() * 3);
+        for(int i = 0; i < 15; i++) {
+            building = Assets.getBuildings()[MathUtils.random(Assets.getBuildings().length - 1)];
+           
+            Sprite s = new Sprite(building);
+            s.setSize(levelWidth / 10,
+                      building.getRegionHeight() + AppData.height * 0.3f);
             
             s.setX(lastBuildingEnd);
             s.setY(road.getY() + road.getTexHeight());
@@ -182,6 +197,9 @@ public class GameScreen implements Screen {
                 else if(keycode == Keys.UP) {
                     battle.getPlayer().increaseElevation();
                 }
+                else if(keycode == Keys.S) {
+                    toolbar.strafeButtonTouchDown();
+                }
                 
                 return false;
             }
@@ -190,6 +208,9 @@ public class GameScreen implements Screen {
             public boolean keyUp(int keycode) {
                 if(keycode == Keys.UP) {
                     battle.getPlayer().decreaseElevation();
+                }
+                else if(keycode == Keys.S) {
+                    toolbar.strafeButtonTouchUp();
                 }
                 
                 return false;
@@ -232,8 +253,8 @@ public class GameScreen implements Screen {
             battle.getPlayer().setX(levelWidth - battle.getPlayer().getWidth() - 1);
             
             // Flip the plane
-            Assets.plane.flip(true, false);
-            battle.getPlayer().setRegion(Assets.plane);
+            Assets.flipPlayerRegions();
+            battle.getPlayer().setHeadingEast(false);
             
             // Now set the gravity on the x axis
             gravity.x = -xGrav;
@@ -242,8 +263,8 @@ public class GameScreen implements Screen {
             battle.getPlayer().setX(1);
             
             // Flip the plane
-            Assets.plane.flip(true, false);
-            battle.getPlayer().setRegion(Assets.plane);
+            Assets.flipPlayerRegions();
+            battle.getPlayer().setHeadingEast(true);
             
             // Now set the gravity on the x axis
             gravity.x = xGrav;
@@ -321,20 +342,20 @@ public class GameScreen implements Screen {
             
             generationRandThresh += 0.000001f;
             
-            if(Math.random() < generationRandThresh) {
-                battle.getEnemyArmy().add(Factory.enemyTankPool.obtain());
-                battle.getMyArmy().add(Factory.tankPool.obtain());
-            }
-            
-            if(Math.random() < generationRandThresh) {
-                Soldier s = (Factory.enemySoldierPool.obtain());
-                s.setParentArmy(battle.getEnemyArmy());
-                battle.getEnemyArmy().add(s);
-                
-                Soldier sa = (Factory.soldierPool.obtain());
-                sa.setParentArmy(battle.getMyArmy());
-                battle.getMyArmy().add(sa);
-            }
+//            if(Math.random() < generationRandThresh) {
+//                battle.getEnemyArmy().add(Factory.enemyTankPool.obtain());
+//                battle.getMyArmy().add(Factory.tankPool.obtain());
+//            }
+//            
+//            if(Math.random() < generationRandThresh) {
+//                Soldier s = (Factory.enemySoldierPool.obtain());
+//                s.setParentArmy(battle.getEnemyArmy());
+//                battle.getEnemyArmy().add(s);
+//                
+//                Soldier sa = (Factory.soldierPool.obtain());
+//                sa.setParentArmy(battle.getMyArmy());
+//                battle.getMyArmy().add(sa);
+//            }
         }
         else {
             if(Assets.lsUpdateRender(context)) {
@@ -460,7 +481,7 @@ public class GameScreen implements Screen {
         skyline[1] = new Sprite(Assets.getSkylines()[1]);
         skyline[1].setX(0);
         skyline[1].setY(road.getY() + road.getHeight());
-        skyline[1].setSize(levelWidth, AppData.height * 1.5f);
+        skyline[1].setSize(levelWidth, skyline[0].getHeight() * 0.9f);
     }
 
     @Override

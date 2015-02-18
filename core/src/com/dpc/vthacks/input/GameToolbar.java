@@ -38,7 +38,7 @@ public class GameToolbar {
         background = skin.getDrawable("Bomb Icon");
         
         bombButton = new ImageButton(skin.getDrawable("Bomb Icon"), skin.getDrawable("Bomb Icon Hover"));   
-        strafeButton = new ImageButton(skin.getDrawable("Bomb Icon"));
+        strafeButton = new ImageButton(skin.getDrawable("Bomb Icon"), skin.getDrawable("Bomb Icon Hover"));
         soldierButton = new ImageButton(skin.getDrawable("Troop Button"), skin.getDrawable("Troop Button Hover"));
         towerButton = new ImageButton(skin.getDrawable("Bomb Icon"));
         tankButton = new ImageButton(skin.getDrawable("Tank Button"), skin.getDrawable("Tank Button Hover"));
@@ -205,7 +205,7 @@ public class GameToolbar {
         // hGroup.addActor(vGroup);
 
         bombButton.setPosition(0, PADDING);
-        strafeButton.setPosition(bombButton.getWidth() + PADDING, PADDING);
+        strafeButton.setPosition(bombButton.getX() + bombButton.getWidth() + PADDING, 200);
         tankButton.setPosition(strafeButton.getWidth() + PADDING, PADDING);
         soldierButton.setPosition(tankButton.getX() + tankButton.getWidth() + PADDING, PADDING);
         tankUpgradeButton.setPosition(soldierButton.getX() + soldierButton.getWidth() + PADDING, PADDING);
@@ -233,17 +233,17 @@ public class GameToolbar {
         BATCH_COLOR = stage.getBatch().getColor();
     }
    
-    protected void strafeButtonTouchUp() {
-        
+    public void strafeButtonTouchUp() {
+        Assets.playPressUp();
     }
     
-    protected void towerButtonTouchDown() {
+    public void towerButtonTouchDown() {
     }
 
-    protected void towerUpgradeButtonTouchedDown() {
+    public void towerUpgradeButtonTouchedDown() {
     }
     
-    protected void soldierUpgradeButtonTouchDown() {
+    public void soldierUpgradeButtonTouchDown() {
     }
 
     public float getTop() {

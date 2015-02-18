@@ -24,7 +24,7 @@
     "health": "250",
     "damage": "50",
     "velX": "0", 
-    "velY": "14",
+    "velY": "11",
     "range": "480"
     "max health": "250"
   }],
@@ -41,8 +41,8 @@
   
   "bomb": [{
 	"damage": "100",
-	"velX": "7",
-	"velY": "8"
+	"velX": "8",
+	"velY": "5"
   }],
   
   "tank shell": [{

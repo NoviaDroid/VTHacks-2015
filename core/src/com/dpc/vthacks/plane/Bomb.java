@@ -1,5 +1,6 @@
 package com.dpc.vthacks.plane;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.dpc.vthacks.App;
 import com.dpc.vthacks.SpriteAnimation;
@@ -22,8 +23,10 @@ public class Bomb extends DynamicGameObject implements Poolable {
         
         N_WIDTH = getRegionWidth();
         N_HEIGHT = getRegionHeight();
-        EXP_WIDTH = Assets.getExplosionFrames()[0].getRegionWidth() * 5;
-        EXP_HEIGHT = Assets.getExplosionFrames()[0].getRegionHeight() * 5;
+        int fct = MathUtils.random(2, 5);
+                
+        EXP_WIDTH = Assets.getExplosionFrames()[0].getRegionWidth() * fct;
+        EXP_HEIGHT = Assets.getExplosionFrames()[0].getRegionHeight() * fct;
         
         explosion = new SpriteAnimation(Assets.getExplosionFrames(), 0.1f);
     }
@@ -41,7 +44,6 @@ public class Bomb extends DynamicGameObject implements Poolable {
             
             // Apply gravity
             applyVel(GameScreen.gravity.cpy().sub(GameScreen.gravity.x, getVelY()));
-           // addVel();
             
             // Gradually rotate the bomb
             setRotation(getRotation() + (TARGET_FALL_ROTATION - getRotation()) * delta * 2);

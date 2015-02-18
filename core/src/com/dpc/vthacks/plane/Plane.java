@@ -1,41 +1,66 @@
 package com.dpc.vthacks.plane;
 
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Music.OnCompletionListener;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 import com.dpc.vthacks.App;
+import com.dpc.vthacks.SpriteAnimation;
+import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.factories.Factory;
 import com.dpc.vthacks.infantry.Unit;
 import com.dpc.vthacks.input.GameToolbar;
 
-public class Plane extends Unit {
+public class Plane extends Unit implements OnCompletionListener {
     private static final float PLUMMIT_TIME = 0.05f; // If no positive force applied in this time, plane will plummit
-    private static final int FALL_ROTATION = -5, RISE_ROTATION = 15, FALL_DELTA_FACTOR = 4, RISE_DELTA_FACTOR = 2;
+    private static final int FALL_ROTATION = -10, RISE_ROTATION = 10, FALL_DELTA_FACTOR = 2, RISE_DELTA_FACTOR = 1;
     private int targetRotation, money, level;
     private float experience;
     private static float goalExperience = 100;
-    private boolean rising;
+    private boolean rising, headingEast, strafing;
     private float plummitTimer;
     private Array<Bomb> bombs;
+    private SpriteAnimation fireAnimation;
     
-    public Plane(TextureRegion region, float range, float damage, float health, float maxHealth, float velX, float velY, float x, float y) {
-        super(region, range, damage, health, maxHealth, velX, velY, x, y);
+    public Plane(AtlasRegion[] regions, TextureRegion initialRegion, float range, float damage, float health, float maxHealth, float velX, float velY, float x, float y) {
+        super(initialRegion, range, damage, health, maxHealth, velX, velY, x, y);
         
-        bombs = new Array<Bomb>(45);    
+        bombs = new Array<Bomb>(45);  
+        fireAnimation = new SpriteAnimation(regions, 0.1f);
     }
 
     @Override
     public void update(float delta) {
         if(rising) {
             addVel();
-            setRotation(getRotation() + (targetRotation - getRotation()) * delta * RISE_DELTA_FACTOR);
+            
+            if(headingEast) {
+                setRotation(getRotation() + (targetRotation - getRotation()) * delta * RISE_DELTA_FACTOR);
+            }
+            else {
+                setRotation(getRotation() - (targetRotation + getRotation()) * delta * RISE_DELTA_FACTOR);  
+            }
         }
         else {
             plummitTimer += delta;
             
             // Begin to plummit if no pos force has been applied lately
             if(plummitTimer >= PLUMMIT_TIME) {
-                setRotation(getRotation() + (targetRotation - getRotation()) * delta * FALL_DELTA_FACTOR);
+                if(headingEast) {
+                    setRotation(getRotation() + (targetRotation - getRotation()) * delta * FALL_DELTA_FACTOR);
+                }
+                else {
+                    setRotation(getRotation() - (targetRotation + getRotation()) * delta * FALL_DELTA_FACTOR);  
+                }
             }
+        }
+        
+        if(strafing) {
+            setRegion(fireAnimation.update(delta));
+        }
+        else {
+            setRegion(Assets.plane);
         }
         
         // Make each bomb continue to fall
@@ -68,10 +93,10 @@ public class Plane extends Unit {
         
     }
     
-    public void strafe() {
-        
+    public void setStrafing(boolean strafe) {
+        this.strafing = strafe;
     }
-
+    
     public static int getGoalExp() {
         return (int) goalExperience;
     }
@@ -122,6 +147,14 @@ public class Plane extends Unit {
         bombs.add(b);
     }
     
+    public void setHeadingEast(boolean headingEast) {
+        this.headingEast = headingEast;
+    }
+    
+    public boolean isHeadingEast() {
+        return headingEast;
+    }
+    
     public void decreaseElevation() {
         rising = false;
         targetRotation = FALL_ROTATION;
@@ -138,6 +171,12 @@ public class Plane extends Unit {
         for(Bomb b : bombs) {
             b.dispose();
         }
+    }
+
+    @Override
+    public void onCompletion(Music music) {
+        strafing = false;
+        System.out.println("on completion");
     }
   
 }
