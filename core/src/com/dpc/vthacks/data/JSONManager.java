@@ -7,7 +7,7 @@ import com.badlogic.gdx.utils.JsonValue;
 import com.dpc.vthacks.factories.Factory;
 import com.dpc.vthacks.infantry.Soldier;
 import com.dpc.vthacks.infantry.Tank;
-import com.dpc.vthacks.plane.Plane;
+import com.dpc.vthacks.properties.Properties;
 
 public class JSONManager {
     private static final String PROPERTIES_PATH = "json/properties.json";
@@ -28,60 +28,89 @@ public class JSONManager {
         JsonValue enemySoldier = root.getChild("enemy soldier");
         JsonValue enemyTank = root.getChild("enemy tank");
         
-        Factory.setEnemyDamage(enemyPlane.getFloat("damage"));
-        Factory.setEnemyHealth(enemyPlane.getInt("health"));
-        Factory.setEnemyVelX(enemyPlane.getFloat("velX"));
-        Factory.setEnemyVelY(enemyPlane.getFloat("velY"));
-        Factory.setEnemyRange(enemyPlane.getFloat("range"));
-        Factory.setEnemyMaxHealth(enemyPlane.getInt("max health"));
+        Properties enemyProperties = new Properties();
         
-        Factory.setPlayerRange(player.getFloat("range"));
-        Factory.setPlayerDamage(player.getFloat("damage"));
-        Factory.setPlayerHealth(player.getFloat("health"));
-        Factory.setPlayerVelX(player.getFloat("velX"));
-        Factory.setPlayerVelY(player.getFloat("velY"));
-        Factory.setPlayerMaxHealth(player.getInt("max health"));
+        enemyProperties.setDamage(enemyPlane.getFloat("damage"));
+        enemyProperties.setHealth(enemyPlane.getInt("health"));
+        enemyProperties.setVelX(enemyPlane.getFloat("velX"));
+        enemyProperties.setVelY(enemyPlane.getFloat("velY"));
+        enemyProperties.setRange(enemyPlane.getFloat("range"));
+        enemyProperties.setMaxHealth(enemyPlane.getInt("max health"));
         
-        Factory.setTankCost(tank.getInt("cost"));
-        Factory.setTankDamage(tank.getFloat("damage"));
-        Factory.setTankHealth(tank.getInt("health"));
-        Factory.setTankVelX(tank.getFloat("velX"));
-        Factory.setTankVelY(tank.getFloat("velY"));
-        Factory.setTankRange(tank.getFloat("range"));
-        Factory.setTankMaxHealth(tank.getInt("max health"));
+        Properties playerProperties = new Properties();
         
-        Factory.setSoldierCost(soldier.getInt("cost"));
-        Factory.setSoldierDamage(soldier.getFloat("damage"));
-        Factory.setSoldierHealth(soldier.getInt("health"));
-        Factory.setSoldierRange(soldier.getFloat("range"));
-        Factory.setSoldierVelX(soldier.getFloat("velX"));
-        Factory.setSoldierVelY(soldier.getFloat("velY"));
-        Factory.setSoldierMaxHealth(soldier.getInt("max health"));
+        playerProperties.setRange(player.getFloat("range"));
+        playerProperties.setDamage(player.getFloat("damage"));
+        playerProperties.setHealth(player.getFloat("health"));
+        playerProperties.setVelX(player.getFloat("velX"));
+        playerProperties.setVelY(player.getFloat("velY"));
+        playerProperties.setMaxHealth(player.getInt("max health"));
         
-        Factory.setBombDamage(bomb.getFloat("damage"));
-        Factory.setBombVelX(bomb.getFloat("velX"));
-        Factory.setBombVelY(bomb.getFloat("velY"));
+        Factory.setPlayerProperties(playerProperties);
         
-        Factory.setTankShellVelX(tankShell.getFloat("velX"));
-        Factory.setTankShellVelY(tankShell.getFloat("velY"));
+        Properties tankProperties = new Properties();
         
-        Factory.setEnemySoldierDamage(enemySoldier.getFloat("damage"));
-        Factory.setEnemySoldierHealth(enemySoldier.getInt("health"));
-        Factory.setEnemySoldierVelX(enemySoldier.getFloat("velX"));
-        Factory.setEnemySoldierVelY(enemySoldier.getFloat("velY"));
-        Factory.setEnemySoldierRange(enemySoldier.getFloat("range"));
-        Factory.setEnemySoldierMaxHealth(enemySoldier.getInt("max health"));
+        tankProperties.setCost(tank.getInt("cost"));
+        tankProperties.setDamage(tank.getFloat("damage"));
+        tankProperties.setHealth(tank.getInt("health"));
+        tankProperties.setVelX(tank.getFloat("velX"));
+        tankProperties.setVelY(tank.getFloat("velY"));
+        tankProperties.setRange(tank.getFloat("range"));
+        tankProperties.setMaxHealth(tank.getInt("max health"));
+
+        Factory.setTankProperties(tankProperties);
         
-        Factory.setEnemyTankDamage(enemyTank.getFloat("damage"));
-        Factory.setEnemyTankHealth(enemyTank.getInt("health"));
-        Factory.setEnemyTankRange(enemyTank.getFloat("range"));
-        Factory.setEnemyTankVelX(enemyTank.getFloat("velX"));
-        Factory.setEnemyTankVelY(enemyTank.getFloat("velY"));
-        Factory.setEnemyTankMaxHealth(enemyTank.getInt("max health"));
+        Properties soldierProperties = new Properties();
         
-        Soldier.setKillExp(enemySoldier.getInt("kill exp"));
-        Soldier.setKillMoney(enemySoldier.getInt("kill money"));
-        Tank.setKillExp(enemyTank.getInt("kill exp"));
-        Tank.setKillMoney(enemyTank.getInt("kill money"));
+        soldierProperties.setCost(soldier.getInt("cost"));
+        soldierProperties.setDamage(soldier.getFloat("damage"));
+        soldierProperties.setHealth(soldier.getInt("health"));
+        soldierProperties.setRange(soldier.getFloat("range"));
+        soldierProperties.setVelX(soldier.getFloat("velX"));
+        soldierProperties.setVelY(soldier.getFloat("velY"));
+        soldierProperties.setMaxHealth(soldier.getInt("max health"));
+        
+        Factory.setSoldierProperties(soldierProperties);
+        
+        Properties bombProperties = new Properties();
+        
+        bombProperties.setDamage(bomb.getFloat("damage"));
+        bombProperties.setVelX(bomb.getFloat("velX"));
+        bombProperties.setVelY(bomb.getFloat("velY"));
+        
+        Factory.setBombProperties(bombProperties);
+        
+        Properties tankShellProperties = new Properties();
+        
+        tankShellProperties.setVelX(tankShell.getFloat("velX"));
+        tankShellProperties.setVelY(tankShell.getFloat("velY"));
+        
+        Factory.setTankShellProperties(tankShellProperties);
+        
+        Properties enemySoldierProperties = new Properties();
+        
+        enemySoldierProperties.setDamage(enemySoldier.getFloat("damage"));
+        enemySoldierProperties.setHealth(enemySoldier.getInt("health"));
+        enemySoldierProperties.setVelX(enemySoldier.getFloat("velX"));
+        enemySoldierProperties.setVelY(enemySoldier.getFloat("velY"));
+        enemySoldierProperties.setRange(enemySoldier.getFloat("range"));
+        enemySoldierProperties.setMaxHealth(enemySoldier.getInt("max health"));
+        
+        Factory.setEnemySoldierProperties(enemySoldierProperties);
+        
+        Properties enemyTankProperties = new Properties();
+        
+        enemyTankProperties.setDamage(enemyTank.getFloat("damage"));
+        enemyTankProperties.setHealth(enemyTank.getInt("health"));
+        enemyTankProperties.setRange(enemyTank.getFloat("range"));
+        enemyTankProperties.setVelX(enemyTank.getFloat("velX"));
+        enemyTankProperties.setVelY(enemyTank.getFloat("velY"));
+        enemyTankProperties.setMaxHealth(enemyTank.getInt("max health"));
+        
+        Factory.setEnemyTankProperties(enemyTankProperties);
+        
+        Properties buildingProperties = new Properties();
+        
+        Factory.setBuildingProperties(buildingProperties);
     }
 }

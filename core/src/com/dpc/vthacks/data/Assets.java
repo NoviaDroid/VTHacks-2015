@@ -51,7 +51,7 @@ public class Assets {
     
     public static void loadGameTextures() {
         manager = new AssetManager();
-        manager.load("gameAtlas.pack", TextureAtlas.class);
+        manager.load("gamePack.pack", TextureAtlas.class);
         manager.load("sounds/pressDown.wav", Music.class); 
         manager.load("sounds/pressUp.wav", Music.class);
         manager.load("sounds/explosion.wav", Sound.class);
@@ -91,7 +91,7 @@ public class Assets {
     }
     
     public static void getGameTextures() {
-        gameAtlas = manager.get("gameAtlas.pack", TextureAtlas.class);
+        gameAtlas = manager.get("gamePack.pack", TextureAtlas.class);
         
         pressDown = manager.get("sounds/pressDown.wav", Music.class); 
         pressUp = manager.get("sounds/pressUp.wav", Music.class); 
@@ -265,7 +265,7 @@ public class Assets {
     
     public static void playStrafe() {
         if(!strafe.isPlaying()) {
-            strafe.setOnCompletionListener(GameScreen.battle.getPlayer());
+            strafe.setOnCompletionListener(GameScreen.getLevel().getPlayer());
             strafe.play();
         }
     }

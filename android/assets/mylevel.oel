@@ -1,0 +1,31 @@
+<level width="2400" height="800">
+  <background>
+    <skyline2 id="0" x="0" y="668" />
+    <skyline1 id="1" x="2" y="698" />
+  </background>  
+  <Layer1>
+    <Building1 id="5" x="0" y="650" />
+    <Building1 id="6" x="430" y="650" />
+    <Building1 id="7" x="860" y="650" />
+    <Building1 id="8" x="1290" y="650" />
+    <Building2 id="9" x="98" y="650" />
+    <Building3 id="10" x="248" y="650" />
+    <Building6 id="11" x="558" y="650" />
+    <Building2 id="12" x="680" y="650" />
+    <Building2 id="13" x="770" y="650" />
+    <Building4 id="14" x="998" y="650" />
+    <Building2 id="15" x="1462" y="650" />
+    <Building5 id="16" x="1612" y="650" />
+    <Road id="0" x="0" y="780" />
+    <Building1 id="1" x="1806" y="650" />
+    <Building2 id="2" x="1904" y="650" />
+    <Building6 id="3" x="2016" y="650" />
+    <Building1 id="4" x="2090" y="650" />
+    <Building3 id="17" x="2210" y="650" />
+    <Building6 id="18" x="2328" y="650" />
+  </Layer1>
+    <GameLayer>
+      <EnemySpawn id="0" x="2289" y="768" />
+      <EnemySpawn id="1" x="822" y="770" />
+  </GameLayer>
+</level>

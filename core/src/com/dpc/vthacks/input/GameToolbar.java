@@ -304,8 +304,8 @@ public class GameToolbar {
         experienceLabel.setText("Experience: " + exp);
         
         // Calculate the exp bar width
-        experienceBar.setWidth((GameScreen.battle.getPlayer().getExperience() / 
-                               (float) GameScreen.battle.getPlayer().getGoalExp()) * 100f);
+        experienceBar.setWidth((GameScreen.getLevel().getPlayer().getExperience() / 
+                               (float) GameScreen.getLevel().getPlayer().getGoalExp()) * 100f);
         
         experienceLabel.setPosition(experienceLabel.getX(), experienceLabel.getY());
     }
@@ -314,8 +314,8 @@ public class GameToolbar {
         healthLabel.setText("Health: " + f);
         
         // Calculate the exp bar width
-        healthBar.setWidth((GameScreen.battle.getPlayer().getHealth() / 
-                               (float) GameScreen.battle.getPlayer().getMaxHealth()) * 100f);
+        healthBar.setWidth((GameScreen.getLevel().getPlayer().getProperties().getHealth() / 
+                               (float) GameScreen.getLevel().getPlayer().getProperties().getMaxHealth()) * 100f);
         
         healthLabel.setPosition((AppData.width - healthLabel.getWidth() * 4), healthLabel.getY());
     }

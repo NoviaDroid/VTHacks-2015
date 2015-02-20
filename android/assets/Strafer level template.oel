@@ -1,0 +1,8 @@
+<level width="800" height="480">
+  <Layer1>
+    <Road id="1" x="377" y="0" />
+    <Road id="2" x="0" y="0" />
+    <Road id="3" x="212" y="0" />
+    <Road id="0" x="591" y="0" />
+  </Layer1>
+</level>

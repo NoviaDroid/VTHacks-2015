@@ -41,8 +41,8 @@
   
   "bomb": [{
 	"damage": "100",
-	"velX": "8",
-	"velY": "5"
+	"velX": "3",
+	"velY": "12"
   }],
   
   "tank shell": [{
@@ -70,5 +70,9 @@
     "kill exp": "40",
     "kill money": "15",
     "max health": "150"
+  }],
+  
+  "building": [{
+  	
   }]
 }

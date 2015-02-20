@@ -2,7 +2,6 @@ package com.dpc.vthacks.gameobject;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector2;
 
 public abstract class GameObject extends Sprite {
     

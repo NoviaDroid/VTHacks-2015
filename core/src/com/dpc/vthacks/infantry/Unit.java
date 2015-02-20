@@ -1,91 +1,73 @@
 package com.dpc.vthacks.infantry;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.dpc.vthacks.Collidable;
 import com.dpc.vthacks.MathUtil;
-import com.dpc.vthacks.army.Army;
-import com.dpc.vthacks.gameobject.DynamicGameObject;
+import com.dpc.vthacks.properties.Properties;
 
-public abstract class Unit extends DynamicGameObject {
-    private float damage, health, range, maxHealth;
-    private boolean isAttacking, moving;
-    private Army parentArmy;
-    private int cost;
+public abstract class Unit extends Collidable {
+    private Properties properties;
+    private boolean moving, attacking;
     
-    public Unit(TextureRegion region, float range, float damage, float health, float maxHealth, float velX, float velY, float x, float y) {
-        super(region, velX, velY, x, y);
-        this.range = range;
-        this.health = maxHealth;
-        this.damage = damage;
-        setMoving(true);
+    public Unit(TextureRegion region, Properties properties) {
+        super(region, properties);
+        this.properties = properties;
     }
 
     @Override
-    public abstract void update(float delta);
+    public void update(float delta) {
+        // Unit has died
+        if(properties.getHealth() < 0) {
+            onDeath();
+        }
+    }
 
+    @Override
+    public abstract void onCollision(Collidable obj);
+        
     @Override
     public abstract void render();
 
+    public abstract void onDeath();
+    
     public abstract void attack(Unit enemy);
-    
-    public abstract void takeDamage(Unit attacker);
-    
-    public float getRange() {
-        return range;
-    }
 
-    public void setAttacking(boolean isAttacking) {
-        this.isAttacking = isAttacking;
+    public abstract void onDamageTaken(float amount);
+    
+    public Properties getProperties() {
+        return properties;
     }
     
-    public boolean isAttacking() {
-        return isAttacking;
+    public void subVel() {
+        setPosition(getX() - properties.getVelX(), getY() - properties.getVelY());
+    }
+    
+    public void addVel() {
+        setPosition(getX() + properties.getVelX(), getY() + properties.getVelY());
     }
     
     public void takeDamage(float damage) {
-        setHealth(getHealth() - damage);
-    }
-    
-    public void setRange(float range) {
-        this.range = range;
-    }
-
-    public float getHealth() {
-        return health;
-    }
-    
-    public void setHealth(float health) {
-        this.health = health;
-    }
-    
-    public float getDamage() {
-        return damage;
-    }
-    
-    public void setDamage(float damage) {
-        this.damage = damage;
+        properties.setHealth(properties.getHealth() - damage);
+        onDamageTaken(damage);
     }
     
     public boolean inRange(Unit u1) {
-        return MathUtil.dst(getX(), getY(), u1.getX(), u1.getY()) <= range;
-    }
-
-    public Army getParentArmy() {
-        return parentArmy;
-    }
-
-    public void setParentArmy(Army parentArmy) {
-        this.parentArmy = parentArmy;
+        return MathUtil.dst(getX(), getY(), u1.getX(), u1.getY()) <= properties.getRange();
     }
 
     public boolean isMoving() {
         return moving;
     }
-
+    
+    public boolean isAttacking() {
+        return attacking;
+    }
+    
     public void setMoving(boolean moving) {
         this.moving = moving;
     }
     
-    public float getMaxHealth() {
-        return maxHealth;
+    public void setAttacking(boolean attacking) {
+        this.attacking = attacking;
     }
 }
