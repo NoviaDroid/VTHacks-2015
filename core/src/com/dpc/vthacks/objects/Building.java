@@ -10,7 +10,7 @@ public class Building extends Collidable {
     public Building(TextureRegion region, Properties properties) {
         super(region, properties);
         
-        setSize(getWidth() * 2, getHeight() * 2);
+        setSize(getWidth() * 5, getHeight() * 5);
     }
 
     @Override

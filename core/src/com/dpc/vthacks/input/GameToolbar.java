@@ -10,6 +10,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
+import com.badlogic.gdx.scenes.scene2d.ui.Touchpad.TouchpadStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.dpc.vthacks.data.AppData;
@@ -21,6 +23,7 @@ public class GameToolbar {
     private Stage stage;
     private static Actor healthBar;
     private static Actor experienceBar;
+    private Touchpad joystick;
     private Drawable background;
     private Button bombButton, strafeButton, soldierButton, tankButton, towerButton,
                    tankUpgradeButton, towerUpgradeButton, soldierUpgradeButton;
@@ -45,6 +48,25 @@ public class GameToolbar {
         tankUpgradeButton = new ImageButton(skin.getDrawable("Tank Button +"), skin.getDrawable("Tank Button +Hover"));
         towerUpgradeButton = new ImageButton(skin.getDrawable("Bomb Icon"));
         soldierUpgradeButton = new ImageButton(skin.getDrawable("Soldier Button +"), skin.getDrawable("Soldier Button + Hover"));
+
+        
+        TouchpadStyle touchpadStyle = new TouchpadStyle();
+        Drawable touchBackground = skin.getDrawable("touchBackground");
+        Drawable touchKnob = skin.getDrawable("touchKnob");
+        touchpadStyle.background = touchBackground;
+        touchpadStyle.knob = touchKnob;
+        joystick = new Touchpad(10, touchpadStyle);
+        joystick.setBounds(15, 15, 100, 100);
+        
+        joystick.getColor().a = 0.75f;
+        soldierUpgradeButton.getColor().a = 0.75f;
+        towerUpgradeButton.getColor().a = 0.75f;
+        tankUpgradeButton.getColor().a = 0.75f;
+        towerButton.getColor().a = 0.75f;
+        soldierButton.getColor().a = 0.75f;
+        strafeButton.getColor().a = 0.75f;
+        tankButton.getColor().a = 0.75f;
+        bombButton.getColor().a = 0.75f;
         
         LabelStyle style = new LabelStyle();
         style.font = Fonts.getVisitor1();
@@ -204,13 +226,14 @@ public class GameToolbar {
         // hGroup.addActor(soldierUpgradeButton);
         // hGroup.addActor(vGroup);
 
-        bombButton.setPosition(0, PADDING);
-        strafeButton.setPosition(bombButton.getX() + bombButton.getWidth() + PADDING, 200);
-        tankButton.setPosition(strafeButton.getWidth() + PADDING, PADDING);
-        soldierButton.setPosition(tankButton.getX() + tankButton.getWidth() + PADDING, PADDING);
-        tankUpgradeButton.setPosition(soldierButton.getX() + soldierButton.getWidth() + PADDING, PADDING);
-        towerUpgradeButton.setPosition(tankUpgradeButton.getX() + tankUpgradeButton.getWidth() + PADDING, PADDING);
-        soldierUpgradeButton.setPosition(towerUpgradeButton.getX() , PADDING);
+        joystick.setPosition(PADDING, PADDING);
+        bombButton.setPosition(AppData.width - bombButton.getWidth(), PADDING);
+        strafeButton.setPosition(bombButton.getX() - strafeButton.getWidth() - PADDING, PADDING);
+        tankButton.setPosition(strafeButton.getX() - tankButton.getWidth() - PADDING, PADDING);
+        soldierButton.setPosition(tankButton.getX() - soldierButton.getWidth() - PADDING, PADDING);
+        tankUpgradeButton.setPosition(soldierButton.getX() - tankUpgradeButton.getWidth() - PADDING, PADDING);
+        towerUpgradeButton.setPosition(tankUpgradeButton.getX() - towerUpgradeButton.getWidth() - PADDING, PADDING);
+        soldierUpgradeButton.setPosition(towerUpgradeButton.getX() - soldierUpgradeButton.getWidth() - PADDING, PADDING);
         healthBar.setPosition(soldierUpgradeButton.getX() + soldierUpgradeButton.getWidth() + PADDING, (70 * 0.5f) - (healthBar.getHeight() * 0.75f) + (healthBar.getHeight() * 0.5f));
         experienceBar.setPosition(healthBar.getX(), healthBar.getY() - (healthBar.getHeight() * 0.75f) - (healthBar.getHeight() * 0.5f));
         experienceLabel.setPosition(soldierUpgradeButton.getX() + soldierUpgradeButton.getWidth() + PADDING, getTop() - experienceLabel.getHeight());
@@ -218,13 +241,15 @@ public class GameToolbar {
         moneyLabel.setPosition(soldierUpgradeButton.getX() + soldierUpgradeButton.getWidth() + PADDING, healthLabel.getY() - moneyLabel.getHeight());
 
         //healthBar.setWidth(AppData.width - (soldierUpgradeButton.getX() + soldierUpgradeButton.getWidth() + PADDING));
-        
+
+       
+        stage.addActor(joystick);
         stage.addActor(bombButton);
         stage.addActor(strafeButton);
         stage.addActor(tankButton);
         stage.addActor(soldierButton);
         stage.addActor(tankUpgradeButton);
-        //stage.addActor(towerUpgradeButton);
+        stage.addActor(towerUpgradeButton);
         stage.addActor(soldierUpgradeButton);
         stage.addActor(moneyLabel);
         //stage.addActor(experienceLabel);
@@ -308,6 +333,10 @@ public class GameToolbar {
                                (float) GameScreen.getLevel().getPlayer().getGoalExp()) * 100f);
         
         experienceLabel.setPosition(experienceLabel.getX(), experienceLabel.getY());
+    }
+    
+    public Touchpad getJoystick() {
+        return joystick;
     }
     
     public static void setHealth(float f) {

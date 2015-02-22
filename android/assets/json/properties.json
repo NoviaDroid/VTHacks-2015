@@ -9,17 +9,6 @@
     "max health": "250"
   }],
   
-  "enemy plane": [{
-    "health": "100",
-    "damage": "30",
-    "velX": "14",
-    "velY": "14",
-    "range": "480",
-    "kill exp": "70"
-    "kill money": "25"
-    "max health": "100"
-  }],
-  
   "player": [{
     "health": "250",
     "damage": "50",
@@ -50,29 +39,12 @@
   	"velY": "14"
   }],
   
-  "enemy soldier": [{
-  	"velX": "-3",
-  	"velY": "0",
+  "zombie": [{
+  	"velX": "2",
+  	"velY": "2",
   	"damage": "1",
   	"range": "150",
   	"health": "50",
-    "kill exp": "10"
-    "kill money": "5"
     "max health": "80"
-  }],
-  
-  "enemy tank": [{
-    "health": "140",
-    "damage": "25",
-    "velX": "-6",
-    "velY": "0",
-    "range": "400",
-    "kill exp": "40",
-    "kill money": "15",
-    "max health": "150"
-  }],
-  
-  "building": [{
-  	
   }]
 }

@@ -60,6 +60,22 @@ public class Properties {
         return vel;
     }
     
+    public void addVel() {
+        pos.add(vel);
+    }
+    
+    public Properties addPos(Vector2 vector) {
+        pos.add(vector);
+
+        return this;
+    }
+    
+    public Properties sclPos(float scl) {
+        pos.scl(scl);
+
+        return this;
+    }
+    
     public void setDamage(float damage) {
         this.damage = damage;
     }
@@ -118,5 +134,10 @@ public class Properties {
     
     public void setVelY(float velY) {
         vel.y = velY;
+    }
+
+    public void setPos(float x, float y) {
+        pos.x = x;
+        pos.y = y;
     }
 }

@@ -1,6 +1,7 @@
 package com.dpc.vthacks.infantry;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.dpc.vthacks.Collidable;
 import com.dpc.vthacks.MathUtil;
 import com.dpc.vthacks.properties.Properties;
@@ -11,6 +12,7 @@ public abstract class Unit extends Collidable {
     
     public Unit(TextureRegion region, Properties properties) {
         super(region, properties);
+
         this.properties = properties;
     }
 
@@ -21,7 +23,7 @@ public abstract class Unit extends Collidable {
             onDeath();
         }
     }
-
+    
     @Override
     public abstract void onCollision(Collidable obj);
         
@@ -44,6 +46,10 @@ public abstract class Unit extends Collidable {
     
     public void addVel() {
         setPosition(getX() + properties.getVelX(), getY() + properties.getVelY());
+    }
+    
+    public void applyGravity(Vector2 vector) {
+        setPosition(getX() + vector.x, getY() + vector.y);
     }
     
     public void takeDamage(float damage) {

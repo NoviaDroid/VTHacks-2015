@@ -5,8 +5,6 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.dpc.vthacks.factories.Factory;
-import com.dpc.vthacks.infantry.Soldier;
-import com.dpc.vthacks.infantry.Tank;
 import com.dpc.vthacks.properties.Properties;
 
 public class JSONManager {
@@ -22,20 +20,9 @@ public class JSONManager {
         JsonValue tank = root.getChild("tank");
         JsonValue soldier = root.getChild("soldier");
         JsonValue player = root.getChild("player");
-        JsonValue enemyPlane = root.getChild("enemy plane");
         JsonValue bomb = root.getChild("bomb");
         JsonValue tankShell = root.getChild("tank shell");
-        JsonValue enemySoldier = root.getChild("enemy soldier");
-        JsonValue enemyTank = root.getChild("enemy tank");
-        
-        Properties enemyProperties = new Properties();
-        
-        enemyProperties.setDamage(enemyPlane.getFloat("damage"));
-        enemyProperties.setHealth(enemyPlane.getInt("health"));
-        enemyProperties.setVelX(enemyPlane.getFloat("velX"));
-        enemyProperties.setVelY(enemyPlane.getFloat("velY"));
-        enemyProperties.setRange(enemyPlane.getFloat("range"));
-        enemyProperties.setMaxHealth(enemyPlane.getInt("max health"));
+        JsonValue zombie = root.getChild("zombie");
         
         Properties playerProperties = new Properties();
         
@@ -87,30 +74,19 @@ public class JSONManager {
         
         Factory.setTankShellProperties(tankShellProperties);
         
-        Properties enemySoldierProperties = new Properties();
-        
-        enemySoldierProperties.setDamage(enemySoldier.getFloat("damage"));
-        enemySoldierProperties.setHealth(enemySoldier.getInt("health"));
-        enemySoldierProperties.setVelX(enemySoldier.getFloat("velX"));
-        enemySoldierProperties.setVelY(enemySoldier.getFloat("velY"));
-        enemySoldierProperties.setRange(enemySoldier.getFloat("range"));
-        enemySoldierProperties.setMaxHealth(enemySoldier.getInt("max health"));
-        
-        Factory.setEnemySoldierProperties(enemySoldierProperties);
-        
-        Properties enemyTankProperties = new Properties();
-        
-        enemyTankProperties.setDamage(enemyTank.getFloat("damage"));
-        enemyTankProperties.setHealth(enemyTank.getInt("health"));
-        enemyTankProperties.setRange(enemyTank.getFloat("range"));
-        enemyTankProperties.setVelX(enemyTank.getFloat("velX"));
-        enemyTankProperties.setVelY(enemyTank.getFloat("velY"));
-        enemyTankProperties.setMaxHealth(enemyTank.getInt("max health"));
-        
-        Factory.setEnemyTankProperties(enemyTankProperties);
-        
         Properties buildingProperties = new Properties();
         
         Factory.setBuildingProperties(buildingProperties);
+        
+        Properties zombieProperties = new Properties();
+        
+        zombieProperties.setDamage(zombie.getFloat("damage"));
+        zombieProperties.setHealth(zombie.getInt("health"));
+        zombieProperties.setRange(zombie.getFloat("range"));
+        zombieProperties.setVelX(zombie.getFloat("velX"));
+        zombieProperties.setVelY(zombie.getFloat("velY"));
+        zombieProperties.setMaxHealth(zombie.getInt("max health"));
+        
+        Factory.setZombieProperties(zombieProperties);
     }
 }

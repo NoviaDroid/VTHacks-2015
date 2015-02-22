@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.utils.Array;
 import com.dpc.vthacks.App;
 import com.dpc.vthacks.Level;
+import com.dpc.vthacks.Player;
 import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.data.Fonts;
@@ -25,6 +26,7 @@ import com.dpc.vthacks.objects.LayerManager;
 public class GameScreen implements Screen {
     private final App context;
     private static Level level;
+    private Player player;
     private FPSLogger logger;
     private GameToolbar toolbar;
     
@@ -54,6 +56,12 @@ public class GameScreen implements Screen {
                 
                 level.addLayer(gameLayer);
             }
+            
+            level.addZombie(Factory.createZombie());
+            
+            player = Factory.createPlayer();
+            
+            level.setPlayer(player);
             
         } catch (IOException e) {
             e.printStackTrace();
@@ -114,7 +122,7 @@ public class GameScreen implements Screen {
                     toolbar.bombButtonTouchDown();
                 }
                 else if(keycode == Keys.UP) {
-
+                    player.increaseElevation();
                 }
                 else if(keycode == Keys.S) {
                     toolbar.strafeButtonTouchDown();
@@ -126,7 +134,7 @@ public class GameScreen implements Screen {
             @Override
             public boolean keyUp(int keycode) {
                 if(keycode == Keys.UP) {
-
+                    player.decreaseElevation();
                 }
                 else if(keycode == Keys.S) {
                     toolbar.strafeButtonTouchUp();
@@ -159,6 +167,8 @@ public class GameScreen implements Screen {
 
     public void update(float delta) {
         level.update(delta);
+        
+        player.walk(toolbar.getJoystick().getKnobPercentX() * 3, toolbar.getJoystick().getKnobPercentY() * 3);
     }
     
     @Override

@@ -14,7 +14,7 @@ public abstract class AnimatedUnit extends Unit {
     public AnimatedUnit(AtlasRegion[] frames, TextureRegion initialFrame, Properties properties, float animationSpeed) {
         super(initialFrame, properties);
         this.initialFrame = initialFrame;
-        
+
         animation = new SpriteAnimation(frames, animationSpeed);
         playing = true; 
     }
@@ -25,10 +25,17 @@ public abstract class AnimatedUnit extends Unit {
         if(playing) {
             setRegion(animation.update(delta));
         }
+        else {
+            setRegion(animation.update(delta));
+        }
     }
     
     public void render() {
         draw(App.batch);
+    }
+    
+    public void setAnimationFrames(AtlasRegion[] frames, float speed) {
+        animation = new SpriteAnimation(frames, speed);
     }
     
     public SpriteAnimation getAnimation() {

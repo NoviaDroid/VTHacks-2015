@@ -2,14 +2,13 @@ package com.dpc.vthacks;
 
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.dpc.vthacks.data.AppData;
-import com.dpc.vthacks.factories.Factory;
 import com.dpc.vthacks.gameobject.GameObject;
 import com.dpc.vthacks.infantry.Unit;
 import com.dpc.vthacks.objects.LayerManager;
 import com.dpc.vthacks.objects.LayerManager.Layer;
-import com.dpc.vthacks.plane.Player;
 import com.dpc.vthacks.zombie.Zombie;
 
 public class Level {
@@ -19,16 +18,35 @@ public class Level {
     private LayerManager layers;
     private GameCamera gameCamera;
     private InputAdapter inputAdapter;
+    private Vector3 input;
     
     public Level() {
+        input = new Vector3();
         layers = new LayerManager(2);
         playerArmy = new Array<Unit>();
         zombies = new Array<Zombie>();
-        player = Factory.createPlayer();
         
         initializeCamera();
+
         
         inputAdapter = new InputAdapter() {
+            
+            @Override
+            public boolean mouseMoved(int screenX, int screenY) {
+                gameCamera.unproject(input.set(screenX, screenY, 0));
+                
+                for(Zombie z : zombies) {
+                    if(MathUtil.dst(input.x, input.y, z.getX(), z.getY()) <= 200f) {
+                        z.setCurrentTarget(input.x, input.y);   
+                    }
+                    else {
+                        z.setCurrentTarget(0, 50);
+                    }
+                }
+                
+                return super.mouseMoved(screenX, screenY);
+            }
+            
             @Override
             public boolean keyDown(int keycode) {
                 if(keycode == Keys.LEFT) {
@@ -66,6 +84,7 @@ public class Level {
     public void update(float delta) {
         updateObjects(delta);
         checkForCollisions();
+        updateCamera();
     }
     
     public void render() {
@@ -82,6 +101,8 @@ public class Level {
             zombie.render();
         }
         
+        player.render();
+        
         App.batch.end();
     }
     
@@ -93,6 +114,9 @@ public class Level {
         for(Unit zombie : zombies) {
             zombie.update(delta);
         }
+        
+        player.update(delta);
+        
     }
     
     public void checkForCollisions() {
@@ -147,6 +171,10 @@ public class Level {
         layers.addLayer(layer);
     }
     
+    public void addZombie(Zombie zombie) {
+        zombies.add(zombie);
+    }
+    
     public Array<Zombie> getZombies() {
         return zombies;
     }
@@ -165,6 +193,15 @@ public class Level {
     
     public void setPlayerArmy(Array<Unit> playerArmy) {
         this.playerArmy = playerArmy;
+    }
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        
+        return super.clone();
+    }
+    
+    public void setPlayer(Player player) {
+        this.player = player;
     }
     
     public void setZombies(Array<Zombie> zombies) {

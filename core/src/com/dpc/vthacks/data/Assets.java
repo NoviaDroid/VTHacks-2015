@@ -14,10 +14,11 @@ import com.dpc.vthacks.screens.GameScreen;
 
 public class Assets {
     private static TextureAtlas skinAtlas, gameAtlas;
-    public static TextureRegion plane, bomb, road, background, tankShell, menuBackground, enemyBase, playerBase, healthbar, bullet;
+    public static TextureRegion plane, emptyPlane, bomb, road, background, tankShell, menuBackground, enemyBase, playerBase, healthbar, bullet;
     private static TextureRegion[] buildings, skylines;
-    private static AtlasRegion[] tankFrames, soldierFrames, enemySoldierFrames, enemyTankFrames, explosionFrames, planeFiringFrames;
+    private static AtlasRegion[] tankFrames, soldierFrames, enemySoldierFrames, enemyTankFrames, explosionFrames, planeFiringFrames, playerWalkFrames;
     private static TextureRegion barBackground, progressBar;
+    private static TextureRegion playerStationary;
     private static AssetManager manager = new AssetManager();
     private static Sound explosion;
     private static Music pressDown, pressUp, shot, strafe;
@@ -116,6 +117,13 @@ public class Assets {
         
         setPlaneFiringFrames(new AtlasRegion[2]);
         
+        playerWalkFrames = new AtlasRegion[3];
+        
+        for(int i = 0; i < 3; i++) {
+            playerWalkFrames[i] = gameAtlas.findRegion("ETroop2Running" + (i + 1));
+            playerWalkFrames[i].flip(true, false);
+        }
+        
         for(int i = 0; i < 5; i++) {
             getExplosionFrames()[i] = gameAtlas.findRegion("Explosion" + (i + 1));
         }
@@ -148,8 +156,11 @@ public class Assets {
 
         for(int i = 0; i < 2; i++) {
             planeFiringFrames[i] = gameAtlas.findRegion("PlaneFiring" + (i + 1));
+            planeFiringFrames[i].flip(true, false);
         }
         
+        playerStationary = gameAtlas.findRegion("ETroopTier2Idle1");
+        emptyPlane = gameAtlas.findRegion("planeLatchOpen");
         plane = gameAtlas.findRegion("PlaneFiring");
         healthbar = gameAtlas.findRegion("healthbar");
         bullet = gameAtlas.findRegion("bullet");
@@ -160,15 +171,8 @@ public class Assets {
         bomb = gameAtlas.findRegion("bomb");
         road = gameAtlas.findRegion("road");
         
-        flipPlayerRegions();
-    }
-    
-    public static void flipPlayerRegions() {
-        for(TextureRegion t : Assets.getPlaneFiringFrames()) {
-            t.flip(true, false);
-        }
-        
         plane.flip(true, false);
+        playerStationary.flip(true, false);
     }
     
     public static void unloadSkins() {
@@ -221,6 +225,12 @@ public class Assets {
         Assets.soldierFrames = soldierFrames;
     }
 
+    public static TextureRegion getEmptyPlane() {
+        return emptyPlane;
+    }
+    public static void setEmptyPlane(TextureRegion emptyPlane) {
+        Assets.emptyPlane = emptyPlane;
+    }
     public static AtlasRegion[] getTankFrames() {
         return tankFrames;
     }
@@ -241,6 +251,14 @@ public class Assets {
         return skylines;
     }
 
+    public static TextureRegion getPlayerStationary() {
+        return playerStationary;
+    }
+    
+    public static AtlasRegion[] getPlayerWalkFrames() {
+        return playerWalkFrames;
+    }
+    
     public static void setSkylines(TextureRegion[] skylines) {
         Assets.skylines = skylines;
     }
@@ -265,7 +283,7 @@ public class Assets {
     
     public static void playStrafe() {
         if(!strafe.isPlaying()) {
-            strafe.setOnCompletionListener(GameScreen.getLevel().getPlayer());
+            //strafe.setOnCompletionListener(GameScreen.getLevel().getPlayer());
             strafe.play();
         }
     }
