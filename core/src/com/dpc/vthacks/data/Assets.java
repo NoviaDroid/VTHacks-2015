@@ -16,7 +16,7 @@ public class Assets {
     private static TextureAtlas skinAtlas, gameAtlas;
     public static TextureRegion plane, emptyPlane, bomb, road, background, tankShell, menuBackground, enemyBase, playerBase, healthbar, bullet;
     private static TextureRegion[] buildings, skylines;
-    private static AtlasRegion[] tankFrames, soldierFrames, enemySoldierFrames, enemyTankFrames, explosionFrames, planeFiringFrames, playerWalkFrames;
+    private static AtlasRegion[] tankFrames, playerStandingStillFrames, soldierFrames, enemySoldierFrames, enemyTankFrames, explosionFrames, planeFiringFrames, playerWalkFrames;
     private static TextureRegion barBackground, progressBar;
     private static TextureRegion playerStationary;
     private static AssetManager manager = new AssetManager();
@@ -117,11 +117,18 @@ public class Assets {
         
         setPlaneFiringFrames(new AtlasRegion[2]);
         
+        playerStandingStillFrames = new AtlasRegion[3];
+        
         playerWalkFrames = new AtlasRegion[3];
         
         for(int i = 0; i < 3; i++) {
+            playerStandingStillFrames[i] = gameAtlas.findRegion("ETroopTier2Idle" + (i + 1));
+            playerStandingStillFrames[i].flip(true, false);
+        }
+        
+        for(int i = 0; i < 3; i++) {
             playerWalkFrames[i] = gameAtlas.findRegion("ETroop2Running" + (i + 1));
-            playerWalkFrames[i].flip(true, false);
+           playerWalkFrames[i].flip(true, false);
         }
         
         for(int i = 0; i < 5; i++) {
@@ -172,7 +179,7 @@ public class Assets {
         road = gameAtlas.findRegion("road");
         
         plane.flip(true, false);
-        playerStationary.flip(true, false);
+      //  playerStationary.flip(true, false);
     }
     
     public static void unloadSkins() {
@@ -327,6 +334,10 @@ public class Assets {
         }
     }
 
+    public static AtlasRegion[] getPlayerStandingStillFrames() {
+        return playerStandingStillFrames;
+    }
+    
     public static void dispose() {
         explosion.dispose();
         strafe.dispose();

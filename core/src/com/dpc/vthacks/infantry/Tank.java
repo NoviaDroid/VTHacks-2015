@@ -4,14 +4,16 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.dpc.vthacks.App;
 import com.dpc.vthacks.Collidable;
+import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.properties.Properties;
 
 public class Tank extends AnimatedUnit {
     
     public Tank(AtlasRegion[] regions, TextureRegion initialFrame, Properties properties) {
-        super(regions, initialFrame, properties, 0.25f);
+        super(Assets.getPlayerStandingStillFrames(), initialFrame, properties, 0.25f);
 
         setSize(getWidth() * 2, getHeight() * 2);
+        setPlaying(true);
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.gameobject.GameObject;
+import com.dpc.vthacks.objects.LayerManager;
 
 public class Road extends GameObject {
     private TextureRegion region;

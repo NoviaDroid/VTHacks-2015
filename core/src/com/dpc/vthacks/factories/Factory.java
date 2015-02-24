@@ -2,9 +2,7 @@ package com.dpc.vthacks.factories;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Pool;
-import com.dpc.vthacks.LevelProperties;
 import com.dpc.vthacks.Player;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.infantry.Soldier;
@@ -69,7 +67,7 @@ public class Factory {
     };
     
     public static Zombie createZombie() {
-        return new Zombie(Assets.getEnemySoldierFrames(), new Properties(zombieProperties));
+        return new Zombie(Assets.getPlayerStandingStillFrames(), new Properties(zombieProperties));
     }
     
     public static Building createRandomBuilding(float x, float y) {

@@ -25,5 +25,4 @@ public class Building extends Collidable {
     public void render() {
         draw(App.batch);
     }
-
 }

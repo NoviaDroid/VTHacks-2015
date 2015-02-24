@@ -40,10 +40,10 @@ public class SpriteAnimation implements Disposable {
         return animation.getKeyFrame(time, true);
     }
     
-    public void render(SpriteBatch batch, float delta) {
+    public void render(SpriteBatch batch, float delta) throws Exception {
         time += delta;
-        
         batch.draw(animation.getKeyFrame(time, true), 50, 50);
+        throw new Exception("not implemented completely lol");
     }
     
     public float getStateTime() {

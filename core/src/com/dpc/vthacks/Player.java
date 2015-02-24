@@ -1,9 +1,9 @@
 package com.dpc.vthacks;
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.dpc.vthacks.data.Assets;
@@ -23,7 +23,9 @@ public class Player extends AnimatedUnit {
     private boolean isFlying, movingLeft;
     private AtlasRegion[] planeFrames, walkFrames;
     private TextureRegion nonFiringPlane;
-    
+    private Rectangle ground;
+    private float animationSpeed = 1;
+
     public class Bomb extends AnimatedUnit implements Poolable {
         private static final int TARGET_FALL_ROTATION = -90;
         private final float EXPLOSION_WIDTH, EXPLOSION_HEIGHT, NORMAL_WIDTH, NORMAL_HEIGHT;
@@ -104,25 +106,24 @@ public class Player extends AnimatedUnit {
     }
     
     public Player(Properties properties, float animationSpeed) {
-        super(Assets.getPlayerWalkFrames(), Assets.getPlayerWalkFrames()[0], properties, animationSpeed);
+        super(Assets.getPlayerWalkFrames(), new SpriteAnimation(Assets.getPlayerStandingStillFrames(), 0.25f), properties, animationSpeed);
         
         planeFrames = Assets.getPlaneFiringFrames();
         nonFiringPlane = Assets.getPlane();
         walkFrames = Assets.getPlayerWalkFrames();
         
         setSize(getWidth() * 3, getHeight() * 3);
-        setPlaying(true);
+        setPlaying(false);
     }
     
     @Override
     public void update(float delta) {
         super.update(delta);
-
+        
         if(isFlying) {
             
         }
         else {
-            
         }
     }
     
@@ -143,9 +144,24 @@ public class Player extends AnimatedUnit {
     }
 
     public void walk(float amX, float amY) {
-        setX(getX() + amX);
-        setY(getY() + amY);
+        setX(getX() + amX * 3);
+        setY(getY() + amY * 2);
         
+        float tamY = (float) Math.abs(amX * 1f);
+        float tamX = (float) Math.abs(amY * 1.5f);
+        
+        // Set the animation speed based on how fast the player is walking
+        animationSpeed = tamX + tamY;
+
+        // Make sure the player is on the ground
+        if(getY() >= ground.y + ground.height - (ground.height / 7)) {
+            setY(ground.y + ground.height - (ground.height / 7));
+        }
+        else if(getY() <= ground.y) {
+            setY(ground.y);
+        }
+        
+        // Make sure the player is still on the map
         if(getX() + getWidth() > LevelProperties.WIDTH) {
             setX(LevelProperties.WIDTH - getWidth());
         }
@@ -153,13 +169,19 @@ public class Player extends AnimatedUnit {
             setX(0);
         }
         
+        // Stop the animation if the joystick isn't being touced
         if(amX == 0 && amY == 0) {
-            setPlaying(false);
+            if(isPlaying()) {
+                setPlaying(false);
+            }
         }
         else {
-            setPlaying(true);
+            if(!isPlaying()) {
+                setPlaying(true);
+            }
         }
         
+        // Move based on which direction the joystick is
         if(amX < 0 && !movingLeft) {
             moveLeft();
         }
@@ -212,6 +234,10 @@ public class Player extends AnimatedUnit {
         for(TextureRegion t : getAnimation().getAnimation().getKeyFrames()) {
             t.flip(true, false);
         }
+        
+        for(TextureRegion t : getRestingAnimation().getAnimation().getKeyFrames()) {
+            t.flip(true, false);
+        }
     }
     
     public void moveRight() {
@@ -220,12 +246,20 @@ public class Player extends AnimatedUnit {
         for(TextureRegion t : getAnimation().getAnimation().getKeyFrames()) {
             t.flip(true, false);
         }
+        
+        for(TextureRegion t : getRestingAnimation().getAnimation().getKeyFrames()) {
+            t.flip(true, false);
+        }
     }
     
     public boolean isRising() {
         return rising;
     }
 
+    public Rectangle getGround() {
+        return ground;
+    }
+    
     public void setRising(boolean rising) {
         this.rising = rising;
     }
@@ -282,6 +316,10 @@ public class Player extends AnimatedUnit {
         this.experience = experience;
     }
 
+    public void setGround(Rectangle rect) {
+        this.ground = rect;
+    }
+    
     public Bomb createBomb(AtlasRegion[] explosionFrames, AtlasRegion atlasRegion, Properties bombProperties) {
         return new Bomb(explosionFrames, atlasRegion, bombProperties);
     }

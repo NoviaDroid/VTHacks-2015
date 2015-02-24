@@ -2,6 +2,7 @@ package com.dpc.vthacks;
 
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.dpc.vthacks.data.AppData;
@@ -9,6 +10,7 @@ import com.dpc.vthacks.gameobject.GameObject;
 import com.dpc.vthacks.infantry.Unit;
 import com.dpc.vthacks.objects.LayerManager;
 import com.dpc.vthacks.objects.LayerManager.Layer;
+import com.dpc.vthacks.screens.GameScreen;
 import com.dpc.vthacks.zombie.Zombie;
 
 public class Level {
@@ -28,7 +30,6 @@ public class Level {
         
         initializeCamera();
 
-        
         inputAdapter = new InputAdapter() {
             
             @Override
@@ -63,9 +64,15 @@ public class Level {
         };
     }
     
-    private void updateCamera() {
-        gameCamera.position.set(player.getX(), gameCamera.position.y, 0);
+    private void updateCamera(float delta) {
+        float y = gameCamera.position.y;
         
+        if(player.getY() > gameCamera.position.y + (gameCamera.viewportHeight * 0.5f)) {
+            y = player.getY();
+        }
+        
+        gameCamera.lerp(player.getX(), y, delta);
+
         boolean wasClamped = false;
         
         // Clamp the camera's position
@@ -73,18 +80,35 @@ public class Level {
             gameCamera.position.x = (gameCamera.viewportWidth * 0.5f);
             wasClamped = true;
         }
-        else if(gameCamera.position.x + (gameCamera.viewportWidth * 0.5f) > LevelProperties.WIDTH) {
+         if(gameCamera.position.x + (gameCamera.viewportWidth * 0.5f) > LevelProperties.WIDTH) {
             gameCamera.position.x = LevelProperties.WIDTH - (gameCamera.viewportWidth * 0.5f);
             wasClamped = true;
         }
-
+         
+         if(!wasClamped) {
+             scrollBackgrounds(GameScreen.getJoystickPercentX(), GameScreen.getJoystickPercentY());
+         }
+         else {
+             scrollBackgrounds(0, 0);
+         }
+         
         gameCamera.update();
+    }
+    
+    public void scrollBackgrounds(float amX, float amY) {
+        for(LayerManager.Layer layer : layers.getLayers()) {
+            if(layer.getName().equals("background")) {
+                layer.setScrollX(amX);
+                layer.setScrollY(amY);
+                layer.setScrolling(true);
+            }
+        }
     }
     
     public void update(float delta) {
         updateObjects(delta);
         checkForCollisions();
-        updateCamera();
+        updateCamera(delta);
     }
     
     public void render() {
@@ -116,7 +140,6 @@ public class Level {
         }
         
         player.update(delta);
-        
     }
     
     public void checkForCollisions() {
@@ -163,7 +186,7 @@ public class Level {
         }
         
         gameCamera.position.set(smallestX + (gameCamera.viewportWidth * 0.5f), 
-                                smallestY + (gameCamera.viewportHeight * 0.5f) , 0);
+                                smallestY + (gameCamera.viewportHeight * 0.5f), 0);
         gameCamera.update();
     }
     

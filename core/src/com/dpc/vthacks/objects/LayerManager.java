@@ -9,17 +9,28 @@ public class LayerManager {
     
     public static class Layer {
         private Array<GameObject> objects;
+        private String name;
         private boolean scrolling;
         private float scrollX, scrollY;
         
-        public Layer() {
-            objects = new Array<GameObject>();
+        public Layer(String name) {
+            this(name, 0, 0, false);
         }
         
-        public Layer(float scrollX, float scrollY, boolean scrolling) {
+        public Layer(String name, float scrollX, float scrollY, boolean scrolling) {
+            this.name = name;
             this.scrollX = scrollX;
             this.scrolling = scrolling;
             this.scrollY = scrollY;
+            objects = new Array<GameObject>();
+        }
+        
+        public void update() {
+            for(GameObject o : objects) {
+                if(o.isScrollable()) {
+                    o.setPosition(o.getX() + (scrollX * o.getScrollX()), o.getY() + (scrollY * o.getScrollY()));
+                }
+            }
         }
         
         public void render() {
@@ -50,6 +61,14 @@ public class LayerManager {
             return scrollY;
         }
         
+        public String getName() {
+            return name;
+        }
+        
+        public void setName(String name) {
+            this.name = name;
+        }
+        
         public boolean isScrolling() {
             return scrolling;
         }
@@ -73,7 +92,7 @@ public class LayerManager {
     
     public void updateAndRender() {
         for(Layer layer : layers) {
-            //layer.setPosition(layer.getX() + layer.scrollX, layer.getY() + layer.scrollY);
+            layer.update();
             layer.render();
         }
     }

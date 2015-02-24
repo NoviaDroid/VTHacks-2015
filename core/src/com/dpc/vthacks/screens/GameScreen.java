@@ -9,9 +9,13 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectMap;
+import com.badlogic.gdx.utils.ObjectMap.Entries;
+import com.badlogic.gdx.utils.ObjectMap.Entry;
 import com.dpc.vthacks.App;
 import com.dpc.vthacks.Level;
 import com.dpc.vthacks.Player;
+import com.dpc.vthacks.Road;
 import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.data.Fonts;
@@ -26,6 +30,7 @@ import com.dpc.vthacks.objects.LayerManager;
 public class GameScreen implements Screen {
     private final App context;
     private static Level level;
+    private static float joystickPercentX, joystickPercentY;
     private Player player;
     private FPSLogger logger;
     private GameToolbar toolbar;
@@ -44,24 +49,11 @@ public class GameScreen implements Screen {
 
         try {
             level = new Level();
-            
-            Array<Array<GameObject>> objects = OgmoParser.parse("mylevel.oel");
-            
-            for(Array<GameObject> layer : objects) {
-                LayerManager.Layer gameLayer = new LayerManager.Layer();
-                
-                for(GameObject node : layer) {
-                    gameLayer.addObject(node);
-                }
-                
-                level.addLayer(gameLayer);
-            }
-            
-            level.addZombie(Factory.createZombie());
-            
+
             player = Factory.createPlayer();
-            
             level.setPlayer(player);
+            
+            OgmoParser.parse("mylevel.oel", level);
             
         } catch (IOException e) {
             e.printStackTrace();
@@ -168,7 +160,12 @@ public class GameScreen implements Screen {
     public void update(float delta) {
         level.update(delta);
         
-        player.walk(toolbar.getJoystick().getKnobPercentX() * 3, toolbar.getJoystick().getKnobPercentY() * 3);
+        joystickPercentX = toolbar.getJoystick().getKnobPercentX();
+        joystickPercentY = toolbar.getJoystick().getKnobPercentY();
+        
+        player.walk(joystickPercentX, joystickPercentY);
+        
+        //level.scrollBackgrounds(joystickPercentX, joystickPercentY);
     }
     
     @Override
@@ -209,5 +206,13 @@ public class GameScreen implements Screen {
     
     public static Level getLevel() {
         return level;
+    }
+    
+    public static float getJoystickPercentX() {
+        return joystickPercentX;
+    }
+    
+    public static float getJoystickPercentY() {
+        return joystickPercentY;
     }
 }

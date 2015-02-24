@@ -10,7 +10,7 @@ import com.dpc.vthacks.data.AppData;
 public class GameCamera extends OrthographicCamera {
     private Viewport viewport;
     private Vector3 target;
-    private float cameraSpeed;
+    private float cameraSpeed = 7;
     
     public GameCamera() {
         target = new Vector3();
