@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.dpc.vthacks.data.AppData;
+import com.dpc.vthacks.factories.Factory;
 import com.dpc.vthacks.gameobject.GameObject;
 import com.dpc.vthacks.infantry.Unit;
 import com.dpc.vthacks.objects.LayerManager;
@@ -21,8 +22,11 @@ public class Level {
     private GameCamera gameCamera;
     private InputAdapter inputAdapter;
     private Vector3 input;
+    private GameScreen context;
     
-    public Level() {
+    public Level(GameScreen context) {
+        this.context = context;
+        
         input = new Vector3();
         layers = new LayerManager(2);
         playerArmy = new Array<Unit>();
@@ -76,12 +80,12 @@ public class Level {
         boolean wasClamped = false;
         
         // Clamp the camera's position
-        if(gameCamera.position.x - (gameCamera.viewportWidth * 0.5f) < 0) {
-            gameCamera.position.x = (gameCamera.viewportWidth * 0.5f);
+        if(gameCamera.position.x - (gameCamera.viewportWidth * 0.385f) < 0) {
+            gameCamera.position.x = (gameCamera.viewportWidth * 0.385f);
             wasClamped = true;
         }
-         if(gameCamera.position.x + (gameCamera.viewportWidth * 0.5f) > LevelProperties.WIDTH) {
-            gameCamera.position.x = LevelProperties.WIDTH - (gameCamera.viewportWidth * 0.5f);
+         if(gameCamera.position.x + (gameCamera.viewportWidth * 0.385f) > LevelProperties.WIDTH) {
+            gameCamera.position.x = LevelProperties.WIDTH - (gameCamera.viewportWidth * 0.385f);
             wasClamped = true;
         }
          
@@ -109,6 +113,13 @@ public class Level {
         updateObjects(delta);
         checkForCollisions();
         updateCamera(delta);
+    //    generateZombies();
+    }
+    
+    public void generateZombies() {
+        if(Math.random() < 0.12) {
+            zombies.add(Factory.createZombie());
+        }
     }
     
     public void render() {
@@ -159,17 +170,8 @@ public class Level {
     }
     
     public void initializeCamera() {
-        int tmpW = AppData.width; 
-        int tmpH = AppData.height;
-        
-        AppData.width = 800;
-        AppData.height = 480;
-        
         gameCamera = new GameCamera();
-        
-        AppData.width =  tmpW;
-        AppData.height = tmpH;
-        
+                
         float smallestY = 0;
         float smallestX = 0;
         
@@ -185,8 +187,11 @@ public class Level {
             }
         }
         
-        gameCamera.position.set(smallestX + (gameCamera.viewportWidth * 0.5f), 
-                                smallestY + (gameCamera.viewportHeight * 0.5f), 0);
+        gameCamera.zoom = 0.75f;
+        
+        gameCamera.position.set(smallestX + (gameCamera.viewportWidth * 0.385f), 
+                                smallestY + (gameCamera.viewportHeight * 0.385f), 0);
+        
         gameCamera.update();
     }
     

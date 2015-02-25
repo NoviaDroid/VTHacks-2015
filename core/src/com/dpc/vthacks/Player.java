@@ -112,7 +112,7 @@ public class Player extends AnimatedUnit {
         nonFiringPlane = Assets.getPlane();
         walkFrames = Assets.getPlayerWalkFrames();
         
-        setSize(getWidth() * 3, getHeight() * 3);
+        setSize(getWidth() * 2, getHeight() * 2);
         setPlaying(false);
     }
     
@@ -144,8 +144,8 @@ public class Player extends AnimatedUnit {
     }
 
     public void walk(float amX, float amY) {
-        setX(getX() + amX * 3);
-        setY(getY() + amY * 2);
+        setX(getX() + amX * getVelX());
+        setY(getY() + amY * getVelY());
         
         float tamY = (float) Math.abs(amX * 1f);
         float tamX = (float) Math.abs(amY * 1.5f);

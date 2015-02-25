@@ -56,7 +56,7 @@ public class GameToolbar {
         touchpadStyle.background = touchBackground;
         touchpadStyle.knob = touchKnob;
         joystick = new Touchpad(10, touchpadStyle);
-        joystick.setBounds(15, 15, 100, 100);
+        joystick.setBounds(15, 15, 150, 150);
         
         joystick.getColor().a = 0.75f;
         soldierUpgradeButton.getColor().a = 0.75f;
@@ -207,15 +207,15 @@ public class GameToolbar {
 //               
 //                healthLabel.setPosition(healthBar.getX() + healthBar.getWidth() + PADDING, healthLabel.getY());
                 
-                getBatch().setProjectionMatrix(getCamera().combined);
-                getBatch().begin();
-                getBatch().draw(Assets.healthbar, healthBar.getX(), healthBar.getY(), healthBar.getWidth(), healthBar.getHeight());
-
-                getBatch().setColor(Color.GRAY);
-                getBatch().draw(Assets.healthbar, experienceBar.getX(), experienceBar.getY(), experienceBar.getWidth(), experienceBar.getHeight());
-                getBatch().setColor(BATCH_COLOR);
-                
-                getBatch().end();
+//                getBatch().setProjectionMatrix(getCamera().combined);
+//                getBatch().begin();
+//                getBatch().draw(Assets.healthbar, healthBar.getX(), healthBar.getY(), healthBar.getWidth(), healthBar.getHeight());
+//
+//                getBatch().setColor(Color.GRAY);
+//                getBatch().draw(Assets.healthbar, experienceBar.getX(), experienceBar.getY(), experienceBar.getWidth(), experienceBar.getHeight());
+//                getBatch().setColor(BATCH_COLOR);
+//                
+//                getBatch().end();
             }
         };
 
@@ -244,14 +244,14 @@ public class GameToolbar {
 
        
         stage.addActor(joystick);
-        stage.addActor(bombButton);
-        stage.addActor(strafeButton);
-        stage.addActor(tankButton);
-        stage.addActor(soldierButton);
-        stage.addActor(tankUpgradeButton);
-        stage.addActor(towerUpgradeButton);
-        stage.addActor(soldierUpgradeButton);
-        stage.addActor(moneyLabel);
+//        stage.addActor(bombButton);
+//        stage.addActor(strafeButton);
+//        stage.addActor(tankButton);
+//        stage.addActor(soldierButton);
+//        stage.addActor(tankUpgradeButton);
+//        stage.addActor(towerUpgradeButton);
+//        stage.addActor(soldierUpgradeButton);
+//        stage.addActor(moneyLabel);
         //stage.addActor(experienceLabel);
         //stage.addActor(healthLabel);
         

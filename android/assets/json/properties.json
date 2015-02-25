@@ -12,8 +12,8 @@
   "player": [{
     "health": "250",
     "damage": "50",
-    "velX": "0", 
-    "velY": "11",
+    "velX": "3", 
+    "velY": "2",
     "range": "480"
     "max health": "250"
   }],
@@ -40,8 +40,8 @@
   }],
   
   "zombie": [{
-  	"velX": "2",
-  	"velY": "2",
+  	"velX": "-2",
+  	"velY": "0",
   	"damage": "1",
   	"range": "150",
   	"health": "50",

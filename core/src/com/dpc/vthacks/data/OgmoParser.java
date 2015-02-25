@@ -49,7 +49,7 @@ public class OgmoParser {
                    
                     obj = new GameSprite(tex, 0, 0);
                     
-                    ((GameObject) obj).setSize(LevelProperties.WIDTH, tex.getRegionHeight() * 3);
+                    ((GameObject) obj).setSize(LevelProperties.WIDTH * 1.5f, AppData.height * 0.9f);
                 }    
                 else if(name.startsWith("Building")) {
                     obj = Factory.createBuilding(Assets.getBuildings()[Integer

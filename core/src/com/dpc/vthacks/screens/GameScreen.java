@@ -47,22 +47,6 @@ public class GameScreen implements Screen {
         Fonts.load();
         Factory.init();
 
-        try {
-            level = new Level();
-
-            player = Factory.createPlayer();
-            level.setPlayer(player);
-            
-            OgmoParser.parse("mylevel.oel", level);
-            
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        InputMultiplexer mplexer = new InputMultiplexer(); 
-
-        mplexer.addProcessor(level.getInputAdapter());
-        
         toolbar = new GameToolbar() {
 
             @Override
@@ -105,6 +89,33 @@ public class GameScreen implements Screen {
             }
         };
 
+        
+        try {
+            int w = AppData.width;
+            int h = AppData.height;
+
+            context.resize(1200, 800);
+            
+            level = new Level(this);
+
+            player = Factory.createPlayer();
+            
+            level.setPlayer(player);
+            level.onResize();
+            OgmoParser.parse("mylevel.oel", level);  
+          
+            context.resize(w, h);
+            
+            player.setPosition((AppData.width * 0.5f) - (player.getWidth() * 0.5f), 
+                    (player.getGround().getY() + (player.getGround().getHeight() * 0.5f)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        InputMultiplexer mplexer = new InputMultiplexer(); 
+
+        mplexer.addProcessor(level.getInputAdapter());
+        
         mplexer.addProcessor(toolbar.getStage());
         
         mplexer.addProcessor(new InputAdapter() {
@@ -181,7 +192,10 @@ public class GameScreen implements Screen {
     public void resize(int width, int height) {
         AppData.onResize(width, height);
         toolbar.onResize(width, height);
-        level.onResize();
+        
+        if(level != null) {
+            level.onResize();
+        }
     }
 
     @Override

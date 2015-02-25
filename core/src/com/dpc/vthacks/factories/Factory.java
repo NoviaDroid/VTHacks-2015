@@ -67,7 +67,7 @@ public class Factory {
     };
     
     public static Zombie createZombie() {
-        return new Zombie(Assets.getPlayerStandingStillFrames(), new Properties(zombieProperties));
+        return new Zombie(Assets.getEnemySoldierFrames(), new Properties(zombieProperties));
     }
     
     public static Building createRandomBuilding(float x, float y) {
