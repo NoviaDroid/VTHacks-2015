@@ -6,23 +6,23 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 
 public class Fonts {
-    private static BitmapFont visitor1;
+    private static BitmapFont zombie;
     
     public static void load() {
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/armalite.ttf"));
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/ZOMBIE.TTF"));
         FreeTypeFontParameter parameter = new FreeTypeFontParameter();
         
-        parameter.size = Gdx.graphics.getWidth() * 16 / 800;
-        System.out.println(parameter.size);
-        visitor1 = generator.generateFont(parameter); 
+        parameter.size = Gdx.graphics.getWidth() * 84 / 1200;
+
+        zombie = generator.generateFont(parameter); 
         generator.dispose(); 
     }
     
-    public static BitmapFont getVisitor1() {
-        return visitor1;
+    public static BitmapFont getZombie() {
+        return zombie;
     }
     
     public static void unload() {
-        visitor1.dispose();
+        zombie.dispose();
     }
 }

@@ -2,7 +2,8 @@ package com.dpc.vthacks.input;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -13,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad.TouchpadStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
@@ -21,13 +23,13 @@ import com.dpc.vthacks.screens.GameScreen;
 
 public class GameToolbar {
     private Stage stage;
-    private static Actor healthBar, experienceBar, playerIcon;
+    private static Sprite healthBarBackground, healthBar, experienceBar, playerIcon;
     private Touchpad joystick;
     private Drawable background;
     private Button bombButton, strafeButton, soldierButton, tankButton, towerButton,
                    tankUpgradeButton, towerUpgradeButton, soldierUpgradeButton;
     private static Label moneyLabel, experienceLabel, healthLabel;
-    
+    private int money;
     private final Color BATCH_COLOR;
     private static final int PADDING = 5;
     
@@ -68,7 +70,7 @@ public class GameToolbar {
         bombButton.getColor().a = 0.75f;
         
         LabelStyle style = new LabelStyle();
-        style.font = Fonts.getVisitor1();
+        style.font = Fonts.getZombie();
         
         moneyLabel = new Label("Money: 0", style);
         experienceLabel = new Label("Experience: ", style);
@@ -187,22 +189,28 @@ public class GameToolbar {
             }
         });
 
-        playerIcon = new Actor();
-        playerIcon.setWidth(Assets.playerIcon.getRegionWidth() * 10);
-        playerIcon.setHeight(Assets.playerIcon.getRegionHeight() * 10);
+        playerIcon = new Sprite(Assets.playerIcon);
+        playerIcon.setSize(Assets.playerIcon.getRegionWidth() * 10,
+                           Assets.playerIcon.getRegionHeight() * 10);
+
         playerIcon.setPosition(PADDING, (AppData.height - playerIcon.getHeight()) - PADDING);
         
         float h = (playerIcon.getHeight() * 0.5f) - PADDING;
         
-        healthBar = new Actor();
-        healthBar.setWidth(Assets.healthbar.getRegionWidth());
-        healthBar.setHeight(h);
-        healthBar.setPosition(playerIcon.getX() + playerIcon.getWidth(), 
-                              (playerIcon.getY() + playerIcon.getHeight()) - h);
+
+        healthBarBackground = new Sprite(Assets.healthBarBackground);
+        healthBarBackground.setPosition(playerIcon.getX() + playerIcon.getWidth(), 
+                                       (playerIcon.getY() + playerIcon.getHeight()) - h);
         
-        experienceBar = new Actor();
-        experienceBar.setWidth(Assets.healthbar.getRegionWidth());
-        experienceBar.setHeight(h);
+        healthBar = new Sprite(Assets.healthbar);
+        healthBar.setSize(Assets.healthBarBackground.getRegionWidth() - (Assets.healthBarBackground.getRegionHeight() * 0.135f * 2) ,
+                          Assets.healthBarBackground.getRegionHeight() * 0.73f);
+        
+        healthBar.setPosition(healthBarBackground.getX() + (Assets.healthBarBackground.getRegionHeight() * 0.135f),
+                              healthBarBackground.getY() + (Assets.healthBarBackground.getRegionHeight() * 0.135f));
+        
+        experienceBar = new Sprite(Assets.healthbar);
+        experienceBar.setSize(Assets.healthbar.getRegionWidth(), h);
         experienceBar.setPosition(healthBar.getX(), playerIcon.getY());
         
         experienceLabel.setPosition(soldierUpgradeButton.getX() + soldierUpgradeButton.getWidth() + PADDING, getTop() - experienceLabel.getHeight());
@@ -220,11 +228,12 @@ public class GameToolbar {
                 getBatch().setColor(BATCH_COLOR.r, BATCH_COLOR.g, BATCH_COLOR.b, 1);
                 getBatch().begin();
                 
-                getBatch().draw(Assets.playerIcon, playerIcon.getX(), playerIcon.getY(), playerIcon.getWidth(), playerIcon.getHeight());
-                getBatch().draw(Assets.healthbar, healthBar.getX(), healthBar.getY(), healthBar.getWidth(), healthBar.getHeight());
+                playerIcon.draw(getBatch());
+                healthBarBackground.draw(getBatch());
+                healthBar.draw(getBatch());
 
                 getBatch().setColor(Color.GRAY);
-                getBatch().draw(Assets.healthbar, experienceBar.getX(), experienceBar.getY(), experienceBar.getWidth(), experienceBar.getHeight());
+                experienceBar.draw(getBatch());
                 getBatch().setColor(BATCH_COLOR);
                 
                 getBatch().end();
@@ -247,7 +256,8 @@ public class GameToolbar {
         towerUpgradeButton.setPosition(tankUpgradeButton.getX() - towerUpgradeButton.getWidth() - PADDING, PADDING);
         soldierUpgradeButton.setPosition(towerUpgradeButton.getX() - soldierUpgradeButton.getWidth() - PADDING, PADDING);
         healthLabel.setPosition(soldierUpgradeButton.getX() + soldierUpgradeButton.getWidth() + PADDING, experienceLabel.getY() - healthLabel.getHeight());
-        moneyLabel.setPosition(soldierUpgradeButton.getX() + soldierUpgradeButton.getWidth() + PADDING, healthLabel.getY() - moneyLabel.getHeight());
+        
+        setMoney(0);
 
         //healthBar.setWidth(AppData.width - (soldierUpgradeButton.getX() + soldierUpgradeButton.getWidth() + PADDING));
        
@@ -259,7 +269,7 @@ public class GameToolbar {
 //        stage.addActor(tankUpgradeButton);
 //        stage.addActor(towerUpgradeButton);
 //        stage.addActor(soldierUpgradeButton);
-//        stage.addActor(moneyLabel);
+        stage.addActor(moneyLabel);
 //          stage.addActor(experienceLabel);
 //          stage.addActor(healthLabel);
 //          stage.addActor(playerIcon);
@@ -330,16 +340,27 @@ public class GameToolbar {
         return stage;
     }
     
-    public static void setMoney(int money) {
-        moneyLabel.setText("Money: " + money);
+    public void addMoney(int amount) {
+        setMoney(money +  + amount);
     }
     
-    public static void setExperience(int exp) {
+    public void setMoney(int am) {
+        this.money = am;
+        
+        moneyLabel.setText("$" + am);
+        
+        // Reposition the money text
+        moneyLabel.setPosition(AppData.width - (Fonts.getZombie().getBounds(moneyLabel.getText()).width), 
+                               AppData.height - (Fonts.getZombie().getBounds(moneyLabel.getText()).height * 2));
+    }
+    
+    public void setExperience(int exp) {
         experienceLabel.setText("Experience: " + exp);
         
         // Calculate the exp bar width
-        experienceBar.setWidth((GameScreen.getLevel().getPlayer().getExperience() / 
-                               (float) GameScreen.getLevel().getPlayer().getGoalExp()) * 100f);
+        experienceBar.setSize((GameScreen.getLevel().getPlayer().getExperience() / 
+                               (float) GameScreen.getLevel().getPlayer().getGoalExp()) * 100f,
+                               experienceBar.getHeight());
         
         experienceLabel.setPosition(experienceLabel.getX(), experienceLabel.getY());
     }
@@ -348,12 +369,12 @@ public class GameToolbar {
         return joystick;
     }
     
-    public static void setHealth(float f) {
+    public void setHealth(float f) {
         healthLabel.setText("Health: " + f);
         
         // Calculate the exp bar width
-        healthBar.setWidth((GameScreen.getLevel().getPlayer().getProperties().getHealth() / 
-                               (float) GameScreen.getLevel().getPlayer().getProperties().getMaxHealth()) * 100f);
+        healthBar.setSize(healthBar.getWidth() * (f / 100),
+                          healthBar.getHeight());
         
         healthLabel.setPosition((AppData.width - healthLabel.getWidth() * 4), healthLabel.getY());
     }

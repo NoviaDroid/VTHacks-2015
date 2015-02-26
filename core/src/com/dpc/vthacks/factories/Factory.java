@@ -23,7 +23,7 @@ public class Factory {
     private static Properties buildingProperties;
     private static Properties zombieProperties;
     private static float myArmyX, myArmyY;
-    private static final int NUMBER_OF_BOMBS = 10;
+    private static final int NUMBER_OF_BOMBS = 100;
     
     public static void init() {
 //        myArmyY = GameScreen.battle.getMyArmy().getBase().getY();

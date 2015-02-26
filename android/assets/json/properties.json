@@ -11,13 +11,13 @@
   }],
   
   "player": [{
-    "health": "250",
+    "health": "100",
     "minDamage": 20,
     "maxDamage": 35,
     "velX": "3", 
     "velY": "2",
     "range": "480"
-    "max health": "250"
+    "max health": "100"
   }],
   
   "soldier": [{
@@ -50,8 +50,8 @@
   	"maxVelX": "2",
   	"minVelY": "1",
   	"maxVelY": "2",
-    "minDamage": "15",
-    "maxDamage": "25",
+    "minDamage": "0.0005",
+    "maxDamage": "0.001",
   	"range": "150",
   	"health": "100",
     "max health": "80"

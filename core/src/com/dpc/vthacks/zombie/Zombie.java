@@ -23,12 +23,7 @@ public class Zombie extends Unit implements Poolable {
                                                       getProperties().getHealth() * 2) + 25);
         setSize(getWidth() * 1, getHeight() * 1);
       
-        dest = new Vector2(0, 50);
-        currentTarget = new Vector2(dest);
-        targ = new Vector2();
-        vel = new Vector2();
-        
-        setCurrentTarget(0, 50);
+        init();
     }
 
     @Override
@@ -72,11 +67,13 @@ public class Zombie extends Unit implements Poolable {
     public void onDeath() {
         Factory.zombiePool.free(this);
         getParentLevel().getZombies().removeValue(this, false);
+        getParentLevel().getContext().getToolbar().addMoney(1);
     }
 
     @Override
     public void attack(Unit enemy) {
-        enemy.takeDamage(0.1f);
+        enemy.takeDamage(MathUtils.random(getProperties().getMinDamage(),
+                                          getProperties().getMaxDamage()));
     }
 
     @Override
@@ -119,6 +116,16 @@ public class Zombie extends Unit implements Poolable {
 
     @Override
     public void reset() {
+        getProperties().setHealth(getProperties().getMaxHealth());
+        init();
+    }
     
+    public void init() {
+        dest = new Vector2(0, 50);
+        currentTarget = new Vector2(dest);
+        targ = new Vector2();
+        vel = new Vector2();
+        
+        setCurrentTarget(0, 50);
     }
 }

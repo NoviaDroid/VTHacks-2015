@@ -143,6 +143,7 @@ public class Player extends AnimatedUnit {
 
     @Override
     public void onDamageTaken(float amount) {
+        getParentLevel().getContext().getToolbar().setHealth(getProperties().getHealth());
     }
 
     public void walk(float amX, float amY) {

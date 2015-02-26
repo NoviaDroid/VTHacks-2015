@@ -3,14 +3,12 @@ package com.dpc.vthacks.data;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Music.OnCompletionListener;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.dpc.vthacks.App;
-import com.dpc.vthacks.screens.GameScreen;
 
 public class Assets {
     private static TextureAtlas skinAtlas, gameAtlas;
@@ -25,7 +23,8 @@ public class Assets {
     private static Sound strafeEnd;
     private static float shotTimer;
     private static int loaded;
-    
+    public static TextureRegion healthBarBackground;
+        
     public static void loadSkins() {
         skinAtlas = new TextureAtlas("skinPack.pack");
     }
@@ -166,6 +165,7 @@ public class Assets {
             planeFiringFrames[i].flip(true, false);
         }
         
+        healthBarBackground = gameAtlas.findRegion("barBackground");
         playerIcon = gameAtlas.findRegion("playerIcon1");
         zombie = gameAtlas.findRegion("zombie");
         playerStationary = gameAtlas.findRegion("ETroopTier2Idle1");

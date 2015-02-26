@@ -8,24 +8,17 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.FPSLogger;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.ObjectMap;
-import com.badlogic.gdx.utils.ObjectMap.Entries;
-import com.badlogic.gdx.utils.ObjectMap.Entry;
 import com.dpc.vthacks.App;
 import com.dpc.vthacks.Level;
 import com.dpc.vthacks.Player;
-import com.dpc.vthacks.Road;
 import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.data.Fonts;
 import com.dpc.vthacks.data.JSONManager;
 import com.dpc.vthacks.data.OgmoParser;
 import com.dpc.vthacks.factories.Factory;
-import com.dpc.vthacks.gameobject.GameObject;
 import com.dpc.vthacks.infantry.Tank;
 import com.dpc.vthacks.input.GameToolbar;
-import com.dpc.vthacks.objects.LayerManager;
 
 public class GameScreen implements Screen {
     private final App context;
@@ -46,7 +39,7 @@ public class GameScreen implements Screen {
         AppData.onResize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         Fonts.load();
         Factory.init();
-
+        
         toolbar = new GameToolbar() {
 
             @Override
@@ -216,6 +209,10 @@ public class GameScreen implements Screen {
     
     public static Level getLevel() {
         return level;
+    }
+    
+    public GameToolbar getToolbar() {
+        return toolbar;
     }
     
     public static float getJoystickPercentX() {

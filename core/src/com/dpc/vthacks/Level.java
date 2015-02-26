@@ -3,6 +3,7 @@ package com.dpc.vthacks;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.dpc.vthacks.data.Assets;
@@ -25,7 +26,7 @@ public class Level {
     private GameScreen context;
     private float spawnTime, spawnTimer;
     
-    public Level(GameScreen context) {
+    public Level(final GameScreen context) {
         this.context = context;
         
         GameObject.setParentLevel(this);
@@ -79,6 +80,9 @@ public class Level {
                 }
                 else if(keycode == Keys.RIGHT) {
                     gameCamera.position.x += 25;
+                }
+                else if(keycode == Keys.M) {
+                    context.getToolbar().addMoney(1000000);
                 }
                 
                 gameCamera.update();
@@ -144,8 +148,8 @@ public class Level {
     
     public void generateZombie() {
         Zombie z = Factory.zombiePool.obtain();
-        
-        if(Math.random() < 1f) {
+
+//        if(Math.random() < 1f) {
             float x = Math.random() < 0.5f ? gameCamera.position.x - (gameCamera.viewportWidth * 0.5f):
                                              gameCamera.position.x + gameCamera.viewportWidth;
             
@@ -157,9 +161,12 @@ public class Level {
             if(player.getX() < x) {
                 z.setVelX(z.getVelX());
             }
+            else {
+                z.setDest(new Vector2(LevelProperties.WIDTH, 0));
+            }
 
             zombies.add(z);
-        }
+//        }
     }
     
     public void render() {
@@ -179,6 +186,10 @@ public class Level {
         player.render();
         
         App.batch.end();
+    }
+    
+    public GameScreen getContext() {
+        return context;
     }
     
     public void updateObjects(float delta) {
