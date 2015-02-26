@@ -7,6 +7,7 @@ import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.dpc.vthacks.factories.Factory;
 import com.dpc.vthacks.properties.Properties;
+import com.dpc.vthacks.properties.ZombieProperties;
 
 public class JSONManager {
     private static final String PROPERTIES_PATH = "json/properties.json";
@@ -83,7 +84,7 @@ public class JSONManager {
         
         Factory.setBuildingProperties(buildingProperties);
         
-        Properties zombieProperties = new Properties();
+        ZombieProperties zombieProperties = new ZombieProperties();
         
         zombieProperties.setMaxDamage(zombie.getFloat("maxDamage"));
         zombieProperties.setMinDamage(zombie.getFloat("minDamage"));
@@ -92,6 +93,8 @@ public class JSONManager {
         zombieProperties.setMinVel(new Vector2(zombie.getFloat("minVelX"), zombie.getFloat("minVelY")));
         zombieProperties.setMaxVel(new Vector2(zombie.getFloat("maxVelX"), zombie.getFloat("maxVelY")));
         zombieProperties.setMaxHealth(zombie.getInt("max health"));
+        zombieProperties.setMinKillMoney(zombie.getInt("minKillMoney"));
+        zombieProperties.setMaxKillMoney(zombie.getInt("maxKillMoney"));
         
         Factory.setZombieProperties(zombieProperties);
     }

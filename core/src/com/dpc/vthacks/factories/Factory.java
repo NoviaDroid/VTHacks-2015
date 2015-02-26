@@ -9,6 +9,7 @@ import com.dpc.vthacks.infantry.Soldier;
 import com.dpc.vthacks.infantry.Tank;
 import com.dpc.vthacks.objects.Building;
 import com.dpc.vthacks.properties.Properties;
+import com.dpc.vthacks.properties.ZombieProperties;
 import com.dpc.vthacks.screens.GameScreen;
 import com.dpc.vthacks.zombie.Zombie;
 
@@ -21,8 +22,8 @@ public class Factory {
     private static Properties bombProperties;
     private static Properties tankShellProperties;
     private static Properties buildingProperties;
-    private static Properties zombieProperties;
-    private static float myArmyX, myArmyY;
+    private static ZombieProperties zombieProperties;
+   
     private static final int NUMBER_OF_BOMBS = 100;
     
     public static void init() {
@@ -67,7 +68,7 @@ public class Factory {
     };
     
     public static Zombie createZombie() {
-        Zombie z = new Zombie(Assets.getEnemySoldierFrames(), new Properties(zombieProperties));
+        Zombie z = new Zombie(Assets.getEnemySoldierFrames(), new ZombieProperties(zombieProperties));
         z.setVelX(MathUtils.random(z.getProperties().getMinVel().x, 
                                    z.getProperties().getMaxVel().x));
 
@@ -176,22 +177,6 @@ public class Factory {
         Factory.tankShellProperties = tankShellProperties;
     }
 
-    public static float getMyArmyX() {
-        return myArmyX;
-    }
-
-    public static void setMyArmyX(float myArmyX) {
-        Factory.myArmyX = myArmyX;
-    }
-
-    public static float getMyArmyY() {
-        return myArmyY;
-    }
-
-    public static void setMyArmyY(float myArmyY) {
-        Factory.myArmyY = myArmyY;
-    }
-
     public static int getNumberOfBombs() {
         return NUMBER_OF_BOMBS;
     }
@@ -212,7 +197,7 @@ public class Factory {
         return zombieProperties;
     }
     
-    public static void setZombieProperties(Properties zombieProperties) {
+    public static void setZombieProperties(ZombieProperties zombieProperties) {
         Factory.zombieProperties = zombieProperties;
     }
     

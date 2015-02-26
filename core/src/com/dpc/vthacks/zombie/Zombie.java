@@ -11,11 +11,12 @@ import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.factories.Factory;
 import com.dpc.vthacks.infantry.Unit;
 import com.dpc.vthacks.properties.Properties;
+import com.dpc.vthacks.properties.ZombieProperties;
 
 public class Zombie extends Unit implements Poolable {
     private Vector2 dest, targ, currentTarget; // Final destination, temporary target
     private Vector2 vel;
-    
+
     public Zombie(AtlasRegion[] frames, Properties properties) {
         super(Assets.getZombie(), properties);
         
@@ -67,7 +68,17 @@ public class Zombie extends Unit implements Poolable {
     public void onDeath() {
         Factory.zombiePool.free(this);
         getParentLevel().getZombies().removeValue(this, false);
-        getParentLevel().getContext().getToolbar().addMoney(1);
+        
+        // Add money to the money total
+        getParentLevel()
+                .getContext()
+                .getToolbar()
+                .addMoney((int) MathUtils.random(((ZombieProperties) getProperties())
+                                                    .getMinKillMoney(),
+                                                ((ZombieProperties) getProperties())
+                                                    .getMaxKillMoney()));
+        
+        System.out.println(((ZombieProperties) getProperties()).getMaxKillMoney());
     }
 
     @Override
@@ -113,7 +124,7 @@ public class Zombie extends Unit implements Poolable {
     public void resetPath() {
         setCurrentTarget(dest.x, dest.y);
     }
-
+    
     @Override
     public void reset() {
         getProperties().setHealth(getProperties().getMaxHealth());

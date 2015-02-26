@@ -195,12 +195,12 @@ public class GameToolbar {
 
         playerIcon.setPosition(PADDING, (AppData.height - playerIcon.getHeight()) - PADDING);
         
-        float h = (playerIcon.getHeight() * 0.5f) - PADDING;
+        float h = (playerIcon.getHeight() * 0.5f);
         
 
         healthBarBackground = new Sprite(Assets.healthBarBackground);
         healthBarBackground.setPosition(playerIcon.getX() + playerIcon.getWidth(), 
-                                       (playerIcon.getY() + playerIcon.getHeight()) - h);
+                                        (playerIcon.getY() + h) - (healthBarBackground.getHeight() * 0.5f));
         
         healthBar = new Sprite(Assets.healthbar);
         healthBar.setSize(Assets.healthBarBackground.getRegionWidth() - (Assets.healthBarBackground.getRegionHeight() * 0.135f * 2) ,
@@ -209,9 +209,9 @@ public class GameToolbar {
         healthBar.setPosition(healthBarBackground.getX() + (Assets.healthBarBackground.getRegionHeight() * 0.135f),
                               healthBarBackground.getY() + (Assets.healthBarBackground.getRegionHeight() * 0.135f));
         
-        experienceBar = new Sprite(Assets.healthbar);
-        experienceBar.setSize(Assets.healthbar.getRegionWidth(), h);
-        experienceBar.setPosition(healthBar.getX(), playerIcon.getY());
+//        experienceBar = new Sprite(Assets.healthbar);
+//        experienceBar.setSize(Assets.healthbar.getRegionWidth(), h);
+//        experienceBar.setPosition(healthBar.getX(), playerIcon.getY());
         
         experienceLabel.setPosition(soldierUpgradeButton.getX() + soldierUpgradeButton.getWidth() + PADDING, getTop() - experienceLabel.getHeight());
         
@@ -220,9 +220,9 @@ public class GameToolbar {
             public void draw() {
                 super.draw();
        
-                experienceLabel.setPosition(experienceBar.getX() + experienceBar.getWidth() + PADDING, experienceLabel.getY());
+                //experienceLabel.setPosition(experienceBar.getX() + experienceBar.getWidth() + PADDING, experienceLabel.getY());
                
-                healthLabel.setPosition(healthBar.getX() + healthBar.getWidth() + PADDING, healthLabel.getY());
+                //healthLabel.setPosition(healthBar.getX() + healthBar.getWidth() + PADDING, healthLabel.getY());
                 
                 getBatch().setProjectionMatrix(getCamera().combined);
                 getBatch().setColor(BATCH_COLOR.r, BATCH_COLOR.g, BATCH_COLOR.b, 1);
@@ -233,7 +233,7 @@ public class GameToolbar {
                 healthBar.draw(getBatch());
 
                 getBatch().setColor(Color.GRAY);
-                experienceBar.draw(getBatch());
+                //experienceBar.draw(getBatch());
                 getBatch().setColor(BATCH_COLOR);
                 
                 getBatch().end();
@@ -349,9 +349,10 @@ public class GameToolbar {
         
         moneyLabel.setText("$" + am);
         
+        float t = (Fonts.getZombie().getBounds(moneyLabel.getText()).height * 2);
         // Reposition the money text
-        moneyLabel.setPosition(AppData.width - (Fonts.getZombie().getBounds(moneyLabel.getText()).width), 
-                               AppData.height - (Fonts.getZombie().getBounds(moneyLabel.getText()).height * 2));
+        moneyLabel.setPosition(AppData.width - (Fonts.getZombie().getBounds(moneyLabel.getText()).width) - (t * 0.5f), 
+                               AppData.height - t);
     }
     
     public void setExperience(int exp) {

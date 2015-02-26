@@ -54,6 +54,8 @@
     "maxDamage": "0.001",
   	"range": "150",
   	"health": "100",
-    "max health": "80"
+    "max health": "80",
+    "minKillMoney": 20,
+    "maxKillMoney": 35
   }]
 }
