@@ -2,7 +2,8 @@
   "tank": [{
     "cost": "150",
     "health": "150",
-    "damage": "30",
+    "minDamage": "30",
+    "maxDamage": "35",
     "velX": "6",
     "velY": "0",
     "range": "600",
@@ -11,7 +12,8 @@
   
   "player": [{
     "health": "250",
-    "damage": "50",
+    "minDamage": 20,
+    "maxDamage": 35,
     "velX": "3", 
     "velY": "2",
     "range": "480"
@@ -20,8 +22,9 @@
   
   "soldier": [{
     "cost": "50",
-    "damage": "1",
-    "health": "50",
+    "minDamage": "10",
+    "maxDamage": "20",
+    "health": "100",
     "range": "150",
     "velX": "3",
     "velY": "0", 
@@ -29,22 +32,28 @@
   }],
   
   "bomb": [{
-	"damage": "100",
+    "minDamage": "100",
+    "maxDamage": "150",
 	"velX": "3",
 	"velY": "12"
   }],
   
   "tank shell": [{
+    "minDamage": "30",
+    "maxDamage": "35",
   	"velX": "50",
   	"velY": "14"
   }],
   
   "zombie": [{
-  	"velX": "-2",
-  	"velY": "0",
-  	"damage": "1",
+  	"minVelX": "1",
+  	"maxVelX": "2",
+  	"minVelY": "1",
+  	"maxVelY": "2",
+    "minDamage": "15",
+    "maxDamage": "25",
   	"range": "150",
-  	"health": "50",
+  	"health": "100",
     "max health": "80"
   }]
 }

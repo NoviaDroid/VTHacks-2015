@@ -137,6 +137,8 @@ public class Player extends AnimatedUnit {
 
     @Override
     public void attack(Unit enemy) {
+        enemy.takeDamage(MathUtils.random(getProperties().getMinDamage(), 
+                                          getProperties().getMaxDamage()));
     }
 
     @Override
@@ -226,6 +228,10 @@ public class Player extends AnimatedUnit {
 
     public static void setGoalExperience(float goalExperience) {
         Player.goalExperience = goalExperience;
+    }
+    
+    public boolean isMovingLeft() {
+        return movingLeft;
     }
 
     public void moveLeft() {

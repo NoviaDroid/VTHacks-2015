@@ -14,7 +14,7 @@ import com.dpc.vthacks.screens.GameScreen;
 
 public class Assets {
     private static TextureAtlas skinAtlas, gameAtlas;
-    public static TextureRegion plane, emptyPlane, bomb, road, background, tankShell, menuBackground, enemyBase, playerBase, healthbar, bullet;
+    public static TextureRegion plane, playerIcon, zombie, emptyPlane, bomb, road, background, tankShell, menuBackground, enemyBase, playerBase, healthbar, bullet;
     private static TextureRegion[] buildings, skylines;
     private static AtlasRegion[] tankFrames, playerStandingStillFrames, soldierFrames, enemySoldierFrames, enemyTankFrames, explosionFrames, planeFiringFrames, playerWalkFrames;
     private static TextureRegion barBackground, progressBar;
@@ -166,6 +166,8 @@ public class Assets {
             planeFiringFrames[i].flip(true, false);
         }
         
+        playerIcon = gameAtlas.findRegion("playerIcon1");
+        zombie = gameAtlas.findRegion("zombie");
         playerStationary = gameAtlas.findRegion("ETroopTier2Idle1");
         emptyPlane = gameAtlas.findRegion("planeLatchOpen");
         plane = gameAtlas.findRegion("PlaneFiring");
@@ -242,6 +244,14 @@ public class Assets {
         return tankFrames;
     }
 
+    public static TextureRegion getPlayerIcon() {
+        return playerIcon;
+    }
+    
+    public static void setPlayerIcon(TextureRegion playerIcon) {
+        Assets.playerIcon = playerIcon;
+    }
+    
     public static TextureRegion getPlane() {
         return plane;
     }
@@ -309,6 +319,14 @@ public class Assets {
     
     public static Music getStrafe() {
         return strafe;
+    }
+    
+    public static TextureRegion getZombie() {
+        return zombie;
+    }
+    
+    public static void setZombie(TextureRegion zombie) {
+        Assets.zombie = zombie;
     }
     
     public static void playStrafeEnd() {

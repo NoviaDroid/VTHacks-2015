@@ -1,4 +1,4 @@
-<level width="2400" height="800">
+<level width="2400" height="800" zombieSpawnTime="1">
   <background>
     <skyline2 id="0" x="0" y="668" scrollable="true" scrollX="-0.05" scrollY="0"/>
     <skyline1 id="1" x="2" y="698" scrollable="true" scrollX="0.1" scrollY="0"/>
@@ -16,7 +16,6 @@
     <Building3 id="8" x="2228" y="670" />
   </Layer1>
   <GameLayer>
-    <EnemySpawn id="0" x="822" y="770" w="100" h="96" />
     <Road id="0" x="0" y="801" />
   </GameLayer>
 </level>

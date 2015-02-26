@@ -5,546 +5,567 @@ filter: Nearest,Nearest
 repeat: none
 background
   rotate: false
-  xy: 1, 820
+  xy: 1, 819
   size: 828, 201
   orig: 828, 201
   offset: 0, 0
   index: -1
-skyline1
+skyline2
   rotate: false
-  xy: 1, 670
+  xy: 1, 669
   size: 828, 148
   orig: 828, 148
   offset: 0, 0
   index: -1
-skyline2
+skyline1
   rotate: false
-  xy: 1, 555
+  xy: 1, 554
   size: 828, 113
   orig: 828, 113
   offset: 0, 0
   index: -1
 ETankfire
   rotate: false
-  xy: 1, 449
+  xy: 1, 448
   size: 195, 104
   orig: 195, 104
   offset: 0, 0
   index: -1
 ETankfire1
   rotate: false
-  xy: 1, 343
+  xy: 1, 342
   size: 195, 104
   orig: 195, 104
   offset: 0, 0
   index: -1
 ETankfire2
   rotate: false
-  xy: 198, 449
+  xy: 198, 448
   size: 195, 104
   orig: 195, 104
   offset: 0, 0
   index: -1
 ETankfire3
   rotate: false
-  xy: 1, 237
+  xy: 1, 236
   size: 195, 104
   orig: 195, 104
   offset: 0, 0
   index: -1
 ETankfire4
   rotate: false
-  xy: 198, 343
+  xy: 198, 342
   size: 195, 104
   orig: 195, 104
   offset: 0, 0
   index: -1
 ETankfire5
   rotate: false
-  xy: 395, 449
+  xy: 395, 448
   size: 195, 104
   orig: 195, 104
   offset: 0, 0
   index: -1
 ETankfire6
   rotate: false
-  xy: 1, 131
+  xy: 1, 130
   size: 195, 104
   orig: 195, 104
   offset: 0, 0
   index: -1
 Tankfire
   rotate: false
-  xy: 198, 237
+  xy: 198, 236
   size: 195, 104
   orig: 195, 104
   offset: 0, 0
   index: -1
 Tankfire1
   rotate: false
-  xy: 395, 343
+  xy: 395, 342
   size: 195, 104
   orig: 195, 104
   offset: 0, 0
   index: -1
 Tankfire2
   rotate: false
-  xy: 592, 449
+  xy: 592, 448
   size: 195, 104
   orig: 195, 104
   offset: 0, 0
   index: -1
 Tankfire3
   rotate: false
-  xy: 1, 25
+  xy: 1, 24
   size: 195, 104
   orig: 195, 104
   offset: 0, 0
   index: -1
 Tankfire4
   rotate: false
-  xy: 198, 131
+  xy: 198, 130
   size: 195, 104
   orig: 195, 104
   offset: 0, 0
   index: -1
 Tankfire5
   rotate: false
-  xy: 395, 237
+  xy: 395, 236
   size: 195, 104
   orig: 195, 104
   offset: 0, 0
   index: -1
 Tankfire6
   rotate: false
-  xy: 592, 343
+  xy: 592, 342
   size: 195, 104
   orig: 195, 104
   offset: 0, 0
   index: -1
 road
   rotate: false
-  xy: 198, 64
+  xy: 198, 63
   size: 215, 65
   orig: 215, 65
   offset: 0, 0
   index: -1
 EPlaneFiring1
   rotate: false
-  xy: 831, 956
+  xy: 831, 955
   size: 171, 65
   orig: 171, 65
   offset: 0, 0
   index: -1
 EPlaneFiring2
   rotate: false
-  xy: 592, 276
+  xy: 592, 275
   size: 171, 65
   orig: 171, 65
   offset: 0, 0
   index: -1
 EPlaneFiring3
   rotate: false
-  xy: 395, 170
+  xy: 395, 169
   size: 171, 65
   orig: 171, 65
   offset: 0, 0
   index: -1
 healthbar
   rotate: false
-  xy: 198, 42
+  xy: 198, 41
   size: 245, 20
   orig: 245, 20
   offset: 0, 0
   index: -1
 PlaneFiring
   rotate: false
-  xy: 831, 889
+  xy: 831, 888
   size: 163, 65
   orig: 163, 65
   offset: 0, 0
   index: -1
 PlaneFiring1
   rotate: false
-  xy: 831, 822
+  xy: 831, 821
   size: 163, 65
   orig: 163, 65
   offset: 0, 0
   index: -1
 PlaneFiring2
   rotate: false
-  xy: 831, 755
+  xy: 831, 754
   size: 163, 65
   orig: 163, 65
   offset: 0, 0
   index: -1
 enemyPlane1
   rotate: false
-  xy: 831, 688
+  xy: 831, 687
   size: 153, 65
   orig: 153, 65
   offset: 0, 0
   index: -1
 EPlane1
   rotate: false
-  xy: 831, 688
+  xy: 831, 687
   size: 153, 65
   orig: 153, 65
   offset: 0, 0
   index: -1
 EPlanewithPilot
   rotate: false
-  xy: 831, 621
+  xy: 831, 620
   size: 153, 65
   orig: 153, 65
   offset: 0, 0
   index: -1
 plane
   rotate: false
-  xy: 831, 554
+  xy: 831, 553
   size: 153, 65
   orig: 153, 65
   offset: 0, 0
   index: -1
 planeLatchOpen
   rotate: false
-  xy: 592, 209
+  xy: 592, 208
   size: 153, 65
   orig: 153, 65
   offset: 0, 0
   index: -1
 PlanewithPilot
   rotate: false
-  xy: 415, 103
+  xy: 415, 102
   size: 153, 65
   orig: 153, 65
   offset: 0, 0
   index: -1
 building5
   rotate: false
-  xy: 789, 427
+  xy: 789, 426
   size: 85, 125
   orig: 85, 125
   offset: 0, 0
   index: -1
 building4
   rotate: false
-  xy: 876, 427
+  xy: 876, 426
   size: 84, 125
   orig: 84, 125
   offset: 0, 0
   index: -1
 ETank1
   rotate: false
-  xy: 789, 374
+  xy: 789, 373
   size: 119, 51
   orig: 119, 51
   offset: 0, 0
   index: -1
-EBarrack
+base
   rotate: false
-  xy: 415, 71
+  xy: 415, 70
   size: 123, 30
   orig: 123, 30
   offset: 0, 0
   index: -1
-Enemy Barrack
+EBarrack
   rotate: false
-  xy: 789, 342
+  xy: 789, 341
   size: 123, 30
   orig: 123, 30
   offset: 0, 0
   index: -1
 ETank2
   rotate: false
-  xy: 765, 289
+  xy: 765, 288
   size: 119, 51
   orig: 119, 51
+  offset: 0, 0
+  index: -1
+Enemy Barrack
+  rotate: false
+  xy: 198, 9
+  size: 123, 30
+  orig: 123, 30
   offset: 0, 0
   index: -1
 ETank3
   rotate: false
-  xy: 765, 236
+  xy: 765, 235
   size: 119, 51
   orig: 119, 51
   offset: 0, 0
   index: -1
+zombie
+  rotate: false
+  xy: 886, 235
+  size: 54, 104
+  orig: 54, 104
+  offset: 0, 0
+  index: -1
 tank1
   rotate: false
-  xy: 747, 183
+  xy: 747, 182
   size: 119, 51
   orig: 119, 51
   offset: 0, 0
   index: -1
 tank2
   rotate: false
-  xy: 445, 18
+  xy: 868, 182
   size: 119, 51
   orig: 119, 51
   offset: 0, 0
   index: -1
 tank3
   rotate: false
-  xy: 570, 156
+  xy: 445, 17
   size: 119, 51
   orig: 119, 51
   offset: 0, 0
   index: -1
+Apartment
+  rotate: false
+  xy: 910, 373
+  size: 32, 51
+  orig: 32, 51
+  offset: 0, 0
+  index: -1
+building1
+  rotate: false
+  xy: 962, 489
+  size: 38, 62
+  orig: 38, 62
+  offset: 0, 0
+  index: -1
+building2
+  rotate: false
+  xy: 962, 425
+  size: 38, 62
+  orig: 38, 62
+  offset: 0, 0
+  index: -1
 Explosion1
   rotate: false
-  xy: 570, 95
+  xy: 944, 364
   size: 53, 59
   orig: 53, 59
   offset: 0, 0
   index: -1
 Explosion2
   rotate: false
-  xy: 625, 95
+  xy: 942, 303
   size: 53, 59
   orig: 53, 59
   offset: 0, 0
   index: -1
 Explosion3
   rotate: false
-  xy: 691, 148
+  xy: 942, 242
   size: 53, 59
   orig: 53, 59
-  offset: 0, 0
-  index: -1
-Explosion4
-  rotate: false
-  xy: 680, 87
-  size: 53, 59
-  orig: 53, 59
-  offset: 0, 0
-  index: -1
-building1
-  rotate: false
-  xy: 886, 278
-  size: 38, 62
-  orig: 38, 62
-  offset: 0, 0
-  index: -1
-Apartment
-  rotate: false
-  xy: 910, 374
-  size: 32, 51
-  orig: 32, 51
-  offset: 0, 0
-  index: -1
-Explosion5
-  rotate: false
-  xy: 746, 122
-  size: 53, 59
-  orig: 53, 59
-  offset: 0, 0
-  index: -1
-building2
-  rotate: false
-  xy: 801, 119
-  size: 38, 62
-  orig: 38, 62
   offset: 0, 0
   index: -1
 ETroop2Running1
   rotate: false
-  xy: 986, 717
+  xy: 986, 716
   size: 37, 36
   orig: 37, 36
   offset: 0, 0
   index: -1
 ETroop2Running2
   rotate: false
-  xy: 986, 679
+  xy: 986, 678
   size: 37, 36
   orig: 37, 36
   offset: 0, 0
   index: -1
 ETroop2Running3
   rotate: false
-  xy: 986, 641
+  xy: 986, 640
   size: 37, 36
   orig: 37, 36
   offset: 0, 0
   index: -1
 ETroop2Running4
   rotate: false
-  xy: 986, 603
+  xy: 986, 602
   size: 37, 36
   orig: 37, 36
   offset: 0, 0
   index: -1
 ETroopTier2Idle1
   rotate: false
-  xy: 986, 565
+  xy: 986, 564
   size: 37, 36
   orig: 37, 36
-  offset: 0, 0
-  index: -1
-ETroopTier2Idle2
-  rotate: false
-  xy: 986, 527
-  size: 37, 36
-  orig: 37, 36
-  offset: 0, 0
-  index: -1
-BombButton
-  rotate: false
-  xy: 886, 238
-  size: 38, 38
-  orig: 38, 38
   offset: 0, 0
   index: -1
 ETroop1
   rotate: false
-  xy: 540, 71
+  xy: 540, 70
   size: 21, 30
   orig: 21, 30
   offset: 0, 0
   index: -1
 ETroop2
   rotate: false
-  xy: 914, 342
+  xy: 914, 341
   size: 21, 30
   orig: 21, 30
   offset: 0, 0
   index: -1
-ETroopTier2Idle3
-  rotate: false
-  xy: 841, 145
-  size: 37, 36
-  orig: 37, 36
-  offset: 0, 0
-  index: -1
 ETroop Running1
   rotate: false
-  xy: 944, 390
+  xy: 999, 388
   size: 24, 35
   orig: 24, 35
   offset: 0, 0
   index: -1
 ETroop Running3
   rotate: false
-  xy: 944, 390
+  xy: 999, 388
   size: 24, 35
   orig: 24, 35
   offset: 0, 0
   index: -1
 ETroop Running2
   rotate: false
-  xy: 868, 199
+  xy: 999, 351
   size: 24, 35
   orig: 24, 35
   offset: 0, 0
   index: -1
 ETroop Running4
   rotate: false
-  xy: 868, 199
-  size: 24, 35
-  orig: 24, 35
-  offset: 0, 0
-  index: -1
-ETroop Running5
-  rotate: false
-  xy: 894, 201
+  xy: 999, 351
   size: 24, 35
   orig: 24, 35
   offset: 0, 0
   index: -1
 ETroop3
   rotate: false
-  xy: 962, 522
+  xy: 1002, 532
   size: 21, 30
   orig: 21, 30
-  offset: 0, 0
-  index: -1
-ETroop Running6
-  rotate: false
-  xy: 962, 485
-  size: 24, 35
-  orig: 24, 35
-  offset: 0, 0
-  index: -1
-troopRunning1
-  rotate: false
-  xy: 962, 448
-  size: 24, 35
-  orig: 24, 35
-  offset: 0, 0
-  index: -1
-troopRunning2
-  rotate: false
-  xy: 988, 490
-  size: 24, 35
-  orig: 24, 35
-  offset: 0, 0
-  index: -1
-troopRunning3
-  rotate: false
-  xy: 988, 453
-  size: 24, 35
-  orig: 24, 35
-  offset: 0, 0
-  index: -1
-building3
-  rotate: false
-  xy: 841, 109
-  size: 24, 34
-  orig: 24, 34
-  offset: 0, 0
-  index: -1
-troopRunnning4
-  rotate: false
-  xy: 735, 85
-  size: 24, 35
-  orig: 24, 35
   offset: 0, 0
   index: -1
 troopStationary1
   rotate: false
-  xy: 761, 90
+  xy: 1002, 500
   size: 21, 30
   orig: 21, 30
   offset: 0, 0
   index: -1
-bomb
-  rotate: false
-  xy: 1, 11
-  size: 32, 12
-  orig: 32, 12
-  offset: 0, 0
-  index: -1
 troopStationary2
   rotate: false
-  xy: 867, 113
+  xy: 1002, 468
   size: 21, 30
   orig: 21, 30
   offset: 0, 0
   index: -1
 troopStationary3
   rotate: false
-  xy: 926, 310
+  xy: 1002, 436
   size: 21, 30
   orig: 21, 30
   offset: 0, 0
   index: -1
+BombButton
+  rotate: false
+  xy: 323, 1
+  size: 38, 38
+  orig: 38, 38
+  offset: 0, 0
+  index: -1
+ETroopTier2Idle2
+  rotate: false
+  xy: 363, 3
+  size: 37, 36
+  orig: 37, 36
+  offset: 0, 0
+  index: -1
+ETroopTier2Idle3
+  rotate: false
+  xy: 402, 3
+  size: 37, 36
+  orig: 37, 36
+  offset: 0, 0
+  index: -1
+ETroop Running5
+  rotate: false
+  xy: 997, 314
+  size: 24, 35
+  orig: 24, 35
+  offset: 0, 0
+  index: -1
+ETroop Running6
+  rotate: false
+  xy: 997, 277
+  size: 24, 35
+  orig: 24, 35
+  offset: 0, 0
+  index: -1
+building3
+  rotate: false
+  xy: 997, 241
+  size: 24, 34
+  orig: 24, 34
+  offset: 0, 0
+  index: -1
+Explosion4
+  rotate: false
+  xy: 570, 147
+  size: 53, 59
+  orig: 53, 59
+  offset: 0, 0
+  index: -1
+Explosion5
+  rotate: false
+  xy: 625, 147
+  size: 53, 59
+  orig: 53, 59
+  offset: 0, 0
+  index: -1
+troopRunning1
+  rotate: false
+  xy: 570, 110
+  size: 24, 35
+  orig: 24, 35
+  offset: 0, 0
+  index: -1
+troopRunning2
+  rotate: false
+  xy: 680, 171
+  size: 24, 35
+  orig: 24, 35
+  offset: 0, 0
+  index: -1
+troopRunning3
+  rotate: false
+  xy: 596, 110
+  size: 24, 35
+  orig: 24, 35
+  offset: 0, 0
+  index: -1
+troopRunnning4
+  rotate: false
+  xy: 706, 171
+  size: 24, 35
+  orig: 24, 35
+  offset: 0, 0
+  index: -1
+bomb
+  rotate: false
+  xy: 1, 10
+  size: 32, 12
+  orig: 32, 12
+  offset: 0, 0
+  index: -1
 ETank Shell
   rotate: false
-  xy: 198, 32
+  xy: 680, 161
   size: 27, 8
   orig: 27, 8
   offset: 0, 0
   index: -1
+playerIcon1
+  rotate: false
+  xy: 986, 553
+  size: 12, 9
+  orig: 12, 9
+  offset: 0, 0
+  index: -1
 Tank Shell
   rotate: false
-  xy: 1, 1
+  xy: 622, 137
   size: 27, 8
   orig: 27, 8
   offset: 0, 0
   index: -1
 bullet
   rotate: false
-  xy: 395, 164
+  xy: 395, 163
   size: 8, 4
   orig: 8, 4
   offset: 0, 0

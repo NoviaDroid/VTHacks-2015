@@ -19,7 +19,7 @@ public abstract class Unit extends Collidable {
     @Override
     public void update(float delta) {
         // Unit has died
-        if(properties.getHealth() < 0) {
+        if(properties.getHealth() <= 0) {
             onDeath();
         }
     }

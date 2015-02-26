@@ -101,7 +101,7 @@ public class GameScreen implements Screen {
             player = Factory.createPlayer();
             
             level.setPlayer(player);
-            level.onResize();
+            
             OgmoParser.parse("mylevel.oel", level);  
           
             context.resize(w, h);
@@ -192,10 +192,6 @@ public class GameScreen implements Screen {
     public void resize(int width, int height) {
         AppData.onResize(width, height);
         toolbar.onResize(width, height);
-        
-        if(level != null) {
-            level.onResize();
-        }
     }
 
     @Override

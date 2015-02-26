@@ -2,6 +2,7 @@ package com.dpc.vthacks.data;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.dpc.vthacks.factories.Factory;
@@ -27,7 +28,8 @@ public class JSONManager {
         Properties playerProperties = new Properties();
         
         playerProperties.setRange(player.getFloat("range"));
-        playerProperties.setDamage(player.getFloat("damage"));
+        playerProperties.setMinDamage(player.getFloat("minDamage"));
+        playerProperties.setMaxDamage(player.getFloat("maxDamage"));
         playerProperties.setHealth(player.getFloat("health"));
         playerProperties.setVelX(player.getFloat("velX"));
         playerProperties.setVelY(player.getFloat("velY"));
@@ -38,7 +40,8 @@ public class JSONManager {
         Properties tankProperties = new Properties();
         
         tankProperties.setCost(tank.getInt("cost"));
-        tankProperties.setDamage(tank.getFloat("damage"));
+        tankProperties.setMinDamage(tank.getFloat("minDamage"));
+        tankProperties.setMaxDamage(player.getFloat("maxDamage"));
         tankProperties.setHealth(tank.getInt("health"));
         tankProperties.setVelX(tank.getFloat("velX"));
         tankProperties.setVelY(tank.getFloat("velY"));
@@ -50,7 +53,8 @@ public class JSONManager {
         Properties soldierProperties = new Properties();
         
         soldierProperties.setCost(soldier.getInt("cost"));
-        soldierProperties.setDamage(soldier.getFloat("damage"));
+        soldierProperties.setMinDamage(soldier.getFloat("minDamage"));
+        soldierProperties.setMaxDamage(soldier.getFloat("maxDamage"));
         soldierProperties.setHealth(soldier.getInt("health"));
         soldierProperties.setRange(soldier.getFloat("range"));
         soldierProperties.setVelX(soldier.getFloat("velX"));
@@ -61,7 +65,8 @@ public class JSONManager {
         
         Properties bombProperties = new Properties();
         
-        bombProperties.setDamage(bomb.getFloat("damage"));
+        bombProperties.setMinDamage(bomb.getFloat("minDamage"));
+        bombProperties.setMaxDamage(bomb.getFloat("maxDamage"));
         bombProperties.setVelX(bomb.getFloat("velX"));
         bombProperties.setVelY(bomb.getFloat("velY"));
         
@@ -80,11 +85,12 @@ public class JSONManager {
         
         Properties zombieProperties = new Properties();
         
-        zombieProperties.setDamage(zombie.getFloat("damage"));
+        zombieProperties.setMaxDamage(zombie.getFloat("maxDamage"));
+        zombieProperties.setMinDamage(zombie.getFloat("minDamage"));
         zombieProperties.setHealth(zombie.getInt("health"));
         zombieProperties.setRange(zombie.getFloat("range"));
-        zombieProperties.setVelX(zombie.getFloat("velX"));
-        zombieProperties.setVelY(zombie.getFloat("velY"));
+        zombieProperties.setMinVel(new Vector2(zombie.getFloat("minVelX"), zombie.getFloat("minVelY")));
+        zombieProperties.setMaxVel(new Vector2(zombie.getFloat("maxVelX"), zombie.getFloat("maxVelY")));
         zombieProperties.setMaxHealth(zombie.getInt("max health"));
         
         Factory.setZombieProperties(zombieProperties);

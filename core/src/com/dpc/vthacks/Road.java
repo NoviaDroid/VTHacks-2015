@@ -15,7 +15,7 @@ public class Road extends GameObject {
         setBounds(x, y, rectWidth, rectHeight);
         
         texWidth = LevelProperties.WIDTH;
-        texHeight = Assets.road.getRegionHeight() * 2;
+        texHeight = (Assets.road.getRegionHeight() * 2) + 1;
         
         region = Assets.road;
     }

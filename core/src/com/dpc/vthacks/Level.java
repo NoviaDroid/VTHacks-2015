@@ -5,7 +5,7 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
-import com.dpc.vthacks.data.AppData;
+import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.factories.Factory;
 import com.dpc.vthacks.gameobject.GameObject;
 import com.dpc.vthacks.infantry.Unit;
@@ -23,9 +23,12 @@ public class Level {
     private InputAdapter inputAdapter;
     private Vector3 input;
     private GameScreen context;
+    private float spawnTime, spawnTimer;
     
     public Level(GameScreen context) {
         this.context = context;
+        
+        GameObject.setParentLevel(this);
         
         input = new Vector3();
         layers = new LayerManager(2);
@@ -37,19 +40,36 @@ public class Level {
         inputAdapter = new InputAdapter() {
             
             @Override
-            public boolean mouseMoved(int screenX, int screenY) {
+            public boolean touchDown(int screenX, int screenY, int pointer, int button) {
                 gameCamera.unproject(input.set(screenX, screenY, 0));
                 
+                if(player.isMovingLeft()) {
+                    Assets.playExplosion();
+                    player.setX(player.getX() + 1);
+                    player.setY(player.getY() + 1);    
+                }
+                else {
+                    Assets.playExplosion();
+                    player.setX(player.getX() - 1);
+                    player.setY(player.getY() + 1);
+                }
+                
                 for(Zombie z : zombies) {
-                    if(MathUtil.dst(input.x, input.y, z.getX(), z.getY()) <= 200f) {
-                        z.setCurrentTarget(input.x, input.y);   
-                    }
-                    else {
-                        z.setCurrentTarget(0, 50);
+                    if(Math.abs(z.getX() - player.getX()) < 250) {
+                        if(Math.abs(z.getY() - player.getY()) < 25) {
+                            if(player.getX() <= z.getX() && !player.isMovingLeft()) {
+                                player.attack(z);
+                                System.out.println("attack right");   
+                            }
+                            else if(player.getX() >= z.getX() && player.isMovingLeft()) {
+                                player.attack(z);
+                                System.out.println("attack left");
+                            }
+                        }
                     }
                 }
                 
-                return super.mouseMoved(screenX, screenY);
+                return false;
             }
             
             @Override
@@ -113,12 +133,32 @@ public class Level {
         updateObjects(delta);
         checkForCollisions();
         updateCamera(delta);
-    //    generateZombies();
+        
+        spawnTimer += delta;
+        
+        if(spawnTimer >= spawnTime) {
+            spawnTimer = 0;
+            generateZombie();
+        }
     }
     
-    public void generateZombies() {
-        if(Math.random() < 0.12) {
-            zombies.add(Factory.createZombie());
+    public void generateZombie() {
+        Zombie z = Factory.zombiePool.obtain();
+        
+        if(Math.random() < 1f) {
+            float x = Math.random() < 0.5f ? gameCamera.position.x - (gameCamera.viewportWidth * 0.5f):
+                                             gameCamera.position.x + gameCamera.viewportWidth;
+            
+            float y = MathUtils.random(0, player.getGround().getY() + player.getGround().getHeight());
+            
+            z.setX(x);
+            z.setY(y);
+            
+            if(player.getX() < x) {
+                z.setVelX(z.getVelX());
+            }
+
+            zombies.add(z);
         }
     }
     
@@ -148,6 +188,14 @@ public class Level {
         
         for(Unit zombie : zombies) {
             zombie.update(delta);
+            
+            if(MathUtil.dst(zombie.getX(), zombie.getY(), player.getX(), player.getY()) <= 200) {
+                ((Zombie) zombie).setCurrentTarget(player.getX(),
+                                                   player.getY());
+            }
+            else {
+                ((Zombie) zombie).resetPath();
+            }
         }
         
         player.update(delta);
@@ -162,11 +210,6 @@ public class Level {
                 }
             }
         }
-        
-    }
-    
-    public void onResize() {
-
     }
     
     public void initializeCamera() {
@@ -242,5 +285,21 @@ public class Level {
     
     public void removeUnit(Unit u) {
         playerArmy.removeValue(u, false);
+    }
+    
+    public void setSpawnTime(float spawnTime) {
+        this.spawnTime = spawnTime;
+    }
+    
+    public float getSpawnTime() {
+        return spawnTime;
+    }
+    
+    public void setSpawnTimer(float spawnTimer) {
+        this.spawnTimer = spawnTimer;
+    }
+    
+    public float getSpawnTimer() {
+        return spawnTimer;
     }
 }

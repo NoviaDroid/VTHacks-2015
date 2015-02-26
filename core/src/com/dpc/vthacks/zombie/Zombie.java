@@ -2,35 +2,27 @@ package com.dpc.vthacks.zombie;
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Pool.Poolable;
 import com.dpc.vthacks.App;
 import com.dpc.vthacks.Collidable;
-import com.dpc.vthacks.LevelProperties;
-import com.dpc.vthacks.SpriteAnimation;
+import com.dpc.vthacks.MathUtil;
 import com.dpc.vthacks.data.Assets;
-import com.dpc.vthacks.infantry.AnimatedUnit;
+import com.dpc.vthacks.factories.Factory;
 import com.dpc.vthacks.infantry.Unit;
 import com.dpc.vthacks.properties.Properties;
 
-public class Zombie extends AnimatedUnit {
+public class Zombie extends Unit implements Poolable {
     private Vector2 dest, targ, currentTarget; // Final destination, temporary target
     private Vector2 vel;
     
     public Zombie(AtlasRegion[] frames, Properties properties) {
-        super(frames, new SpriteAnimation(Assets.getTankFrames(), 0.15f), properties, 0.25f);
+        super(Assets.getZombie(), properties);
         
-        setSize(getWidth() * 3, getHeight() * 3);
-        
-        Rectangle rect = LevelProperties.enemySpawns.get(MathUtils.random(LevelProperties.enemySpawns.size - 1));
-        
-        float y = rect.x + (MathUtils.random() * (rect.height - getHeight()));
-        float x = rect.y + (MathUtils.random() * (rect.width - getWidth()));
-
-        properties.setPos(new Vector2(rect.x, rect.y));
-        setX(rect.x);
-        setY(rect.y);
-        
+        getProperties().setMaxHealth(MathUtils.random(getProperties().getHealth(), 
+                                                      getProperties().getHealth() * 2) + 25);
+        setSize(getWidth() * 1, getHeight() * 1);
+      
         dest = new Vector2(0, 50);
         currentTarget = new Vector2(dest);
         targ = new Vector2();
@@ -43,8 +35,28 @@ public class Zombie extends AnimatedUnit {
     public void update(float delta) {
         super.update(delta);
         
-        //setRotation(MathUtils.radiansToDegrees * (float) Math.atan2(getY() - currentTarget.y, getX() - currentTarget.x));
-        addPos(getProperties().getVelX(), getProperties().getVelY());
+        if(getParentLevel().getPlayer().getX() < getX()) {
+            if(MathUtil.dst(getX(), 
+                            getY(), 
+                            getParentLevel().getPlayer().getX(), 
+                            getParentLevel().getPlayer().getY()) < getParentLevel().getPlayer().getWidth()) {
+                attack(getParentLevel().getPlayer());
+            }
+            else {
+                addPos(vel.x, vel.y);
+            }
+        }
+        else {
+            if(MathUtil.dst(getX(), 
+                    getY(), 
+                    getParentLevel().getPlayer().getX(), 
+                    getParentLevel().getPlayer().getY()) < getWidth()) {
+                attack(getParentLevel().getPlayer());
+            }
+            else {
+                addPos(vel.x, vel.y);
+            }   
+        }
     }
     
     @Override
@@ -58,10 +70,13 @@ public class Zombie extends AnimatedUnit {
 
     @Override
     public void onDeath() {
+        Factory.zombiePool.free(this);
+        getParentLevel().getZombies().removeValue(this, false);
     }
 
     @Override
     public void attack(Unit enemy) {
+        enemy.takeDamage(0.1f);
     }
 
     @Override
@@ -86,8 +101,8 @@ public class Zombie extends AnimatedUnit {
         vel.set(currentTarget.x - getX(), currentTarget.y - getY());
         vel.nor(); 
         
-        vel.x *= getProperties().getVelX(); 
-        vel.y *= getProperties().getVelY();
+        vel.x *= getVelX(); 
+        vel.y *= getVelY();
     }
     
     public void setTarg(Vector2 targ) {
@@ -96,5 +111,14 @@ public class Zombie extends AnimatedUnit {
     
     public void setDest(Vector2 dest) {
         this.dest = dest;
+    }
+
+    public void resetPath() {
+        setCurrentTarget(dest.x, dest.y);
+    }
+
+    @Override
+    public void reset() {
+    
     }
 }

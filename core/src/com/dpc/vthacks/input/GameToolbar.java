@@ -21,8 +21,7 @@ import com.dpc.vthacks.screens.GameScreen;
 
 public class GameToolbar {
     private Stage stage;
-    private static Actor healthBar;
-    private static Actor experienceBar;
+    private static Actor healthBar, experienceBar, playerIcon;
     private Touchpad joystick;
     private Drawable background;
     private Button bombButton, strafeButton, soldierButton, tankButton, towerButton,
@@ -48,7 +47,7 @@ public class GameToolbar {
         tankUpgradeButton = new ImageButton(skin.getDrawable("Tank Button +"), skin.getDrawable("Tank Button +Hover"));
         towerUpgradeButton = new ImageButton(skin.getDrawable("Bomb Icon"));
         soldierUpgradeButton = new ImageButton(skin.getDrawable("Soldier Button +"), skin.getDrawable("Soldier Button + Hover"));
-
+        
         
         TouchpadStyle touchpadStyle = new TouchpadStyle();
         Drawable touchBackground = skin.getDrawable("touchBackground");
@@ -188,34 +187,47 @@ public class GameToolbar {
             }
         });
 
+        playerIcon = new Actor();
+        playerIcon.setWidth(Assets.playerIcon.getRegionWidth() * 10);
+        playerIcon.setHeight(Assets.playerIcon.getRegionHeight() * 10);
+        playerIcon.setPosition(PADDING, (AppData.height - playerIcon.getHeight()) - PADDING);
+        
+        float h = (playerIcon.getHeight() * 0.5f) - PADDING;
+        
         healthBar = new Actor();
-        healthBar.setWidth(Assets.healthbar.getRegionWidth() * 0.5f);
-        healthBar.setHeight(Assets.healthbar.getRegionHeight() * 0.5f);
-        healthBar.setBounds(0, 0, healthBar.getWidth(), healthBar.getHeight());
+        healthBar.setWidth(Assets.healthbar.getRegionWidth());
+        healthBar.setHeight(h);
+        healthBar.setPosition(playerIcon.getX() + playerIcon.getWidth(), 
+                              (playerIcon.getY() + playerIcon.getHeight()) - h);
         
         experienceBar = new Actor();
-        experienceBar.setWidth(0);
-        experienceBar.setHeight(Assets.healthbar.getRegionHeight() * 0.5f);
-        experienceBar.setBounds(0, 0, experienceBar.getWidth(), experienceBar.getHeight());
+        experienceBar.setWidth(Assets.healthbar.getRegionWidth());
+        experienceBar.setHeight(h);
+        experienceBar.setPosition(healthBar.getX(), playerIcon.getY());
+        
+        experienceLabel.setPosition(soldierUpgradeButton.getX() + soldierUpgradeButton.getWidth() + PADDING, getTop() - experienceLabel.getHeight());
         
         stage = new Stage(new StretchViewport(AppData.width, AppData.height)) {
             @Override
             public void draw() {
                 super.draw();
        
-//                experienceLabel.setPosition(experienceBar.getX() + experienceBar.getWidth() + PADDING, experienceLabel.getY());
-//               
-//                healthLabel.setPosition(healthBar.getX() + healthBar.getWidth() + PADDING, healthLabel.getY());
+                experienceLabel.setPosition(experienceBar.getX() + experienceBar.getWidth() + PADDING, experienceLabel.getY());
+               
+                healthLabel.setPosition(healthBar.getX() + healthBar.getWidth() + PADDING, healthLabel.getY());
                 
-//                getBatch().setProjectionMatrix(getCamera().combined);
-//                getBatch().begin();
-//                getBatch().draw(Assets.healthbar, healthBar.getX(), healthBar.getY(), healthBar.getWidth(), healthBar.getHeight());
-//
-//                getBatch().setColor(Color.GRAY);
-//                getBatch().draw(Assets.healthbar, experienceBar.getX(), experienceBar.getY(), experienceBar.getWidth(), experienceBar.getHeight());
-//                getBatch().setColor(BATCH_COLOR);
-//                
-//                getBatch().end();
+                getBatch().setProjectionMatrix(getCamera().combined);
+                getBatch().setColor(BATCH_COLOR.r, BATCH_COLOR.g, BATCH_COLOR.b, 1);
+                getBatch().begin();
+                
+                getBatch().draw(Assets.playerIcon, playerIcon.getX(), playerIcon.getY(), playerIcon.getWidth(), playerIcon.getHeight());
+                getBatch().draw(Assets.healthbar, healthBar.getX(), healthBar.getY(), healthBar.getWidth(), healthBar.getHeight());
+
+                getBatch().setColor(Color.GRAY);
+                getBatch().draw(Assets.healthbar, experienceBar.getX(), experienceBar.getY(), experienceBar.getWidth(), experienceBar.getHeight());
+                getBatch().setColor(BATCH_COLOR);
+                
+                getBatch().end();
             }
         };
 
@@ -234,14 +246,10 @@ public class GameToolbar {
         tankUpgradeButton.setPosition(soldierButton.getX() - tankUpgradeButton.getWidth() - PADDING, PADDING);
         towerUpgradeButton.setPosition(tankUpgradeButton.getX() - towerUpgradeButton.getWidth() - PADDING, PADDING);
         soldierUpgradeButton.setPosition(towerUpgradeButton.getX() - soldierUpgradeButton.getWidth() - PADDING, PADDING);
-        healthBar.setPosition(soldierUpgradeButton.getX() + soldierUpgradeButton.getWidth() + PADDING, (70 * 0.5f) - (healthBar.getHeight() * 0.75f) + (healthBar.getHeight() * 0.5f));
-        experienceBar.setPosition(healthBar.getX(), healthBar.getY() - (healthBar.getHeight() * 0.75f) - (healthBar.getHeight() * 0.5f));
-        experienceLabel.setPosition(soldierUpgradeButton.getX() + soldierUpgradeButton.getWidth() + PADDING, getTop() - experienceLabel.getHeight());
         healthLabel.setPosition(soldierUpgradeButton.getX() + soldierUpgradeButton.getWidth() + PADDING, experienceLabel.getY() - healthLabel.getHeight());
         moneyLabel.setPosition(soldierUpgradeButton.getX() + soldierUpgradeButton.getWidth() + PADDING, healthLabel.getY() - moneyLabel.getHeight());
 
         //healthBar.setWidth(AppData.width - (soldierUpgradeButton.getX() + soldierUpgradeButton.getWidth() + PADDING));
-
        
         stage.addActor(joystick);
 //        stage.addActor(bombButton);
@@ -252,8 +260,9 @@ public class GameToolbar {
 //        stage.addActor(towerUpgradeButton);
 //        stage.addActor(soldierUpgradeButton);
 //        stage.addActor(moneyLabel);
-        //stage.addActor(experienceLabel);
-        //stage.addActor(healthLabel);
+//          stage.addActor(experienceLabel);
+//          stage.addActor(healthLabel);
+//          stage.addActor(playerIcon);
         
         BATCH_COLOR = stage.getBatch().getColor();
     }

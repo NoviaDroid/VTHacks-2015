@@ -10,7 +10,7 @@ public abstract class DynamicGameObject extends GameObject {
     public DynamicGameObject(TextureRegion region, Properties properties) {
         super(region, properties.getX(), properties.getY());
 
-        vel = new Vector2(properties.getVelX(), properties.getVelY());
+        vel = properties.getVel();
     }
     
     @Override

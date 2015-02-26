@@ -129,5 +129,7 @@ public class OgmoParser {
             
             level.addLayer(parsed);
         }
+        
+        level.setSpawnTime(root.getFloat("zombieSpawnTime"));
     }
 }

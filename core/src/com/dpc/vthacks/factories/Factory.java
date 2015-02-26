@@ -67,7 +67,13 @@ public class Factory {
     };
     
     public static Zombie createZombie() {
-        return new Zombie(Assets.getEnemySoldierFrames(), new Properties(zombieProperties));
+        Zombie z = new Zombie(Assets.getEnemySoldierFrames(), new Properties(zombieProperties));
+        z.setVelX(MathUtils.random(z.getProperties().getMinVel().x, 
+                                   z.getProperties().getMaxVel().x));
+
+        z.setVelY(MathUtils.random(z.getProperties().getMinVel().y, 
+                                   z.getProperties().getMaxVel().y));
+        return z;
     }
     
     public static Building createRandomBuilding(float x, float y) {

@@ -3,30 +3,38 @@ package com.dpc.vthacks.properties;
 import com.badlogic.gdx.math.Vector2;
 
 public class Properties {
-    private Vector2 pos, vel;
-    private float range, damage, health, maxHealth;
+    private Vector2 pos, minVel, maxVel, vel;
+    private float range, minDamage, maxDamage, health, maxHealth;
     private int cost;
     
     public Properties(Properties cpy) {
         pos = cpy.pos.cpy();
         vel = cpy.vel.cpy();
         range = cpy.getRange();
-        damage = cpy.getDamage();
+        minDamage = cpy.getMinDamage();
+        maxDamage = cpy.getMaxDamage();
         health = cpy.getHealth();
         maxHealth = cpy.getMaxHealth();
         cost = cpy.getCost();
+        maxVel = cpy.getMaxVel();
+        minVel = cpy.getMinVel();
     }
     
     public Properties() {
         pos = new Vector2();
         vel = new Vector2();
+        minVel = new Vector2();
+        maxVel = new Vector2();
     }
     
-    public Properties(Vector2 pos, Vector2 vel, float range, float damage, float health, int cost) {
+    public Properties(Vector2 pos, Vector2 vel, Vector2 minVel, Vector2 maxVel, float range, float minDamage, float maxDamage, float health, int cost) {
         this.pos = pos;
         this.vel = vel;
         this.range = range;
-        this.damage = damage;
+        this.minDamage = minDamage;
+        this.maxDamage = maxDamage;
+        this.minVel = minVel;
+        this.maxVel = maxVel;
         this.health = health;
         this.maxHealth = health;
         this.cost = cost;
@@ -40,8 +48,12 @@ public class Properties {
         return maxHealth;
     }
     
-    public float getDamage() {
-        return damage;
+    public float getMaxDamage() {
+        return maxDamage;
+    }
+    
+    public float getMinDamage() {
+        return minDamage;
     }
     
     public float getHealth() {
@@ -76,8 +88,12 @@ public class Properties {
         return this;
     }
     
-    public void setDamage(float damage) {
-        this.damage = damage;
+    public void setMaxDamage(float maxDamage) {
+        this.maxDamage = maxDamage;
+    }
+    
+    public void setMinDamage(float minDamage) {
+        this.minDamage = minDamage;
     }
     
     public void setHealth(float health) {
@@ -120,6 +136,14 @@ public class Properties {
         return pos.y;
     }
     
+    public Vector2 getMaxVel() {
+        return maxVel;
+    }
+    
+    public Vector2 getMinVel() {
+        return minVel;
+    }
+    
     public float getVelX() {
         return vel.x;
     }
@@ -136,6 +160,14 @@ public class Properties {
         vel.y = velY;
     }
 
+    public void setMaxVel(Vector2 maxVel) {
+        this.maxVel = maxVel;
+    }
+    
+    public void setMinVel(Vector2 minVel) {
+        this.minVel = minVel;
+    }
+    
     public void setPos(float x, float y) {
         pos.x = x;
         pos.y = y;
