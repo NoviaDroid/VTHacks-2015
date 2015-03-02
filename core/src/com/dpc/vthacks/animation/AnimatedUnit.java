@@ -1,9 +1,8 @@
-package com.dpc.vthacks.infantry;
+package com.dpc.vthacks.animation;
 
-import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.dpc.vthacks.App;
-import com.dpc.vthacks.SpriteAnimation;
+import com.dpc.vthacks.infantry.Unit;
 import com.dpc.vthacks.properties.Properties;
 
 public abstract class AnimatedUnit extends Unit {
@@ -12,24 +11,36 @@ public abstract class AnimatedUnit extends Unit {
     private boolean playing;
     private final boolean useRestAnimation;
     
-    public AnimatedUnit(AtlasRegion[] frames, SpriteAnimation restingAnimation, Properties properties, float animationSpeed) {
-        super(frames[0], properties);
+    public AnimatedUnit(SpriteAnimation animation, 
+                        SpriteAnimation restingAnimation, 
+                        Properties properties,
+                        float x, 
+                        float y) {
+        super(animation.update(0), properties, x, y);
         this.restingAnimation = restingAnimation;
         
         useRestAnimation = true;
-        animation = new SpriteAnimation(frames, animationSpeed);
+        this.animation = animation;
         playing = false; 
     }
     
-    public AnimatedUnit(AtlasRegion[] frames, TextureRegion initialFrame, Properties properties, float animationSpeed) {
-        super(initialFrame, properties);
+    public AnimatedUnit(FrameData[] frames, 
+                        TextureRegion initialFrame, 
+                        Properties properties,
+                        float x, 
+                        float y) {
+        super(initialFrame, properties, x, y);
         this.initialFrame = initialFrame;
 
         useRestAnimation = false;
-        animation = new SpriteAnimation(frames, animationSpeed);
+        animation = new SpriteAnimation(frames);
         playing = false; 
     }
 
+    public FrameData getCurrentFrame() {
+        return animation.getCurrentFrame();
+    }
+    
     public void update(float delta) {
         super.update(delta);
 
@@ -53,8 +64,8 @@ public abstract class AnimatedUnit extends Unit {
         draw(App.batch);
     }
     
-    public void setAnimationFrames(AtlasRegion[] frames, float speed) {
-        animation = new SpriteAnimation(frames, speed);
+    public void setAnimationFrames(FrameData[] frames) {
+        animation = new SpriteAnimation(frames);
     }
     
     public SpriteAnimation getAnimation() {
@@ -63,6 +74,10 @@ public abstract class AnimatedUnit extends Unit {
     
     public SpriteAnimation getRestingAnimation() {
         return restingAnimation;
+    }
+    
+    public void setAnimation(SpriteAnimation animation) {
+        this.animation = animation;
     }
     
     public boolean isAnimationFinished() {

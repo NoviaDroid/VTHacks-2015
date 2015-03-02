@@ -7,8 +7,12 @@ import com.dpc.vthacks.properties.Properties;
 public abstract class DynamicGameObject extends GameObject {
     private Vector2 vel;
     
-    public DynamicGameObject(TextureRegion region, Properties properties) {
-        super(region, properties.getX(), properties.getY());
+    public DynamicGameObject() {
+    
+    }
+    
+    public DynamicGameObject(TextureRegion region, Properties properties, float x, float y) {
+        super(region, x, y);
 
         vel = properties.getVel();
     }

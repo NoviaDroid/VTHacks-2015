@@ -1,17 +1,24 @@
-package com.dpc.vthacks;
+package com.dpc.vthacks.level;
 
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
+import com.dpc.vthacks.App;
+import com.dpc.vthacks.GameCamera;
+import com.dpc.vthacks.MathUtil;
+import com.dpc.vthacks.Player;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.factories.Factory;
 import com.dpc.vthacks.gameobject.GameObject;
 import com.dpc.vthacks.infantry.Unit;
 import com.dpc.vthacks.objects.LayerManager;
 import com.dpc.vthacks.objects.LayerManager.Layer;
+import com.dpc.vthacks.properties.ZombieProperties;
+import com.dpc.vthacks.properties.ZombieSegment;
 import com.dpc.vthacks.screens.GameScreen;
 import com.dpc.vthacks.zombie.Zombie;
 
@@ -44,27 +51,29 @@ public class Level {
             public boolean touchDown(int screenX, int screenY, int pointer, int button) {
                 gameCamera.unproject(input.set(screenX, screenY, 0));
                 
-                if(player.isMovingLeft()) {
-                    Assets.playExplosion();
-                    player.setX(player.getX() + 1);
-                    player.setY(player.getY() + 1);    
-                }
-                else {
-                    Assets.playExplosion();
-                    player.setX(player.getX() - 1);
-                    player.setY(player.getY() + 1);
-                }
+                // Fire a shot, it may not hit
+                player.blindFire();
                 
                 for(Zombie z : zombies) {
                     if(Math.abs(z.getX() - player.getX()) < 250) {
-                        if(Math.abs(z.getY() - player.getY()) < 25) {
-                            if(player.getX() <= z.getX() && !player.isMovingLeft()) {
-                                player.attack(z);
-                                System.out.println("attack right");   
-                            }
-                            else if(player.getX() >= z.getX() && player.isMovingLeft()) {
-                                player.attack(z);
-                                System.out.println("attack left");
+                        if(Math.abs(z.getY() - player.getY()) < 100) {
+                            if(player.getX() <= z.getX() && !player.isMovingLeft() ||
+                               player.getX() >= z.getX() && player.isMovingLeft()) {
+                                float segDmg = ((ZombieProperties) z.getProperties()).getSegments()[0].damageFactor;
+                                
+                                ZombieSegment seg = null;
+                                int len = ((ZombieProperties)z.getProperties()).getSegments().length;
+                                
+                                for(int i = 0; i < len; i++) {
+                                    seg = ((ZombieProperties) z.getProperties()).getSegments()[i];
+                     
+                                    if(seg.bounds.contains(seg.bounds.x + 1,player.getPrimary().getY())) {
+                                        segDmg = seg.damageFactor;
+                                    }
+                                }
+                                
+                                player.attack(z, segDmg);
+                                return false;
                             }
                         }
                     }
@@ -163,6 +172,8 @@ public class Level {
             }
             else {
                 z.setDest(new Vector2(LevelProperties.WIDTH, 0));
+                z.flip(true, false);
+                z.setFlipped(true);
             }
 
             zombies.add(z);
@@ -186,6 +197,40 @@ public class Level {
         player.render();
         
         App.batch.end();
+        
+        //debugRender();
+    }
+    
+    public void debugRender() {
+        App.debugRenderer.setProjectionMatrix(gameCamera.combined);
+        App.debugRenderer.setColor(1, 0, 0, 1);
+        App.debugRenderer.begin(ShapeType.Line);
+        
+        App.debugRenderer.rect(player.getPrimary().getX(),
+                               player.getPrimary().getY(),
+                               150, 
+                               150);
+        
+        App.debugRenderer.end();
+        
+        App.debugRenderer.setColor(1, 1, 1, 1);
+        App.debugRenderer.begin(ShapeType.Line);
+        
+        for(Unit u : playerArmy) {
+            App.debugRenderer.rect(u.getBoundingRectangle().x, 
+                                   u.getBoundingRectangle().y,
+                                   u.getBoundingRectangle().width,
+                                   u.getBoundingRectangle().height);
+        }
+        
+        for(Unit zombie : zombies) {
+            App.debugRenderer.rect(zombie.getX(), zombie.getY(), zombie.getWidth(), zombie.getHeight());
+            for(ZombieSegment s : ((ZombieProperties) zombie.getProperties()).getSegments()) {
+                App.debugRenderer.rect(s.bounds.x, s.bounds.y, s.bounds.width, s.bounds.height);
+            }
+        }
+        
+        App.debugRenderer.end();
     }
     
     public GameScreen getContext() {
@@ -216,8 +261,7 @@ public class Level {
         for(Unit unit : playerArmy) {
             for(Unit zombie : zombies) {
                 if(zombie.getBoundingRectangle().overlaps(unit.getBoundingRectangle())) {
-                    unit.onCollision(zombie);
-                    zombie.onCollision(unit);
+                    zombie.attack(unit);
                 }
             }
         }

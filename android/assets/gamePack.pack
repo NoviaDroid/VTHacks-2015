@@ -290,18 +290,32 @@ zombie
   orig: 54, 104
   offset: 0, 0
   index: -1
+shotgun
+  rotate: false
+  xy: 568, 184
+  size: 120, 25
+  orig: 120, 25
+  offset: 0, 0
+  index: -1
 tank2
   rotate: false
-  xy: 570, 158
+  xy: 570, 131
   size: 119, 51
   orig: 119, 51
   offset: 0, 0
   index: -1
 tank3
   rotate: false
-  xy: 570, 105
+  xy: 570, 78
   size: 119, 51
   orig: 119, 51
+  offset: 0, 0
+  index: -1
+Apartment
+  rotate: false
+  xy: 536, 52
+  size: 32, 51
+  orig: 32, 51
   offset: 0, 0
   index: -1
 Explosion1
@@ -313,44 +327,37 @@ Explosion1
   index: -1
 Explosion2
   rotate: false
-  xy: 746, 145
+  xy: 691, 89
   size: 53, 59
   orig: 53, 59
   offset: 0, 0
   index: -1
 Explosion3
   rotate: false
-  xy: 801, 145
+  xy: 746, 145
   size: 53, 59
   orig: 53, 59
   offset: 0, 0
   index: -1
 Explosion4
   rotate: false
-  xy: 536, 44
+  xy: 801, 145
   size: 53, 59
   orig: 53, 59
   offset: 0, 0
   index: -1
 Explosion5
   rotate: false
-  xy: 591, 44
+  xy: 746, 84
   size: 53, 59
   orig: 53, 59
   offset: 0, 0
   index: -1
 building1
   rotate: false
-  xy: 646, 41
+  xy: 801, 81
   size: 38, 62
   orig: 38, 62
-  offset: 0, 0
-  index: -1
-Apartment
-  rotate: false
-  xy: 910, 376
-  size: 32, 51
-  orig: 32, 51
   offset: 0, 0
   index: -1
 ETroop2Running1
@@ -388,32 +395,32 @@ ETroopTier2Idle1
   orig: 37, 36
   offset: 0, 0
   index: -1
-building2
-  rotate: false
-  xy: 691, 86
-  size: 38, 62
-  orig: 38, 62
-  offset: 0, 0
-  index: -1
 BombButton
   rotate: false
-  xy: 686, 46
+  xy: 910, 389
   size: 38, 38
   orig: 38, 38
   offset: 0, 0
   index: -1
+building2
+  rotate: false
+  xy: 841, 81
+  size: 38, 62
+  orig: 38, 62
+  offset: 0, 0
+  index: -1
 ETroopTier2Idle2
   rotate: false
-  xy: 886, 306
+  xy: 535, 14
   size: 37, 36
   orig: 37, 36
   offset: 0, 0
   index: -1
-ETroop1
+ETroopTier2Idle3
   rotate: false
-  xy: 914, 344
-  size: 21, 30
-  orig: 21, 30
+  xy: 886, 306
+  size: 37, 36
+  orig: 37, 36
   offset: 0, 0
   index: -1
 healthbar
@@ -430,149 +437,156 @@ bomb
   orig: 32, 12
   offset: 0, 0
   index: -1
-ETroopTier2Idle3
-  rotate: false
-  xy: 535, 6
-  size: 37, 36
-  orig: 37, 36
-  offset: 0, 0
-  index: -1
 ETroop Running1
-  rotate: false
-  xy: 574, 7
-  size: 24, 35
-  orig: 24, 35
-  offset: 0, 0
-  index: -1
-ETroop Running3
-  rotate: false
-  xy: 574, 7
-  size: 24, 35
-  orig: 24, 35
-  offset: 0, 0
-  index: -1
-ETroop Running2
-  rotate: false
-  xy: 600, 7
-  size: 24, 35
-  orig: 24, 35
-  offset: 0, 0
-  index: -1
-ETroop Running4
-  rotate: false
-  xy: 600, 7
-  size: 24, 35
-  orig: 24, 35
-  offset: 0, 0
-  index: -1
-ETroop Running5
   rotate: false
   xy: 868, 222
   size: 24, 35
   orig: 24, 35
   offset: 0, 0
   index: -1
-ETroop Running6
+ETroop Running3
   rotate: false
-  xy: 944, 392
+  xy: 868, 222
   size: 24, 35
   orig: 24, 35
   offset: 0, 0
   index: -1
-troopRunning1
+ETroop Running2
+  rotate: false
+  xy: 914, 352
+  size: 24, 35
+  orig: 24, 35
+  offset: 0, 0
+  index: -1
+ETroop Running4
+  rotate: false
+  xy: 914, 352
+  size: 24, 35
+  orig: 24, 35
+  offset: 0, 0
+  index: -1
+ETroop Running5
+  rotate: false
+  xy: 950, 392
+  size: 24, 35
+  orig: 24, 35
+  offset: 0, 0
+  index: -1
+ETroop Running6
   rotate: false
   xy: 856, 169
   size: 24, 35
   orig: 24, 35
   offset: 0, 0
   index: -1
-building3
-  rotate: false
-  xy: 856, 133
-  size: 24, 34
-  orig: 24, 34
-  offset: 0, 0
-  index: -1
-troopRunning2
-  rotate: false
-  xy: 925, 307
-  size: 24, 35
-  orig: 24, 35
-  offset: 0, 0
-  index: -1
-ETroop2
-  rotate: false
-  xy: 937, 344
-  size: 21, 30
-  orig: 21, 30
-  offset: 0, 0
-  index: -1
-troopRunning3
+troopRunning1
   rotate: false
   xy: 890, 269
   size: 24, 35
   orig: 24, 35
   offset: 0, 0
   index: -1
-troopRunnning4
+troopRunning2
   rotate: false
   xy: 894, 232
   size: 24, 35
   orig: 24, 35
   offset: 0, 0
   index: -1
+troopRunning3
+  rotate: false
+  xy: 916, 269
+  size: 24, 35
+  orig: 24, 35
+  offset: 0, 0
+  index: -1
+troopRunnning4
+  rotate: false
+  xy: 920, 232
+  size: 24, 35
+  orig: 24, 35
+  offset: 0, 0
+  index: -1
+building3
+  rotate: false
+  xy: 940, 353
+  size: 24, 34
+  orig: 24, 34
+  offset: 0, 0
+  index: -1
+ETroop1
+  rotate: false
+  xy: 996, 926
+  size: 21, 30
+  orig: 21, 30
+  offset: 0, 0
+  index: -1
+ETroop2
+  rotate: false
+  xy: 996, 894
+  size: 21, 30
+  orig: 21, 30
+  offset: 0, 0
+  index: -1
 ETroop3
   rotate: false
-  xy: 951, 312
+  xy: 996, 862
   size: 21, 30
   orig: 21, 30
   offset: 0, 0
   index: -1
 troopStationary1
   rotate: false
-  xy: 916, 274
+  xy: 996, 830
   size: 21, 30
   orig: 21, 30
   offset: 0, 0
   index: -1
 troopStationary2
   rotate: false
-  xy: 920, 242
+  xy: 996, 798
   size: 21, 30
   orig: 21, 30
   offset: 0, 0
   index: -1
 troopStationary3
   rotate: false
-  xy: 939, 275
+  xy: 996, 766
   size: 21, 30
   orig: 21, 30
   offset: 0, 0
   index: -1
 ETank Shell
   rotate: false
-  xy: 986, 557
-  size: 27, 8
-  orig: 27, 8
-  offset: 0, 0
-  index: -1
-Tank Shell
-  rotate: false
-  xy: 53, 17
+  xy: 691, 79
   size: 27, 8
   orig: 27, 8
   offset: 0, 0
   index: -1
 playerIcon1
   rotate: false
-  xy: 395, 161
+  xy: 986, 556
   size: 12, 9
   orig: 12, 9
   offset: 0, 0
   index: -1
+Tank Shell
+  rotate: false
+  xy: 570, 68
+  size: 27, 8
+  orig: 27, 8
+  offset: 0, 0
+  index: -1
+handun
+  rotate: false
+  xy: 395, 160
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
 bullet
   rotate: false
-  xy: 1015, 561
+  xy: 747, 272
   size: 8, 4
   orig: 8, 4
   offset: 0, 0

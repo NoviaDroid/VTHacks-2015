@@ -7,17 +7,82 @@
     "velX": "6",
     "velY": "0",
     "range": "600",
-    "max health": "250"
+    "max health": "250",
+    "animations": [{
+    	"rolling": [{
+    		"frame1": [{
+    			"img": "tank1", 
+    			"time": "0.15"
+    		}],
+    		"frame2": [{
+    			"img": "tank2",
+    			"time": "0.15"
+    		}],
+    		"frame3": [{
+    			"img": "tank3",
+    			"time": "0.15"
+    		}]
+    	}]
+    }]
   }],
   
   "player": [{
     "health": "100",
-    "minDamage": 20,
-    "maxDamage": 35,
+    "minDamage": "40",
+    "maxDamage": "60",
     "velX": "3", 
     "velY": "2",
-    "range": "480"
-    "max health": "100"
+    "range": "480",
+    "max health": "100",
+    "scaleX": "2",
+    "scaleY": "2",
+    "ammo": "25", 
+    "walking": [{
+    	"frame1": [{
+    		"img": "ETroop2Running1", 
+    		"time": "1",
+    		"handOffsetX": "24",
+    		"handOffsetY": "24"
+    	}],
+    	"frame2": [{
+    		"img": "ETroop2Running2",
+    		"time": "4",
+    		"handOffsetX": "23",
+    		"handOffsetY": "21"
+    	}],
+    	"frame3": [{
+    		"img": "ETroop2Running3",
+    		"time": "1",
+    		"handOffsetX": "20",
+    		"handOffsetY": "21"
+    	}],
+    	"frame4": [{
+    		"img": "ETroop2Running4",
+    		"time": "4",
+    		"handOffsetX": "20",
+    		"handOffsetY": "21"
+    	}]
+    }],
+    "stationary": [{
+    	"frame1": [{
+    		"img": "ETroopTier2Idle1", 
+    		"time": "5",
+    		"handOffsetX": "20",
+    		"handOffsetY": "19"
+    	}],
+    	"frame2": [{
+    		"img": "ETroopTier2Idle2",
+    		"time": "5",
+    		"handOffsetX": "20",
+    		"handOffsetY": "18"
+    	}],
+    	"frame3": [{
+    		"img": "ETroopTier2Idle3",
+    		"time": "5",
+    		"handOffsetX": "20",
+    		"handOffsetY": "17"
+    	}]
+    }]
   }],
   
   "soldier": [{
@@ -28,14 +93,58 @@
     "range": "150",
     "velX": "3",
     "velY": "0", 
-    "max health": "80"
+    "max health": "80",
+    "animations": [{
+    	"walking": [{
+    		"frame1": [{
+    			"img": "troopRunnning1", 
+    			"time": "0.15"
+    		}],
+    		"frame2": [{
+    			"img": "troopRunnning2",
+    			"time": "0.15"
+    		}],
+    		"frame3": [{
+    			"img": "troopRunnning3",
+    			"time": "0.15"
+    		}],
+    		"frame4": [{
+    			"img": "troopRunnning4",
+    			"time": "0.15"
+    		}]
+    	}]
+    }]
   }],
   
   "bomb": [{
     "minDamage": "100",
     "maxDamage": "150",
 	"velX": "3",
-	"velY": "12"
+	"velY": "12",
+	"animations": [{
+    	"walking": [{
+    		"frame1": [{
+    			"img": "Explosion1", 
+    			"time": "0.15"
+    		}],
+    		"frame2": [{
+    			"img": "Explosion2",
+    			"time": "0.15"
+    		}],
+    		"frame3": [{
+    			"img": "Explosion3",
+    			"time": "0.15"
+    		}],
+    		"frame4": [{
+    			"img": "Explosion4",
+    			"time": "0.15"
+    		}],
+    		"frame5": [{
+    			"img": "Explosion5",
+    			"time": "0.15"
+    		}]
+    	}]
+    }]
   }],
   
   "tank shell": [{
@@ -55,7 +164,38 @@
   	"range": "150",
   	"health": "100",
     "max health": "80",
-    "minKillMoney": 20,
-    "maxKillMoney": 35
+    "minKillMoney": "20",
+    "maxKillMoney": "35",
+    "animations": [{
+    	"walking": [{
+    		"frame1": [{
+    			"img": "zombie", 
+    			"time": "5"
+    		}]
+    	}]
+    }],
+    "segments": [{
+    	"head": [{
+    		"width": "31",
+    		"height": "21",
+    		"x": "4",
+    		"y": "59",
+    		"damageFactor": "4"
+    	}],
+    	"upperTorso": [{
+    		"width": "37",
+    		"height": "17",
+    		"x": "9",
+    		"y": "42",
+    		"damageFactor": "1.75"
+    	}],
+    	"lowerTorso": [{
+    		"width": "41",
+    		"height": "42",
+    		"x": "0",
+    		"y": "1",
+    		"damageFactor": "1"
+    	}]
+    }]
   }]
 }

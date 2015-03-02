@@ -3,7 +3,6 @@ package com.dpc.vthacks.input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -14,30 +13,33 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad.TouchpadStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.data.Fonts;
+import com.dpc.vthacks.objects.Gun;
 import com.dpc.vthacks.screens.GameScreen;
 
 public class GameToolbar {
     private Stage stage;
-    private static Sprite healthBarBackground, healthBar, experienceBar, playerIcon;
+    private static Sprite healthBarBackground, healthBar, playerIcon, gunIcon;
     private Touchpad joystick;
     private Drawable background;
     private Button bombButton, strafeButton, soldierButton, tankButton, towerButton,
                    tankUpgradeButton, towerUpgradeButton, soldierUpgradeButton;
-    private static Label moneyLabel, experienceLabel, healthLabel;
+    private static Label moneyLabel, experienceLabel, healthLabel, ammoLabel;
     private int money;
     private final Color BATCH_COLOR;
     private static final int PADDING = 5;
+    private GameScreen parent;
     
-    public GameToolbar() {
+    public GameToolbar(GameScreen parent) {
+        this.parent = parent;
+        
         Assets.loadSkins();
         
         Skin skin = new Skin();
-        skin.addRegions(Assets.getSkins());
+        skin.addRegions(Assets.skinAtlas);
         
         background = skin.getDrawable("Bomb Icon");
         
@@ -54,10 +56,15 @@ public class GameToolbar {
         TouchpadStyle touchpadStyle = new TouchpadStyle();
         Drawable touchBackground = skin.getDrawable("touchBackground");
         Drawable touchKnob = skin.getDrawable("touchKnob");
+        
+        touchKnob.setMinWidth(AppData.width / 25);
+        touchKnob.setMinHeight(AppData.width / 25);
+        
         touchpadStyle.background = touchBackground;
         touchpadStyle.knob = touchKnob;
+        
         joystick = new Touchpad(10, touchpadStyle);
-        joystick.setBounds(15, 15, 150, 150);
+        joystick.setBounds(15, 15, AppData.width / 8, AppData.width / 8);
         
         joystick.getColor().a = 0.75f;
         soldierUpgradeButton.getColor().a = 0.75f;
@@ -75,7 +82,19 @@ public class GameToolbar {
         moneyLabel = new Label("Money: 0", style);
         experienceLabel = new Label("Experience: ", style);
         healthLabel = new Label("Health: 100", style);
-
+        
+        style = new LabelStyle();
+        style.font = Fonts.getZombieSmall();
+        
+        ammoLabel = new Label("", style);
+        
+        joystick.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                return true;
+            }
+        });
+        
         soldierUpgradeButton.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -229,6 +248,7 @@ public class GameToolbar {
                 getBatch().begin();
                 
                 playerIcon.draw(getBatch());
+                gunIcon.draw(getBatch());
                 healthBarBackground.draw(getBatch());
                 healthBar.draw(getBatch());
 
@@ -256,7 +276,6 @@ public class GameToolbar {
         towerUpgradeButton.setPosition(tankUpgradeButton.getX() - towerUpgradeButton.getWidth() - PADDING, PADDING);
         soldierUpgradeButton.setPosition(towerUpgradeButton.getX() - soldierUpgradeButton.getWidth() - PADDING, PADDING);
         healthLabel.setPosition(soldierUpgradeButton.getX() + soldierUpgradeButton.getWidth() + PADDING, experienceLabel.getY() - healthLabel.getHeight());
-        
         setMoney(0);
 
         //healthBar.setWidth(AppData.width - (soldierUpgradeButton.getX() + soldierUpgradeButton.getWidth() + PADDING));
@@ -270,6 +289,7 @@ public class GameToolbar {
 //        stage.addActor(towerUpgradeButton);
 //        stage.addActor(soldierUpgradeButton);
         stage.addActor(moneyLabel);
+        stage.addActor(ammoLabel);
 //          stage.addActor(experienceLabel);
 //          stage.addActor(healthLabel);
 //          stage.addActor(playerIcon);
@@ -344,6 +364,11 @@ public class GameToolbar {
         setMoney(money +  + amount);
     }
     
+    public void setAmmo(int ammo) {
+        ammoLabel.setText(parent.getLevel().getPlayer().getCurrentWeapon().getAmmo() + " / " +
+                          parent.getLevel().getPlayer().getCurrentWeapon().getMaxAmmo());
+    }
+    
     public void setMoney(int am) {
         this.money = am;
         
@@ -355,19 +380,22 @@ public class GameToolbar {
                                AppData.height - t);
     }
     
-    public void setExperience(int exp) {
-        experienceLabel.setText("Experience: " + exp);
-        
-        // Calculate the exp bar width
-        experienceBar.setSize((GameScreen.getLevel().getPlayer().getExperience() / 
-                               (float) GameScreen.getLevel().getPlayer().getGoalExp()) * 100f,
-                               experienceBar.getHeight());
-        
-        experienceLabel.setPosition(experienceLabel.getX(), experienceLabel.getY());
-    }
-    
     public Touchpad getJoystick() {
         return joystick;
+    }
+    
+    public void setGunIcon(Gun gun) {
+        if(gunIcon == null) {
+            gunIcon = new Sprite(gun.getRegion());
+        }
+        
+        // Position directly under player icon
+        gunIcon.setPosition(playerIcon.getX(), 
+                            playerIcon.getY() - (gunIcon.getHeight() * 2));
+        
+        // Position ammo label to the right of the gun icon
+        ammoLabel.setPosition(gunIcon.getX() + gunIcon.getWidth() + PADDING, 
+                              gunIcon.getY());
     }
     
     public void setHealth(float f) {

@@ -1,15 +1,19 @@
 package com.dpc.vthacks.infantry;
 
-import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.dpc.vthacks.Collidable;
+import com.dpc.vthacks.animation.AnimatedUnit;
+import com.dpc.vthacks.animation.FrameData;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.properties.Properties;
 
 public class Soldier extends AnimatedUnit {
 
-    public Soldier(AtlasRegion[] regions, TextureRegion initialFrame, Properties properties) {
-        super(regions, initialFrame, properties, 0.1f);
+    public Soldier(FrameData[] regions, 
+                   TextureRegion initialFrame, 
+                   Properties properties,
+                   float x,
+                   float y) {
+        super(regions, initialFrame, properties, x, y);
 
         setSize(getWidth() * 3, getHeight() * 3);
     }
@@ -30,11 +34,6 @@ public class Soldier extends AnimatedUnit {
     }
     
     @Override
-    public void onCollision(Collidable obj) {
-    
-    }
-    
-    @Override
     public void onDamageTaken(float amount) {
     
     }
@@ -42,5 +41,9 @@ public class Soldier extends AnimatedUnit {
     @Override
     public void onDeath() {
     
+    }
+
+    @Override
+    public void attack(Unit enemy, float dmg) {
     }
 }

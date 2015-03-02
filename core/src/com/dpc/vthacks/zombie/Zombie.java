@@ -5,32 +5,42 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.dpc.vthacks.App;
-import com.dpc.vthacks.Collidable;
 import com.dpc.vthacks.MathUtil;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.factories.Factory;
 import com.dpc.vthacks.infantry.Unit;
 import com.dpc.vthacks.properties.Properties;
 import com.dpc.vthacks.properties.ZombieProperties;
+import com.dpc.vthacks.properties.ZombieSegment;
 
 public class Zombie extends Unit implements Poolable {
     private Vector2 dest, targ, currentTarget; // Final destination, temporary target
     private Vector2 vel;
-
-    public Zombie(AtlasRegion[] frames, Properties properties) {
-        super(Assets.getZombie(), properties);
+    private boolean isFlipped;
+    
+    public Zombie(AtlasRegion[] frames, Properties properties, float x, float y) {
+        super(Assets.zombie, properties, x, y);
         
         getProperties().setMaxHealth(MathUtils.random(getProperties().getHealth(), 
                                                       getProperties().getHealth() * 2) + 25);
-        setSize(getWidth() * 1, getHeight() * 1);
-      
         init();
     }
 
     @Override
+    public void addPos(float x, float y) {
+        super.addPos(x, y);
+        
+        // Update every segment
+        for(ZombieSegment seg : ((ZombieProperties) getProperties()).getSegments()) {
+            seg.bounds.x = getBoundingRectangle().x + seg.offsetX;
+            seg.bounds.y = getBoundingRectangle().y + seg.offsetY;
+        }
+    }
+    
+    @Override
     public void update(float delta) {
         super.update(delta);
-        
+               
         if(getParentLevel().getPlayer().getX() < getX()) {
             if(MathUtil.dst(getX(), 
                             getY(), 
@@ -53,10 +63,6 @@ public class Zombie extends Unit implements Poolable {
                 addPos(vel.x, vel.y);
             }   
         }
-    }
-    
-    @Override
-    public void onCollision(Collidable obj) {
     }
 
     @Override
@@ -125,9 +131,23 @@ public class Zombie extends Unit implements Poolable {
         setCurrentTarget(dest.x, dest.y);
     }
     
+    public boolean isFlipped() {
+        return isFlipped;
+    }
+    
+    public void setFlipped(boolean b) {
+        this.isFlipped = b;
+    }
+    
     @Override
     public void reset() {
         getProperties().setHealth(getProperties().getMaxHealth());
+        
+        if(isFlipped) {
+            isFlipped = false;
+            flip(true, false);
+        }
+        
         init();
     }
     
@@ -138,5 +158,9 @@ public class Zombie extends Unit implements Poolable {
         vel = new Vector2();
         
         setCurrentTarget(0, 50);
+    }
+
+    @Override
+    public void attack(Unit enemy, float dmg) {
     }
 }

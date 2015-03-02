@@ -1,10 +1,10 @@
-package com.dpc.vthacks;
+package com.dpc.vthacks.objects;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.dpc.vthacks.data.AppData;
+import com.dpc.vthacks.App;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.gameobject.GameObject;
-import com.dpc.vthacks.objects.LayerManager;
+import com.dpc.vthacks.level.LevelProperties;
 
 public class Road extends GameObject {
     private TextureRegion region;

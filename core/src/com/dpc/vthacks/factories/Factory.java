@@ -2,15 +2,16 @@ package com.dpc.vthacks.factories;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pool;
 import com.dpc.vthacks.Player;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.infantry.Soldier;
 import com.dpc.vthacks.infantry.Tank;
-import com.dpc.vthacks.objects.Building;
+import com.dpc.vthacks.objects.GameSprite;
+import com.dpc.vthacks.objects.Gun;
 import com.dpc.vthacks.properties.Properties;
 import com.dpc.vthacks.properties.ZombieProperties;
-import com.dpc.vthacks.screens.GameScreen;
 import com.dpc.vthacks.zombie.Zombie;
 
 public class Factory {
@@ -22,23 +23,16 @@ public class Factory {
     private static Properties bombProperties;
     private static Properties tankShellProperties;
     private static Properties buildingProperties;
+    private static Gun primaryGun, secondaryGun;
     private static ZombieProperties zombieProperties;
-   
+    private static Vector2 playerGunOffset;
+    
     private static final int NUMBER_OF_BOMBS = 100;
     
     public static void init() {
 //        myArmyY = GameScreen.battle.getMyArmy().getBase().getY();
 //        myArmyX = GameScreen.battle.getMyArmy().getBase().getX();
     }
-    
-    public static final Pool<Player.Bomb> bombPool = new Pool<Player.Bomb>(NUMBER_OF_BOMBS) {
-
-        @Override
-        protected Player.Bomb newObject() {
-            return GameScreen.getLevel().getPlayer().createBomb(Assets.getExplosionFrames(), Assets.getExplosionFrames()[0], bombProperties);
-        }
-        
-    };
     
     public static final Pool<Tank> tankPool = new Pool<Tank>() {
 
@@ -67,8 +61,20 @@ public class Factory {
         
     };
     
+    public static Gun createPrimaryGun() {
+        return new Gun(primaryGun);
+    }
+    
+    public static Gun createSecondaryGun() {
+        return new Gun(secondaryGun);
+    }
+    
     public static Zombie createZombie() {
-        Zombie z = new Zombie(Assets.getEnemySoldierFrames(), new ZombieProperties(zombieProperties));
+        Zombie z = new Zombie(Assets.enemySoldierFrames, 
+                              new ZombieProperties(zombieProperties),
+                              0,
+                              0);
+        
         z.setVelX(MathUtils.random(z.getProperties().getMinVel().x, 
                                    z.getProperties().getMaxVel().x));
 
@@ -77,48 +83,58 @@ public class Factory {
         return z;
     }
     
-    public static Building createRandomBuilding(float x, float y) {
+    public static GameSprite createRandomBuilding(float x, float y) {
         Properties props = new Properties(buildingProperties);
 
-        Building b = new Building(Assets.getBuildings()[MathUtils.random(Assets.getBuildings().length - 1)], props);
-        props.setX(x);
-        props.setY(y);
+        GameSprite b = new GameSprite(Assets.getBuildings()[MathUtils.random(Assets.getBuildings().length - 1)], 
+                                      props,
+                                      x,
+                                      y);
         
         return b;
     }
     
-    public static Building createBuilding(TextureRegion building, float x, float y) {
+    public static GameSprite createBuilding(TextureRegion building, float x, float y) {
         Properties props = new Properties(buildingProperties);
 
-        Building b = new Building(building, props);
-        props.setX(x);
-        props.setY(y);
+        GameSprite b = new GameSprite(building, props, x, y);
+        b.setX(x);
+        b.setY(y);
         
         return b;
     }
     
     public static Soldier createEnemySoldier() {
-        return new Soldier(Assets.getEnemySoldierFrames(), Assets.getEnemyTankFrames()[0], new Properties(enemySoldierProperties));
+        return null;
+      //  return new Soldier(Assets.enemySoldierFrames, Assets.enemySoldierFrames[0], new Properties(enemySoldierProperties));
     }
     
     public static Player createPlayer() {
-        return new Player(new Properties(playerProperties), 0.15f);
+        Player p = new Player(new Properties(playerProperties), 0, 0, 0.15f);
+        p.setGunOffset(playerGunOffset);
+        p.setPrimary(primaryGun);
+        p.setCurrentWeapon(p.getPrimary());
+        
+        return p;
     }
     
     public static Tank createTank() {
-        return new Tank(Assets.getTankFrames(), Assets.getTankFrames()[0], new Properties(tankProperties));
+        return null;
+      //  return new Tank(Assets.tankFrames, Assets.tankFrames[0], new Properties(tankProperties));
     }
     
     public static Tank createEnemyTank() {
-        return new Tank(Assets.getEnemyTankFrames(), Assets.getEnemyTankFrames()[0], new Properties(enemyTankProperties));
+        return null;
+     //   return new Tank(Assets.enemyTankFrames, Assets.enemyTankFrames()[0], new Properties(enemyTankProperties));
     }
     
     public static Player createEnemyPlane(float x, float y) {
-        return new Player(null, 0.25f);
+        return new Player(null, x, y, 0.25f);
     }
     
     public static Soldier createSoldier() {
-        return new Soldier(Assets.getSoldierFrames(), Assets.getSoldierFrames()[0], new Properties(soldierProperties));
+        return null;
+    //    return new Soldier(Assets.soldierFrames, Assets.soldierFrames[0], new Properties(soldierProperties));
     }
 
     public static Properties getPlayerProperties() {
@@ -180,11 +196,7 @@ public class Factory {
     public static int getNumberOfBombs() {
         return NUMBER_OF_BOMBS;
     }
-
-    public static Pool<Player.Bomb> getBombpool() {
-        return bombPool;
-    }
-
+    
     public static Pool<Tank> getTankpool() {
         return tankPool;
     }
@@ -197,12 +209,36 @@ public class Factory {
         return zombieProperties;
     }
     
+    public static Vector2 getPlayerGunOffset() {
+        return playerGunOffset;
+    }
+    
+    public static void setPlayerGunOffset(Vector2 playerGunOffset) {
+        Factory.playerGunOffset = playerGunOffset;
+    }
+    
     public static void setZombieProperties(ZombieProperties zombieProperties) {
         Factory.zombieProperties = zombieProperties;
     }
     
     public static Properties getBuildingProperties() {
         return buildingProperties;
+    }
+    
+    public static Gun getPrimaryGun() {
+        return primaryGun;
+    }
+    
+    public static Gun getSecondaryGun() {
+        return secondaryGun;
+    }
+   
+    public static void setPrimaryGun(Gun primaryGun) {
+        Factory.primaryGun = primaryGun;
+    }
+    
+    public static void setSecondaryGun(Gun secondaryGun) {
+        Factory.secondaryGun = secondaryGun;
     }
     
     public static void setBuildingProperties(Properties buildingProperties) {

@@ -2,16 +2,16 @@ package com.dpc.vthacks.infantry;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.dpc.vthacks.Collidable;
 import com.dpc.vthacks.MathUtil;
+import com.dpc.vthacks.gameobject.DynamicGameObject;
 import com.dpc.vthacks.properties.Properties;
 
-public abstract class Unit extends Collidable {
+public abstract class Unit extends DynamicGameObject {
     private Properties properties;
     private boolean moving, attacking;
     
-    public Unit(TextureRegion region, Properties properties) {
-        super(region, properties);
+    public Unit(TextureRegion region, Properties properties, float x, float y) {
+        super(region, properties, x, y);
 
         this.properties = properties;
     }
@@ -25,15 +25,14 @@ public abstract class Unit extends Collidable {
     }
     
     @Override
-    public abstract void onCollision(Collidable obj);
-        
-    @Override
     public abstract void render();
 
     public abstract void onDeath();
     
     public abstract void attack(Unit enemy);
-
+    
+    public abstract void attack(Unit enemy, float dmg);
+    
     public abstract void onDamageTaken(float amount);
     
     public Properties getProperties() {

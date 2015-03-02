@@ -1,134 +1,70 @@
 package com.dpc.vthacks;
 
-import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Pool.Poolable;
+import com.badlogic.gdx.math.Vector2;
+import com.dpc.vthacks.animation.AnimatedUnit;
 import com.dpc.vthacks.data.Assets;
-import com.dpc.vthacks.factories.Factory;
-import com.dpc.vthacks.infantry.AnimatedUnit;
 import com.dpc.vthacks.infantry.Unit;
+import com.dpc.vthacks.level.LevelProperties;
+import com.dpc.vthacks.objects.Gun;
 import com.dpc.vthacks.properties.Properties;
 
 public class Player extends AnimatedUnit {
-    private static final float PLUMMIT_TIME = 0.05f; // If no positive force applied in this time, plane will plummit
-    private static final int FALL_ROTATION = -10, RISE_ROTATION = 10, FALL_DELTA_FACTOR = 2, RISE_DELTA_FACTOR = 1;
-    private static float goalExperience = 100;
-    private boolean rising, strafing;
-    private int targetRotation, money, level;
-    private float experience, plummitTimer;
-    private Array<Bomb> bombs;
-    private boolean isFlying, movingLeft;
-    private AtlasRegion[] planeFrames, walkFrames;
-    private TextureRegion nonFiringPlane;
-    private Rectangle ground;
+    private int money;
+    private boolean shotDelayed;
+    private final float FIRE_DELAY = 0.15f; // Delay between shots
+    private float fireTimer; // Current time between shot
     private float animationSpeed = 1;
-
-    public class Bomb extends AnimatedUnit implements Poolable {
-        private static final int TARGET_FALL_ROTATION = -90;
-        private final float EXPLOSION_WIDTH, EXPLOSION_HEIGHT, NORMAL_WIDTH, NORMAL_HEIGHT;
-       
-        public Bomb(AtlasRegion[] frames, TextureRegion initialFrame, Properties properties) {
-            super(frames, initialFrame, properties, 0.1f);
-            
-            int rand = MathUtils.random(4, 8);
-            
-            NORMAL_WIDTH = initialFrame.getRegionWidth();
-            NORMAL_HEIGHT = initialFrame.getRegionHeight();
-            EXPLOSION_WIDTH = NORMAL_WIDTH * rand;
-            EXPLOSION_HEIGHT = NORMAL_HEIGHT * rand;
-            
-            setPlaying(false);
-        }
-        
-        @Override
-        public void update(float delta) {
-            super.update(delta);
-                 
-            if(isAnimationFinished()) {
-                Factory.bombPool.free(this);
-                bombs.removeValue(this, false);
-            }
-            
-            if(isPlaying()) {
-                setSize(EXPLOSION_WIDTH, EXPLOSION_HEIGHT);
-                
-                // Apply a linear interpolation on the rotation
-                setRotation(getRotation() + (TARGET_FALL_ROTATION - getRotation()) * delta);       
-            }
-            else {
-                setSize(NORMAL_WIDTH, NORMAL_HEIGHT);
-                applyVel(LevelProperties.GRAVITY.cpy().sub(LevelProperties.GRAVITY.x, getVelY()));
-            }
-        }
-
-        @Override
-        public void render() {
-            draw(App.batch);
-       }
-
-        @Override
-        public void reset() {
-            setRegion(getInitialFrame());
-            setSize(getInitialFrame().getRegionWidth(), getInitialFrame().getRegionHeight());
-            setRotation(0);
-            setPosition(0, 0);
-            setRotation(0);
-            setPlaying(false);
-        }
-        
-        public void triggerExplosion() {
-            Assets.playExplosion();
-            setRotation(0);
-            setPosition(getX() - (getWidth() * 0.5f), getY() - (getHeight() * 0.5f));
-            setPlaying(true);
-        }
-        
-        @Override
-        public void onDeath() {
-        
-        }
-
-        @Override
-        public void attack(Unit enemy) {
-        
-        }
-
-        @Override
-        public void onDamageTaken(float amount) {
-        }
-
-        @Override
-        public void onCollision(Collidable obj) {
-        }
-    }
+    private boolean movingLeft;
+    private Rectangle ground;
+    private Vector2 gunOffset; // X and Y positions of tip of the gun relative to and inside of the bounding box
+    private Gun primary, secondary;
+    private Gun currentWeapon;
     
-    public Player(Properties properties, float animationSpeed) {
-        super(Assets.getPlayerWalkFrames(), new SpriteAnimation(Assets.getPlayerStandingStillFrames(), 0.25f), properties, animationSpeed);
-        
-        planeFrames = Assets.getPlaneFiringFrames();
-        nonFiringPlane = Assets.getPlane();
-        walkFrames = Assets.getPlayerWalkFrames();
+    public Player(Properties properties, float x, float y, float animationSpeed) {
+        super(Assets.playerAnimationData.get("walking"), 
+              Assets.playerAnimationData.get("stationary"), 
+              properties,
+              x, 
+              y);
         
         setSize(getWidth() * 2, getHeight() * 2);
+        
         setPlaying(false);
+        
+        shotDelayed = false;
+    }
+    
+    @Override
+    public void render() {      
+
+        if(movingLeft) {
+            primary.setX(getX() + getCurrentFrame().getAnchorOffsetX());//+ (primary.getData().getAnchorOffsetX() - primary.getX()));
+        }
+        else {
+            primary.setX(getX() + getCurrentFrame().getAnchorOffsetX());
+        }
+        
+        primary.setY(getY() + getCurrentFrame().getAnchorOffsetY());// + (primary.getData().getAnchorOffsetY() - primary.getY()));
+        
+        //primary.render();
+        super.render();
     }
     
     @Override
     public void update(float delta) {
         super.update(delta);
         
-        if(isFlying) {
+        if(shotDelayed) {
+            fireTimer += delta;
             
+            if(fireTimer >= FIRE_DELAY) {
+                fireTimer = 0;
+                shotDelayed = false;
+            }
         }
-        else {
-        }
-    }
-    
-    @Override
-    public void onCollision(Collidable obj) {
     }
 
     @Override
@@ -136,16 +72,70 @@ public class Player extends AnimatedUnit {
     }
 
     @Override
-    public void attack(Unit enemy) {
-        enemy.takeDamage(MathUtils.random(getProperties().getMinDamage(), 
-                                          getProperties().getMaxDamage()));
+    public void attack(Unit enemy, float dmg) {
+        if(currentWeapon.getAmmo() > 0) {
+            enemy.takeDamage(dmg * MathUtils.random(getProperties().getMinDamage(), 
+                                                getProperties().getMaxDamage()));
+        }
     }
 
+    /**
+     * Fire the gun even though it may not hit something
+     */
+    public void blindFire() {
+        if(!shotDelayed) {
+            if(currentWeapon.getAmmo() > 0) {
+                int dex = MathUtils.random(0, Assets.playerSounds.length - 1);
+                Assets.playerSounds[dex].stop();
+                Assets.playerSounds[dex].play();
+    
+                // Decrease ammo
+                currentWeapon.decAmmo(1);
+                
+                // Update the ammo label
+                getParentLevel().getContext().getToolbar().setAmmo(currentWeapon.getAmmo());
+                
+                
+                if(movingLeft) {
+                    setX(getX() + 1);
+                    setY(getY() + 1);    
+                }
+                else {
+                    setX(getX() - 1);
+                    setY(getY() + 1);
+                }
+                
+                
+            }
+            else {
+                Assets.outOfAmmo.stop();
+                Assets.outOfAmmo.play();
+            }
+        }
+        
+        shotDelayed = true;
+    }
+    
+    @Override
+    public void attack(Unit enemy) {
+        
+    }
+    
     @Override
     public void onDamageTaken(float amount) {
         getParentLevel().getContext().getToolbar().setHealth(getProperties().getHealth());
     }
 
+    @Override
+    public void setX(float x) {
+        super.setX(x);
+    }
+    
+    @Override
+    public void setY(float y) {
+        super.setY(y);
+    }
+    
     public void walk(float amX, float amY) {
         setX(getX() + amX * getVelX());
         setY(getY() + amY * getVelY());
@@ -192,45 +182,7 @@ public class Player extends AnimatedUnit {
             moveRight();
         }
     }
-    
-    public void toggleFlyMode(boolean isFlying) {
-        this.isFlying = isFlying;
-        
-        if(isFlying) {
-            setAnimationFrames(planeFrames, 0.15f);
-        }
-        else {
-            setAnimationFrames(walkFrames, 0.15f);
-        }
-    }
-    
-    public void increaseElevation() {
-        rising = true;
-        targetRotation = RISE_ROTATION;
-        plummitTimer = 0;    
-    }
-    
-    public void decreaseElevation() {
-        rising = false;
-        targetRotation = FALL_ROTATION;
-    }
-    
-    public float getExperience() {
-        return experience;
-    }
-    
-    public float getGoalExp() {
-        return goalExperience;
-    }
-
-    public static float getGoalExperience() {
-        return goalExperience;
-    }
-
-    public static void setGoalExperience(float goalExperience) {
-        Player.goalExperience = goalExperience;
-    }
-    
+  
     public boolean isMovingLeft() {
         return movingLeft;
     }
@@ -245,6 +197,9 @@ public class Player extends AnimatedUnit {
         for(TextureRegion t : getRestingAnimation().getAnimation().getKeyFrames()) {
             t.flip(true, false);
         }
+        
+        primary.flip(true, false);
+       // secondary.flip(true, false);
     }
     
     public void moveRight() {
@@ -257,26 +212,13 @@ public class Player extends AnimatedUnit {
         for(TextureRegion t : getRestingAnimation().getAnimation().getKeyFrames()) {
             t.flip(true, false);
         }
+        
+        primary.flip(true, false);
+       // secondary.flip(true, false);
     }
     
-    public boolean isRising() {
-        return rising;
-    }
-
     public Rectangle getGround() {
         return ground;
-    }
-    
-    public void setRising(boolean rising) {
-        this.rising = rising;
-    }
-
-    public boolean isStrafing() {
-        return strafing;
-    }
-
-    public void setStrafing(boolean strafing) {
-        this.strafing = strafing;
     }
 
     public int getMoney() {
@@ -287,47 +229,69 @@ public class Player extends AnimatedUnit {
         this.money = money;
     }
 
-    public int getLevel() {
-        return level;
-    }
-
-    public void setLevel(int level) {
-        this.level = level;
-    }
-
-    public float getPlummitTimer() {
-        return plummitTimer;
-    }
-
-    public void setPlummitTimer(float plummitTimer) {
-        this.plummitTimer = plummitTimer;
-    }
-
-    public Array<Bomb> getBombs() {
-        return bombs;
-    }
-
-    public void setBombs(Array<Bomb> bombs) {
-        this.bombs = bombs;
-    }
-
-    public boolean isFlying() {
-        return isFlying;
-    }
-
-    public void setFlying(boolean isFlying) {
-        this.isFlying = isFlying;
-    }
-
-    public void setExperience(float experience) {
-        this.experience = experience;
-    }
-
     public void setGround(Rectangle rect) {
         this.ground = rect;
     }
     
-    public Bomb createBomb(AtlasRegion[] explosionFrames, AtlasRegion atlasRegion, Properties bombProperties) {
-        return new Bomb(explosionFrames, atlasRegion, bombProperties);
+    public Vector2 getGunOffset() {
+        return gunOffset;
+    }
+    
+    public float getGunOffsetX() {
+        return gunOffset.x;
+    }
+    
+    public float getGunOffsetY() {
+        return gunOffset.y;
+    }
+    
+    public void setGunOffset(Vector2 gunOffset) {
+        this.gunOffset = gunOffset;
+    }
+    
+    public void setGunOffsetX(float x) {
+        gunOffset.x = x;
+    }
+    
+    public void setGunOffsetY(float y) {
+        gunOffset.y = y;
+    }
+    
+    public float getGunX() {
+        return gunOffset.x + getX();
+    }
+    
+    public float getGunY() {
+        return gunOffset.y + getY();
+    }
+    
+    public void setAmmo(int ammo) {
+        currentWeapon.setAmmo(ammo);
+    }
+    
+    public void setPrimary(Gun primary) {
+        this.primary = primary;
+        
+        primary.flip(true, false);
+    }
+    
+    public Gun getCurrentWeapon() {
+        return currentWeapon;
+    }
+    
+    public void setCurrentWeapon(Gun currentWeapon) {
+        this.currentWeapon = currentWeapon;
+    }
+    
+    public void setSecondary(Gun secondary) {
+        this.secondary = secondary;
+    }
+    
+    public Gun getPrimary() {
+        return primary;
+    }
+    
+    public Gun getSecondary() {
+        return secondary;
     }
 }

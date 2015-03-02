@@ -3,12 +3,11 @@ package com.dpc.vthacks.properties;
 import com.badlogic.gdx.math.Vector2;
 
 public class Properties {
-    private Vector2 pos, minVel, maxVel, vel;
+    private Vector2 minVel, maxVel, vel;
     private float range, minDamage, maxDamage, health, maxHealth;
     private int cost;
     
     public Properties(Properties cpy) {
-        pos = cpy.pos.cpy();
         vel = cpy.vel.cpy();
         range = cpy.getRange();
         minDamage = cpy.getMinDamage();
@@ -21,14 +20,12 @@ public class Properties {
     }
     
     public Properties() {
-        pos = new Vector2();
         vel = new Vector2();
         minVel = new Vector2();
         maxVel = new Vector2();
     }
     
-    public Properties(Vector2 pos, Vector2 vel, Vector2 minVel, Vector2 maxVel, float range, float minDamage, float maxDamage, float health, int cost) {
-        this.pos = pos;
+    public Properties(Vector2 vel, Vector2 minVel, Vector2 maxVel, float range, float minDamage, float maxDamage, float health, int cost) {
         this.vel = vel;
         this.range = range;
         this.minDamage = minDamage;
@@ -59,33 +56,13 @@ public class Properties {
     public float getHealth() {
         return health;
     }
-    
-    public Vector2 getPos() {
-        return pos;
-    }
-    
+  
     public float getRange() {
         return range;
     }
     
     public Vector2 getVel() {
         return vel;
-    }
-    
-    public void addVel() {
-        pos.add(vel);
-    }
-    
-    public Properties addPos(Vector2 vector) {
-        pos.add(vector);
-
-        return this;
-    }
-    
-    public Properties sclPos(float scl) {
-        pos.scl(scl);
-
-        return this;
     }
     
     public void setMaxDamage(float maxDamage) {
@@ -98,10 +75,6 @@ public class Properties {
     
     public void setHealth(float health) {
         this.health = health;
-    }
-    
-    public void setPos(Vector2 pos) {
-        this.pos = pos;
     }
     
     public void setRange(float range) {
@@ -119,23 +92,7 @@ public class Properties {
     public void setCost(int cost) {
         this.cost = cost;
     }
-    
-    public void setX(float x) {
-        pos.x = x;
-    }
-    
-    public void setY(float y) {
-        pos.y = y;
-    }
-    
-    public float getX() {
-        return pos.x;
-    }
-    
-    public float getY() {
-        return pos.y;
-    }
-    
+   
     public Vector2 getMaxVel() {
         return maxVel;
     }
@@ -166,10 +123,5 @@ public class Properties {
     
     public void setMinVel(Vector2 minVel) {
         this.minVel = minVel;
-    }
-    
-    public void setPos(float x, float y) {
-        pos.x = x;
-        pos.y = y;
     }
 }

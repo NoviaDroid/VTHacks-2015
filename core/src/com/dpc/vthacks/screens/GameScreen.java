@@ -9,7 +9,6 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.dpc.vthacks.App;
-import com.dpc.vthacks.Level;
 import com.dpc.vthacks.Player;
 import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
@@ -19,6 +18,7 @@ import com.dpc.vthacks.data.OgmoParser;
 import com.dpc.vthacks.factories.Factory;
 import com.dpc.vthacks.infantry.Tank;
 import com.dpc.vthacks.input.GameToolbar;
+import com.dpc.vthacks.level.Level;
 
 public class GameScreen implements Screen {
     private final App context;
@@ -39,8 +39,8 @@ public class GameScreen implements Screen {
         AppData.onResize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         Fonts.load();
         Factory.init();
-        
-        toolbar = new GameToolbar() {
+
+        toolbar = new GameToolbar(this) {
 
             @Override
             public void towerButtonTouchDown() {
@@ -54,7 +54,7 @@ public class GameScreen implements Screen {
             @Override
             public void strafeButtonTouchUp() {
                 
-                if(Assets.getStrafe().isPlaying()) {
+                if(Assets.strafe.isPlaying()) {
                     Assets.playStrafeEnd();
                 }
                 
@@ -81,7 +81,6 @@ public class GameScreen implements Screen {
 
             }
         };
-
         
         try {
             int w = AppData.width;
@@ -100,25 +99,27 @@ public class GameScreen implements Screen {
             context.resize(w, h);
             
             player.setPosition((AppData.width * 0.5f) - (player.getWidth() * 0.5f), 
-                    (player.getGround().getY() + (player.getGround().getHeight() * 0.5f)));
+                               (player.getGround().getY() + (player.getGround().getHeight() * 0.5f)));
+            
+            toolbar.setAmmo(player.getCurrentWeapon().getAmmo());
+            
+            toolbar.setGunIcon(player.getCurrentWeapon());
+            
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         InputMultiplexer mplexer = new InputMultiplexer(); 
-
-        mplexer.addProcessor(level.getInputAdapter());
         
         mplexer.addProcessor(toolbar.getStage());
+        
+        mplexer.addProcessor(level.getInputAdapter());
         
         mplexer.addProcessor(new InputAdapter() {
             @Override
             public boolean keyDown(int keycode) {
                 if(keycode == Keys.B) {
                     toolbar.bombButtonTouchDown();
-                }
-                else if(keycode == Keys.UP) {
-                    player.increaseElevation();
                 }
                 else if(keycode == Keys.S) {
                     toolbar.strafeButtonTouchDown();
@@ -129,10 +130,7 @@ public class GameScreen implements Screen {
             
             @Override
             public boolean keyUp(int keycode) {
-                if(keycode == Keys.UP) {
-                    player.decreaseElevation();
-                }
-                else if(keycode == Keys.S) {
+                if (keycode == Keys.S) {
                     toolbar.strafeButtonTouchUp();
                 }
                 

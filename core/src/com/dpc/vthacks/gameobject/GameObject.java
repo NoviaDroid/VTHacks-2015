@@ -2,15 +2,19 @@ package com.dpc.vthacks.gameobject;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.dpc.vthacks.Level;
+import com.dpc.vthacks.level.Level;
 
 public abstract class GameObject extends Sprite {
     private boolean scrollable;
     private float scrollX, scrollY;
     private static Level parentLevel;
     
+    public GameObject() {
+    
+    }
+    
     public GameObject(TextureRegion region, float x, float y) {
-        super(region);
+        super(new TextureRegion(region));
         
         setOrigin(region.getRegionWidth() * 0.5f, region.getRegionHeight() * 0.5f);
         setX(x);

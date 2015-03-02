@@ -2,22 +2,31 @@ package com.dpc.vthacks.data;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
+import com.badlogic.gdx.utils.ObjectMap;
+import com.dpc.vthacks.animation.FrameData;
+import com.dpc.vthacks.animation.SpriteAnimation;
 import com.dpc.vthacks.factories.Factory;
+import com.dpc.vthacks.objects.Gun;
 import com.dpc.vthacks.properties.Properties;
 import com.dpc.vthacks.properties.ZombieProperties;
+import com.dpc.vthacks.properties.ZombieSegment;
 
 public class JSONManager {
     private static final String PROPERTIES_PATH = "json/properties.json";
+    private static final String WEAPONS_PATH = "json/weapons.json";
     
     public static void parseProperties() {
         FileHandle handle = Gdx.files.internal(PROPERTIES_PATH);
+        FileHandle handle1 = Gdx.files.internal(WEAPONS_PATH);
         
         JsonReader reader = new JsonReader();
         
         JsonValue root = reader.parse(handle);
+        JsonValue root1 = reader.parse(handle1);
         
         JsonValue tank = root.getChild("tank");
         JsonValue soldier = root.getChild("soldier");
@@ -25,6 +34,7 @@ public class JSONManager {
         JsonValue bomb = root.getChild("bomb");
         JsonValue tankShell = root.getChild("tank shell");
         JsonValue zombie = root.getChild("zombie");
+        JsonValue weapon = root1.getChild("handgun1");
         
         Properties playerProperties = new Properties();
         
@@ -96,6 +106,71 @@ public class JSONManager {
         zombieProperties.setMinKillMoney(zombie.getInt("minKillMoney"));
         zombieProperties.setMaxKillMoney(zombie.getInt("maxKillMoney"));
         
+        ZombieSegment[] zombieSegments = new ZombieSegment[3];
+        
+        JsonValue segs = root.getChild("zombie").getChild("segments");
+
+        for(int i = 0; i < 3; i++) {
+            JsonValue child = segs.get(i);
+
+            zombieSegments[i] = new ZombieSegment();
+            
+            zombieSegments[i].bounds = new Rectangle(child.child.getFloat("x"),
+                                                     child.child.getFloat("y"),
+                                                     child.child.getFloat("width"),
+                                                     child.child.getFloat("height"));
+
+            zombieSegments[i].damageFactor = child.child.getFloat("damageFactor");
+            zombieSegments[i].offsetX = zombieSegments[i].bounds.x;
+            zombieSegments[i].offsetY = zombieSegments[i].bounds.y;
+         }
+        
+        zombieProperties.setSegments(zombieSegments);
+        
         Factory.setZombieProperties(zombieProperties);
+        
+        Factory.setPlayerGunOffset(new Vector2(0, 0));
+   
+
+        ObjectMap<String, SpriteAnimation> playerAnimationData = new ObjectMap<String, SpriteAnimation>();
+  
+        playerAnimationData.put("stationary", createAnimation(player, "stationary", 3));
+        playerAnimationData.put("walking", createAnimation(player, "walking", 3));
+        
+        Assets.playerAnimationData = playerAnimationData;
+  
+        Factory.setPrimaryGun(createGun(root1.child.child, weapon.getChild("firing")));
+    }
+    
+    private static Gun createGun(JsonValue root, JsonValue child) {
+        FrameData data = new FrameData(Assets.gameAtlas.findRegion(child.getString("src")), 
+                                       child.getFloat("time"), 
+                                       child.getFloat("handleOffsetX"),
+                                       child.getFloat("handleOffsetY"));
+
+        Gun gun = new Gun(root.getFloat("minDmg"), 
+                          root.getFloat("maxDmg"),
+                          root.getInt("ammo"),
+                          data);
+        
+        return gun;
+        
+    }
+    
+    private static SpriteAnimation createAnimation(JsonValue root, String child, int len) {
+        JsonValue w = root.getChild(child);
+
+        FrameData[] frames = new FrameData[len];
+        
+        for(int i = 0; i < frames.length; i++) {
+            JsonValue c = w.get(i).child;
+    
+            frames[i] = new FrameData(Assets.gameAtlas.findRegion(c.getString("img")),
+                    c.getFloat("time"), c.getFloat("handOffsetX"),
+                    c.getFloat("handOffsetY"));
+        
+        }
+        
+        return new SpriteAnimation(frames);
     }
 }
