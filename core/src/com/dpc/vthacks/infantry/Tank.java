@@ -2,18 +2,19 @@ package com.dpc.vthacks.infantry;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.dpc.vthacks.App;
-import com.dpc.vthacks.animation.AnimatedUnit;
-import com.dpc.vthacks.animation.FrameData;
+import com.dpc.vthacks.animation.SpriteAnimation;
+import com.dpc.vthacks.data.Assets;
+import com.dpc.vthacks.factories.Factory;
 import com.dpc.vthacks.properties.Properties;
 
-public class Tank extends AnimatedUnit {
+public class Tank extends Parachutist {
     
-    public Tank(FrameData[] regions, 
+    public Tank(SpriteAnimation animation, 
                 TextureRegion initialFrame, 
                 Properties properties,
                 float x,
                 float y) {
-        super(regions, initialFrame, properties, x, y);
+        super(new SpriteAnimation(animation, 0.15f), initialFrame, properties, x, y);
 
         setSize(getWidth() * 2, getHeight() * 2);
         setPlaying(true);
@@ -30,25 +31,27 @@ public class Tank extends AnimatedUnit {
     }
 
     @Override
-    public void attack(Unit enemy) {
+    public void reset() {
+        super.reset();
+    }
+    
+    @Override
+    public void attack() {
+       Assets.explosion.play();
+    }
+
+    @Override
+    public void onDeath(Unit killer) {
+        Factory.tankPool.free(this);
        
-    }
-
-    @Override
-    public void onDeath() {
-        //Factory.tankPool.free(this);
+        getParentLevel().getPlayerArmy().removeValue(this, false);
         
-        // Reward the player with the kill
-//        if(getParentArmy().equals(GameScreen.battle.getEnemyArmy())) {
-//            GameScreen.battle.getPlayer().addExperience(killExp);
-//            GameScreen.battle.getPlayer().addMoney(killMoney);
-//        }
-//        
-//        getParentArmy().getUnits().removeValue(this, false);
+        killer.setAttacking(false, null);
     }
 
     @Override
-    public void onDamageTaken(float amount) {
+    public void onDamageTaken(Unit attacker, float amount) {
+        super.onDamageTaken(attacker, amount);
     }
 
     @Override

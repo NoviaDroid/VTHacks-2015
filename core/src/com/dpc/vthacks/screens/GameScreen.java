@@ -8,6 +8,7 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.FPSLogger;
+import com.badlogic.gdx.math.MathUtils;
 import com.dpc.vthacks.App;
 import com.dpc.vthacks.Player;
 import com.dpc.vthacks.data.AppData;
@@ -16,6 +17,7 @@ import com.dpc.vthacks.data.Fonts;
 import com.dpc.vthacks.data.JSONManager;
 import com.dpc.vthacks.data.OgmoParser;
 import com.dpc.vthacks.factories.Factory;
+import com.dpc.vthacks.infantry.Soldier;
 import com.dpc.vthacks.infantry.Tank;
 import com.dpc.vthacks.input.GameToolbar;
 import com.dpc.vthacks.level.Level;
@@ -68,12 +70,42 @@ public class GameScreen implements Screen {
             
             @Override
             public void tankButtonTouchDown() {
-                Tank t = Factory.tankPool.obtain();
+                Tank s = Factory.tankPool.obtain();
+                
+                s.setX(level.getPlayer().getX());
+                s.setY(AppData.height + s.getHeight());
+                
+                s.setFallTargetX(MathUtils.random(level.getGameCamera().position.x - 
+                                              (level.getGameCamera().viewportWidth * 0.5f),
+                                              level.getGameCamera().position.x + 
+                                              (level.getGameCamera().viewportWidth * 0.5f)));
+                
+                s.setFallTargetY(MathUtils.random(level.getPlayer().getGround().getY(),
+                                              level.getPlayer().getGround().getY() +
+                                              level.getPlayer().getGround().getHeight()));
+                
+                level.getPlayerArmy().add(s);
             }
             
             @Override
             public void soldierButtonTouchDown() {
+                Soldier s = Factory.soldierPool.obtain();
+                s.setX(level.getPlayer().getX());
+                s.setY(AppData.height + s.getHeight());
                 
+                s.setFallTargetX(MathUtils.random(level.getGameCamera().position.x - 
+                                              (level.getGameCamera().viewportWidth * 0.5f),
+                                              level.getGameCamera().position.x + 
+                                              (level.getGameCamera().viewportWidth * 0.5f)));
+                
+                s.setFallTargetY(MathUtils.random(level.getPlayer().getGround().getY(),
+                                              level.getPlayer().getGround().getY() +
+                                              level.getPlayer().getGround().getHeight()));
+              
+                s.setCurrentTarget(level.getPlayer().getX(),
+                        level.getPlayer().getY());
+                
+                level.getPlayerArmy().add(s);
             }
             
             @Override
@@ -161,6 +193,7 @@ public class GameScreen implements Screen {
 
     public void update(float delta) {
         level.update(delta);
+        toolbar.update(delta);
         
         joystickPercentX = toolbar.getJoystick().getKnobPercentX();
         joystickPercentY = toolbar.getJoystick().getKnobPercentY();

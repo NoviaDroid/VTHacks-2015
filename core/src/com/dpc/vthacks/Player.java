@@ -4,16 +4,17 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.dpc.vthacks.animation.AnimatedUnit;
+import com.dpc.vthacks.animation.AdvancedAnimatedUnit;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.infantry.Unit;
 import com.dpc.vthacks.level.LevelProperties;
 import com.dpc.vthacks.objects.Gun;
 import com.dpc.vthacks.properties.Properties;
+import com.dpc.vthacks.zombie.Zombie;
 
-public class Player extends AnimatedUnit {
+public class Player extends AdvancedAnimatedUnit {
     private int money;
-    private boolean shotDelayed;
+    private boolean shotDelayed, drawBehind;
     private final float FIRE_DELAY = 0.15f; // Delay between shots
     private float fireTimer; // Current time between shot
     private float animationSpeed = 1;
@@ -22,7 +23,7 @@ public class Player extends AnimatedUnit {
     private Vector2 gunOffset; // X and Y positions of tip of the gun relative to and inside of the bounding box
     private Gun primary, secondary;
     private Gun currentWeapon;
-    
+   
     public Player(Properties properties, float x, float y, float animationSpeed) {
         super(Assets.playerAnimationData.get("walking"), 
               Assets.playerAnimationData.get("stationary"), 
@@ -68,13 +69,13 @@ public class Player extends AnimatedUnit {
     }
 
     @Override
-    public void onDeath() {
+    public void onDeath(Unit killer) {
     }
 
     @Override
     public void attack(Unit enemy, float dmg) {
         if(currentWeapon.getAmmo() > 0) {
-            enemy.takeDamage(dmg * MathUtils.random(getProperties().getMinDamage(), 
+            enemy.takeDamage(this, dmg * MathUtils.random(getProperties().getMinDamage(), 
                                                 getProperties().getMaxDamage()));
         }
     }
@@ -95,7 +96,6 @@ public class Player extends AnimatedUnit {
                 // Update the ammo label
                 getParentLevel().getContext().getToolbar().setAmmo(currentWeapon.getAmmo());
                 
-                
                 if(movingLeft) {
                     setX(getX() + 1);
                     setY(getY() + 1);    
@@ -110,6 +110,7 @@ public class Player extends AnimatedUnit {
             else {
                 Assets.outOfAmmo.stop();
                 Assets.outOfAmmo.play();
+                getParentLevel().getContext().getToolbar().shakeAmmo();
             }
         }
         
@@ -117,12 +118,13 @@ public class Player extends AnimatedUnit {
     }
     
     @Override
-    public void attack(Unit enemy) {
+    public void attack() {
         
     }
     
     @Override
-    public void onDamageTaken(float amount) {
+    public void onDamageTaken(Unit attacker, float amount) {
+        super.onDamageTaken(attacker, amount);
         getParentLevel().getContext().getToolbar().setHealth(getProperties().getHealth());
     }
 
@@ -137,8 +139,22 @@ public class Player extends AnimatedUnit {
     }
     
     public void walk(float amX, float amY) {
-        setX(getX() + amX * getVelX());
-        setY(getY() + amY * getVelY());
+        for(Zombie z : getParentLevel().getZombies()) {
+            if(getBoundingRectangle().overlaps(z.getBoundingRectangle())) {
+                amY *= 0.25f;
+                if(getY() > z.getY()) {
+                    drawBehind = true;
+                }
+                else {
+                    drawBehind = false;
+                }
+             
+                break;
+            }
+        }
+        
+        setX(getX() + amX * getVelocityScalarX());
+        setY(getY() + amY * getVelocityScalarY());
         
         float tamY = (float) Math.abs(amX * 1f);
         float tamX = (float) Math.abs(amY * 1.5f);
@@ -161,6 +177,7 @@ public class Player extends AnimatedUnit {
         else if(getX() < 0) {
             setX(0);
         }
+       
         
         // Stop the animation if the joystick isn't being touced
         if(amX == 0 && amY == 0) {
@@ -285,6 +302,14 @@ public class Player extends AnimatedUnit {
     
     public void setSecondary(Gun secondary) {
         this.secondary = secondary;
+    }
+    
+    public void setDrawBehind(boolean drawBehind) {
+        this.drawBehind = drawBehind;
+    }
+    
+    public boolean isDrawingBehind() {
+        return drawBehind;
     }
     
     public Gun getPrimary() {

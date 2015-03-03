@@ -2,12 +2,14 @@ package com.dpc.vthacks.infantry;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Pool.Poolable;
 import com.dpc.vthacks.MathUtil;
 import com.dpc.vthacks.gameobject.DynamicGameObject;
 import com.dpc.vthacks.properties.Properties;
 
-public abstract class Unit extends DynamicGameObject {
+public abstract class Unit extends DynamicGameObject implements Poolable {
     private Properties properties;
+    private Unit targetEnemy;
     private boolean moving, attacking;
     
     public Unit(TextureRegion region, Properties properties, float x, float y) {
@@ -17,23 +19,33 @@ public abstract class Unit extends DynamicGameObject {
     }
 
     @Override
-    public void update(float delta) {
-        // Unit has died
-        if(properties.getHealth() <= 0) {
-            onDeath();
+    public void update(float delta) { 
+        if(attacking) {
+            attack();
         }
     }
     
     @Override
     public abstract void render();
 
-    public abstract void onDeath();
+    public abstract void onDeath(Unit killer);
     
-    public abstract void attack(Unit enemy);
+    public abstract void attack();
     
     public abstract void attack(Unit enemy, float dmg);
     
-    public abstract void onDamageTaken(float amount);
+    public void onDamageTaken(Unit attacker, float amount) {
+
+        // Unit has died
+        if(properties.getHealth() <= 0) {
+            onDeath(attacker);
+        }
+    }
+
+    @Override
+    public void reset() {
+        properties.setHealth(properties.getMaxHealth());
+    }
     
     public Properties getProperties() {
         return properties;
@@ -51,9 +63,10 @@ public abstract class Unit extends DynamicGameObject {
         setPosition(getX() + vector.x, getY() + vector.y);
     }
     
-    public void takeDamage(float damage) {
+    public void takeDamage(Unit attacker, float damage) {
         properties.setHealth(properties.getHealth() - damage);
-        onDamageTaken(damage);
+
+        onDamageTaken(attacker, damage);
     }
     
     public boolean inRange(Unit u1) {
@@ -72,7 +85,16 @@ public abstract class Unit extends DynamicGameObject {
         this.moving = moving;
     }
     
-    public void setAttacking(boolean attacking) {
+    public void setAttacking(boolean attacking, Unit target) {
         this.attacking = attacking;
+        this.targetEnemy = target;
+    }
+    
+    public Unit getTargetEnemy() {
+        return targetEnemy;
+    }
+    
+    public void setTargetEnemy(Unit targetEnemy) {
+        this.targetEnemy = targetEnemy;
     }
 }

@@ -7,8 +7,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.dpc.vthacks.MathUtil;
 import com.dpc.vthacks.animation.FrameData;
-import com.dpc.vthacks.animation.SpriteAnimation;
+import com.dpc.vthacks.animation.AdvancedSpriteAnimation;
 import com.dpc.vthacks.factories.Factory;
 import com.dpc.vthacks.objects.Gun;
 import com.dpc.vthacks.properties.Properties;
@@ -58,7 +59,8 @@ public class JSONManager {
         tankProperties.setVelY(tank.getFloat("velY"));
         tankProperties.setRange(tank.getFloat("range"));
         tankProperties.setMaxHealth(tank.getInt("max health"));
-
+        tankProperties.setFrameTime(soldier.getFloat("frameTime"));
+        
         Factory.setTankProperties(tankProperties);
         
         Properties soldierProperties = new Properties();
@@ -71,6 +73,7 @@ public class JSONManager {
         soldierProperties.setVelX(soldier.getFloat("velX"));
         soldierProperties.setVelY(soldier.getFloat("velY"));
         soldierProperties.setMaxHealth(soldier.getInt("max health"));
+        soldierProperties.setFrameTime(soldier.getFloat("frameTime"));
         
         Factory.setSoldierProperties(soldierProperties);
         
@@ -105,6 +108,9 @@ public class JSONManager {
         zombieProperties.setMaxHealth(zombie.getInt("max health"));
         zombieProperties.setMinKillMoney(zombie.getInt("minKillMoney"));
         zombieProperties.setMaxKillMoney(zombie.getInt("maxKillMoney"));
+        zombieProperties.setVel(new Vector2(MathUtil.rand(zombieProperties.getMinVel().x, zombieProperties.getMaxVel().x),
+                                            MathUtil.rand(zombieProperties.getMinVel().y, zombieProperties.getMaxVel().y)));
+
         
         ZombieSegment[] zombieSegments = new ZombieSegment[3];
         
@@ -132,7 +138,7 @@ public class JSONManager {
         Factory.setPlayerGunOffset(new Vector2(0, 0));
    
 
-        ObjectMap<String, SpriteAnimation> playerAnimationData = new ObjectMap<String, SpriteAnimation>();
+        ObjectMap<String, AdvancedSpriteAnimation> playerAnimationData = new ObjectMap<String, AdvancedSpriteAnimation>();
   
         playerAnimationData.put("stationary", createAnimation(player, "stationary", 3));
         playerAnimationData.put("walking", createAnimation(player, "walking", 3));
@@ -157,7 +163,7 @@ public class JSONManager {
         
     }
     
-    private static SpriteAnimation createAnimation(JsonValue root, String child, int len) {
+    private static AdvancedSpriteAnimation createAnimation(JsonValue root, String child, int len) {
         JsonValue w = root.getChild(child);
 
         FrameData[] frames = new FrameData[len];
@@ -171,6 +177,6 @@ public class JSONManager {
         
         }
         
-        return new SpriteAnimation(frames);
+        return new AdvancedSpriteAnimation(frames);
     }
 }

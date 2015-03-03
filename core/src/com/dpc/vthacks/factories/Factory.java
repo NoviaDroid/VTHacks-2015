@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pool;
 import com.dpc.vthacks.Player;
+import com.dpc.vthacks.animation.SpriteAnimation;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.infantry.Soldier;
 import com.dpc.vthacks.infantry.Tank;
@@ -103,12 +104,6 @@ public class Factory {
         
         return b;
     }
-    
-    public static Soldier createEnemySoldier() {
-        return null;
-      //  return new Soldier(Assets.enemySoldierFrames, Assets.enemySoldierFrames[0], new Properties(enemySoldierProperties));
-    }
-    
     public static Player createPlayer() {
         Player p = new Player(new Properties(playerProperties), 0, 0, 0.15f);
         p.setGunOffset(playerGunOffset);
@@ -119,22 +114,19 @@ public class Factory {
     }
     
     public static Tank createTank() {
-        return null;
-      //  return new Tank(Assets.tankFrames, Assets.tankFrames[0], new Properties(tankProperties));
-    }
-    
-    public static Tank createEnemyTank() {
-        return null;
-     //   return new Tank(Assets.enemyTankFrames, Assets.enemyTankFrames()[0], new Properties(enemyTankProperties));
-    }
-    
-    public static Player createEnemyPlane(float x, float y) {
-        return new Player(null, x, y, 0.25f);
+        return new Tank(Assets.tankAnimations.get("moving"), 
+                        Assets.tankAnimations.get("moving").getAnimation().getKeyFrames()[0], 
+                        new Properties(tankProperties),
+                        0,
+                        0);
     }
     
     public static Soldier createSoldier() {
-        return null;
-    //    return new Soldier(Assets.soldierFrames, Assets.soldierFrames[0], new Properties(soldierProperties));
+        return new Soldier(Assets.soldierFrames,
+                          Assets.soldierFrames[0], 
+                          new Properties(soldierProperties),
+                          0,
+                          0);
     }
 
     public static Properties getPlayerProperties() {

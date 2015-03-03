@@ -10,11 +10,15 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.dpc.vthacks.App;
+import com.dpc.vthacks.animation.AdvancedSpriteAnimation;
 import com.dpc.vthacks.animation.SpriteAnimation;
 
 public class Assets {
-    public static TextureAtlas skinAtlas, gameAtlas;
-    public static ObjectMap<String, SpriteAnimation> playerAnimationData;
+    public static TextureAtlas skinAtlas, gameAtlas, zombieAtlas;
+    public static ObjectMap<String, AdvancedSpriteAnimation> playerAnimationData;
+    public static ObjectMap<String, SpriteAnimation> tankAnimations;
+    public static ObjectMap<String, SpriteAnimation> zombieAnimations;
+    
     public static TextureRegion shotgun;
     public static TextureRegion plane, playerIcon, zombie, emptyPlane, bomb, road, background, tankShell, menuBackground, enemyBase, playerBase, healthbar, bullet;
     public static TextureRegion[] buildings, skylines;
@@ -53,6 +57,7 @@ public class Assets {
     
     public static void loadGameTextures() {
         manager = new AssetManager();
+        manager.load("Zombie1.pack", TextureAtlas.class);
         manager.load("gamePack.pack", TextureAtlas.class);
         manager.load("sounds/pressDown.wav", Music.class); 
         manager.load("sounds/pressUp.wav", Music.class);
@@ -99,7 +104,7 @@ public class Assets {
     
     public static void getGameTextures() {
         gameAtlas = manager.get("gamePack.pack", TextureAtlas.class);
-        
+        zombieAtlas = manager.get("Zombie1.pack", TextureAtlas.class);
         playerSounds = new Sound[1];
         pressDown = manager.get("sounds/pressDown.wav", Music.class); 
         pressUp = manager.get("sounds/pressUp.wav", Music.class); 
@@ -169,6 +174,17 @@ public class Assets {
             planeFiringFrames[i].flip(true, false);
         }
         
+        tankAnimations = new ObjectMap<String, SpriteAnimation>();
+        
+            
+        TextureRegion[] tfFrames = new TextureRegion[5];
+        for(int i = 0; i < 5; i++) {
+            tfFrames[i] = gameAtlas.findRegion("Tankfire" + (i + 1));
+        }
+
+        tankAnimations.put("fire", new SpriteAnimation(tfFrames, 0.15f));
+        tankAnimations.put("moving", new SpriteAnimation(tankFrames, 0.15f));
+        
         shotgun = gameAtlas.findRegion("shotgun");
         healthBarBackground = gameAtlas.findRegion("barBackground");
         playerIcon = gameAtlas.findRegion("playerIcon1");
@@ -187,6 +203,24 @@ public class Assets {
         
         plane.flip(true, false);
       //  playerStationary.flip(true, false);
+        
+        zombieAnimations = new ObjectMap<String, SpriteAnimation>();
+        
+        TextureRegion[] zwf = new TextureRegion[zombieAtlas.getRegions().size];
+        
+        for(int i = 0; i < zwf.length; i++) {
+           zwf[i] = zombieAtlas.getRegions().get(i);
+        }
+        
+        TextureRegion[] zwf2 = new TextureRegion[zwf.length];
+        
+        for(int i = 0; i < zwf2.length; i++) {
+            zwf2[i] = new TextureRegion(zwf[i]);
+            zwf2[i].flip(true, false);
+        }
+        
+        zombieAnimations.put("walking-right", new SpriteAnimation(zwf, 0.25f));
+        zombieAnimations.put("walking-left", new SpriteAnimation(zwf2, 0.25f));
     }
     
     public static void unloadSkins() {

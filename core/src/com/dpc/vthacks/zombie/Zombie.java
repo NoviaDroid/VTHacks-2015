@@ -2,10 +2,10 @@ package com.dpc.vthacks.zombie;
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.dpc.vthacks.App;
 import com.dpc.vthacks.MathUtil;
+import com.dpc.vthacks.animation.AnimatedUnit;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.factories.Factory;
 import com.dpc.vthacks.infantry.Unit;
@@ -13,16 +13,17 @@ import com.dpc.vthacks.properties.Properties;
 import com.dpc.vthacks.properties.ZombieProperties;
 import com.dpc.vthacks.properties.ZombieSegment;
 
-public class Zombie extends Unit implements Poolable {
-    private Vector2 dest, targ, currentTarget; // Final destination, temporary target
-    private Vector2 vel;
+public class Zombie extends AnimatedUnit implements Poolable {
     private boolean isFlipped;
     
     public Zombie(AtlasRegion[] frames, Properties properties, float x, float y) {
-        super(Assets.zombie, properties, x, y);
-        
+        super(Assets.zombieAnimations.get("walking-right"), Assets.zombieAnimations.get("walking-right"), properties, x, y);
+       
         getProperties().setMaxHealth(MathUtils.random(getProperties().getHealth(), 
                                                       getProperties().getHealth() * 2) + 25);
+        
+        setSize(getWidth() * 3, getHeight() * 3);
+        
         init();
     }
 
@@ -40,28 +41,32 @@ public class Zombie extends Unit implements Poolable {
     @Override
     public void update(float delta) {
         super.update(delta);
-               
-        if(getParentLevel().getPlayer().getX() < getX()) {
-            if(MathUtil.dst(getX(), 
-                            getY(), 
-                            getParentLevel().getPlayer().getX(), 
-                            getParentLevel().getPlayer().getY()) < getParentLevel().getPlayer().getWidth()) {
-                attack(getParentLevel().getPlayer());
+        
+        if(!isAttacking()) {
+            if(getParentLevel().getPlayer().getX() < getX()) {
+                if(MathUtil.dst(getX(), 
+                                getY(), 
+                                getParentLevel().getPlayer().getX(), 
+                                getParentLevel().getPlayer().getY()) < getParentLevel().getPlayer().getWidth()) {
+                    setAttacking(true, getParentLevel().getPlayer());
+                    attack();
+                }
+                else {
+                    addPos(getVelX(), getVelY());
+                }
             }
             else {
-                addPos(vel.x, vel.y);
+                if(MathUtil.dst(getX(), 
+                        getY(), 
+                        getParentLevel().getPlayer().getX(), 
+                        getParentLevel().getPlayer().getY()) < getWidth()) {
+                    setAttacking(true, getParentLevel().getPlayer());
+                    attack();
+                }
+                else {
+                    addPos(getVelX(), getVelY());
+                }   
             }
-        }
-        else {
-            if(MathUtil.dst(getX(), 
-                    getY(), 
-                    getParentLevel().getPlayer().getX(), 
-                    getParentLevel().getPlayer().getY()) < getWidth()) {
-                attack(getParentLevel().getPlayer());
-            }
-            else {
-                addPos(vel.x, vel.y);
-            }   
         }
     }
 
@@ -71,7 +76,7 @@ public class Zombie extends Unit implements Poolable {
     }
 
     @Override
-    public void onDeath() {
+    public void onDeath(Unit killer) {
         Factory.zombiePool.free(this);
         getParentLevel().getZombies().removeValue(this, false);
         
@@ -88,47 +93,20 @@ public class Zombie extends Unit implements Poolable {
     }
 
     @Override
-    public void attack(Unit enemy) {
-        enemy.takeDamage(MathUtils.random(getProperties().getMinDamage(),
-                                          getProperties().getMaxDamage()));
+    public void attack() {
+        float rand = MathUtil.rand(getProperties().getMinDamage(), 
+                                   getProperties().getMaxDamage());
+        
+        getTargetEnemy().takeDamage(this, rand);
     }
 
     @Override
-    public void onDamageTaken(float amount) {
-    }
-    
-    public Vector2 getTarg() {
-        return targ;
-    }
-    
-    public Vector2 getDest() {
-        return dest;
-    }
-    
-    public Vector2 getCurrentTarget() {
-        return currentTarget;
-    }
-    
-    public void setCurrentTarget(float x, float y) {
-        currentTarget.set(x, y);
-        
-        vel.set(currentTarget.x - getX(), currentTarget.y - getY());
-        vel.nor(); 
-        
-        vel.x *= getVelX(); 
-        vel.y *= getVelY();
-    }
-    
-    public void setTarg(Vector2 targ) {
-        this.targ = targ;
-    }
-    
-    public void setDest(Vector2 dest) {
-        this.dest = dest;
+    public void onDamageTaken(Unit attacker, float amount) {
+        super.onDamageTaken(attacker, amount);
     }
 
     public void resetPath() {
-        setCurrentTarget(dest.x, dest.y);
+        setCurrentTarget(getFinalDestination().x, getFinalDestination().y);
     }
     
     public boolean isFlipped() {
@@ -136,12 +114,13 @@ public class Zombie extends Unit implements Poolable {
     }
     
     public void setFlipped(boolean b) {
-        this.isFlipped = b;
+      //  this.isFlipped = b;
     }
     
     @Override
     public void reset() {
-        getProperties().setHealth(getProperties().getMaxHealth());
+        super.reset();
+        //getProperties().setHealth(getProperties().getMaxHealth());
         
         if(isFlipped) {
             isFlipped = false;
@@ -151,13 +130,12 @@ public class Zombie extends Unit implements Poolable {
         init();
     }
     
+    @Override
     public void init() {
-        dest = new Vector2(0, 50);
-        currentTarget = new Vector2(dest);
-        targ = new Vector2();
-        vel = new Vector2();
-        
+        super.init();
         setCurrentTarget(0, 50);
+        setAttacking(false, null);
+        setPlaying(true);
     }
 
     @Override

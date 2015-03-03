@@ -2,6 +2,7 @@ package com.dpc.vthacks.level;
 
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -11,6 +12,7 @@ import com.dpc.vthacks.App;
 import com.dpc.vthacks.GameCamera;
 import com.dpc.vthacks.MathUtil;
 import com.dpc.vthacks.Player;
+import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.factories.Factory;
 import com.dpc.vthacks.gameobject.GameObject;
@@ -32,6 +34,9 @@ public class Level {
     private Vector3 input;
     private GameScreen context;
     private float spawnTime, spawnTimer;
+    private float origCameraZoom;
+    private static final float MAX_ZOOM = 0.35f; // Most that can be zoomed in
+    private static final float ZOOM_STEP = 0.05f; // How much zoom to add
     
     public Level(final GameScreen context) {
         this.context = context;
@@ -44,8 +49,30 @@ public class Level {
         zombies = new Array<Zombie>();
         
         initializeCamera();
-
+        
         inputAdapter = new InputAdapter() {
+            
+            @Override
+            public boolean scrolled(int amount) {
+                if(gameCamera.zoom + ZOOM_STEP > origCameraZoom && amount > 0) {
+                    return false;
+                }
+                
+                if(amount > 0) {
+                    gameCamera.zoom += ZOOM_STEP;
+                }
+                else if(gameCamera.zoom - ZOOM_STEP > MAX_ZOOM){
+                    gameCamera.zoom -= ZOOM_STEP;
+                }
+                
+                gameCamera.position.set(player.getX() - (gameCamera.viewportWidth * 0f), 
+                                       gameCamera.viewportHeight * gameCamera.zoom * 0.5f, 0);
+
+                gameCamera.update();
+                
+
+                return false;
+            }
             
             @Override
             public boolean touchDown(int screenX, int screenY, int pointer, int button) {
@@ -167,13 +194,13 @@ public class Level {
             z.setX(x);
             z.setY(y);
             
-            if(player.getX() < x) {
-                z.setVelX(z.getVelX());
+            if(player.getX() >= x) {
+                z.setFinalDestination(new Vector2(LevelProperties.WIDTH, 0));  
+                z.setFlipped(true);
+                z.setAnimation(Assets.zombieAnimations.get("walking-right"));
             }
             else {
-                z.setDest(new Vector2(LevelProperties.WIDTH, 0));
-                z.flip(true, false);
-                z.setFlipped(true);
+                z.setAnimation(Assets.zombieAnimations.get("walking-left"));
             }
 
             zombies.add(z);
@@ -186,6 +213,10 @@ public class Level {
 
         layers.updateAndRender();
         
+        if(player.isDrawingBehind()) {
+            player.render();
+        }
+        
         for(Unit u : playerArmy) {
             u.render();
         }
@@ -193,19 +224,21 @@ public class Level {
         for(Unit zombie : zombies) {
             zombie.render();
         }
-        
-        player.render();
+
+        if(!player.isDrawingBehind()) {
+            player.render();
+        }
         
         App.batch.end();
         
-        //debugRender();
+     //  debugRender();
     }
     
     public void debugRender() {
         App.debugRenderer.setProjectionMatrix(gameCamera.combined);
         App.debugRenderer.setColor(1, 0, 0, 1);
-        App.debugRenderer.begin(ShapeType.Line);
-        
+        App.debugRenderer.begin(ShapeType.Filled);
+
         App.debugRenderer.rect(player.getPrimary().getX(),
                                player.getPrimary().getY(),
                                150, 
@@ -238,10 +271,6 @@ public class Level {
     }
     
     public void updateObjects(float delta) {
-        for(Unit u : playerArmy) {
-            u.update(delta);
-        }
-        
         for(Unit zombie : zombies) {
             zombie.update(delta);
             
@@ -252,43 +281,52 @@ public class Level {
             else {
                 ((Zombie) zombie).resetPath();
             }
+            
+            for(Unit u : playerArmy) {
+                u.update(delta);
+                
+                if(MathUtil.dst(zombie.getX(), zombie.getY(), u.getX(), u.getY()) <= 100) {
+                    ((Zombie) zombie).setCurrentTarget(u.getX(), u.getY());
+                }
+                else {
+                    ((Zombie) zombie).resetPath();
+                }
+            }
         }
         
         player.update(delta);
     }
     
-    public void checkForCollisions() {
+    public void checkForCollisions() {    
         for(Unit unit : playerArmy) {
             for(Unit zombie : zombies) {
-                if(zombie.getBoundingRectangle().overlaps(unit.getBoundingRectangle())) {
-                    zombie.attack(unit);
+                if(zombie.getBoundingRectangle().overlaps(unit.getBoundingRectangle()) &&
+                   !zombie.isAttacking()) {
+                    zombie.setAttacking(true, unit);
+                    zombie.attack();
+                    
+                    if(unit.getProperties().getHealth() <= 0) {
+                        zombie.setAttacking(false, null);
+                    }
+
                 }
             }
         }
     }
     
+    public GameCamera getGameCamera() {
+        return gameCamera;
+    }
+    
     public void initializeCamera() {
         gameCamera = new GameCamera();
-                
-        float smallestY = 0;
-        float smallestX = 0;
-        
-        for(Layer layer : layers.getLayers()) {
-            for(GameObject o : layer.getObjects()) {
-                if(o.getY() < smallestY) {
-                    smallestY = o.getY();
-                }
-                
-                if(o.getX() < smallestX) {
-                    smallestX = o.getX();
-                }
-            }
-        }
         
         gameCamera.zoom = 0.75f;
         
-        gameCamera.position.set(smallestX + (gameCamera.viewportWidth * 0.385f), 
-                                smallestY + (gameCamera.viewportHeight * 0.385f), 0);
+        origCameraZoom = gameCamera.zoom;
+
+        gameCamera.position.set(gameCamera.viewportWidth * gameCamera.zoom * 0.5f, 
+                                gameCamera.viewportHeight * gameCamera.zoom * 0.5f, 0);
         
         gameCamera.update();
     }

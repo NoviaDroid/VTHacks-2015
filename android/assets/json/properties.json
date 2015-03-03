@@ -8,22 +8,7 @@
     "velY": "0",
     "range": "600",
     "max health": "250",
-    "animations": [{
-    	"rolling": [{
-    		"frame1": [{
-    			"img": "tank1", 
-    			"time": "0.15"
-    		}],
-    		"frame2": [{
-    			"img": "tank2",
-    			"time": "0.15"
-    		}],
-    		"frame3": [{
-    			"img": "tank3",
-    			"time": "0.15"
-    		}]
-    	}]
-    }]
+    "frameTime": "0.15"
   }],
   
   "player": [{
@@ -94,26 +79,7 @@
     "velX": "3",
     "velY": "0", 
     "max health": "80",
-    "animations": [{
-    	"walking": [{
-    		"frame1": [{
-    			"img": "troopRunnning1", 
-    			"time": "0.15"
-    		}],
-    		"frame2": [{
-    			"img": "troopRunnning2",
-    			"time": "0.15"
-    		}],
-    		"frame3": [{
-    			"img": "troopRunnning3",
-    			"time": "0.15"
-    		}],
-    		"frame4": [{
-    			"img": "troopRunnning4",
-    			"time": "0.15"
-    		}]
-    	}]
-    }]
+    "frameTime": "0.15"
   }],
   
   "bomb": [{

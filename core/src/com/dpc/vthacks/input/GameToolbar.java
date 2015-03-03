@@ -3,8 +3,10 @@ package com.dpc.vthacks.input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -32,6 +34,11 @@ public class GameToolbar {
     private final Color BATCH_COLOR;
     private static final int PADDING = 5;
     private GameScreen parent;
+    private Label moneyToast;
+    private final int KS_INTERVAL = 3; // If a sequential kill isn't done within this time, killstreak over
+    private float killStreakTimer;
+    private boolean killStreak, killCompleted;
+    private int killstreakAmount;
     
     public GameToolbar(GameScreen parent) {
         this.parent = parent;
@@ -79,6 +86,7 @@ public class GameToolbar {
         LabelStyle style = new LabelStyle();
         style.font = Fonts.getZombie();
         
+        moneyToast = new Label("", style);
         moneyLabel = new Label("Money: 0", style);
         experienceLabel = new Label("Experience: ", style);
         healthLabel = new Label("Health: 100", style);
@@ -86,7 +94,12 @@ public class GameToolbar {
         style = new LabelStyle();
         style.font = Fonts.getZombieSmall();
         
-        ammoLabel = new Label("", style);
+        ammoLabel = new Label("", style);        
+        
+        style = new LabelStyle();
+        style.font = Fonts.getVisitor();
+        
+        moneyToast = new Label("", style);
         
         joystick.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
             @Override
@@ -276,15 +289,25 @@ public class GameToolbar {
         towerUpgradeButton.setPosition(tankUpgradeButton.getX() - towerUpgradeButton.getWidth() - PADDING, PADDING);
         soldierUpgradeButton.setPosition(towerUpgradeButton.getX() - soldierUpgradeButton.getWidth() - PADDING, PADDING);
         healthLabel.setPosition(soldierUpgradeButton.getX() + soldierUpgradeButton.getWidth() + PADDING, experienceLabel.getY() - healthLabel.getHeight());
-        setMoney(0);
+        addMoney(0);
 
+        moneyToast.setColor(moneyToast.getColor().r, 
+                moneyToast.getColor().g,
+                moneyToast.getColor().b,
+                0);
+
+        
+        moneyLabel.setColor(new Color(0,   
+                                      0.5f,
+                                      0, 1));
         //healthBar.setWidth(AppData.width - (soldierUpgradeButton.getX() + soldierUpgradeButton.getWidth() + PADDING));
        
         stage.addActor(joystick);
 //        stage.addActor(bombButton);
 //        stage.addActor(strafeButton);
-//        stage.addActor(tankButton);
-//        stage.addActor(soldierButton);
+ //       stage.addActor(tankButton);
+ //       stage.addActor(soldierButton);
+        stage.addActor(moneyToast);
 //        stage.addActor(tankUpgradeButton);
 //        stage.addActor(towerUpgradeButton);
 //        stage.addActor(soldierUpgradeButton);
@@ -297,6 +320,32 @@ public class GameToolbar {
         BATCH_COLOR = stage.getBatch().getColor();
     }
    
+    public void update(float delta) {
+       stage.act(delta);
+      
+       if(killStreak) {
+           killStreakTimer += delta;
+           
+           if(killStreakTimer >= KS_INTERVAL) {
+               if(!killCompleted) {
+                   killStreakTimer = 0;
+                   killCompleted = false;
+                   killstreakAmount = 0;
+                   killStreak = false;
+                   
+                   // Move off screen
+                   moneyToast.addAction(Actions.parallel(
+                                           Actions.fadeOut(0.25f),
+                                           Actions.moveTo(AppData.width + (PADDING * 2), 
+                                                   moneyToast.getY(), 0.25f)));
+               }
+           }
+       }
+       else {
+           
+       }
+    }
+    
     public void strafeButtonTouchUp() {
         Assets.playPressUp();
     }
@@ -360,24 +409,61 @@ public class GameToolbar {
         return stage;
     }
     
-    public void addMoney(int amount) {
-        setMoney(money +  + amount);
-    }
-    
     public void setAmmo(int ammo) {
         ammoLabel.setText(parent.getLevel().getPlayer().getCurrentWeapon().getAmmo() + " / " +
                           parent.getLevel().getPlayer().getCurrentWeapon().getMaxAmmo());
+        //shakeAmmo();
     }
     
-    public void setMoney(int am) {
-        this.money = am;
+    private void updateMoneyToast(int am) {    
+        if(am > 0) {
+            killStreak = true;
         
-        moneyLabel.setText("$" + am);
+            killstreakAmount += am;
+            moneyToast.setText("+" + killstreakAmount);
+        }
+        
+        float x = moneyLabel.getX();
+        float y = moneyLabel.getY() - moneyToast.getStyle().font.getBounds(moneyToast.getText()).height;
+        
+        moneyToast.setPosition(x, y);
+     
+        if(killStreak) {
+            moneyToast.addAction(
+                    Actions.sequence(     
+                            Actions.parallel(Actions.sequence(
+                                    Actions.moveBy(10, 0,0.02f),
+                                    Actions.moveBy(-10, 0,0.02f),
+                                    Actions.moveBy(0, 10,0.02f),
+                                    Actions.moveBy(0, -10,0.02f),
+                    Actions.fadeIn(0.5f)))));
+        }
+    }
+    
+    public void addMoney(int am) {
+        this.money += am;
+
+        moneyLabel.setText("$" + money);
         
         float t = (Fonts.getZombie().getBounds(moneyLabel.getText()).height * 2);
+        
         // Reposition the money text
         moneyLabel.setPosition(AppData.width - (Fonts.getZombie().getBounds(moneyLabel.getText()).width) - (t * 0.5f), 
                                AppData.height - t);
+     
+        moneyLabel.addAction(Actions.sequence(
+                Actions.moveBy(10, 0,0.02f),
+                Actions.moveBy(-10, 0,0.02f),
+                Actions.moveBy(0, 10,0.02f),
+                Actions.moveBy(0, -10,0.02f)));
+        
+        updateMoneyToast(am);
+    }
+    
+    public void shakeAmmo() {
+        ammoLabel.addAction(Actions.repeat(2, Actions.sequence(
+                Actions.moveBy(20, 0, 0.1f),
+                Actions.moveBy(-20, 0, 0.1f))));
     }
     
     public Touchpad getJoystick() {

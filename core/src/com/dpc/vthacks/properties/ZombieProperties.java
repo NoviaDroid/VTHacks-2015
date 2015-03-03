@@ -23,8 +23,8 @@ public class ZombieProperties extends Properties {
         super();
     }
     
-    public ZombieProperties(Vector2 vel, Vector2 minVel, Vector2 minKillExp, Vector2 maxKillExp, Vector2 maxVel, float range, float minDamage, float maxDamage, float health, int cost) {
-        super(vel, minVel, maxVel, range, minDamage, maxDamage, health, cost);
+    public ZombieProperties(Vector2 vel, Vector2 minVel, Vector2 minKillExp, Vector2 maxKillExp, Vector2 maxVel, float range, float minDamage, float maxDamage, float health, int cost, float frameTime) {
+        super(vel, minVel, maxVel, range, minDamage, maxDamage, health, cost, frameTime);
     }
 
     public int getMinKillMoney() {

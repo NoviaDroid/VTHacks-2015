@@ -6,18 +6,18 @@ import com.dpc.vthacks.infantry.Unit;
 import com.dpc.vthacks.properties.Properties;
 
 /**
- * Animated unit with meta data for each frame
+ * Provides meta data for each frame
  * @author Daniel
  *
  */
-public abstract class AnimatedUnit extends Unit {
-    private SpriteAnimation animation, restingAnimation;
+public abstract class AdvancedAnimatedUnit extends Unit {
+    private AdvancedSpriteAnimation animation, restingAnimation;
     private TextureRegion initialFrame;
     private boolean playing;
     private final boolean useRestAnimation;
     
-    public AnimatedUnit(SpriteAnimation animation, 
-                        SpriteAnimation restingAnimation, 
+    public AdvancedAnimatedUnit(AdvancedSpriteAnimation animation, 
+                        AdvancedSpriteAnimation restingAnimation, 
                         Properties properties,
                         float x, 
                         float y) {
@@ -29,7 +29,7 @@ public abstract class AnimatedUnit extends Unit {
         playing = false; 
     }
     
-    public AnimatedUnit(SpriteAnimation animation, 
+    public AdvancedAnimatedUnit(FrameData[] frames, 
                         TextureRegion initialFrame, 
                         Properties properties,
                         float x, 
@@ -38,10 +38,14 @@ public abstract class AnimatedUnit extends Unit {
         this.initialFrame = initialFrame;
 
         useRestAnimation = false;
-        this.animation = animation;
+        animation = new AdvancedSpriteAnimation(frames);
         playing = false; 
     }
 
+    public FrameData getCurrentFrame() {
+        return animation.getCurrentFrame();
+    }
+    
     public void update(float delta) {
         super.update(delta);
 
@@ -65,19 +69,19 @@ public abstract class AnimatedUnit extends Unit {
         draw(App.batch);
     }
     
-    public void setAnimationFrames(TextureRegion[] frames, float time) {
-        animation = new SpriteAnimation(frames, time);
+    public void setAnimationFrames(FrameData[] frames) {
+        animation = new AdvancedSpriteAnimation(frames);
     }
     
-    public SpriteAnimation getAnimation() {
+    public AdvancedSpriteAnimation getAnimation() {
         return animation;
     }
     
-    public SpriteAnimation getRestingAnimation() {
+    public AdvancedSpriteAnimation getRestingAnimation() {
         return restingAnimation;
     }
     
-    public void setAnimation(SpriteAnimation animation) {
+    public void setAnimation(AdvancedSpriteAnimation animation) {
         this.animation = animation;
     }
     

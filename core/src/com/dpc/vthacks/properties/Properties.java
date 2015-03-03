@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Properties {
     private Vector2 minVel, maxVel, vel;
+    private float frameTime;
     private float range, minDamage, maxDamage, health, maxHealth;
     private int cost;
     
@@ -15,8 +16,9 @@ public class Properties {
         health = cpy.getHealth();
         maxHealth = cpy.getMaxHealth();
         cost = cpy.getCost();
-        maxVel = cpy.getMaxVel();
-        minVel = cpy.getMinVel();
+        maxVel = cpy.getMaxVel().cpy();
+        minVel = cpy.getMinVel().cpy();
+        frameTime = cpy.getFrameTime();
     }
     
     public Properties() {
@@ -25,7 +27,7 @@ public class Properties {
         maxVel = new Vector2();
     }
     
-    public Properties(Vector2 vel, Vector2 minVel, Vector2 maxVel, float range, float minDamage, float maxDamage, float health, int cost) {
+    public Properties(Vector2 vel, Vector2 minVel, Vector2 maxVel, float range, float minDamage, float maxDamage, float health, int cost, float frameTime) {
         this.vel = vel;
         this.range = range;
         this.minDamage = minDamage;
@@ -34,9 +36,18 @@ public class Properties {
         this.maxVel = maxVel;
         this.health = health;
         this.maxHealth = health;
+        this.frameTime = frameTime;
         this.cost = cost;
     }
 
+    public float getFrameTime() {
+        return frameTime;
+    }
+    
+    public void setFrameTime(float frameTime) {
+        this.frameTime = frameTime;
+    }
+    
     public int getCost() {
         return cost;
     }
