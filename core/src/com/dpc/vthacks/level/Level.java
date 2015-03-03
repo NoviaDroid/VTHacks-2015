@@ -131,7 +131,7 @@ public class Level {
     private void updateCamera(float delta) {
         float y = gameCamera.position.y;
         
-        if(player.getY() > gameCamera.position.y + (gameCamera.viewportHeight * 0.5f)) {
+        if(player.getY() > gameCamera.position.y + (gameCamera.viewportHeight * gameCamera.zoom * 0.5f)) {
             y = player.getY();
         }
         
@@ -140,12 +140,12 @@ public class Level {
         boolean wasClamped = false;
         
         // Clamp the camera's position
-        if(gameCamera.position.x - (gameCamera.viewportWidth * 0.385f) < 0) {
-            gameCamera.position.x = (gameCamera.viewportWidth * 0.385f);
+        if(gameCamera.position.x - (gameCamera.viewportWidth * gameCamera.zoom * 0.5f) < 0) {
+            gameCamera.position.x = (gameCamera.viewportWidth * gameCamera.zoom * 0.5f);
             wasClamped = true;
         }
-         if(gameCamera.position.x + (gameCamera.viewportWidth * 0.385f) > LevelProperties.WIDTH) {
-            gameCamera.position.x = LevelProperties.WIDTH - (gameCamera.viewportWidth * 0.385f);
+         if(gameCamera.position.x + (gameCamera.viewportWidth * gameCamera.zoom * 0.5f) > LevelProperties.WIDTH) {
+            gameCamera.position.x = LevelProperties.WIDTH - (gameCamera.viewportWidth * gameCamera.zoom * 0.5f);
             wasClamped = true;
         }
          
