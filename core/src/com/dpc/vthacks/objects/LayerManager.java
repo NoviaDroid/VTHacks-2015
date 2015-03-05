@@ -38,7 +38,7 @@ public class LayerManager {
         public void render() {
             for(GameObject o : objects) {
                 // Render only if visible
-                if(camera.frustum.pointInFrustum(o.getX(), o.getY(), 0)) {
+                if(camera.frustum.boundsInFrustum(o.getX(), o.getY(), 0, o.getWidth()*2, o.getHeight()*2, 0.5f)) {
                     o.render();
                 }
             }
