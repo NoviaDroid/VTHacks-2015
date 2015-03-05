@@ -1,8 +1,8 @@
 package com.dpc.vthacks.level;
 
-import com.badlogic.gdx.Input.Keys;
+import java.util.Iterator;
+
 import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.input.GestureDetector.GestureListener;
@@ -14,13 +14,12 @@ import com.dpc.vthacks.App;
 import com.dpc.vthacks.GameCamera;
 import com.dpc.vthacks.MathUtil;
 import com.dpc.vthacks.Player;
-import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.factories.Factory;
 import com.dpc.vthacks.gameobject.GameObject;
 import com.dpc.vthacks.infantry.Unit;
+import com.dpc.vthacks.objects.AmmoCrate;
 import com.dpc.vthacks.objects.LayerManager;
-import com.dpc.vthacks.objects.LayerManager.Layer;
 import com.dpc.vthacks.properties.ZombieProperties;
 import com.dpc.vthacks.properties.ZombieSegment;
 import com.dpc.vthacks.screens.GameScreen;
@@ -28,6 +27,7 @@ import com.dpc.vthacks.zombie.Zombie;
 
 public class Level {
     private Player player;
+    private Array<AmmoCrate> ammoCrates;
     private Array<Unit> playerArmy;
     private Array<Zombie> zombies;
     private LayerManager layers;
@@ -50,6 +50,7 @@ public class Level {
         layers = new LayerManager(2);
         playerArmy = new Array<Unit>();
         zombies = new Array<Zombie>();
+        ammoCrates = new Array<AmmoCrate>();
         
         initializeCamera();
         
@@ -224,6 +225,16 @@ public class Level {
             spawnTimer = 0;
             generateZombie();
         }
+        
+        // Possibly generate an ammo crate
+        if(MathUtils.random() < 0.01f) {
+            AmmoCrate c = Factory.ammoCratePool.obtain();
+            
+            c.setX(MathUtils.random(0, LevelProperties.WIDTH - c.getWidth()));
+            c.setY(MathUtils.random(0, player.getGround().height));
+            
+            ammoCrates.add(c);
+        }
     }
     
     public void generateZombie() {
@@ -273,6 +284,12 @@ public class Level {
             }
         }
 
+        for(AmmoCrate c : ammoCrates) {
+            if(gameCamera.frustum.pointInFrustum(c.getX(), c.getY(), 0)) {
+                c.render();
+            }
+        }
+        
         if(!player.isDrawingBehind()) {
             player.render();
         }
@@ -337,7 +354,22 @@ public class Level {
         player.update(delta);
     }
     
-    public void checkForCollisions() {    
+    public void checkForCollisions() { 
+        Iterator<AmmoCrate> iter = ammoCrates.iterator();
+        AmmoCrate cur = null;
+        
+        while(iter.hasNext()) {
+            cur = iter.next();
+            
+            // If the player obtains an ammo crate, refill ammo and remove it
+            if(cur.getBoundingRectangle().overlaps(player.getBoundingRectangle())) {
+                player.refillAmmo();
+                Factory.ammoCratePool.free(cur);
+                Assets.outOfAmmo.play();
+                iter.remove();
+            }
+        }
+        
         for(Unit unit : playerArmy) {
             for(Zombie zombie : zombies) {
                 if(zombie.getBoundingRectangle().overlaps(unit.getBoundingRectangle()) &&

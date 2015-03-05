@@ -5,10 +5,10 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pool;
 import com.dpc.vthacks.Player;
-import com.dpc.vthacks.animation.SpriteAnimation;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.infantry.Soldier;
 import com.dpc.vthacks.infantry.Tank;
+import com.dpc.vthacks.objects.AmmoCrate;
 import com.dpc.vthacks.objects.GameSprite;
 import com.dpc.vthacks.objects.Gun;
 import com.dpc.vthacks.properties.Properties;
@@ -28,12 +28,21 @@ public class Factory {
     private static ZombieProperties zombieProperties;
     private static Vector2 playerGunOffset;
     
-    private static final int NUMBER_OF_BOMBS = 100;
+    private static final int NUMBER_OF_BOMBS = 15;
     
     public static void init() {
 //        myArmyY = GameScreen.battle.getMyArmy().getBase().getY();
 //        myArmyX = GameScreen.battle.getMyArmy().getBase().getX();
     }
+    
+    public static final Pool<AmmoCrate> ammoCratePool = new Pool<AmmoCrate>(NUMBER_OF_BOMBS) {
+
+        @Override
+        protected AmmoCrate newObject() {
+            return new AmmoCrate(Assets.ammoCrate, 0, 0);
+        }
+        
+    };
     
     public static final Pool<Tank> tankPool = new Pool<Tank>() {
 

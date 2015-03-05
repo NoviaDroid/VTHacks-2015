@@ -199,7 +199,7 @@ public class Player extends AdvancedAnimatedUnit {
     public boolean isMovingLeft() {
         return movingLeft;
     }
-
+    
     public void moveLeft() {
         movingLeft = true;
         
@@ -242,6 +242,15 @@ public class Player extends AdvancedAnimatedUnit {
         this.money = money;
     }
 
+    public void addAmmo(int am) {
+        currentWeapon.setAmmo(currentWeapon.getAmmo() + am);
+    }
+    
+    public void refillAmmo() {
+        currentWeapon.setAmmo(currentWeapon.getMaxAmmo());
+        getParentLevel().getContext().getToolbar().setAmmo(currentWeapon.getAmmo());
+    }
+    
     public void setGround(Rectangle rect) {
         this.ground = rect;
     }

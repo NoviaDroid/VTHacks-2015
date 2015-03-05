@@ -305,8 +305,8 @@ public class GameToolbar {
         stage.addActor(joystick);
 //        stage.addActor(bombButton);
 //        stage.addActor(strafeButton);
-        stage.addActor(tankButton);
-        stage.addActor(soldierButton);
+  //      stage.addActor(tankButton);
+  //      stage.addActor(soldierButton);
         stage.addActor(moneyToast);
 //        stage.addActor(tankUpgradeButton);
 //        stage.addActor(towerUpgradeButton);

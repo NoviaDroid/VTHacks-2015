@@ -19,6 +19,7 @@ public class Assets {
     public static ObjectMap<String, SpriteAnimation> tankAnimations;
     public static ObjectMap<String, SpriteAnimation> zombieAnimations;
     
+    public static TextureRegion ammoCrate;
     public static TextureRegion shotgun;
     public static TextureRegion plane, playerIcon, zombie, emptyPlane, bomb, road, background, tankShell, menuBackground, enemyBase, playerBase, healthbar, bullet;
     public static TextureRegion[] buildings, skylines;
@@ -200,6 +201,7 @@ public class Assets {
         background = gameAtlas.findRegion("background");
         bomb = gameAtlas.findRegion("bomb");
         road = gameAtlas.findRegion("road");
+        ammoCrate = gameAtlas.findRegion("Ammo Crate");
         
         plane.flip(true, false);
       //  playerStationary.flip(true, false);
