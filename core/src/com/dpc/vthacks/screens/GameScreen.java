@@ -145,6 +145,8 @@ public class GameScreen implements Screen {
         
         mplexer.addProcessor(toolbar.getStage());
         
+        mplexer.addProcessor(level.getGestureDetector());
+        
         mplexer.addProcessor(level.getInputAdapter());
         
         mplexer.addProcessor(new InputAdapter() {

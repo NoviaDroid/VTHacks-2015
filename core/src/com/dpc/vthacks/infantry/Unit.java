@@ -34,6 +34,14 @@ public abstract class Unit extends DynamicGameObject implements Poolable {
     
     public abstract void attack(Unit enemy, float dmg);
     
+    /*
+     * Returns the distance between two units
+     */
+    public float dst(Unit u) {
+        return MathUtil.dst(u.getX(), u.getY(),
+                             getX(), getY());
+    }
+    
     public void onDamageTaken(Unit attacker, float amount) {
 
         // Unit has died

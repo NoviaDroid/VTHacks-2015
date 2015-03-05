@@ -305,8 +305,8 @@ public class GameToolbar {
         stage.addActor(joystick);
 //        stage.addActor(bombButton);
 //        stage.addActor(strafeButton);
- //       stage.addActor(tankButton);
- //       stage.addActor(soldierButton);
+        stage.addActor(tankButton);
+        stage.addActor(soldierButton);
         stage.addActor(moneyToast);
 //        stage.addActor(tankUpgradeButton);
 //        stage.addActor(towerUpgradeButton);
@@ -418,7 +418,7 @@ public class GameToolbar {
     private void updateMoneyToast(int am) {    
         if(am > 0) {
             killStreak = true;
-        
+            killStreakTimer = 0;
             killstreakAmount += am;
             moneyToast.setText("+" + killstreakAmount);
         }

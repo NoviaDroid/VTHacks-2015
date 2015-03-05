@@ -15,6 +15,7 @@ import com.dpc.vthacks.properties.ZombieSegment;
 
 public class Zombie extends AnimatedUnit implements Poolable {
     private boolean isFlipped;
+    private boolean walkingLeft;
     
     public Zombie(AtlasRegion[] frames, Properties properties, float x, float y) {
         super(Assets.zombieAnimations.get("walking-right"), Assets.zombieAnimations.get("walking-right"), properties, x, y);
@@ -41,32 +42,30 @@ public class Zombie extends AnimatedUnit implements Poolable {
     @Override
     public void update(float delta) {
         super.update(delta);
-        
-        if(!isAttacking()) {
-            if(getParentLevel().getPlayer().getX() < getX()) {
-                if(MathUtil.dst(getX(), 
-                                getY(), 
-                                getParentLevel().getPlayer().getX(), 
-                                getParentLevel().getPlayer().getY()) < getParentLevel().getPlayer().getWidth()) {
-                    setAttacking(true, getParentLevel().getPlayer());
-                    attack();
-                }
-                else {
-                    addPos(getVelX(), getVelY());
-                }
+    
+        if(inRange(getParentLevel().getPlayer())) {
+            if(getBoundingRectangle().overlaps(getParentLevel().getPlayer().getBoundingRectangle())) {
+                setAttacking(true, getParentLevel().getPlayer());
             }
             else {
-                if(MathUtil.dst(getX(), 
-                        getY(), 
-                        getParentLevel().getPlayer().getX(), 
-                        getParentLevel().getPlayer().getY()) < getWidth()) {
-                    setAttacking(true, getParentLevel().getPlayer());
-                    attack();
-                }
-                else {
-                    addPos(getVelX(), getVelY());
-                }   
+                setAttacking(false, null);
             }
+            
+            if (getVelX() < 0) {
+                setCurrentTarget(getParentLevel().getPlayer().getX()
+                        - getWidth(), getParentLevel().getPlayer().getY());
+            } else {
+                setCurrentTarget(getParentLevel().getPlayer().getX(),
+                        getParentLevel().getPlayer().getY());
+            }
+            
+        }
+        else {
+            resetPath();
+        }
+        
+        if(!isAttacking()) {
+            addPos(getVelX(), getVelY());
         }
     }
 
@@ -75,6 +74,21 @@ public class Zombie extends AnimatedUnit implements Poolable {
         draw(App.batch);
     }
 
+    @Override
+    public void setCurrentTarget(float x, float y) {
+        super.setCurrentTarget(x, y);
+        
+        // Assign the right animation
+        if(getVelX() < 0) {
+            // Right
+            setAnimation(Assets.zombieAnimations.get("walking-left"));
+        }
+        else if(getVelX() != 0){
+            // Left
+            setAnimation(Assets.zombieAnimations.get("walking-right"));
+        }
+    }
+    
     @Override
     public void onDeath(Unit killer) {
         Factory.zombiePool.free(this);

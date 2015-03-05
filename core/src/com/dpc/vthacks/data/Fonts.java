@@ -1,7 +1,6 @@
 package com.dpc.vthacks.data;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
@@ -17,9 +16,9 @@ public class Fonts {
         FreeTypeFontParameter parameter = new FreeTypeFontParameter();
         
         parameter.size = Gdx.graphics.getWidth() * 84 / 1200;
-        parameter.borderColor = Color.BLACK;
-        parameter.borderWidth = 3;
-        parameter.characters = FreeTypeFontGenerator.DEFAULT_CHARS;
+   //     parameter.borderColor = Color.BLACK;
+     //   parameter.borderWidth = 3;
+   //     parameter.characters = FreeTypeFontGenerator.DEFAULT_CHARS;
    
         zombie = generator.generateFont(parameter); 
         
@@ -31,7 +30,7 @@ public class Fonts {
         zombieXSmall = generator.generateFont(parameter);
         
         generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/visitor1.ttf"));
-        parameter.characters = FreeTypeFontGenerator.DEFAULT_CHARS;
+
         visitor = generator.generateFont(parameter);
         
         generator.dispose();

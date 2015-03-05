@@ -139,18 +139,14 @@ public class Player extends AdvancedAnimatedUnit {
     }
     
     public void walk(float amX, float amY) {
-        for(Zombie z : getParentLevel().getZombies()) {
-            if(getBoundingRectangle().overlaps(z.getBoundingRectangle())) {
-                amY *= 0.25f;
-                if(getY() > z.getY()) {
-                    drawBehind = true;
-                }
-                else {
-                    drawBehind = false;
-                }
-             
-                break;
+        for (Zombie z : getParentLevel().getZombies()) {
+            if (getY() > z.getY()) {
+                drawBehind = true;
+            } else {
+                drawBehind = false;
             }
+
+            break;
         }
         
         setX(getX() + amX * getVelocityScalarX());

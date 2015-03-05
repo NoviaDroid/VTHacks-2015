@@ -15,7 +15,6 @@ public abstract class DynamicGameObject extends GameObject {
         velSCL = properties.getVel();
         
         init();
-        System.err.println(velSCL + " OKAY");
     }
     
     @Override
