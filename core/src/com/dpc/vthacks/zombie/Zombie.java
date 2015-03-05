@@ -43,11 +43,13 @@ public class Zombie extends AnimatedUnit implements Poolable {
     public void update(float delta) {
         super.update(delta);
     
+        // Set a random velocity
         getVelSCL().set(MathUtil.rand(getProperties().getMinVel().x,
                                       getProperties().getMaxVel().x),
                         MathUtil.rand(getProperties().getMaxVel().y,
                                       getProperties().getMaxVel().y));
         
+        // If in range of the player, attack
         if(inRange(getParentLevel().getPlayer())) {
             if(getBoundingRectangle().overlaps(getParentLevel().getPlayer().getBoundingRectangle())) {
                 if(!isAttacking()) {
@@ -61,6 +63,7 @@ public class Zombie extends AnimatedUnit implements Poolable {
                 }
             }
             
+            // Set target based on where currently is
             if (getVelX() < 0) {
                 setCurrentTarget(getParentLevel().getPlayer().getX()
                         - getWidth(), getParentLevel().getPlayer().getY());
@@ -71,9 +74,11 @@ public class Zombie extends AnimatedUnit implements Poolable {
             
         }
         else {
+            // If there is no target near, reset the path
             resetPath();
         }
-        
+
+        // Continue to move if not attacking
         if(!isAttacking()) {
             addPos(getVelX(), getVelY());
         }
@@ -112,8 +117,6 @@ public class Zombie extends AnimatedUnit implements Poolable {
                                                     .getMinKillMoney(),
                                                 ((ZombieProperties) getProperties())
                                                     .getMaxKillMoney()));
-        
-        System.out.println(((ZombieProperties) getProperties()).getMaxKillMoney());
     }
 
     @Override

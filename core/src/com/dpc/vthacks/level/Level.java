@@ -3,6 +3,7 @@ package com.dpc.vthacks.level;
 import java.util.Iterator;
 
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.input.GestureDetector.GestureListener;
@@ -14,6 +15,7 @@ import com.dpc.vthacks.App;
 import com.dpc.vthacks.GameCamera;
 import com.dpc.vthacks.MathUtil;
 import com.dpc.vthacks.Player;
+import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.factories.Factory;
 import com.dpc.vthacks.gameobject.GameObject;
@@ -38,6 +40,7 @@ public class Level {
     private GameScreen context;
     private float spawnTime, spawnTimer;
     private float origCameraZoom;
+    private float AMMO_CRATE_SPAWN_TIME = 0.001f;
     private static final float MAX_ZOOM = 0.35f; // Most that can be zoomed in
     private static final float ZOOM_STEP = 0.05f; // How much zoom to add
     
@@ -70,26 +73,34 @@ public class Level {
                 
                 // Fire a shot, it may not hit
                 player.blindFire();
-                
+ 
+                // Calculate damage on a zombie
                 for(Zombie z : zombies) {
+                    
+                    // Check if the player is in range of the zombie
                     if(Math.abs(z.getX() - player.getX()) < 250) {
                         if(Math.abs(z.getY() - player.getY()) < 100) {
                             if(player.getX() <= z.getX() && !player.isMovingLeft() ||
                                player.getX() >= z.getX() && player.isMovingLeft()) {
+                                // Assume
                                 float segDmg = ((ZombieProperties) z.getProperties()).getSegments()[0].damageFactor;
                                 
+                                // Grab the segments of the zombie
                                 ZombieSegment seg = null;
                                 int len = ((ZombieProperties)z.getProperties()).getSegments().length;
                                 
                                 for(int i = 0; i < len; i++) {
                                     seg = ((ZombieProperties) z.getProperties()).getSegments()[i];
-                     
+                                    
+                                    // Find out if the current seg is the right one
                                     if(seg.bounds.contains(seg.bounds.x + 1,player.getPrimary().getY())) {
                                         segDmg = seg.damageFactor;
                                     }
                                 }
                                 
+                                // Attack the right zombie with the apropriate damage
                                 player.attack(z, segDmg);
+                                
                                 return false;
                             }
                         }
@@ -144,10 +155,12 @@ public class Level {
             
             @Override
             public boolean scrolled(int amount) {
+                // Make sure the amount of zoom is valid
                 if(gameCamera.zoom + ZOOM_STEP > origCameraZoom && amount > 0) {
                     return false;
                 }
-                
+  
+                // Actual zooming
                 if(amount > 0) {
                     gameCamera.zoom += ZOOM_STEP;
                 }
@@ -155,12 +168,13 @@ public class Level {
                     gameCamera.zoom -= ZOOM_STEP;
                 }
                 
+                // Reposition the camera
                 gameCamera.position.set(player.getX() - (gameCamera.viewportWidth * 0f), 
                                        gameCamera.viewportHeight * gameCamera.zoom * 0.5f, 0);
 
                 gameCamera.update();
                 
-
+                
                 return false;
             }
             
@@ -176,6 +190,7 @@ public class Level {
     private void updateCamera(float delta) {
         float y = gameCamera.position.y;
         
+        // Calculate the camera Y
         if(player.getY() > gameCamera.position.y + (gameCamera.viewportHeight * gameCamera.zoom * 0.5f)) {
             y = player.getY();
         }
@@ -227,7 +242,7 @@ public class Level {
         }
         
         // Possibly generate an ammo crate
-        if(MathUtils.random() < 0.01f) {
+        if(MathUtils.random() < AMMO_CRATE_SPAWN_TIME) {
             AmmoCrate c = Factory.ammoCratePool.obtain();
             
             c.setX(MathUtils.random(0, LevelProperties.WIDTH - c.getWidth()));
@@ -240,26 +255,28 @@ public class Level {
     public void generateZombie() {
         Zombie z = Factory.zombiePool.obtain();
 
-//        if(Math.random() < 1f) {
-            float x = Math.random() < 0.5f ? gameCamera.position.x - (gameCamera.viewportWidth * 0.5f):
-                                             gameCamera.position.x + gameCamera.viewportWidth;
-            
-            float y = MathUtils.random(0, player.getGround().getY() + player.getGround().getHeight());
-            
-            z.setX(x);
-            z.setY(y);
-            
-            if(player.getX() >= x) {
-                z.setFinalDestination(new Vector2(LevelProperties.WIDTH, 0));  
-                z.setFlipped(true);
-                z.setAnimation(Assets.zombieAnimations.get("walking-right"));
-            }
-            else {
-                z.setAnimation(Assets.zombieAnimations.get("walking-left"));
-            }
+        // Calculate zombie x
+        float x = Math.random() < 0.5f ? gameCamera.position.x
+                - (gameCamera.viewportWidth * 0.5f) : gameCamera.position.x
+                + gameCamera.viewportWidth;
 
-            zombies.add(z);
-//        }
+        // Calculate zombie y 
+        float y = MathUtils.random(0, player.getGround().getY()
+                + player.getGround().getHeight());
+
+        z.setX(x);
+        z.setY(y);
+
+        // Determine the destination and animation
+        if (player.getX() >= x) {
+            z.setFinalDestination(new Vector2(LevelProperties.WIDTH, 0));
+            z.setFlipped(true);
+            z.setAnimation(Assets.zombieAnimations.get("walking-right"));
+        } else {
+            z.setAnimation(Assets.zombieAnimations.get("walking-left"));
+        }
+
+        zombies.add(z);
     }
     
     public void render() {
@@ -331,10 +348,6 @@ public class Level {
         App.debugRenderer.end();
     }
     
-    public GameScreen getContext() {
-        return context;
-    }
-    
     public void updateObjects(float delta) {
         for(Zombie zombie : zombies) {
             zombie.update(delta);
@@ -390,10 +403,14 @@ public class Level {
         return gameCamera;
     }
     
+    public GameScreen getContext() {
+        return context;
+    }
+    
     public void initializeCamera() {
         gameCamera = new GameCamera();
         
-        gameCamera.zoom = 0.75f;
+        gameCamera.zoom = 0.55f;
         
         origCameraZoom = gameCamera.zoom;
 

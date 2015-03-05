@@ -3,7 +3,6 @@ package com.dpc.vthacks.input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -24,7 +23,7 @@ import com.dpc.vthacks.screens.GameScreen;
 
 public class GameToolbar {
     private Stage stage;
-    private static Sprite healthBarBackground, healthBar, playerIcon, gunIcon;
+    private static Sprite leftBg, healthBarBackground, healthBar, playerIcon, gunIcon;
     private Touchpad joystick;
     private Drawable background;
     private Button bombButton, strafeButton, soldierButton, tankButton, towerButton,
@@ -91,11 +90,16 @@ public class GameToolbar {
         experienceLabel = new Label("Experience: ", style);
         healthLabel = new Label("Health: 100", style);
         
+        moneyToast.setColor(new Color(0, 0.5f, 0, 1));
+        
         style = new LabelStyle();
         style.font = Fonts.getZombieSmall();
         
-        ammoLabel = new Label("", style);        
+        ammoLabel = new Label("", style);   
         
+        style = new LabelStyle();
+        style.font = Fonts.getZombie();
+
         style = new LabelStyle();
         style.font = Fonts.getVisitor();
         
@@ -247,6 +251,7 @@ public class GameToolbar {
         
         experienceLabel.setPosition(soldierUpgradeButton.getX() + soldierUpgradeButton.getWidth() + PADDING, getTop() - experienceLabel.getHeight());
         
+        
         stage = new Stage(new StretchViewport(AppData.width, AppData.height)) {
             @Override
             public void draw() {
@@ -291,15 +296,15 @@ public class GameToolbar {
         healthLabel.setPosition(soldierUpgradeButton.getX() + soldierUpgradeButton.getWidth() + PADDING, experienceLabel.getY() - healthLabel.getHeight());
         addMoney(0);
 
-        moneyToast.setColor(moneyToast.getColor().r, 
-                moneyToast.getColor().g,
-                moneyToast.getColor().b,
-                0);
+        moneyToast.setColor(1, 1, 1, 1);
 
         
         moneyLabel.setColor(new Color(0,   
-                                      0.5f,
+                                      0.4f,
                                       0, 1));
+        
+        
+        
         //healthBar.setWidth(AppData.width - (soldierUpgradeButton.getX() + soldierUpgradeButton.getWidth() + PADDING));
        
         stage.addActor(joystick);
@@ -412,7 +417,8 @@ public class GameToolbar {
     public void setAmmo(int ammo) {
         ammoLabel.setText(parent.getLevel().getPlayer().getCurrentWeapon().getAmmo() + " / " +
                           parent.getLevel().getPlayer().getCurrentWeapon().getMaxAmmo());
-        //shakeAmmo();
+        
+    //    shakeAmmo();
     }
     
     private void updateMoneyToast(int am) {    
@@ -486,7 +492,7 @@ public class GameToolbar {
     
     public void setHealth(float f) {
         healthLabel.setText("Health: " + f);
-        
+System.err.println(healthBar.getWidth() * (f / 100));
         // Calculate the exp bar width
         healthBar.setSize(healthBar.getWidth() * (f / 100),
                           healthBar.getHeight());

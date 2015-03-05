@@ -12,15 +12,17 @@ public class Fonts {
     private static BitmapFont visitor;
     
     public static void load() {
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/ZOMBIE.TTF"));
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/visitor1.TTF"));
         FreeTypeFontParameter parameter = new FreeTypeFontParameter();
         
-        parameter.size = Gdx.graphics.getWidth() * 84 / 1200;
+        parameter.size = Gdx.graphics.getWidth() * 104 / 1200;
    //     parameter.borderColor = Color.BLACK;
      //   parameter.borderWidth = 3;
    //     parameter.characters = FreeTypeFontGenerator.DEFAULT_CHARS;
    
         zombie = generator.generateFont(parameter); 
+        
+        generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/ZOMBIE.ttf"));
         
         parameter.size = Gdx.graphics.getWidth() * 54 / 1200;
         

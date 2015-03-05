@@ -121,10 +121,10 @@
   }],
   
   "zombie": [{
-  	"minVelX": "1",
-  	"maxVelX": "2",
-  	"minVelY": "1",
-  	"maxVelY": "2",
+  	"minVelX": "0.5",
+  	"maxVelX": "1",
+  	"minVelY": "0.5",
+  	"maxVelY": "1",
     "minDamage": "0.0005",
     "maxDamage": "0.001",
   	"range": "250",
