@@ -3,7 +3,6 @@ package com.dpc.vthacks.level;
 import java.util.Iterator;
 
 import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.input.GestureDetector.GestureListener;
@@ -15,7 +14,6 @@ import com.dpc.vthacks.App;
 import com.dpc.vthacks.GameCamera;
 import com.dpc.vthacks.MathUtil;
 import com.dpc.vthacks.Player;
-import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.factories.Factory;
 import com.dpc.vthacks.gameobject.GameObject;
@@ -63,49 +61,49 @@ public class Level {
 
             @Override
             public boolean touchDown(float x, float y, int pointer, int button) {
-                
+                                gameCamera.unproject(input.set(x, y, 0));
+                                // Fire a shot, it may not hit
+                                player.blindFire();
+                 
+                                // Calculate damage on a zombie
+                                for(Zombie z : zombies) {
+                                    
+                                    // Check if the player is in range of the zombie
+                                    if(Math.abs(z.getX() - player.getX()) < 250) {
+                                        if(Math.abs(z.getY() - player.getY()) < 100) {
+                                            if(player.getX() <= z.getX() && !player.isMovingLeft() ||
+                                               player.getX() >= z.getX() && player.isMovingLeft()) {
+                                                // Assume
+                                                float segDmg = ((ZombieProperties) z.getProperties()).getSegments()[0].damageFactor;
+                                                
+                                                // Grab the segments of the zombie
+                                                ZombieSegment seg = null;
+                                                int len = ((ZombieProperties)z.getProperties()).getSegments().length;
+                                                
+                                                for(int i = 0; i < len; i++) {
+                                                    seg = ((ZombieProperties) z.getProperties()).getSegments()[i];
+                                                    
+                                                    // Find out if the current seg is the right one
+                                                    if(seg.bounds.contains(seg.bounds.x + 1,player.getPrimary().getY())) {
+                                                        segDmg = seg.damageFactor;
+                                                    }
+                                                }
+                                                
+                                                // Attack the right zombie with the apropriate damage
+                                                player.attack(z, segDmg);
+                                                
+                                                return false;
+                                            }
+                                        }
+                                    }
+                                }
                 return false;
             }
 
             @Override
             public boolean tap(float x, float y, int count, int button) {
-                gameCamera.unproject(input.set(x, y, 0));
+
                 
-                // Fire a shot, it may not hit
-                player.blindFire();
- 
-                // Calculate damage on a zombie
-                for(Zombie z : zombies) {
-                    
-                    // Check if the player is in range of the zombie
-                    if(Math.abs(z.getX() - player.getX()) < 250) {
-                        if(Math.abs(z.getY() - player.getY()) < 100) {
-                            if(player.getX() <= z.getX() && !player.isMovingLeft() ||
-                               player.getX() >= z.getX() && player.isMovingLeft()) {
-                                // Assume
-                                float segDmg = ((ZombieProperties) z.getProperties()).getSegments()[0].damageFactor;
-                                
-                                // Grab the segments of the zombie
-                                ZombieSegment seg = null;
-                                int len = ((ZombieProperties)z.getProperties()).getSegments().length;
-                                
-                                for(int i = 0; i < len; i++) {
-                                    seg = ((ZombieProperties) z.getProperties()).getSegments()[i];
-                                    
-                                    // Find out if the current seg is the right one
-                                    if(seg.bounds.contains(seg.bounds.x + 1,player.getPrimary().getY())) {
-                                        segDmg = seg.damageFactor;
-                                    }
-                                }
-                                
-                                // Attack the right zombie with the apropriate damage
-                                player.attack(z, segDmg);
-                                
-                                return false;
-                            }
-                        }
-                    }
-                }
                 
                 return true;
             }

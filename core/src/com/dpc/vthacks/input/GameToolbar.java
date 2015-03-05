@@ -3,6 +3,8 @@ package com.dpc.vthacks.input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -104,13 +106,6 @@ public class GameToolbar {
         style.font = Fonts.getVisitor();
         
         moneyToast = new Label("", style);
-        
-        joystick.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                return true;
-            }
-        });
         
         soldierUpgradeButton.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
             @Override
@@ -253,6 +248,7 @@ public class GameToolbar {
         
         
         stage = new Stage(new StretchViewport(AppData.width, AppData.height)) {
+            
             @Override
             public void draw() {
                 super.draw();
@@ -277,6 +273,7 @@ public class GameToolbar {
                 getBatch().end();
             }
         };
+
 
         // hGroup.addActor(soldierButton);
         // hGroup.addActor(tankButton);
