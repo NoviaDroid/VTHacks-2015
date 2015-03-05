@@ -1,11 +1,13 @@
 package com.dpc.vthacks.objects;
 
 import com.badlogic.gdx.utils.Array;
+import com.dpc.vthacks.GameCamera;
 import com.dpc.vthacks.gameobject.GameObject;
 
 
 public class LayerManager {
     private Array<Layer> layers;
+    private static GameCamera camera;
     
     public static class Layer {
         private Array<GameObject> objects;
@@ -35,7 +37,10 @@ public class LayerManager {
         
         public void render() {
             for(GameObject o : objects) {
-                o.render();
+                // Render only if visible
+                if(camera.frustum.pointInFrustum(o.getX(), o.getY(), 0)) {
+                    o.render();
+                }
             }
         }
         
@@ -111,6 +116,10 @@ public class LayerManager {
     
     public void removeLayer(Layer layer) {
         layers.removeValue(layer, false);
+    }
+    
+    public static void setCamera(GameCamera camera) {
+        LayerManager.camera = camera;
     }
     
     public void addLayer(Layer layer) {

@@ -51,6 +51,8 @@ public class Level {
         playerArmy = new Array<Unit>();
         zombies = new Array<Zombie>();
         
+        LayerManager.setCamera(gameCamera);
+        
         initializeCamera();
         
         GestureListener l = new GestureListener() {
