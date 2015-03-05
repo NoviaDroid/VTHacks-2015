@@ -260,11 +260,15 @@ public class Level {
         }
         
         for(Unit u : playerArmy) {
-            u.render();
+            if(gameCamera.frustum.pointInFrustum(u.getX(), u.getY(), 0)) {
+                u.render();
+            }
         }
         
         for(Unit zombie : zombies) {
-            zombie.render();
+            if(gameCamera.frustum.pointInFrustum(zombie.getX(), zombie.getY(), 0)) {
+                zombie.render();
+            }
         }
 
         if(!player.isDrawingBehind()) {
