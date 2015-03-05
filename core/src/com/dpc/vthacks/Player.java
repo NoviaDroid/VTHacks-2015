@@ -87,8 +87,8 @@ public class Player extends AdvancedAnimatedUnit {
         if(!shotDelayed) {
             if(currentWeapon.getAmmo() > 0) {
                 int dex = MathUtils.random(0, Assets.playerSounds.length - 1);
-                //Assets.playerSounds[dex].stop();
-               // Assets.playerSounds[dex].play();
+                Assets.playerSounds[dex].stop();
+                Assets.playerSounds[dex].play();
     
                 // Decrease ammo
                 currentWeapon.decAmmo(1);

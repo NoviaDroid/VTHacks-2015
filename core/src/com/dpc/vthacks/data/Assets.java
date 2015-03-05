@@ -219,8 +219,13 @@ public class Assets {
             zwf2[i].flip(true, false);
         }
         
+        TextureRegion[] zwf3 = new TextureRegion[1];
+        
+        zwf3[0] = zombieAtlas.getRegions().get(0);
+        
         zombieAnimations.put("walking-right", new SpriteAnimation(zwf, 0.25f));
         zombieAnimations.put("walking-left", new SpriteAnimation(zwf2, 0.25f));
+        zombieAnimations.put("attacking", new SpriteAnimation(zwf3, 15));
     }
     
     public static void unloadSkins() {

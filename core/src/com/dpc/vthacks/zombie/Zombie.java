@@ -43,12 +43,22 @@ public class Zombie extends AnimatedUnit implements Poolable {
     public void update(float delta) {
         super.update(delta);
     
+        getVelSCL().set(MathUtil.rand(getProperties().getMinVel().x,
+                                      getProperties().getMaxVel().x),
+                        MathUtil.rand(getProperties().getMaxVel().y,
+                                      getProperties().getMaxVel().y));
+        
         if(inRange(getParentLevel().getPlayer())) {
             if(getBoundingRectangle().overlaps(getParentLevel().getPlayer().getBoundingRectangle())) {
-                setAttacking(true, getParentLevel().getPlayer());
+                if(!isAttacking()) {
+                    setAttacking(true, getParentLevel().getPlayer());
+                    setAnimation(Assets.zombieAnimations.get("attacking"));
+                }
             }
             else {
-                setAttacking(false, null);
+                if(isAttacking()) {
+                    setAttacking(false, null);
+                }
             }
             
             if (getVelX() < 0) {
