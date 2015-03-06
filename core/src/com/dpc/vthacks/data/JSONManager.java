@@ -8,7 +8,6 @@ import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.dpc.vthacks.MathUtil;
-import com.dpc.vthacks.animation.AdvancedAnimatedUnit;
 import com.dpc.vthacks.animation.AdvancedSpriteAnimation;
 import com.dpc.vthacks.animation.FrameData;
 import com.dpc.vthacks.animation.SpriteAnimation;
