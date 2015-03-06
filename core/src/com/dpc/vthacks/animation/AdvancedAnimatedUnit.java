@@ -1,67 +1,40 @@
 package com.dpc.vthacks.animation;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.dpc.vthacks.App;
 import com.dpc.vthacks.infantry.Unit;
-import com.dpc.vthacks.properties.Properties;
+import com.dpc.vthacks.properties.AnimatedUnitProperties;
 
 /**
- * Provides meta data for each frame
- * @author Daniel
+ * Animated unit with meta data for each frame
+ * @author Daniel Christopher
+ * @version 3/5/2015
  *
  */
 public abstract class AdvancedAnimatedUnit extends Unit {
-    private AdvancedSpriteAnimation animation, restingAnimation;
-    private TextureRegion initialFrame;
+    private ObjectMap<String, AdvancedSpriteAnimation> stateAnimations;
     private boolean playing;
-    private final boolean useRestAnimation;
+    private String currentState;
     
-    public AdvancedAnimatedUnit(AdvancedSpriteAnimation animation, 
-                        AdvancedSpriteAnimation restingAnimation, 
-                        Properties properties,
-                        float x, 
-                        float y) {
-        super(animation.update(0), properties, x, y);
-        this.restingAnimation = restingAnimation;
-        
-        useRestAnimation = true;
-        this.animation = animation;
-        playing = false; 
-    }
-    
-    public AdvancedAnimatedUnit(FrameData[] frames, 
-                        TextureRegion initialFrame, 
-                        Properties properties,
-                        float x, 
-                        float y) {
-        super(initialFrame, properties, x, y);
-        this.initialFrame = initialFrame;
+    public AdvancedAnimatedUnit(String currentState,
+                                AnimatedUnitProperties<AdvancedSpriteAnimation> properties,
+                                float x, 
+                                float y) {
+        super(properties.getStateAnimations().get(currentState).getCurrentFrame().getRegion(), 
+              properties, x, y);
 
-        useRestAnimation = false;
-        animation = new AdvancedSpriteAnimation(frames);
+        this.stateAnimations = properties.getStateAnimations();
+        this.currentState = currentState;
         playing = false; 
     }
 
-    public FrameData getCurrentFrame() {
-        return animation.getCurrentFrame();
-    }
-    
     public void update(float delta) {
         super.update(delta);
 
         if(playing) {
             //System.out.println("setRegion(animation.update(delta));");
-            setRegion(animation.update(delta));
-        }
-        else {
-            if(useRestAnimation) {
-                //System.out.println("setRegion(restingAnimation.update(delta));");
-                setRegion(restingAnimation.update(delta));
-            }
-            else {
-                //System.out.println("setRegion(initialFrame)");
-                setRegion(initialFrame);
-            }
+            setRegion(stateAnimations.get(currentState).update(delta));
         }
     }
     
@@ -69,49 +42,55 @@ public abstract class AdvancedAnimatedUnit extends Unit {
         draw(App.batch);
     }
     
-    public void setAnimationFrames(FrameData[] frames) {
-        animation = new AdvancedSpriteAnimation(frames);
-    }
-    
-    public AdvancedSpriteAnimation getAnimation() {
-        return animation;
-    }
-    
-    public AdvancedSpriteAnimation getRestingAnimation() {
-        return restingAnimation;
-    }
-    
-    public void setAnimation(AdvancedSpriteAnimation animation) {
-        this.animation = animation;
-    }
-    
-    public boolean isAnimationFinished() {
-        return animation.getAnimation().isAnimationFinished(animation.getStateTime());
-    }
-    
-    public void setPlaying(boolean playing) {
-        this.playing = playing;
-
-        // If not playing anymore, change back to the initial frame
-        if(!playing) {
-            if(useRestAnimation) {    
-                setRegion(restingAnimation.getAnimation().getKeyFrame(0));
-            }
-            else {
-                setRegion(initialFrame);
+    /**
+     * Flips every animation
+     * @param x Flip on the x axis ?
+     * @param y Flip on the y axis ?
+     */
+    public void flipAll(boolean x, boolean y) {
+        for(AdvancedSpriteAnimation animation : stateAnimations.values()) {
+            for(TextureRegion region : animation.getAnimation().getKeyFrames()) {
+                region.flip(x, y);
             }
         }
     }
     
+    public void setStateFrames(FrameData[] frames, String state, float speed) {
+        stateAnimations.get(state).setFrameData(frames, speed);
+    }
+    
+    public AdvancedSpriteAnimation getStateAnimation(String state) {
+        return stateAnimations.get(state);
+    }
+    
+    public boolean isCurrentAnimationFinished() {
+        return stateAnimations.get(currentState)
+                .getAnimation()
+                .isAnimationFinished(stateAnimations.get(currentState)
+                .getStateTime());
+    }
+    
+    public void setPlaying(boolean playing) {
+        this.playing = playing;
+    }
+    
+    public FrameData getCurrentFrame() {
+        return stateAnimations.get(currentState).getCurrentFrame();
+    }
+    
+    public void setCurrentState(String currentState) {
+        this.currentState = currentState;
+    }
+    
+    public ObjectMap<String, AdvancedSpriteAnimation> getStateAnimations() {
+        return stateAnimations;
+    }
+    
+    public AdvancedSpriteAnimation getCurrentAnimation() {
+        return stateAnimations.get(currentState);
+    }
+    
     public boolean isPlaying() {
         return playing;
-    }
-    
-    public boolean hasRestAnimation() {
-        return useRestAnimation;
-    }
-    
-    public TextureRegion getInitialFrame() {
-        return initialFrame;
     }
 }

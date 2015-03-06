@@ -1,15 +1,16 @@
 package com.dpc.vthacks;
 
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.dpc.vthacks.animation.AdvancedAnimatedUnit;
+import com.dpc.vthacks.animation.AdvancedSpriteAnimation;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.infantry.Unit;
 import com.dpc.vthacks.level.LevelProperties;
 import com.dpc.vthacks.objects.Gun;
-import com.dpc.vthacks.properties.Properties;
+import com.dpc.vthacks.properties.AnimatedUnitProperties;
 import com.dpc.vthacks.zombie.Zombie;
 
 public class Player extends AdvancedAnimatedUnit {
@@ -17,23 +18,23 @@ public class Player extends AdvancedAnimatedUnit {
     private boolean shotDelayed, drawBehind;
     private final float FIRE_DELAY = 0.15f; // Delay between shots
     private float fireTimer; // Current time between shot
-    private float animationSpeed = 1;
     private boolean movingLeft;
     private Rectangle ground;
     private Vector2 gunOffset; // X and Y positions of tip of the gun relative to and inside of the bounding box
     private Gun primary, secondary;
     private Gun currentWeapon;
    
-    public Player(Properties properties, float x, float y, float animationSpeed) {
-        super(Assets.playerAnimationData.get("walking"), 
-              Assets.playerAnimationData.get("stationary"), 
+    public Player(String currentState,
+                  AnimatedUnitProperties<AdvancedSpriteAnimation> properties, 
+                  float x, float y, float animationSpeed) {
+        super(currentState,
               properties,
               x, 
               y);
         
         setSize(getWidth() * 2, getHeight() * 2);
         
-        setPlaying(false);
+        setPlaying(true);
         
         shotDelayed = false;
     }
@@ -139,6 +140,13 @@ public class Player extends AdvancedAnimatedUnit {
     }
     
     public void walk(float amX, float amY) {
+        if(amX + amY == 0) {
+            setCurrentState("idle");
+        }
+        else {
+            setCurrentState("running");
+        }
+        
         for (Zombie z : getParentLevel().getZombies()) {
             if (getY() > z.getY()) {
                 drawBehind = true;
@@ -154,9 +162,6 @@ public class Player extends AdvancedAnimatedUnit {
         
         float tamY = (float) Math.abs(amX * 1f);
         float tamX = (float) Math.abs(amY * 1.5f);
-        
-        // Set the animation speed based on how fast the player is walking
-        animationSpeed = tamX + tamY;
 
         // Make sure the player is on the ground
         if(getY() >= ground.y + ground.height - (ground.height / 7)) {
@@ -172,19 +177,6 @@ public class Player extends AdvancedAnimatedUnit {
         }
         else if(getX() < 0) {
             setX(0);
-        }
-       
-        
-        // Stop the animation if the joystick isn't being touced
-        if(amX == 0 && amY == 0) {
-            if(isPlaying()) {
-                setPlaying(false);
-            }
-        }
-        else {
-            if(!isPlaying()) {
-                setPlaying(true);
-            }
         }
         
         // Move based on which direction the joystick is
@@ -203,31 +195,19 @@ public class Player extends AdvancedAnimatedUnit {
     public void moveLeft() {
         movingLeft = true;
         
-        for(TextureRegion t : getAnimation().getAnimation().getKeyFrames()) {
-            t.flip(true, false);
-        }
-        
-        for(TextureRegion t : getRestingAnimation().getAnimation().getKeyFrames()) {
-            t.flip(true, false);
-        }
+        // Flip every animation
+        flipAll(true, false);
         
         primary.flip(true, false);
-       // secondary.flip(true, false);
     }
     
     public void moveRight() {
         movingLeft = false;
         
-        for(TextureRegion t : getAnimation().getAnimation().getKeyFrames()) {
-            t.flip(true, false);
-        }
-        
-        for(TextureRegion t : getRestingAnimation().getAnimation().getKeyFrames()) {
-            t.flip(true, false);
-        }
+        // Flip every animation
+        flipAll(true, false);
         
         primary.flip(true, false);
-       // secondary.flip(true, false);
     }
     
     public Rectangle getGround() {

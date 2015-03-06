@@ -1,15 +1,14 @@
 package com.dpc.vthacks.zombie;
 
-import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.dpc.vthacks.App;
 import com.dpc.vthacks.MathUtil;
 import com.dpc.vthacks.animation.AnimatedUnit;
-import com.dpc.vthacks.data.Assets;
+import com.dpc.vthacks.animation.SpriteAnimation;
 import com.dpc.vthacks.factories.Factory;
 import com.dpc.vthacks.infantry.Unit;
-import com.dpc.vthacks.properties.Properties;
+import com.dpc.vthacks.properties.AnimatedUnitProperties;
 import com.dpc.vthacks.properties.ZombieProperties;
 import com.dpc.vthacks.properties.ZombieSegment;
 
@@ -17,15 +16,20 @@ public class Zombie extends AnimatedUnit implements Poolable {
     private boolean isFlipped;
     private boolean walkingLeft;
     
-    public Zombie(AtlasRegion[] frames, Properties properties, float x, float y) {
-        super(Assets.zombieAnimations.get("walking-right"), Assets.zombieAnimations.get("walking-right"), properties, x, y);
+    public Zombie(String currentState, 
+                  AnimatedUnitProperties<SpriteAnimation> properties, 
+                  float x, float y) {
+        super(currentState,
+              properties, x, y);
        
-        getProperties().setMaxHealth(MathUtils.random(getProperties().getHealth(), 
-                                                      getProperties().getHealth() * 2) + 25);
+        getProperties().maxHealth(MathUtils.random(getProperties().getHealth(), 
+                                                   getProperties().getHealth() * 2) + 25);
         
         setSize(getWidth() * 3, getHeight() * 3);
         
         init();
+        
+        setPlaying(true);
     }
 
     @Override
@@ -54,7 +58,7 @@ public class Zombie extends AnimatedUnit implements Poolable {
             if(getBoundingRectangle().overlaps(getParentLevel().getPlayer().getBoundingRectangle())) {
                 if(!isAttacking()) {
                     setAttacking(true, getParentLevel().getPlayer());
-                    setAnimation(Assets.zombieAnimations.get("attacking"));
+                    setState("attacking");
                 }
             }
             else {
@@ -96,11 +100,11 @@ public class Zombie extends AnimatedUnit implements Poolable {
         // Assign the right animation
         if(getVelX() < 0) {
             // Right
-            setAnimation(Assets.zombieAnimations.get("walking-left"));
+            setState("walking-left");
         }
         else if(getVelX() != 0){
             // Left
-            setAnimation(Assets.zombieAnimations.get("walking-right"));
+            setState("walking-right");
         }
     }
     
@@ -140,20 +144,11 @@ public class Zombie extends AnimatedUnit implements Poolable {
         return isFlipped;
     }
     
-    public void setFlipped(boolean b) {
-      //  this.isFlipped = b;
-    }
     
     @Override
     public void reset() {
         super.reset();
-        //getProperties().setHealth(getProperties().getMaxHealth());
-        
-        if(isFlipped) {
-            isFlipped = false;
-            flip(true, false);
-        }
-        
+
         init();
     }
     

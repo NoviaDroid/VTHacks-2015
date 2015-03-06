@@ -22,7 +22,7 @@
     "scaleX": "2",
     "scaleY": "2",
     "ammo": "25", 
-    "walking": [{
+    "running": [{
     	"frame1": [{
     		"img": "ETroop2Running1", 
     		"time": "1",
@@ -48,7 +48,7 @@
     		"handOffsetY": "21"
     	}]
     }],
-    "stationary": [{
+    "idle": [{
     	"frame1": [{
     		"img": "ETroopTier2Idle1", 
     		"time": "5",

@@ -2,6 +2,12 @@ package com.dpc.vthacks.properties;
 
 import com.badlogic.gdx.math.Vector2;
 
+/**
+ * Encapsulates properties for a given unit
+ * @author Daniel Christopher
+ * @version 3/5/15
+ *
+ */
 public class Properties {
     private Vector2 minVel, maxVel, vel;
     private float frameTime;
@@ -10,15 +16,15 @@ public class Properties {
     
     public Properties(Properties cpy) {
         vel = cpy.vel.cpy();
-        range = cpy.getRange();
-        minDamage = cpy.getMinDamage();
-        maxDamage = cpy.getMaxDamage();
-        health = cpy.getHealth();
-        maxHealth = cpy.getMaxHealth();
-        cost = cpy.getCost();
-        maxVel = cpy.getMaxVel().cpy();
-        minVel = cpy.getMinVel().cpy();
-        frameTime = cpy.getFrameTime();
+        range = cpy.range;
+        minDamage = cpy.minDamage;
+        maxDamage = cpy.maxDamage;
+        health = cpy.health;
+        maxHealth = cpy.maxHealth;
+        cost = cpy.cost;
+        maxVel = cpy.maxVel.cpy();
+        minVel = cpy.minVel.cpy();
+        frameTime = cpy.frameTime;
     }
     
     public Properties() {
@@ -26,90 +32,81 @@ public class Properties {
         minVel = new Vector2();
         maxVel = new Vector2();
     }
-    
-    public Properties(Vector2 vel, Vector2 minVel, Vector2 maxVel, float range, float minDamage, float maxDamage, float health, int cost, float frameTime) {
-        this.vel = vel;
-        this.range = range;
-        this.minDamage = minDamage;
-        this.maxDamage = maxDamage;
-        this.minVel = minVel;
-        this.maxVel = maxVel;
-        this.health = health;
-        this.maxHealth = health;
+
+    public Properties frameTime(float frameTime) {
         this.frameTime = frameTime;
+        
+        return this;
+    }
+    
+    public Properties cost(int cost) {
         this.cost = cost;
+        
+        return this;
+    }
+    
+    public Properties health(float health) {
+        this.health = health;
+        
+        return this;
+    }
+    
+    public Properties maxDamage(float maxDamage) {
+        this.maxDamage = maxDamage;
+        
+        return this;
+    }
+    
+    public Properties minDamage(float minDamage) {
+        this.minDamage = minDamage;
+        
+        return this;
+    }
+    
+    public Properties range(float range) {
+        this.range = range;
+        
+        return this;
+    }
+    
+    public Properties vel(float vx, float vy) {
+        vel.set(vx, vy);
+        
+        return this;
+    }
+    
+    public Properties minVel(float vx, float vy) {
+        minVel.set(vx, vy);
+        
+        return this;
+    }
+    
+    public Properties maxVel(float vx, float vy) {
+        maxVel.set(vx, vy);
+        
+        return this;
+    }
+    
+    public Properties maxHealth(float maxHealth) {
+        this.maxHealth = maxHealth;
+        
+        return this;
+    }
+    
+    public Properties build() {
+        return this;
     }
 
-    public float getFrameTime() {
-        return frameTime;
+    public Vector2 getMinVel() {
+        return minVel;
     }
-    
-    public void setFrameTime(float frameTime) {
-        this.frameTime = frameTime;
-    }
-    
-    public int getCost() {
-        return cost;
-    }
-    
-    public float getMaxHealth() {
-        return maxHealth;
-    }
-    
-    public float getMaxDamage() {
-        return maxDamage;
-    }
-    
-    public float getMinDamage() {
-        return minDamage;
-    }
-    
-    public float getHealth() {
-        return health;
-    }
-  
-    public float getRange() {
-        return range;
-    }
-    
-    public Vector2 getVel() {
-        return vel;
-    }
-    
-    public void setMaxDamage(float maxDamage) {
-        this.maxDamage = maxDamage;
-    }
-    
-    public void setMinDamage(float minDamage) {
-        this.minDamage = minDamage;
-    }
-    
-    public void setHealth(float health) {
-        this.health = health;
-    }
-    
-    public void setRange(float range) {
-        this.range = range;
-    }
-    
-    public void setVel(Vector2 vel) {
-        this.vel = vel;
-    }
-    
-    public void setMaxHealth(float maxHealth) {
-        this.maxHealth = maxHealth;
-    }
-    
-    public void setCost(int cost) {
-        this.cost = cost;
-    }
-   
+
     public Vector2 getMaxVel() {
         return maxVel;
     }
-    
-    public Vector2 getMinVel() {
-        return minVel;
+
+    public Vector2 getVel() {
+        return vel;
     }
     
     public float getVelX() {
@@ -120,19 +117,31 @@ public class Properties {
         return vel.y;
     }
     
-    public void setVelX(float velX) {
-        vel.x = velX;
-    }
-    
-    public void setVelY(float velY) {
-        vel.y = velY;
+    public float getFrameTime() {
+        return frameTime;
     }
 
-    public void setMaxVel(Vector2 maxVel) {
-        this.maxVel = maxVel;
+    public float getRange() {
+        return range;
     }
-    
-    public void setMinVel(Vector2 minVel) {
-        this.minVel = minVel;
+
+    public float getMinDamage() {
+        return minDamage;
+    }
+
+    public float getMaxDamage() {
+        return maxDamage;
+    }
+
+    public float getHealth() {
+        return health;
+    }
+
+    public float getMaxHealth() {
+        return maxHealth;
+    }
+
+    public int getCost() {
+        return cost;
     }
 }

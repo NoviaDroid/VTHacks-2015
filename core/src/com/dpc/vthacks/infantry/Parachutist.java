@@ -1,29 +1,20 @@
 package com.dpc.vthacks.infantry;
 
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.dpc.vthacks.MathUtil;
 import com.dpc.vthacks.animation.AnimatedUnit;
 import com.dpc.vthacks.animation.SpriteAnimation;
+import com.dpc.vthacks.properties.AnimatedUnitProperties;
 import com.dpc.vthacks.properties.Properties;
 
 public class Parachutist extends AnimatedUnit {
     private boolean isFalling;
     private float fallTargetX, fallTargetY;
     
-    public Parachutist(SpriteAnimation animation,
-                       SpriteAnimation restingAnimation, Properties properties, 
+    public Parachutist(String currentState,
+                       AnimatedUnitProperties<SpriteAnimation> properties, 
                        float x, float y) {
-        super(animation, restingAnimation, properties, x, y);
-        
-        isFalling = true;
-    }
-    
-    public Parachutist(SpriteAnimation animation, 
-                TextureRegion initialFrame, 
-                Properties properties,
-                float x, 
-                float y) {
-        super(animation, initialFrame, properties, x, y);
+        super(currentState, properties, x, y);
         
         isFalling = true;
     }

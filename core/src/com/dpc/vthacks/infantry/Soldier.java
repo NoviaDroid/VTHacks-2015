@@ -1,19 +1,17 @@
 package com.dpc.vthacks.infantry;
 
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.dpc.vthacks.animation.SpriteAnimation;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.factories.Factory;
-import com.dpc.vthacks.properties.Properties;
+import com.dpc.vthacks.properties.AnimatedUnitProperties;
 
 public class Soldier extends Parachutist {
     
-    public Soldier(TextureRegion[] regions, 
-                   TextureRegion initialFrame, 
-                   Properties properties,
+    public Soldier(String currentState,
+                   AnimatedUnitProperties<SpriteAnimation> properties,
                    float x,
                    float y) {
-        super(new SpriteAnimation(regions, properties.getFrameTime()), initialFrame, properties, x, y);
+        super(currentState, properties, x, y);
 
         setSize(getWidth() * 2, getHeight() * 2);
     }

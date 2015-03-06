@@ -6,36 +6,41 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.dpc.vthacks.App;
 import com.dpc.vthacks.animation.AdvancedSpriteAnimation;
+import com.dpc.vthacks.animation.FrameData;
 import com.dpc.vthacks.animation.SpriteAnimation;
 
 public class Assets {
+    public static AssetManager manager = new AssetManager();
     public static TextureAtlas skinAtlas, gameAtlas, zombieAtlas;
-    public static ObjectMap<String, AdvancedSpriteAnimation> playerAnimationData;
+    
+    public static ObjectMap<String, AdvancedSpriteAnimation> playerAnimations;
     public static ObjectMap<String, SpriteAnimation> tankAnimations;
     public static ObjectMap<String, SpriteAnimation> zombieAnimations;
+    public static ObjectMap<String, SpriteAnimation> soldierAnimations;
+    public static ObjectMap<String, SpriteAnimation> planeAnimations;
+    public static ObjectMap<String, SpriteAnimation> explosionAnimations;
     
-    public static TextureRegion ammoCrate;
-    public static TextureRegion shotgun;
-    public static TextureRegion plane, playerIcon, zombie, emptyPlane, bomb, road, background, tankShell, menuBackground, enemyBase, playerBase, healthbar, bullet;
     public static TextureRegion[] buildings, skylines;
-    public static AtlasRegion[] tankFrames, playerStandingStillFrames, soldierFrames, enemySoldierFrames, enemyTankFrames, explosionFrames, planeFiringFrames, playerWalkFrames;
-    public static TextureRegion barBackground, progressBar;
-    public static TextureRegion playerStationary;
-    public static AssetManager manager = new AssetManager();
-    public static Sound explosion;
+
+    public static TextureRegion  playerIcon, barBackground, progressBar, 
+                                 zombie, bomb, road, background, 
+                                 menuBackground, healthbar, ammoCrate;
+
     public static Sound[] playerSounds;
     public static Music pressDown, pressUp, shot, strafe;
-    public static Sound strafeEnd;
-    public static float shotTimer;
-    public static int loaded;
+    public static Sound strafeEnd, explosion;
     public static TextureRegion healthBarBackground;
     public static Sound outOfAmmo;
-        
+    public static float shotTimer;
+    public static int loaded;
+    
     public static void loadSkins() {
         skinAtlas = new TextureAtlas("skinPack.pack");
     }
@@ -106,7 +111,6 @@ public class Assets {
     public static void getGameTextures() {
         gameAtlas = manager.get("gamePack.pack", TextureAtlas.class);
         zombieAtlas = manager.get("Zombie1.pack", TextureAtlas.class);
-        playerSounds = new Sound[1];
         pressDown = manager.get("sounds/pressDown.wav", Music.class); 
         pressUp = manager.get("sounds/pressUp.wav", Music.class); 
         strafeEnd = manager.get("sounds/strafeEnd.wav", Sound.class);
@@ -115,123 +119,106 @@ public class Assets {
         strafe = manager.get("sounds/strafe.wav", Music.class);
         outOfAmmo = manager.get("sounds/outofammo.wav", Sound.class);
         
-        playerSounds[0] = manager.get("sounds/shot1.wav", Sound.class);
-        //playerSounds[1] = manager.get("sounds/shot2.wav", Sound.class);
-        ///playerSounds[2] = manager.get("sounds/shot3.wav", Sound.class);
+        tankAnimations = new ObjectMap<String, SpriteAnimation>();
+        playerAnimations = new ObjectMap<String, AdvancedSpriteAnimation>();
+        zombieAnimations = new ObjectMap<String, SpriteAnimation>();
+        soldierAnimations = new ObjectMap<String, SpriteAnimation>();
+        planeAnimations = new ObjectMap<String, SpriteAnimation>();
+        explosionAnimations = new ObjectMap<String, SpriteAnimation>();
         
+        playerSounds = new Sound[1];
         buildings = new AtlasRegion[6];
         skylines = new AtlasRegion[2];
-        tankFrames = new AtlasRegion[3];
-        soldierFrames = new AtlasRegion[3];
-        enemySoldierFrames = new AtlasRegion[4];
-        enemyTankFrames = new AtlasRegion[3];
-        explosionFrames = new AtlasRegion[5];
-        planeFiringFrames = new AtlasRegion[2];
-        playerStandingStillFrames = new AtlasRegion[3];
-        playerWalkFrames = new AtlasRegion[3];
-
-        for(int i = 0; i < 3; i++) {
-            playerStandingStillFrames[i] = gameAtlas.findRegion("ETroopTier2Idle" + (i + 1));
-            playerStandingStillFrames[i].flip(true, false);
+        
+        buildings = getFrames("building", 6, false);
+        skylines = getFrames("skyline", 2, false);
+        explosionAnimations.put("explosion", getAnimation("Explosion", 5, 0.15f, false));
+        soldierAnimations.put("running", getAnimation("troopRunning", 3, 0.15f, false));
+        planeAnimations.put("firing", getAnimation("PlaneFiring", 2, 0.15f, true));     
+        tankAnimations.put("moving", getAnimation("tank", 3, 0.15f, false));
+        tankAnimations.put("firing", getAnimation("Tankfire", 5, 0.15f, false));
+        zombieAnimations.put("walking-right", getAnimation(zombieAtlas, 0.15f, false));
+        zombieAnimations.put("walking-left", getAnimation(zombieAtlas, 0.15f, true));
+        zombieAnimations.put("attacking", getAnimation(zombieAtlas, 0.15f, false));
+       
+        for(SpriteAnimation a : zombieAnimations.values()) {
+            a.getAnimation().setPlayMode(PlayMode.LOOP);
         }
         
-        for(int i = 0; i < 3; i++) {
-            playerWalkFrames[i] = gameAtlas.findRegion("ETroop2Running" + (i + 1));
-            playerWalkFrames[i].flip(true, false);
-        }
-        
-        for(int i = 0; i < 5; i++) {
-            explosionFrames[i] = gameAtlas.findRegion("Explosion" + (i + 1));
-        }
-        
-        for(int i = 0; i < 5; i++) {
-            buildings[i] = gameAtlas.findRegion("building" + (i + 1));
-        }
-        
-        buildings[5] = gameAtlas.findRegion("Apartment");
-        
-        for(int i = 0; i < 2; i++) {
-            skylines[i] = gameAtlas.findRegion("skyline" + (i + 1));
-        }
-        
-        for(int i = 0; i < 3; i++) {
-            tankFrames[i] = gameAtlas.findRegion("tank" + (i + 1));
-        }
-        
-        for(int i = 0; i < 3; i++) {
-            soldierFrames[i] = gameAtlas.findRegion("troopRunning" + (i + 1));
-        }
-        
-        for(int i = 0; i < 4; i++) {
-            enemySoldierFrames[i] = gameAtlas.findRegion("ETroop Running" + (i + 1));
-        }
-        
-        for(int i = 0; i < 3; i++) {
-            enemySoldierFrames[i] = gameAtlas.findRegion("ETank" + (i + 1));
-        }
-
-        for(int i = 0; i < 2; i++) {
-            planeFiringFrames[i] = gameAtlas.findRegion("PlaneFiring" + (i + 1));
-            planeFiringFrames[i].flip(true, false);
-        }
-        
-        tankAnimations = new ObjectMap<String, SpriteAnimation>();
-        
-            
-        TextureRegion[] tfFrames = new TextureRegion[5];
-        for(int i = 0; i < 5; i++) {
-            tfFrames[i] = gameAtlas.findRegion("Tankfire" + (i + 1));
-        }
-
-        tankAnimations.put("fire", new SpriteAnimation(tfFrames, 0.15f));
-        tankAnimations.put("moving", new SpriteAnimation(tankFrames, 0.15f));
-        
-        shotgun = gameAtlas.findRegion("shotgun");
         healthBarBackground = gameAtlas.findRegion("barBackground");
         playerIcon = gameAtlas.findRegion("playerIcon1");
         zombie = gameAtlas.findRegion("zombie");
-        playerStationary = gameAtlas.findRegion("ETroopTier2Idle1");
-        emptyPlane = gameAtlas.findRegion("planeLatchOpen");
-        plane = gameAtlas.findRegion("PlaneFiring");
-        healthbar = gameAtlas.findRegion("healthbar");
-        bullet = gameAtlas.findRegion("bullet");
-        playerBase = gameAtlas.findRegion("Enemy Barrack");
-        enemyBase = gameAtlas.findRegion("Enemy Barrack");      
-        tankShell = gameAtlas.findRegion("ETank Shell");
+        healthbar = gameAtlas.findRegion("healthbar");  
         background = gameAtlas.findRegion("background");
         bomb = gameAtlas.findRegion("bomb");
         road = gameAtlas.findRegion("road");
         ammoCrate = gameAtlas.findRegion("Ammo Crate");
         
-        plane.flip(true, false);
-      //  playerStationary.flip(true, false);
+        playerSounds[0] = manager.get("sounds/shot1.wav", Sound.class);
+    }
+    
+    public static AdvancedSpriteAnimation getAdvancedAnimation(JsonValue root, 
+                                                               String child, 
+                                                               int len, 
+                                                               boolean flipX,
+                                                               boolean flipY) {
+        JsonValue w = root.getChild(child);
+
+        FrameData[] frames = new FrameData[len];
         
-        zombieAnimations = new ObjectMap<String, SpriteAnimation>();
+        for(int i = 0; i < frames.length; i++) {
+            JsonValue c = w.get(i).child;
+    
+            frames[i] = new FrameData(Assets.gameAtlas.findRegion(c.getString("img")),
+                    c.getFloat("time"), c.getFloat("handOffsetX"),
+                    c.getFloat("handOffsetY"));
+            
+            frames[i].getRegion().flip(flipX, flipY);
         
-        TextureRegion[] zwf = new TextureRegion[zombieAtlas.getRegions().size];
-        
-        for(int i = 0; i < zwf.length; i++) {
-           zwf[i] = zombieAtlas.getRegions().get(i);
         }
         
-        TextureRegion[] zwf2 = new TextureRegion[zwf.length];
+        return new AdvancedSpriteAnimation(frames);
+    }
+    
+    private static SpriteAnimation getAnimation(TextureAtlas atlas, float stateTime, boolean flip) {
+        TextureRegion[] regions = new TextureRegion[atlas.getRegions().size];
         
-        for(int i = 0; i < zwf2.length; i++) {
-            zwf2[i] = new TextureRegion(zwf[i]);
-            zwf2[i].flip(true, false);
+        for(int i = 0; i < atlas.getRegions().size; i++) {
+            regions[i] = new TextureRegion(atlas.getRegions().get(i));
+            
+            regions[i].flip(flip, false);
         }
         
-        TextureRegion[] zwf3 = new TextureRegion[1];
+        return new SpriteAnimation(regions, stateTime);
+    }
+    
+    private static TextureRegion[] getFrames(String name, int iterations, boolean flip) {
+        TextureRegion[] regions = new TextureRegion[iterations];
         
-        zwf3[0] = zombieAtlas.getRegions().get(0);
+        for(int i = 0; i < iterations; i++) {
+            regions[i] = gameAtlas.findRegion(name + (i + 1));
+            
+            regions[i].flip(flip, false);
+        }
         
-        zombieAnimations.put("walking-right", new SpriteAnimation(zwf, 0.25f));
-        zombieAnimations.put("walking-left", new SpriteAnimation(zwf2, 0.25f));
-        zombieAnimations.put("attacking", new SpriteAnimation(zwf3, 15));
+        return regions;
+    }
+    
+    private static SpriteAnimation getAnimation(String name, int iterations, float stateTime, boolean flip) {
+        TextureRegion[] regions = new TextureRegion[iterations];
+        
+        for(int i = 0; i < iterations; i++) {
+            regions[i] = gameAtlas.findRegion(name + (i + 1));
+            
+            if(flip) {
+                regions[i].flip(true, false);
+            }
+        }
+        
+        return new SpriteAnimation(regions, stateTime);
     }
     
     public static void unloadSkins() {
-       // skinAtlas.dispose();
         menuBackground.getTexture().dispose();
     }
 
@@ -299,13 +286,5 @@ public class Assets {
         for(Sound s : playerSounds) {
             s.dispose();
         }
-    }
-
-    public static TextureRegion[] getBuildings() {
-        return buildings;
-    }
-
-    public static void setBuildings(TextureRegion[] buildings) {
-        Assets.buildings = buildings;
     }
 }

@@ -1,20 +1,18 @@
 package com.dpc.vthacks.infantry;
 
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.dpc.vthacks.App;
 import com.dpc.vthacks.animation.SpriteAnimation;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.factories.Factory;
-import com.dpc.vthacks.properties.Properties;
+import com.dpc.vthacks.properties.AnimatedUnitProperties;
 
 public class Tank extends Parachutist {
     
-    public Tank(SpriteAnimation animation, 
-                TextureRegion initialFrame, 
-                Properties properties,
+    public Tank(String currentState,
+                AnimatedUnitProperties<SpriteAnimation> properties,
                 float x,
                 float y) {
-        super(new SpriteAnimation(animation, 0.15f), initialFrame, properties, x, y);
+        super(currentState, properties, x, y);
 
         setSize(getWidth() * 2, getHeight() * 2);
         setPlaying(true);

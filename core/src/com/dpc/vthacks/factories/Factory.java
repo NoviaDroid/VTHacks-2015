@@ -5,24 +5,24 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pool;
 import com.dpc.vthacks.Player;
+import com.dpc.vthacks.animation.AdvancedSpriteAnimation;
+import com.dpc.vthacks.animation.SpriteAnimation;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.infantry.Soldier;
 import com.dpc.vthacks.infantry.Tank;
 import com.dpc.vthacks.objects.AmmoCrate;
 import com.dpc.vthacks.objects.GameSprite;
 import com.dpc.vthacks.objects.Gun;
+import com.dpc.vthacks.properties.AnimatedUnitProperties;
 import com.dpc.vthacks.properties.Properties;
 import com.dpc.vthacks.properties.ZombieProperties;
 import com.dpc.vthacks.zombie.Zombie;
 
 public class Factory {
-    private static Properties playerProperties;
-    private static Properties tankProperties;
-    private static Properties enemyTankProperties;
-    private static Properties enemySoldierProperties;
-    private static Properties soldierProperties;
+    private static AnimatedUnitProperties<AdvancedSpriteAnimation> playerProperties;
+    private static AnimatedUnitProperties<SpriteAnimation> tankProperties;
+    private static AnimatedUnitProperties<SpriteAnimation> soldierProperties;
     private static Properties bombProperties;
-    private static Properties tankShellProperties;
     private static Properties buildingProperties;
     private static Gun primaryGun, secondaryGun;
     private static ZombieProperties zombieProperties;
@@ -80,7 +80,7 @@ public class Factory {
     }
     
     public static Zombie createZombie() {
-        Zombie z = new Zombie(Assets.enemySoldierFrames, 
+        Zombie z = new Zombie("walking-right", 
                               new ZombieProperties(zombieProperties),
                               0,
                               0);
@@ -96,7 +96,7 @@ public class Factory {
     public static GameSprite createRandomBuilding(float x, float y) {
         Properties props = new Properties(buildingProperties);
 
-        GameSprite b = new GameSprite(Assets.getBuildings()[MathUtils.random(Assets.getBuildings().length - 1)], 
+        GameSprite b = new GameSprite(Assets.buildings[MathUtils.random(Assets.buildings.length - 1)], 
                                       props,
                                       x,
                                       y);
@@ -114,7 +114,10 @@ public class Factory {
         return b;
     }
     public static Player createPlayer() {
-        Player p = new Player(new Properties(playerProperties), 0, 0, 0.15f);
+        Player p = new Player("idle",
+                              new AnimatedUnitProperties<AdvancedSpriteAnimation>(playerProperties), 
+                              0, 0, 0.15f);
+        
         p.setGunOffset(playerGunOffset);
         p.setPrimary(primaryGun);
         p.setCurrentWeapon(p.getPrimary());
@@ -123,17 +126,15 @@ public class Factory {
     }
     
     public static Tank createTank() {
-        return new Tank(Assets.tankAnimations.get("moving"), 
-                        Assets.tankAnimations.get("moving").getAnimation().getKeyFrames()[0], 
-                        new Properties(tankProperties),
+        return new Tank("", 
+                        new AnimatedUnitProperties<SpriteAnimation>(tankProperties),
                         0,
                         0);
     }
     
     public static Soldier createSoldier() {
-        return new Soldier(Assets.soldierFrames,
-                          Assets.soldierFrames[0], 
-                          new Properties(soldierProperties),
+        return new Soldier("",
+                          new AnimatedUnitProperties<SpriteAnimation>(soldierProperties),
                           0,
                           0);
     }
@@ -142,7 +143,7 @@ public class Factory {
         return playerProperties;
     }
 
-    public static void setPlayerProperties(Properties playerProperties) {
+    public static void setPlayerProperties(AnimatedUnitProperties<AdvancedSpriteAnimation> playerProperties) {
         Factory.playerProperties = playerProperties;
     }
 
@@ -150,31 +151,15 @@ public class Factory {
         return tankProperties;
     }
 
-    public static void setTankProperties(Properties tankProperties) {
+    public static void setTankProperties(AnimatedUnitProperties<SpriteAnimation> tankProperties) {
         Factory.tankProperties = tankProperties;
-    }
-
-    public static Properties getEnemyTankProperties() {
-        return enemyTankProperties;
-    }
-
-    public static void setEnemyTankProperties(Properties enemyTankProperties) {
-        Factory.enemyTankProperties = enemyTankProperties;
-    }
-
-    public static Properties getEnemySoldierProperties() {
-        return enemySoldierProperties;
-    }
-
-    public static void setEnemySoldierProperties(Properties enemySoldierProperties) {
-        Factory.enemySoldierProperties = enemySoldierProperties;
     }
 
     public static Properties getSoldierProperties() {
         return soldierProperties;
     }
 
-    public static void setSoldierProperties(Properties soldierProperties) {
+    public static void setSoldierProperties(AnimatedUnitProperties<SpriteAnimation> soldierProperties) {
         Factory.soldierProperties = soldierProperties;
     }
 
@@ -184,14 +169,6 @@ public class Factory {
 
     public static void setBombProperties(Properties bombProperties) {
         Factory.bombProperties = bombProperties;
-    }
-
-    public static Properties getTankShellProperties() {
-        return tankShellProperties;
-    }
-
-    public static void setTankShellProperties(Properties tankShellProperties) {
-        Factory.tankShellProperties = tankShellProperties;
     }
 
     public static int getNumberOfBombs() {

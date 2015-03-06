@@ -52,7 +52,7 @@ public abstract class Unit extends DynamicGameObject implements Poolable {
 
     @Override
     public void reset() {
-        properties.setHealth(properties.getMaxHealth());
+        properties.health(properties.getMaxHealth());
     }
     
     public Properties getProperties() {
@@ -72,7 +72,7 @@ public abstract class Unit extends DynamicGameObject implements Poolable {
     }
     
     public void takeDamage(Unit attacker, float damage) {
-        properties.setHealth(properties.getHealth() - damage);
+        properties.health(properties.getHealth() - damage);
 
         onDamageTaken(attacker, damage);
     }

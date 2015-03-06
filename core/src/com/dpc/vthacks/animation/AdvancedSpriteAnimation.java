@@ -2,7 +2,6 @@ package com.dpc.vthacks.animation;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Disposable;
 
@@ -20,13 +19,17 @@ public class AdvancedSpriteAnimation implements Disposable {
     public AdvancedSpriteAnimation(FrameData[] frameData) {
         this.frameData = frameData;
         
+        init(0.15f);
+    }
+    
+    private void init(float time) {
         TextureRegion[] d = new TextureRegion[frameData.length];
         
         for(int i = 0; i < frameData.length; i++) {
             d[i] = frameData[i].getRegion();
         }
 
-        animation = new Animation(0.15f, d);
+        animation = new Animation(time, d);
         animation.setPlayMode(PlayMode.LOOP);
     }
     
@@ -38,10 +41,10 @@ public class AdvancedSpriteAnimation implements Disposable {
         return animation.getKeyFrame(time, true);
     }
     
-    public void render(SpriteBatch batch, float delta) throws Exception {
-        time += delta;
-        batch.draw(animation.getKeyFrame(time, true), 50, 50);
-        throw new Exception("not implemented completely lol");
+    public void setFrameData(FrameData[] frameData, float speed) {
+        this.frameData = frameData;
+        
+        init(speed);
     }
     
     public FrameData getCurrentFrame() {
@@ -62,7 +65,6 @@ public class AdvancedSpriteAnimation implements Disposable {
     
     @Override
     public void dispose() {
-
     }
 
 }

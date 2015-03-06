@@ -8,10 +8,13 @@ import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.dpc.vthacks.MathUtil;
-import com.dpc.vthacks.animation.FrameData;
+import com.dpc.vthacks.animation.AdvancedAnimatedUnit;
 import com.dpc.vthacks.animation.AdvancedSpriteAnimation;
+import com.dpc.vthacks.animation.FrameData;
+import com.dpc.vthacks.animation.SpriteAnimation;
 import com.dpc.vthacks.factories.Factory;
 import com.dpc.vthacks.objects.Gun;
+import com.dpc.vthacks.properties.AnimatedUnitProperties;
 import com.dpc.vthacks.properties.Properties;
 import com.dpc.vthacks.properties.ZombieProperties;
 import com.dpc.vthacks.properties.ZombieSegment;
@@ -37,79 +40,58 @@ public class JSONManager {
         JsonValue zombie = root.getChild("zombie");
         JsonValue weapon = root1.getChild("handgun1");
         
-        Properties playerProperties = new Properties();
-        
-        playerProperties.setRange(player.getFloat("range"));
-        playerProperties.setMinDamage(player.getFloat("minDamage"));
-        playerProperties.setMaxDamage(player.getFloat("maxDamage"));
-        playerProperties.setHealth(player.getFloat("health"));
-        playerProperties.setVelX(player.getFloat("velX"));
-        playerProperties.setVelY(player.getFloat("velY"));
-        playerProperties.setMaxHealth(player.getInt("max health"));
-        
-        Factory.setPlayerProperties(playerProperties);
-        
-        Properties tankProperties = new Properties();
-        
-        tankProperties.setCost(tank.getInt("cost"));
-        tankProperties.setMinDamage(tank.getFloat("minDamage"));
-        tankProperties.setMaxDamage(player.getFloat("maxDamage"));
-        tankProperties.setHealth(tank.getInt("health"));
-        tankProperties.setVelX(tank.getFloat("velX"));
-        tankProperties.setVelY(tank.getFloat("velY"));
-        tankProperties.setRange(tank.getFloat("range"));
-        tankProperties.setMaxHealth(tank.getInt("max health"));
-        tankProperties.setFrameTime(soldier.getFloat("frameTime"));
+        AnimatedUnitProperties<SpriteAnimation> tankProperties = 
+                new AnimatedUnitProperties<SpriteAnimation>()
+                    .cost(tank.getInt("cost"))
+                    .minDamage(tank.getFloat("minDamage"))
+                    .maxDamage(player.getFloat("maxDamage"))
+                    .health(tank.getInt("health"))
+                    .vel(tank.getFloat("velX"), tank.getFloat("velY"))
+                    .range(tank.getFloat("range"))
+                    .maxHealth(tank.getInt("max health"))
+                    .frameTime(soldier.getFloat("frameTime"));
         
         Factory.setTankProperties(tankProperties);
         
-        Properties soldierProperties = new Properties();
-        
-        soldierProperties.setCost(soldier.getInt("cost"));
-        soldierProperties.setMinDamage(soldier.getFloat("minDamage"));
-        soldierProperties.setMaxDamage(soldier.getFloat("maxDamage"));
-        soldierProperties.setHealth(soldier.getInt("health"));
-        soldierProperties.setRange(soldier.getFloat("range"));
-        soldierProperties.setVelX(soldier.getFloat("velX"));
-        soldierProperties.setVelY(soldier.getFloat("velY"));
-        soldierProperties.setMaxHealth(soldier.getInt("max health"));
-        soldierProperties.setFrameTime(soldier.getFloat("frameTime"));
+        AnimatedUnitProperties<SpriteAnimation> soldierProperties = 
+                new AnimatedUnitProperties<SpriteAnimation>()
+                    .cost(soldier.getInt("cost"))
+                    .minDamage(soldier.getFloat("minDamage"))
+                    .maxDamage(soldier.getFloat("maxDamage"))
+                    .health(soldier.getInt("health"))
+                    .range(soldier.getFloat("range"))
+                    .vel(soldier.getFloat("velX"), soldier.getFloat("velY"))
+                    .maxHealth(soldier.getInt("max health"))
+                    .frameTime(soldier.getFloat("frameTime"));
         
         Factory.setSoldierProperties(soldierProperties);
         
-        Properties bombProperties = new Properties();
-        
-        bombProperties.setMinDamage(bomb.getFloat("minDamage"));
-        bombProperties.setMaxDamage(bomb.getFloat("maxDamage"));
-        bombProperties.setVelX(bomb.getFloat("velX"));
-        bombProperties.setVelY(bomb.getFloat("velY"));
+        Properties bombProperties = 
+                new Properties()
+                    .minDamage(bomb.getFloat("minDamage"))
+                    .maxDamage(bomb.getFloat("maxDamage"))
+                    .vel(bomb.getFloat("velX"), bomb.getFloat("velY"));
         
         Factory.setBombProperties(bombProperties);
-        
-        Properties tankShellProperties = new Properties();
-        
-        tankShellProperties.setVelX(tankShell.getFloat("velX"));
-        tankShellProperties.setVelY(tankShell.getFloat("velY"));
-        
-        Factory.setTankShellProperties(tankShellProperties);
         
         Properties buildingProperties = new Properties();
         
         Factory.setBuildingProperties(buildingProperties);
         
-        ZombieProperties zombieProperties = new ZombieProperties();
-        
-        zombieProperties.setMaxDamage(zombie.getFloat("maxDamage"));
-        zombieProperties.setMinDamage(zombie.getFloat("minDamage"));
-        zombieProperties.setHealth(zombie.getInt("health"));
-        zombieProperties.setRange(zombie.getFloat("range"));
-        zombieProperties.setMinVel(new Vector2(zombie.getFloat("minVelX"), zombie.getFloat("minVelY")));
-        zombieProperties.setMaxVel(new Vector2(zombie.getFloat("maxVelX"), zombie.getFloat("maxVelY")));
-        zombieProperties.setMaxHealth(zombie.getInt("max health"));
-        zombieProperties.setMinKillMoney(zombie.getInt("minKillMoney"));
-        zombieProperties.setMaxKillMoney(zombie.getInt("maxKillMoney"));
-        zombieProperties.setVel(new Vector2(MathUtil.rand(zombieProperties.getMinVel().x, zombieProperties.getMaxVel().x),
-                                            MathUtil.rand(zombieProperties.getMinVel().y, zombieProperties.getMaxVel().y)));
+        ZombieProperties zombieProperties = 
+                new ZombieProperties()
+                    .maxDamage(zombie.getFloat("maxDamage"))
+                    .minDamage(zombie.getFloat("minDamage"))
+                    .health(zombie.getInt("health"))
+                    .range(zombie.getFloat("range"))
+                    .minVel(zombie.getFloat("minVelX"), zombie.getFloat("minVelY"))
+                    .maxVel(zombie.getFloat("maxVelX"), zombie.getFloat("maxVelY"))
+                    .maxHealth(zombie.getInt("max health"))
+                    .minKillMoney(zombie.getInt("minKillMoney"))
+                    .maxKillMoney(zombie.getInt("maxKillMoney"))
+                    .vel(MathUtil.rand(zombie.getFloat("minVelX"), zombie.getFloat("maxVelX")),
+                         MathUtil.rand(zombie.getFloat("minVelY"), zombie.getFloat("maxVelY")))
+                    .stateAnimations(Assets.zombieAnimations);
 
         
         ZombieSegment[] zombieSegments = new ZombieSegment[3];
@@ -131,7 +113,7 @@ public class JSONManager {
             zombieSegments[i].offsetY = zombieSegments[i].bounds.y;
          }
         
-        zombieProperties.setSegments(zombieSegments);
+        zombieProperties.segments(zombieSegments);
         
         Factory.setZombieProperties(zombieProperties);
         
@@ -140,12 +122,24 @@ public class JSONManager {
 
         ObjectMap<String, AdvancedSpriteAnimation> playerAnimationData = new ObjectMap<String, AdvancedSpriteAnimation>();
   
-        playerAnimationData.put("stationary", createAnimation(player, "stationary", 3));
-        playerAnimationData.put("walking", createAnimation(player, "walking", 3));
+        playerAnimationData.put("idle", Assets.getAdvancedAnimation(player, "idle", 3, true, false));
+        playerAnimationData.put("running", Assets.getAdvancedAnimation(player, "running", 3, true, false));
         
-        Assets.playerAnimationData = playerAnimationData;
+        Assets.playerAnimations = playerAnimationData;
   
         Factory.setPrimaryGun(createGun(root1.child.child, weapon.getChild("firing")));
+        
+        AnimatedUnitProperties<AdvancedSpriteAnimation> playerProperties = 
+                new AnimatedUnitProperties<AdvancedSpriteAnimation>()
+                    .range(player.getFloat("range"))
+                    .minDamage(player.getFloat("minDamage"))
+                    .maxDamage(player.getFloat("maxDamage"))
+                    .health(player.getFloat("health"))
+                    .vel(player.getFloat("velX"), player.getFloat("velY"))
+                    .maxHealth(player.getInt("max health"))
+                    .stateAnimations(playerAnimationData);
+        
+        Factory.setPlayerProperties(playerProperties);
     }
     
     private static Gun createGun(JsonValue root, JsonValue child) {
@@ -161,22 +155,5 @@ public class JSONManager {
         
         return gun;
         
-    }
-    
-    private static AdvancedSpriteAnimation createAnimation(JsonValue root, String child, int len) {
-        JsonValue w = root.getChild(child);
-
-        FrameData[] frames = new FrameData[len];
-        
-        for(int i = 0; i < frames.length; i++) {
-            JsonValue c = w.get(i).child;
-    
-            frames[i] = new FrameData(Assets.gameAtlas.findRegion(c.getString("img")),
-                    c.getFloat("time"), c.getFloat("handOffsetX"),
-                    c.getFloat("handOffsetY"));
-        
-        }
-        
-        return new AdvancedSpriteAnimation(frames);
     }
 }

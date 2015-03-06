@@ -1,9 +1,11 @@
 package com.dpc.vthacks.animation;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.dpc.vthacks.App;
 import com.dpc.vthacks.infantry.Unit;
-import com.dpc.vthacks.properties.Properties;
+import com.dpc.vthacks.properties.AnimatedUnitProperties;
 
 /**
  * Animated unit with meta data for each frame
@@ -11,53 +13,31 @@ import com.dpc.vthacks.properties.Properties;
  *
  */
 public abstract class AnimatedUnit extends Unit {
-    private SpriteAnimation animation, restingAnimation;
-    private TextureRegion initialFrame;
+    private ObjectMap<String, SpriteAnimation> stateAnimations;
+    private String currentState;
     private boolean playing;
-    private final boolean useRestAnimation;
-    
-    public AnimatedUnit(SpriteAnimation animation, 
-                        SpriteAnimation restingAnimation, 
-                        Properties properties,
-                        float x, 
-                        float y) {
-        super(animation.update(0), properties, x, y);
-        this.restingAnimation = restingAnimation;
-        
-        useRestAnimation = true;
-        this.animation = animation;
-        playing = false; 
-    }
-    
-    public AnimatedUnit(SpriteAnimation animation, 
-                        TextureRegion initialFrame, 
-                        Properties properties,
-                        float x, 
-                        float y) {
-        super(initialFrame, properties, x, y);
-        this.initialFrame = initialFrame;
 
-        useRestAnimation = false;
-        this.animation = animation;
+    public AnimatedUnit(String currentState,
+                        AnimatedUnitProperties<SpriteAnimation> properties,
+                        float x, 
+                        float y) {
+        super(properties.getStateAnimations().get(currentState).getAnimation().getKeyFrames()[0], 
+              properties, 
+              x, 
+              y);
+
+        this.stateAnimations = properties.getStateAnimations();
+        this.currentState = currentState;
+        
         playing = false; 
     }
 
     public void update(float delta) {
         super.update(delta);
-
+        
         if(playing) {
-            //System.out.println("setRegion(animation.update(delta));");
-            setRegion(animation.update(delta));
-        }
-        else {
-            if(useRestAnimation) {
-                //System.out.println("setRegion(restingAnimation.update(delta));");
-                setRegion(restingAnimation.update(delta));
-            }
-            else {
-                //System.out.println("setRegion(initialFrame)");
-                setRegion(initialFrame);
-            }
+            stateAnimations.get(currentState).update(delta);
+            setRegion(stateAnimations.get(currentState).getCurrentFrame());
         }
     }
     
@@ -65,49 +45,33 @@ public abstract class AnimatedUnit extends Unit {
         draw(App.batch);
     }
     
-    public void setAnimationFrames(TextureRegion[] frames, float time) {
-        animation = new SpriteAnimation(frames, time);
+    public void setStateAnimationFrames(TextureRegion[] frames, String state, float frameTime) {
+        stateAnimations.get(state).setFrames(frames, frameTime);
     }
     
-    public SpriteAnimation getAnimation() {
-        return animation;
+    public SpriteAnimation getCurrentAnimation() {
+        return stateAnimations.get(currentState);
     }
     
-    public SpriteAnimation getRestingAnimation() {
-        return restingAnimation;
+    public void setState(String state) {
+        this.currentState = state;
     }
     
-    public void setAnimation(SpriteAnimation animation) {
-        this.animation = animation;
+    public String getCurrentState() {
+        return currentState;
     }
     
-    public boolean isAnimationFinished() {
-        return animation.getAnimation().isAnimationFinished(animation.getStateTime());
+    public boolean isCurrentAnimationFinished() {
+        return stateAnimations.get(currentState)
+                .getAnimation()
+                .isAnimationFinished(stateAnimations.get(currentState).getStateTime());
     }
     
     public void setPlaying(boolean playing) {
         this.playing = playing;
-
-        // If not playing anymore, change back to the initial frame
-        if(!playing) {
-            if(useRestAnimation) {    
-                setRegion(restingAnimation.getAnimation().getKeyFrame(0));
-            }
-            else {
-                setRegion(initialFrame);
-            }
-        }
     }
     
     public boolean isPlaying() {
         return playing;
-    }
-    
-    public boolean hasRestAnimation() {
-        return useRestAnimation;
-    }
-    
-    public TextureRegion getInitialFrame() {
-        return initialFrame;
     }
 }

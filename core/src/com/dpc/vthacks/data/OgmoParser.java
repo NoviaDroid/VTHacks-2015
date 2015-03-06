@@ -50,7 +50,7 @@ public class OgmoParser {
                     obj.setSize(LevelProperties.WIDTH * 1.5f, AppData.height * 0.9f);
                 }    
                 else if(name.startsWith("Building")) {
-                    obj = Factory.createBuilding(Assets.getBuildings()[Integer
+                    obj = Factory.createBuilding(Assets.buildings[Integer
                             .parseInt(name.substring(name.indexOf("g") + 1,
                                     name.length())) - 1], 0, 0);
                     
@@ -60,9 +60,6 @@ public class OgmoParser {
                 else if(name.equals("Road")) {
                     obj = new Road(0, 0, 0, 0, LevelProperties.WIDTH, Assets.road.getRegionHeight() * 2);
                     level.getPlayer().setGround(obj.getBoundingRectangle());
-                }
-                else if(name.equals("Base")) {
-                    obj = new Base(Assets.playerBase, 0, 0);
                 }
                 
                 for(Entry<String, String> entry : child2.getAttributes()) {

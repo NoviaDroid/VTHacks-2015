@@ -268,10 +268,9 @@ public class Level {
         // Determine the destination and animation
         if (player.getX() >= x) {
             z.setFinalDestination(new Vector2(LevelProperties.WIDTH, 0));
-            z.setFlipped(true);
-            z.setAnimation(Assets.zombieAnimations.get("walking-right"));
+            z.setState("walking-right");
         } else {
-            z.setAnimation(Assets.zombieAnimations.get("walking-left"));
+            z.setState("walking-left");
         }
 
         zombies.add(z);
