@@ -16,7 +16,7 @@
     "minDamage": "40",
     "maxDamage": "60",
     "velX": "3", 
-    "velY": "2",
+    "velY": "1.5",
     "range": "250",
     "max health": "100",
     "scaleX": "2",

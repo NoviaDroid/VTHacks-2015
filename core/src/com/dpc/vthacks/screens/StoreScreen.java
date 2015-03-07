@@ -39,7 +39,9 @@ public class StoreScreen implements Screen {
         private Label damage = new Label("", labelStyle);
         private Label ammo = new Label("", labelStyle);
         private Label cost = new Label("", labelStyle);
+        private int id;
         private Image icon;
+        private TextButton purchase;
         
         private void add(Stage stage) {
             stage.addActor(name);
@@ -48,6 +50,7 @@ public class StoreScreen implements Screen {
             stage.addActor(ammo);
             stage.addActor(icon);
             stage.addActor(cost);
+            stage.addActor(purchase);
         }
     }
     
@@ -58,9 +61,33 @@ public class StoreScreen implements Screen {
     @Override
     public void show() {
         stage = new Stage(new StretchViewport(AppData.width, AppData.height));
+
+        TextButtonStyle textButtonStyle = new TextButtonStyle();
+        textButtonStyle.font = Fonts.getZombieXSmall();
         
         labelStyle = new LabelStyle();
         labelStyle.font = Fonts.getZombieSmall();
+        
+        weaponInfo = new WeaponInfo();
+        
+        weaponInfo.purchase = new TextButton("Purchase", textButtonStyle);
+        
+        weaponInfo.purchase.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                // Unlock the weapon
+                WeaponManager.unlock(weaponInfo.id);
+                
+                // Withdrawal money
+                Bank.withdrawal(Integer.parseInt(weaponInfo.cost.getText()
+                        .toString().replace("cost: ", "")));
+                
+                // Update display
+                moneyLabel.setText("You have $" + Bank.getBalance());
+                
+                return super.touchDown(event, x, y, pointer, button);
+            }
+        });
         
         moneyLabel = new Label("You have $" + Bank.getBalance(), labelStyle);
         
@@ -77,8 +104,6 @@ public class StoreScreen implements Screen {
         labelStyle = new LabelStyle();
         labelStyle.font = Fonts.getZombieSmall();
         
-        TextButtonStyle textButtonStyle = new TextButtonStyle();
-        textButtonStyle.font = Fonts.getZombieXSmall();
         
         backButton = new TextButton("back", textButtonStyle);
         
@@ -124,8 +149,6 @@ public class StoreScreen implements Screen {
             stage.addActor(button);
         }
         
-        
-        weaponInfo = new WeaponInfo();
        
         display(WeaponManager.getWeapons().get(0));
         positionElements();
@@ -144,17 +167,22 @@ public class StoreScreen implements Screen {
         v.addActor(weaponInfo.damage);
         v.addActor(weaponInfo.description);
         v.addActor(weaponInfo.cost);
+        v.addActor(weaponInfo.purchase);
         
         stage.addActor(v);
     }
     
     public void display(Weapon weapon) {
         weaponInfo.icon = new Image(weaponIcons.getDrawable(weapon.getIconPath()));
-        weaponInfo.name.setText("name - " + weapon.getName());
-        weaponInfo.ammo.setText("ammo - " + weapon.getAmmo());
-        weaponInfo.damage.setText("damage - " + weapon.getMinDamage() + " to " + weapon.getMaxDamage());
-        weaponInfo.description.setText("description - " + weapon.getDescription());
-        weaponInfo.cost.setText("cost - " + weapon.getCost());
+        weaponInfo.name.setText("name: " + weapon.getName());
+        weaponInfo.ammo.setText("ammo: " + weapon.getAmmo());
+        weaponInfo.damage.setText("damage: " + weapon.getMinDamage() + " to " + weapon.getMaxDamage());
+        weaponInfo.description.setText("description: " + weapon.getDescription());
+        weaponInfo.cost.setText("cost: " + weapon.getCost());
+        weaponInfo.id = weapon.getId();
+        
+        // Only allow purchase if enough money is there
+        weaponInfo.purchase.setDisabled(Bank.getBalance() >= weapon.getCost());
     }
     
     public void update(float delta) {

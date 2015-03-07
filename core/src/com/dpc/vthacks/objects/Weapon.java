@@ -15,6 +15,7 @@ public class Weapon {
     private int ammo;
     private int maxAmmo;
     private int cost;
+    private int id;
     
     public Weapon() {
         
@@ -25,7 +26,15 @@ public class Weapon {
         return "name: " + name + "\ndescription: " + 
                description + "\nminDamage" + 
                 minDamage + "\nammo" + 
-               ammo + "\nmaxAmmo" + maxAmmo + "\ncost" + cost;
+               ammo + "\nmaxAmmo" + maxAmmo + "\ncost" + cost + "\nid" + id;
+    }
+
+    public int getId() {
+        return id;
+    }
+    
+    public void setId(int id) {
+        this.id = id;
     }
     
     public int getCost() {

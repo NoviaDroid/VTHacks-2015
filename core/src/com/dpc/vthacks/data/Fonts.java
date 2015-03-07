@@ -12,7 +12,7 @@ public class Fonts {
     private static BitmapFont visitor;
     
     public static void load() {
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/visitor1.ttf"));
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/RobotoCondensed-Bold.ttf"));
         FreeTypeFontParameter parameter = new FreeTypeFontParameter();
         
         parameter.size = Gdx.graphics.getWidth() * 104 / 1200;
@@ -22,7 +22,7 @@ public class Fonts {
    
         zombie = generator.generateFont(parameter); 
         
-        generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/ZOMBIE.TTF"));
+        generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/RobotoCondensed-Bold.TTF"));
         
         parameter.size = Gdx.graphics.getWidth() * 54 / 1200;
         
@@ -31,7 +31,7 @@ public class Fonts {
         parameter.size = Gdx.graphics.getWidth() * 36 / 1200;
         zombieXSmall = generator.generateFont(parameter);
         
-        generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/visitor1.ttf"));
+        generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/RobotoCondensed-Bold.ttf"));
 
         visitor = generator.generateFont(parameter);
         
