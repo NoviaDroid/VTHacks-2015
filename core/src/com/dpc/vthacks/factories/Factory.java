@@ -12,7 +12,7 @@ import com.dpc.vthacks.infantry.Soldier;
 import com.dpc.vthacks.infantry.Tank;
 import com.dpc.vthacks.objects.AmmoCrate;
 import com.dpc.vthacks.objects.GameSprite;
-import com.dpc.vthacks.objects.Gun;
+import com.dpc.vthacks.objects.Weapon;
 import com.dpc.vthacks.properties.AnimatedUnitProperties;
 import com.dpc.vthacks.properties.Properties;
 import com.dpc.vthacks.properties.ZombieProperties;
@@ -24,7 +24,7 @@ public class Factory {
     private static AnimatedUnitProperties<SpriteAnimation> soldierProperties;
     private static Properties bombProperties;
     private static Properties buildingProperties;
-    private static Gun primaryGun, secondaryGun;
+    private static Weapon primaryGun, secondaryGun;
     private static ZombieProperties zombieProperties;
     private static Vector2 playerGunOffset;
     
@@ -70,15 +70,7 @@ public class Factory {
         }
         
     };
-    
-    public static Gun createPrimaryGun() {
-        return new Gun(primaryGun);
-    }
-    
-    public static Gun createSecondaryGun() {
-        return new Gun(secondaryGun);
-    }
-    
+
     public static Zombie createZombie() {
         ZombieProperties cpy = 
                 new ZombieProperties(zombieProperties);
@@ -214,19 +206,19 @@ public class Factory {
         return buildingProperties;
     }
     
-    public static Gun getPrimaryGun() {
+    public static Weapon getPrimaryGun() {
         return primaryGun;
     }
     
-    public static Gun getSecondaryGun() {
+    public static Weapon getSecondaryGun() {
         return secondaryGun;
     }
    
-    public static void setPrimaryGun(Gun primaryGun) {
+    public static void setPrimaryGun(Weapon primaryGun) {
         Factory.primaryGun = primaryGun;
     }
     
-    public static void setSecondaryGun(Gun secondaryGun) {
+    public static void setSecondaryGun(Weapon secondaryGun) {
         Factory.secondaryGun = secondaryGun;
     }
     

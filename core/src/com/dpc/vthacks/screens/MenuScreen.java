@@ -1,12 +1,15 @@
 package com.dpc.vthacks.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.dpc.vthacks.App;
 import com.dpc.vthacks.GameCamera;
 import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
+import com.dpc.vthacks.properties.WeaponManager;
 
 public class MenuScreen implements Screen {
     private Sprite menu;
@@ -16,6 +19,24 @@ public class MenuScreen implements Screen {
     
     public MenuScreen(App app) {
         context = app;
+        
+        Gdx.input.setInputProcessor(new InputAdapter() {
+            @Override
+            public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+                
+                Assets.loadLoadingScreenTextures();
+                loading = true;
+                
+                return super.touchDown(screenX, screenY, pointer, button);
+            }
+            
+            @Override
+            public boolean keyDown(int keycode) {
+                context.setScreen(new StoreScreen(context));
+                
+                return super.keyDown(keycode);
+            }
+        });
     }
     
     @Override
@@ -38,13 +59,7 @@ public class MenuScreen implements Screen {
         menu.draw(App.batch);
 
         App.batch.end();
-        
-        
-        if(Gdx.input.isTouched()) {
-            Assets.loadLoadingScreenTextures();
-            loading = true;
-        }
-        
+
         if(loading && Assets.lsUpdateRender(context)) {
             Assets.getGameTextures();
             context.setScreen(new GameScreen(context));

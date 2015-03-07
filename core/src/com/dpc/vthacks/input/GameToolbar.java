@@ -20,7 +20,7 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.data.Fonts;
-import com.dpc.vthacks.objects.Gun;
+import com.dpc.vthacks.objects.Weapon;
 import com.dpc.vthacks.screens.GameScreen;
 
 public class GameToolbar {
@@ -473,9 +473,9 @@ public class GameToolbar {
         return joystick;
     }
     
-    public void setGunIcon(Gun gun) {
+    public void setGunIcon(Weapon gun) {
         if(gunIcon == null) {
-            gunIcon = new Sprite(gun.getRegion());
+            gunIcon = new Sprite(Assets.weaponIconAtlas.findRegion(gun.getIconPath()));
         }
         
         // Position directly under player icon

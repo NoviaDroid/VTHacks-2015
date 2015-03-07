@@ -1,27 +1,21 @@
-{
-	"handgun1": [{
-		"type": "handgun",
-		"minDmg": "25",
-		"maxDmg": "50",
-		"ammo": "50",
-		"sounds": [{
-			"fire1": [{
-				"src": "explosion"
-			}],
-			"fire2": [{
-				"src": "shot1"
-			}],
-			"fire3": [{
-				"src": "shot2"
-			}]
-		}],
-		"firing": [{
-
-				"time": "0.15",
-				"src": "shotgun",
-				"handleOffsetX": "9",
-				"handleOffsetY":"3"
-		
-		}]
-	}]
-}
+[
+	{
+		"name": "shotgun",
+		"description": "Packs a punch",
+		"iconPath": "shotgun",
+		"minDamage": 25,
+		"maxDamage": 50,
+		"ammo": 50,
+		"maxAmmo": 50
+	},
+	
+	{
+		"name": "handgun",
+		"description": "Small but powerful",
+		"iconPath": "shotgun",
+		"minDamage": 20,
+		"maxDamage": 30,
+		"ammo": 27,
+		"maxAmmo": 27
+	}
+]

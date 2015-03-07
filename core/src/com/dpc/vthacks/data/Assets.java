@@ -18,7 +18,7 @@ import com.dpc.vthacks.animation.SpriteAnimation;
 
 public class Assets {
     public static AssetManager manager = new AssetManager();
-    public static TextureAtlas skinAtlas, gameAtlas, zombieAtlas;
+    public static TextureAtlas skinAtlas, storeAtlas, weaponIconAtlas, gameAtlas, zombieAtlas;
     
     public static ObjectMap<String, AdvancedSpriteAnimation> playerAnimations;
     public static ObjectMap<String, SpriteAnimation> tankAnimations;
@@ -47,6 +47,8 @@ public class Assets {
 
     public static void loadMenu() {
         menuBackground = new TextureRegion(new Texture(Gdx.files.internal("MenuScreen.png")));
+        storeAtlas = new TextureAtlas("storePack.pack");
+        weaponIconAtlas = new TextureAtlas("weaponIconPack.pack");
     }
 
     public static void loadLoadingScreenTextures() {
@@ -278,6 +280,8 @@ public class Assets {
         pressUp.dispose();
         pressDown.dispose();
         outOfAmmo.dispose();
+        storeAtlas.dispose();
+        weaponIconAtlas.dispose();
         
         for(Sound s : playerSounds) {
             s.dispose();

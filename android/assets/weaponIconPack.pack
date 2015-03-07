@@ -1,0 +1,12 @@
+
+weaponIconPack.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+shotgun
+  rotate: false
+  xy: 1, 1
+  size: 120, 25
+  orig: 120, 25
+  offset: 0, 0
+  index: -1
