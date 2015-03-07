@@ -1,6 +1,7 @@
 [
 	{
 		"name": "shotgun",
+		"id": 2,
 		"description": "Packs a punch",
 		"iconPath": "shotgun",
 		"minDamage": 25,
@@ -12,6 +13,7 @@
 	
 	{
 		"name": "handgun",
+		"id": 1,
 		"description": "Small but powerful",
 		"iconPath": "shotgun",
 		"minDamage": 20,
@@ -19,5 +21,41 @@
 		"ammo": 27,
 		"maxAmmo": 27,
 		"cost": 250
+	},
+
+	{
+		"name": "RPG",
+		"id": 4,
+		"description": "It might blow things up",
+		"iconPath": "shotgun",
+		"minDamage": 50,
+		"maxDamage": 70,
+		"ammo": 6,
+		"maxAmmo": 6,
+		"cost": 5000
+	},
+
+	{
+		"name": "magnum",
+		"id": 3,
+		"description": "Revolves around power",
+		"iconPath": "shotgun",
+		"minDamage": 30,
+		"maxDamage": 40,
+		"ammo": 27,
+		"maxAmmo": 27,
+		"cost": 7000
+	},
+	
+	{
+		"name": "ak-47",
+		"id": 5,
+		"description": "Full auto. Enough said.",
+		"iconPath": "shotgun",
+		"minDamage": 35,
+		"maxDamage": 40,
+		"ammo": 250,
+		"maxAmmo": 250,
+		"cost": 15000
 	}
 ]
