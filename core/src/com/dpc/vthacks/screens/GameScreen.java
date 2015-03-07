@@ -39,7 +39,6 @@ public class GameScreen implements Screen {
     public void show() {
         JSONManager.parseProperties();
         AppData.onResize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        Fonts.load();
         Factory.init();
 
         toolbar = new GameToolbar(this) {

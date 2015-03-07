@@ -9,7 +9,7 @@ import com.dpc.vthacks.animation.AdvancedSpriteAnimation;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.infantry.Unit;
 import com.dpc.vthacks.level.LevelProperties;
-import com.dpc.vthacks.objects.Gun;
+import com.dpc.vthacks.objects.Weapon;
 import com.dpc.vthacks.properties.AnimatedUnitProperties;
 import com.dpc.vthacks.zombie.Zombie;
 
@@ -21,8 +21,8 @@ public class Player extends AdvancedAnimatedUnit {
     private boolean movingLeft;
     private Rectangle ground;
     private Vector2 gunOffset; // X and Y positions of tip of the gun relative to and inside of the bounding box
-    private Gun primary, secondary;
-    private Gun currentWeapon;
+    private Weapon primary, secondary;
+    private Weapon currentWeapon;
    
     public Player(String currentState,
                   AnimatedUnitProperties<AdvancedSpriteAnimation> properties, 
@@ -36,22 +36,13 @@ public class Player extends AdvancedAnimatedUnit {
         
         setPlaying(true);
         
+        setCurrentWeapon(primary);
+        
         shotDelayed = false;
     }
     
     @Override
     public void render() {      
-
-        if(movingLeft) {
-            primary.setX(getX() + getCurrentFrame().getAnchorOffsetX());//+ (primary.getData().getAnchorOffsetX() - primary.getX()));
-        }
-        else {
-            primary.setX(getX() + getCurrentFrame().getAnchorOffsetX());
-        }
-        
-        primary.setY(getY() + getCurrentFrame().getAnchorOffsetY());// + (primary.getData().getAnchorOffsetY() - primary.getY()));
-        
-        //primary.render();
         super.render();
     }
     
@@ -197,8 +188,6 @@ public class Player extends AdvancedAnimatedUnit {
         
         // Flip every animation
         flipAll(true, false);
-        
-        primary.flip(true, false);
     }
     
     public void moveRight() {
@@ -206,8 +195,6 @@ public class Player extends AdvancedAnimatedUnit {
         
         // Flip every animation
         flipAll(true, false);
-        
-        primary.flip(true, false);
     }
     
     public Rectangle getGround() {
@@ -271,21 +258,19 @@ public class Player extends AdvancedAnimatedUnit {
         currentWeapon.setAmmo(ammo);
     }
     
-    public void setPrimary(Gun primary) {
+    public void setPrimary(Weapon primary) {
         this.primary = primary;
-        
-        primary.flip(true, false);
     }
     
-    public Gun getCurrentWeapon() {
+    public Weapon getCurrentWeapon() {
         return currentWeapon;
     }
     
-    public void setCurrentWeapon(Gun currentWeapon) {
+    public void setCurrentWeapon(Weapon currentWeapon) {
         this.currentWeapon = currentWeapon;
     }
     
-    public void setSecondary(Gun secondary) {
+    public void setSecondary(Weapon secondary) {
         this.secondary = secondary;
     }
     
@@ -297,11 +282,11 @@ public class Player extends AdvancedAnimatedUnit {
         return drawBehind;
     }
     
-    public Gun getPrimary() {
+    public Weapon getPrimary() {
         return primary;
     }
     
-    public Gun getSecondary() {
+    public Weapon getSecondary() {
         return secondary;
     }
 }

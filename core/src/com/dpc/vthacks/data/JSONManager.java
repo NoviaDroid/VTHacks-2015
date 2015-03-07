@@ -12,9 +12,10 @@ import com.dpc.vthacks.animation.AdvancedSpriteAnimation;
 import com.dpc.vthacks.animation.FrameData;
 import com.dpc.vthacks.animation.SpriteAnimation;
 import com.dpc.vthacks.factories.Factory;
-import com.dpc.vthacks.objects.Gun;
+import com.dpc.vthacks.objects.Weapon;
 import com.dpc.vthacks.properties.AnimatedUnitProperties;
 import com.dpc.vthacks.properties.Properties;
+import com.dpc.vthacks.properties.WeaponManager;
 import com.dpc.vthacks.properties.ZombieProperties;
 import com.dpc.vthacks.properties.ZombieSegment;
 
@@ -37,7 +38,6 @@ public class JSONManager {
         JsonValue bomb = root.getChild("bomb");
         JsonValue tankShell = root.getChild("tank shell");
         JsonValue zombie = root.getChild("zombie");
-        JsonValue weapon = root1.getChild("handgun1");
         
         AnimatedUnitProperties<SpriteAnimation> tankProperties = 
                 new AnimatedUnitProperties<SpriteAnimation>()
@@ -125,9 +125,7 @@ public class JSONManager {
         playerAnimationData.put("running", Assets.getAdvancedAnimation(player, "running", 3, true, false));
         
         Assets.playerAnimations = playerAnimationData;
-  
-        Factory.setPrimaryGun(createGun(root1.child.child, weapon.getChild("firing")));
-        
+
         AnimatedUnitProperties<AdvancedSpriteAnimation> playerProperties = 
                 new AnimatedUnitProperties<AdvancedSpriteAnimation>()
                     .range(player.getFloat("range"))
@@ -139,20 +137,7 @@ public class JSONManager {
                     .stateAnimations(playerAnimationData);
         
         Factory.setPlayerProperties(playerProperties);
-    }
-    
-    private static Gun createGun(JsonValue root, JsonValue child) {
-        FrameData data = new FrameData(Assets.gameAtlas.findRegion(child.getString("src")), 
-                                       child.getFloat("time"), 
-                                       child.getFloat("handleOffsetX"),
-                                       child.getFloat("handleOffsetY"));
-
-        Gun gun = new Gun(root.getFloat("minDmg"), 
-                          root.getFloat("maxDmg"),
-                          root.getInt("ammo"),
-                          data);
         
-        return gun;
-        
+        Factory.setPrimaryGun(WeaponManager.getWeapons().get(0));
     }
 }

@@ -27,25 +27,25 @@
     		"img": "ETroop2Running1", 
     		"time": "1",
     		"handOffsetX": "24",
-    		"handOffsetY": "24"
+    		"handOffsetY": "48"
     	}],
     	"frame2": [{
     		"img": "ETroop2Running2",
     		"time": "4",
     		"handOffsetX": "23",
-    		"handOffsetY": "21"
+    		"handOffsetY": "42"
     	}],
     	"frame3": [{
     		"img": "ETroop2Running3",
     		"time": "1",
     		"handOffsetX": "20",
-    		"handOffsetY": "21"
+    		"handOffsetY": "42"
     	}],
     	"frame4": [{
     		"img": "ETroop2Running4",
     		"time": "4",
     		"handOffsetX": "20",
-    		"handOffsetY": "21"
+    		"handOffsetY": "42"
     	}]
     }],
     "idle": [{
@@ -53,7 +53,7 @@
     		"img": "ETroopTier2Idle1", 
     		"time": "5",
     		"handOffsetX": "20",
-    		"handOffsetY": "19"
+    		"handOffsetY": "38"
     	}],
     	"frame2": [{
     		"img": "ETroopTier2Idle2",
@@ -65,7 +65,7 @@
     		"img": "ETroopTier2Idle3",
     		"time": "5",
     		"handOffsetX": "20",
-    		"handOffsetY": "17"
+    		"handOffsetY": "34"
     	}]
     }]
   }],

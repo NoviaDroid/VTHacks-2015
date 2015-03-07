@@ -84,7 +84,7 @@ public class Level {
                                                     seg = ((ZombieProperties) z.getProperties()).getSegments()[i];
                                                     
                                                     // Find out if the current seg is the right one
-                                                    if(seg.bounds.contains(seg.bounds.x + 1,player.getPrimary().getY())) {
+                                                    if(seg.bounds.contains(seg.bounds.x + 1,player.getY() + player.getCurrentFrame().getAnchorOffsetY())) {
                                                         segDmg = seg.damageFactor;
                                                     }
                                                 }
@@ -310,7 +310,7 @@ public class Level {
         
         App.batch.end();
         
-     //  debugRender();
+        //debugRender();
     }
     
     public void debugRender() {
@@ -318,10 +318,10 @@ public class Level {
         App.debugRenderer.setColor(1, 0, 0, 1);
         App.debugRenderer.begin(ShapeType.Filled);
 
-        App.debugRenderer.rect(player.getPrimary().getX(),
-                               player.getPrimary().getY(),
-                               150, 
-                               150);
+        App.debugRenderer.rect(player.getX(), 
+                               player.getY() + player.getCurrentFrame().getAnchorOffsetY(),
+                               50,
+                               50);
         
         App.debugRenderer.end();
         
