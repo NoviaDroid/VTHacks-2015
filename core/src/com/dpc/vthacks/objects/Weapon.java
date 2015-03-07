@@ -14,6 +14,7 @@ public class Weapon {
     private float maxDamage;
     private int ammo;
     private int maxAmmo;
+    private int cost;
     
     public Weapon() {
         
@@ -24,7 +25,15 @@ public class Weapon {
         return "name: " + name + "\ndescription: " + 
                description + "\nminDamage" + 
                 minDamage + "\nammo" + 
-               ammo + "\nmaxAmmo" + maxAmmo;
+               ammo + "\nmaxAmmo" + maxAmmo + "\ncost" + cost;
+    }
+    
+    public int getCost() {
+        return cost;
+    }
+    
+    public void setCost(int cost) {
+        this.cost = cost;
     }
     
     public float getMinDamage() {

@@ -25,6 +25,7 @@ import com.dpc.vthacks.properties.WeaponManager;
 public class StoreScreen implements Screen {
     private Stage stage;
     private TextButton backButton;
+    private Label moneyLabel;
     private ImageButton[] weaponButtons;
     private WeaponInfo weaponInfo; // Info on selected weapon
     private Skin weaponIcons;
@@ -37,6 +38,7 @@ public class StoreScreen implements Screen {
         private Label description = new Label("", labelStyle);
         private Label damage = new Label("", labelStyle);
         private Label ammo = new Label("", labelStyle);
+        private Label cost = new Label("", labelStyle);
         private Image icon;
         
         private void add(Stage stage) {
@@ -45,6 +47,7 @@ public class StoreScreen implements Screen {
             stage.addActor(damage);
             stage.addActor(ammo);
             stage.addActor(icon);
+            stage.addActor(cost);
         }
     }
     
@@ -55,6 +58,24 @@ public class StoreScreen implements Screen {
     @Override
     public void show() {
         stage = new Stage(new StretchViewport(AppData.width, AppData.height));
+        
+        labelStyle = new LabelStyle();
+        labelStyle.font = Fonts.getZombieSmall();
+        
+        moneyLabel = new Label("You have $" + Bank.getBalance(), labelStyle);
+        
+        moneyLabel.setColor(0, 0.4f, 0, 1);
+        
+        moneyLabel.setPosition(AppData.width-
+                               (moneyLabel.getStyle().font.getBounds(moneyLabel.getText()).width),
+                               AppData.height -
+                               (moneyLabel.getStyle().font.getBounds(moneyLabel.getText()).height*2));
+                               
+        
+    //    stage.addActor(moneyLabel);
+        
+        labelStyle = new LabelStyle();
+        labelStyle.font = Fonts.getZombieSmall();
         
         TextButtonStyle textButtonStyle = new TextButtonStyle();
         textButtonStyle.font = Fonts.getZombieXSmall();
@@ -75,8 +96,6 @@ public class StoreScreen implements Screen {
         
         stage.addActor(backButton);
         
-        labelStyle = new LabelStyle();
-        labelStyle.font = Fonts.getZombieSmall();
         
         Skin skin = new Skin(Assets.storeAtlas);
         weaponIcons = new Skin(Assets.weaponIconAtlas);
@@ -105,6 +124,7 @@ public class StoreScreen implements Screen {
             stage.addActor(button);
         }
         
+        
         weaponInfo = new WeaponInfo();
        
         display(WeaponManager.getWeapons().get(0));
@@ -117,11 +137,13 @@ public class StoreScreen implements Screen {
         VerticalGroup v = new VerticalGroup();
         v.setFillParent(true);
         
+        v.addActor(moneyLabel);
         v.addActor(weaponInfo.icon);
         v.addActor(weaponInfo.name);
         v.addActor(weaponInfo.ammo);
         v.addActor(weaponInfo.damage);
         v.addActor(weaponInfo.description);
+        v.addActor(weaponInfo.cost);
         
         stage.addActor(v);
     }
@@ -132,6 +154,7 @@ public class StoreScreen implements Screen {
         weaponInfo.ammo.setText("ammo - " + weapon.getAmmo());
         weaponInfo.damage.setText("damage - " + weapon.getMinDamage() + " to " + weapon.getMaxDamage());
         weaponInfo.description.setText("description - " + weapon.getDescription());
+        weaponInfo.cost.setText("cost - " + weapon.getCost());
     }
     
     public void update(float delta) {
