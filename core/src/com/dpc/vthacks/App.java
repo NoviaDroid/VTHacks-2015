@@ -19,6 +19,7 @@ public class App extends Game {
 	public void create () {
         Fonts.load();
         WeaponManager.load();
+        Bank.load();
         
 	    AppData.width = Gdx.graphics.getWidth();
 	    AppData.height = Gdx.graphics.getHeight();
