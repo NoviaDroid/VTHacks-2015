@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad.TouchpadStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.dpc.vthacks.Bank;
 import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.data.Fonts;
@@ -446,6 +447,9 @@ public class GameToolbar {
     public void addMoney(int am) {
         this.money += am;
 
+        // Deposit money into the player's bank
+        Bank.deposit(am);
+        
         moneyLabel.setText("$" + money);
         
         float t = (Fonts.getZombie().getBounds(moneyLabel.getText()).height * 2);
