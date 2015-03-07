@@ -16,6 +16,13 @@ public class AdvancedSpriteAnimation implements Disposable {
     private int index;
     private float time;
     
+    public AdvancedSpriteAnimation(AdvancedSpriteAnimation cpy) {
+        animation = new Animation(cpy.time, cpy.getAnimation().getKeyFrames());
+        frameData = cpy.frameData;
+        time = cpy.time;
+        System.err.println("advancedspriteanimation time: " + time);
+    }
+    
     public AdvancedSpriteAnimation(FrameData[] frameData) {
         this.frameData = frameData;
         
@@ -23,6 +30,8 @@ public class AdvancedSpriteAnimation implements Disposable {
     }
     
     private void init(float time) {
+        this.time = time;
+        
         TextureRegion[] d = new TextureRegion[frameData.length];
         
         for(int i = 0; i < frameData.length; i++) {

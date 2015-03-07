@@ -13,7 +13,6 @@ import com.dpc.vthacks.properties.ZombieProperties;
 import com.dpc.vthacks.properties.ZombieSegment;
 
 public class Zombie extends AnimatedUnit implements Poolable {
-    private boolean isFlipped;
     private boolean walkingLeft;
     
     public Zombie(String currentState, 
@@ -28,8 +27,6 @@ public class Zombie extends AnimatedUnit implements Poolable {
         setSize(getWidth() * 3, getHeight() * 3);
         
         init();
-        
-        setPlaying(true);
     }
 
     @Override
@@ -58,7 +55,7 @@ public class Zombie extends AnimatedUnit implements Poolable {
             if(getBoundingRectangle().overlaps(getParentLevel().getPlayer().getBoundingRectangle())) {
                 if(!isAttacking()) {
                     setAttacking(true, getParentLevel().getPlayer());
-                    setState("attacking");
+                //    setState("attacking");
                 }
             }
             else {
@@ -139,12 +136,7 @@ public class Zombie extends AnimatedUnit implements Poolable {
     public void resetPath() {
         setCurrentTarget(getFinalDestination().x, getFinalDestination().y);
     }
-    
-    public boolean isFlipped() {
-        return isFlipped;
-    }
-    
-    
+
     @Override
     public void reset() {
         super.reset();
@@ -155,6 +147,7 @@ public class Zombie extends AnimatedUnit implements Poolable {
     @Override
     public void init() {
         super.init();
+
         setCurrentTarget(0, 50);
         setAttacking(false, null);
         setPlaying(true);

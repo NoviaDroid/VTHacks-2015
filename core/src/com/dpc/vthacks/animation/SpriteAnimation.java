@@ -13,18 +13,26 @@ public class SpriteAnimation implements Disposable {
     private Animation animation;
     private float time;
     
-    public SpriteAnimation(SpriteAnimation cpy, float time) {
-        this.time = time;
-
-        animation = new Animation(time, cpy.getAnimation().getKeyFrames());
+    public SpriteAnimation(SpriteAnimation cpy) {
+        this.time = cpy.time;
+        
+        TextureRegion[] regions = new TextureRegion[cpy.getAnimation().getKeyFrames().length];
+        
+        // Make a copy of each region
+        for(int i = 0; i < regions.length; i++) {
+            regions[i] = new TextureRegion(cpy.getAnimation().getKeyFrames()[i]);
+        }
+        
+        animation = new Animation(time, regions);   
     }
     
     public SpriteAnimation(TextureRegion[] frames, float frameTime) {
+        this.time = frameTime;
         animation = new Animation(frameTime, frames);
     }
     
     public SpriteAnimation cpy() {
-        return new SpriteAnimation(this, time);
+        return new SpriteAnimation(this);
     }
     
     public TextureRegion update(float delta) {

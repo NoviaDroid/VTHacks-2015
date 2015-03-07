@@ -10,13 +10,14 @@ import com.badlogic.gdx.utils.ObjectMap;
  */
 public class AnimatedUnitProperties<T> extends Properties {
     private ObjectMap<String, T> stateAnimations;
-    
+
     public AnimatedUnitProperties() {
         super();
     }
     
     public AnimatedUnitProperties(AnimatedUnitProperties<T> cpy) {
         super(cpy);
+
         stateAnimations = cpy.stateAnimations;
     }
     

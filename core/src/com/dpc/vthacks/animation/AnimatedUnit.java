@@ -45,6 +45,12 @@ public abstract class AnimatedUnit extends Unit {
         draw(App.batch);
     }
     
+    
+    public void setStateAnimations(
+            ObjectMap<String, SpriteAnimation> stateAnimations) {
+        this.stateAnimations = stateAnimations;
+    }
+    
     public void setStateAnimationFrames(TextureRegion[] frames, String state, float frameTime) {
         stateAnimations.get(state).setFrames(frames, frameTime);
     }

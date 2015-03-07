@@ -14,6 +14,20 @@ public class ZombieProperties extends AnimatedUnitProperties<SpriteAnimation> {
     public ZombieProperties(ZombieProperties cpy) {
         super(cpy);
         
+        ObjectMap<String, SpriteAnimation> map = new ObjectMap<String, SpriteAnimation>();
+        
+        for(String key : cpy.getStateAnimations().keys()) {
+            SpriteAnimation value = cpy.getStateAnimations().get(key);
+            
+            SpriteAnimation cpyAnim = new SpriteAnimation(value);
+
+            cpyAnim.getAnimation().setPlayMode(value.getAnimation().getPlayMode());
+
+            map.put(new String(key), cpyAnim);
+        }
+
+        stateAnimations(map);
+        
         segments = new ZombieSegment[cpy.getSegments().length];
         
         for(int i = 0; i < cpy.getSegments().length; i++) {

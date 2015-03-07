@@ -139,8 +139,8 @@ public class Assets {
         tankAnimations.put("firing", getAnimation("Tankfire", 5, 0.15f, false));
         zombieAnimations.put("walking-right", getAnimation(zombieAtlas, 0.15f, false));
         zombieAnimations.put("walking-left", getAnimation(zombieAtlas, 0.15f, true));
-        zombieAnimations.put("attacking", getAnimation(zombieAtlas, 0.15f, false));
-       
+     //   zombieAnimations.put("attacking", )
+        
         for(SpriteAnimation a : zombieAnimations.values()) {
             a.getAnimation().setPlayMode(PlayMode.LOOP);
         }
@@ -185,9 +185,9 @@ public class Assets {
         
         for(int i = 0; i < atlas.getRegions().size; i++) {
             regions[i] = new TextureRegion(atlas.getRegions().get(i));
-            
             regions[i].flip(flip, false);
         }
+        
         
         return new SpriteAnimation(regions, stateTime);
     }
@@ -197,7 +197,6 @@ public class Assets {
         
         for(int i = 0; i < iterations; i++) {
             regions[i] = gameAtlas.findRegion(name + (i + 1));
-            
             regions[i].flip(flip, false);
         }
         
@@ -209,10 +208,7 @@ public class Assets {
         
         for(int i = 0; i < iterations; i++) {
             regions[i] = gameAtlas.findRegion(name + (i + 1));
-            
-            if(flip) {
-                regions[i].flip(true, false);
-            }
+            regions[i].flip(flip, false);
         }
         
         return new SpriteAnimation(regions, stateTime);

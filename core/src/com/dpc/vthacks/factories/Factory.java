@@ -80,10 +80,14 @@ public class Factory {
     }
     
     public static Zombie createZombie() {
+        ZombieProperties cpy = 
+                new ZombieProperties(zombieProperties);
+
         Zombie z = new Zombie("walking-right", 
-                              new ZombieProperties(zombieProperties),
+                              cpy,
                               0,
                               0);
+        
         
         z.setVelX(MathUtils.random(z.getProperties().getMinVel().x, 
                                    z.getProperties().getMaxVel().x));
@@ -114,8 +118,15 @@ public class Factory {
         return b;
     }
     public static Player createPlayer() {
+        AnimatedUnitProperties<AdvancedSpriteAnimation> cpy = 
+                new AnimatedUnitProperties<AdvancedSpriteAnimation>(playerProperties);
+
+        for(AdvancedSpriteAnimation a : cpy.getStateAnimations().values()) {
+            a = new AdvancedSpriteAnimation(a);
+        }
+        
         Player p = new Player("idle",
-                              new AnimatedUnitProperties<AdvancedSpriteAnimation>(playerProperties), 
+                              cpy, 
                               0, 0, 0.15f);
         
         p.setGunOffset(playerGunOffset);

@@ -82,6 +82,10 @@ public abstract class AdvancedAnimatedUnit extends Unit {
         this.currentState = currentState;
     }
     
+    public void setStateAnimations(ObjectMap<String, AdvancedSpriteAnimation> stateAnimations) {
+        this.stateAnimations = stateAnimations;
+    }
+    
     public ObjectMap<String, AdvancedSpriteAnimation> getStateAnimations() {
         return stateAnimations;
     }

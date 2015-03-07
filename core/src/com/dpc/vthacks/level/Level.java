@@ -407,7 +407,7 @@ public class Level {
     public void initializeCamera() {
         gameCamera = new GameCamera();
         
-        gameCamera.zoom = 0.55f;
+        gameCamera.zoom = 0.45f;
         
         origCameraZoom = gameCamera.zoom;
 
