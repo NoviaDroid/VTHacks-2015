@@ -2,73 +2,166 @@
   "tank": [{
     "cost": "150",
     "health": "150",
-    "damage": "30",
+    "minDamage": "30",
+    "maxDamage": "35",
     "velX": "6",
     "velY": "0",
     "range": "600",
-    "max health": "250"
-  }],
-  
-  "enemy plane": [{
-    "health": "100",
-    "damage": "30",
-    "velX": "14",
-    "velY": "14",
-    "range": "480",
-    "kill exp": "70"
-    "kill money": "25"
-    "max health": "100"
+    "max health": "250",
+    "frameTime": "0.15"
   }],
   
   "player": [{
-    "health": "250",
-    "damage": "50",
-    "velX": "0", 
-    "velY": "11",
-    "range": "480"
-    "max health": "250"
+    "health": "100",
+    "minDamage": "40",
+    "maxDamage": "60",
+    "velX": "3", 
+    "velY": "2",
+    "range": "250",
+    "max health": "100",
+    "scaleX": "2",
+    "scaleY": "2",
+    "ammo": "25", 
+    "running": [{
+    	"frame1": [{
+    		"img": "ETroop2Running1", 
+    		"time": "1",
+    		"handOffsetX": "24",
+    		"handOffsetY": "24"
+    	}],
+    	"frame2": [{
+    		"img": "ETroop2Running2",
+    		"time": "4",
+    		"handOffsetX": "23",
+    		"handOffsetY": "21"
+    	}],
+    	"frame3": [{
+    		"img": "ETroop2Running3",
+    		"time": "1",
+    		"handOffsetX": "20",
+    		"handOffsetY": "21"
+    	}],
+    	"frame4": [{
+    		"img": "ETroop2Running4",
+    		"time": "4",
+    		"handOffsetX": "20",
+    		"handOffsetY": "21"
+    	}]
+    }],
+    "idle": [{
+    	"frame1": [{
+    		"img": "ETroopTier2Idle1", 
+    		"time": "5",
+    		"handOffsetX": "20",
+    		"handOffsetY": "19"
+    	}],
+    	"frame2": [{
+    		"img": "ETroopTier2Idle2",
+    		"time": "5",
+    		"handOffsetX": "20",
+    		"handOffsetY": "18"
+    	}],
+    	"frame3": [{
+    		"img": "ETroopTier2Idle3",
+    		"time": "5",
+    		"handOffsetX": "20",
+    		"handOffsetY": "17"
+    	}]
+    }]
   }],
   
   "soldier": [{
     "cost": "50",
-    "damage": "1",
-    "health": "50",
+    "minDamage": "10",
+    "maxDamage": "20",
+    "health": "100",
     "range": "150",
     "velX": "3",
     "velY": "0", 
-    "max health": "80"
+    "max health": "80",
+    "frameTime": "0.15"
   }],
   
   "bomb": [{
-	"damage": "100",
-	"velX": "8",
-	"velY": "5"
+    "minDamage": "100",
+    "maxDamage": "150",
+	"velX": "3",
+	"velY": "12",
+	"animations": [{
+    	"walking": [{
+    		"frame1": [{
+    			"img": "Explosion1", 
+    			"time": "0.15"
+    		}],
+    		"frame2": [{
+    			"img": "Explosion2",
+    			"time": "0.15"
+    		}],
+    		"frame3": [{
+    			"img": "Explosion3",
+    			"time": "0.15"
+    		}],
+    		"frame4": [{
+    			"img": "Explosion4",
+    			"time": "0.15"
+    		}],
+    		"frame5": [{
+    			"img": "Explosion5",
+    			"time": "0.15"
+    		}]
+    	}]
+    }]
   }],
   
   "tank shell": [{
+    "minDamage": "30",
+    "maxDamage": "35",
   	"velX": "50",
   	"velY": "14"
   }],
   
-  "enemy soldier": [{
-  	"velX": "-3",
-  	"velY": "0",
-  	"damage": "1",
-  	"range": "150",
-  	"health": "50",
-    "kill exp": "10"
-    "kill money": "5"
-    "max health": "80"
-  }],
-  
-  "enemy tank": [{
-    "health": "140",
-    "damage": "25",
-    "velX": "-6",
-    "velY": "0",
-    "range": "400",
-    "kill exp": "40",
-    "kill money": "15",
-    "max health": "150"
+  "zombie": [{
+  	"minVelX": "0.5",
+  	"maxVelX": "1",
+  	"minVelY": "0.5",
+  	"maxVelY": "1",
+    "minDamage": "0.0005",
+    "maxDamage": "0.001",
+  	"range": "250",
+  	"health": "100",
+    "max health": "80",
+    "minKillMoney": "20",
+    "maxKillMoney": "35",
+    "animations": [{
+    	"walking": [{
+    		"frame1": [{
+    			"img": "zombie", 
+    			"time": "5"
+    		}]
+    	}]
+    }],
+    "segments": [{
+    	"head": [{
+    		"width": "31",
+    		"height": "21",
+    		"x": "4",
+    		"y": "59",
+    		"damageFactor": "4"
+    	}],
+    	"upperTorso": [{
+    		"width": "37",
+    		"height": "17",
+    		"x": "9",
+    		"y": "42",
+    		"damageFactor": "1.75"
+    	}],
+    	"lowerTorso": [{
+    		"width": "41",
+    		"height": "42",
+    		"x": "0",
+    		"y": "1",
+    		"damageFactor": "1"
+    	}]
+    }]
   }]
 }

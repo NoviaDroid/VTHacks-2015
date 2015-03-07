@@ -6,23 +6,58 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 
 public class Fonts {
-    private static BitmapFont visitor1;
+    private static BitmapFont zombie;
+    private static BitmapFont zombieSmall;
+    private static BitmapFont zombieXSmall;
+    private static BitmapFont visitor;
     
     public static void load() {
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/armalite.ttf"));
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/visitor1.ttf"));
         FreeTypeFontParameter parameter = new FreeTypeFontParameter();
         
-        parameter.size = Gdx.graphics.getWidth() * 16 / 800;
-        System.out.println(parameter.size);
-        visitor1 = generator.generateFont(parameter); 
-        generator.dispose(); 
+        parameter.size = Gdx.graphics.getWidth() * 104 / 1200;
+   //     parameter.borderColor = Color.BLACK;
+     //   parameter.borderWidth = 3;
+   //     parameter.characters = FreeTypeFontGenerator.DEFAULT_CHARS;
+   
+        zombie = generator.generateFont(parameter); 
+        
+        generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/ZOMBIE.TTF"));
+        
+        parameter.size = Gdx.graphics.getWidth() * 54 / 1200;
+        
+        zombieSmall = generator.generateFont(parameter);
+       
+        parameter.size = Gdx.graphics.getWidth() * 36 / 1200;
+        zombieXSmall = generator.generateFont(parameter);
+        
+        generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/visitor1.ttf"));
+
+        visitor = generator.generateFont(parameter);
+        
+        generator.dispose();
     }
     
-    public static BitmapFont getVisitor1() {
-        return visitor1;
+    public static BitmapFont getVisitor() {
+        return visitor;
+    }
+    
+    public static BitmapFont getZombie() {
+        return zombie;
+    }
+    
+    public static BitmapFont getZombieSmall() {
+        return zombieSmall;
+    }
+    
+    public static BitmapFont getZombieXSmall() {
+        return zombieXSmall;
     }
     
     public static void unload() {
-        visitor1.dispose();
+        zombie.dispose();
+        zombieSmall.dispose();
+        zombieXSmall.dispose();
+        visitor.dispose();
     }
 }

@@ -2,38 +2,52 @@ package com.dpc.vthacks.input;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
+import com.badlogic.gdx.scenes.scene2d.ui.Touchpad.TouchpadStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.data.Fonts;
+import com.dpc.vthacks.objects.Gun;
 import com.dpc.vthacks.screens.GameScreen;
 
 public class GameToolbar {
     private Stage stage;
-    private static Actor healthBar;
-    private static Actor experienceBar;
+    private static Sprite leftBg, healthBarBackground, healthBar, playerIcon, gunIcon;
+    private Touchpad joystick;
     private Drawable background;
     private Button bombButton, strafeButton, soldierButton, tankButton, towerButton,
                    tankUpgradeButton, towerUpgradeButton, soldierUpgradeButton;
-    private static Label moneyLabel, experienceLabel, healthLabel;
-    
+    private static Label moneyLabel, experienceLabel, healthLabel, ammoLabel;
+    private int money;
     private final Color BATCH_COLOR;
     private static final int PADDING = 5;
+    private GameScreen parent;
+    private Label moneyToast;
+    private final int KS_INTERVAL = 3; // If a sequential kill isn't done within this time, killstreak over
+    private float killStreakTimer;
+    private boolean killStreak, killCompleted;
+    private int killstreakAmount;
     
-    public GameToolbar() {
+    public GameToolbar(GameScreen parent) {
+        this.parent = parent;
+        
         Assets.loadSkins();
         
         Skin skin = new Skin();
-        skin.addRegions(Assets.getSkins());
+        skin.addRegions(Assets.skinAtlas);
         
         background = skin.getDrawable("Bomb Icon");
         
@@ -46,13 +60,53 @@ public class GameToolbar {
         towerUpgradeButton = new ImageButton(skin.getDrawable("Bomb Icon"));
         soldierUpgradeButton = new ImageButton(skin.getDrawable("Soldier Button +"), skin.getDrawable("Soldier Button + Hover"));
         
-        LabelStyle style = new LabelStyle();
-        style.font = Fonts.getVisitor1();
         
+        TouchpadStyle touchpadStyle = new TouchpadStyle();
+        Drawable touchBackground = skin.getDrawable("touchBackground");
+        Drawable touchKnob = skin.getDrawable("touchKnob");
+        
+        touchKnob.setMinWidth(AppData.width / 25);
+        touchKnob.setMinHeight(AppData.width / 25);
+        
+        touchpadStyle.background = touchBackground;
+        touchpadStyle.knob = touchKnob;
+        
+        joystick = new Touchpad(10, touchpadStyle);
+        joystick.setBounds(15, 15, AppData.width / 8, AppData.width / 8);
+        
+        joystick.getColor().a = 0.75f;
+        soldierUpgradeButton.getColor().a = 0.75f;
+        towerUpgradeButton.getColor().a = 0.75f;
+        tankUpgradeButton.getColor().a = 0.75f;
+        towerButton.getColor().a = 0.75f;
+        soldierButton.getColor().a = 0.75f;
+        strafeButton.getColor().a = 0.75f;
+        tankButton.getColor().a = 0.75f;
+        bombButton.getColor().a = 0.75f;
+        
+        LabelStyle style = new LabelStyle();
+        style.font = Fonts.getZombie();
+        
+        moneyToast = new Label("", style);
         moneyLabel = new Label("Money: 0", style);
         experienceLabel = new Label("Experience: ", style);
         healthLabel = new Label("Health: 100", style);
+        
+        moneyToast.setColor(new Color(0, 0.5f, 0, 1));
+        
+        style = new LabelStyle();
+        style.font = Fonts.getZombieSmall();
+        
+        ammoLabel = new Label("", style);   
+        
+        style = new LabelStyle();
+        style.font = Fonts.getZombie();
 
+        style = new LabelStyle();
+        style.font = Fonts.getVisitor();
+        
+        moneyToast = new Label("", style);
+        
         soldierUpgradeButton.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -166,36 +220,60 @@ public class GameToolbar {
             }
         });
 
-        healthBar = new Actor();
-        healthBar.setWidth(Assets.healthbar.getRegionWidth() * 0.5f);
-        healthBar.setHeight(Assets.healthbar.getRegionHeight() * 0.5f);
-        healthBar.setBounds(0, 0, healthBar.getWidth(), healthBar.getHeight());
+        playerIcon = new Sprite(Assets.playerIcon);
+        playerIcon.setSize(Assets.playerIcon.getRegionWidth() * 10,
+                           Assets.playerIcon.getRegionHeight() * 10);
+
+        playerIcon.setPosition(PADDING, (AppData.height - playerIcon.getHeight()) - PADDING);
         
-        experienceBar = new Actor();
-        experienceBar.setWidth(0);
-        experienceBar.setHeight(Assets.healthbar.getRegionHeight() * 0.5f);
-        experienceBar.setBounds(0, 0, experienceBar.getWidth(), experienceBar.getHeight());
+        float h = (playerIcon.getHeight() * 0.5f);
+        
+
+        healthBarBackground = new Sprite(Assets.healthBarBackground);
+        healthBarBackground.setPosition(playerIcon.getX() + playerIcon.getWidth(), 
+                                        (playerIcon.getY() + h) - (healthBarBackground.getHeight() * 0.5f));
+        
+        healthBar = new Sprite(Assets.healthbar);
+        healthBar.setSize(Assets.healthBarBackground.getRegionWidth() - (Assets.healthBarBackground.getRegionHeight() * 0.135f * 2) ,
+                          Assets.healthBarBackground.getRegionHeight() * 0.73f);
+        
+        healthBar.setPosition(healthBarBackground.getX() + (Assets.healthBarBackground.getRegionHeight() * 0.135f),
+                              healthBarBackground.getY() + (Assets.healthBarBackground.getRegionHeight() * 0.135f));
+        
+//        experienceBar = new Sprite(Assets.healthbar);
+//        experienceBar.setSize(Assets.healthbar.getRegionWidth(), h);
+//        experienceBar.setPosition(healthBar.getX(), playerIcon.getY());
+        
+        experienceLabel.setPosition(soldierUpgradeButton.getX() + soldierUpgradeButton.getWidth() + PADDING, getTop() - experienceLabel.getHeight());
+        
         
         stage = new Stage(new StretchViewport(AppData.width, AppData.height)) {
+            
             @Override
             public void draw() {
                 super.draw();
        
-//                experienceLabel.setPosition(experienceBar.getX() + experienceBar.getWidth() + PADDING, experienceLabel.getY());
-//               
-//                healthLabel.setPosition(healthBar.getX() + healthBar.getWidth() + PADDING, healthLabel.getY());
+                //experienceLabel.setPosition(experienceBar.getX() + experienceBar.getWidth() + PADDING, experienceLabel.getY());
+               
+                //healthLabel.setPosition(healthBar.getX() + healthBar.getWidth() + PADDING, healthLabel.getY());
                 
                 getBatch().setProjectionMatrix(getCamera().combined);
+                getBatch().setColor(BATCH_COLOR.r, BATCH_COLOR.g, BATCH_COLOR.b, 1);
                 getBatch().begin();
-                getBatch().draw(Assets.healthbar, healthBar.getX(), healthBar.getY(), healthBar.getWidth(), healthBar.getHeight());
+                
+                playerIcon.draw(getBatch());
+                gunIcon.draw(getBatch());
+                healthBarBackground.draw(getBatch());
+                healthBar.draw(getBatch());
 
                 getBatch().setColor(Color.GRAY);
-                getBatch().draw(Assets.healthbar, experienceBar.getX(), experienceBar.getY(), experienceBar.getWidth(), experienceBar.getHeight());
+                //experienceBar.draw(getBatch());
                 getBatch().setColor(BATCH_COLOR);
                 
                 getBatch().end();
             }
         };
+
 
         // hGroup.addActor(soldierButton);
         // hGroup.addActor(tankButton);
@@ -204,35 +282,72 @@ public class GameToolbar {
         // hGroup.addActor(soldierUpgradeButton);
         // hGroup.addActor(vGroup);
 
-        bombButton.setPosition(0, PADDING);
-        strafeButton.setPosition(bombButton.getX() + bombButton.getWidth() + PADDING, 200);
-        tankButton.setPosition(strafeButton.getWidth() + PADDING, PADDING);
-        soldierButton.setPosition(tankButton.getX() + tankButton.getWidth() + PADDING, PADDING);
-        tankUpgradeButton.setPosition(soldierButton.getX() + soldierButton.getWidth() + PADDING, PADDING);
-        towerUpgradeButton.setPosition(tankUpgradeButton.getX() + tankUpgradeButton.getWidth() + PADDING, PADDING);
-        soldierUpgradeButton.setPosition(towerUpgradeButton.getX() , PADDING);
-        healthBar.setPosition(soldierUpgradeButton.getX() + soldierUpgradeButton.getWidth() + PADDING, (70 * 0.5f) - (healthBar.getHeight() * 0.75f) + (healthBar.getHeight() * 0.5f));
-        experienceBar.setPosition(healthBar.getX(), healthBar.getY() - (healthBar.getHeight() * 0.75f) - (healthBar.getHeight() * 0.5f));
-        experienceLabel.setPosition(soldierUpgradeButton.getX() + soldierUpgradeButton.getWidth() + PADDING, getTop() - experienceLabel.getHeight());
+        joystick.setPosition(PADDING, PADDING);
+        bombButton.setPosition(AppData.width - bombButton.getWidth(), PADDING);
+        strafeButton.setPosition(bombButton.getX() - strafeButton.getWidth() - PADDING, PADDING);
+        tankButton.setPosition(strafeButton.getX() - tankButton.getWidth() - PADDING, PADDING);
+        soldierButton.setPosition(tankButton.getX() - soldierButton.getWidth() - PADDING, PADDING);
+        tankUpgradeButton.setPosition(soldierButton.getX() - tankUpgradeButton.getWidth() - PADDING, PADDING);
+        towerUpgradeButton.setPosition(tankUpgradeButton.getX() - towerUpgradeButton.getWidth() - PADDING, PADDING);
+        soldierUpgradeButton.setPosition(towerUpgradeButton.getX() - soldierUpgradeButton.getWidth() - PADDING, PADDING);
         healthLabel.setPosition(soldierUpgradeButton.getX() + soldierUpgradeButton.getWidth() + PADDING, experienceLabel.getY() - healthLabel.getHeight());
-        moneyLabel.setPosition(soldierUpgradeButton.getX() + soldierUpgradeButton.getWidth() + PADDING, healthLabel.getY() - moneyLabel.getHeight());
+        addMoney(0);
 
-        //healthBar.setWidth(AppData.width - (soldierUpgradeButton.getX() + soldierUpgradeButton.getWidth() + PADDING));
+        moneyToast.setColor(1, 1, 1, 1);
+
         
-        stage.addActor(bombButton);
-        stage.addActor(strafeButton);
-        stage.addActor(tankButton);
-        stage.addActor(soldierButton);
-        stage.addActor(tankUpgradeButton);
-        //stage.addActor(towerUpgradeButton);
-        stage.addActor(soldierUpgradeButton);
+        moneyLabel.setColor(new Color(0,   
+                                      0.4f,
+                                      0, 1));
+        
+        
+        
+        //healthBar.setWidth(AppData.width - (soldierUpgradeButton.getX() + soldierUpgradeButton.getWidth() + PADDING));
+       
+        stage.addActor(joystick);
+//        stage.addActor(bombButton);
+//        stage.addActor(strafeButton);
+  //      stage.addActor(tankButton);
+  //      stage.addActor(soldierButton);
+        stage.addActor(moneyToast);
+//        stage.addActor(tankUpgradeButton);
+//        stage.addActor(towerUpgradeButton);
+//        stage.addActor(soldierUpgradeButton);
         stage.addActor(moneyLabel);
-        //stage.addActor(experienceLabel);
-        //stage.addActor(healthLabel);
+        stage.addActor(ammoLabel);
+//          stage.addActor(experienceLabel);
+//          stage.addActor(healthLabel);
+//          stage.addActor(playerIcon);
         
         BATCH_COLOR = stage.getBatch().getColor();
     }
    
+    public void update(float delta) {
+       stage.act(delta);
+      
+       if(killStreak) {
+           killStreakTimer += delta;
+           
+           if(killStreakTimer >= KS_INTERVAL) {
+               if(!killCompleted) {
+                   killStreakTimer = 0;
+                   killCompleted = false;
+                   killstreakAmount = 0;
+                   killStreak = false;
+                   
+                   // Move off screen
+                   moneyToast.addAction(Actions.parallel(
+                                           Actions.fadeOut(0.25f),
+                                           Actions.moveTo(AppData.width + (PADDING * 2), 
+                                                   moneyToast.getY(), 0.25f)));
+               }
+           }
+       }
+       else {
+           
+       }
+    }
+    
     public void strafeButtonTouchUp() {
         Assets.playPressUp();
     }
@@ -296,26 +411,88 @@ public class GameToolbar {
         return stage;
     }
     
-    public static void setMoney(int money) {
-        moneyLabel.setText("Money: " + money);
+    public void setAmmo(int ammo) {
+        ammoLabel.setText(parent.getLevel().getPlayer().getCurrentWeapon().getAmmo() + " / " +
+                          parent.getLevel().getPlayer().getCurrentWeapon().getMaxAmmo());
+        
+    //    shakeAmmo();
     }
     
-    public static void setExperience(int exp) {
-        experienceLabel.setText("Experience: " + exp);
+    private void updateMoneyToast(int am) {    
+        if(am > 0) {
+            killStreak = true;
+            killStreakTimer = 0;
+            killstreakAmount += am;
+            moneyToast.setText("+" + killstreakAmount);
+        }
         
-        // Calculate the exp bar width
-        experienceBar.setWidth((GameScreen.battle.getPlayer().getExperience() / 
-                               (float) GameScreen.battle.getPlayer().getGoalExp()) * 100f);
+        float x = moneyLabel.getX();
+        float y = moneyLabel.getY() - moneyToast.getStyle().font.getBounds(moneyToast.getText()).height;
         
-        experienceLabel.setPosition(experienceLabel.getX(), experienceLabel.getY());
+        moneyToast.setPosition(x, y);
+     
+        if(killStreak) {
+            moneyToast.addAction(
+                    Actions.sequence(     
+                            Actions.parallel(Actions.sequence(
+                                    Actions.moveBy(10, 0,0.02f),
+                                    Actions.moveBy(-10, 0,0.02f),
+                                    Actions.moveBy(0, 10,0.02f),
+                                    Actions.moveBy(0, -10,0.02f),
+                    Actions.fadeIn(0.5f)))));
+        }
     }
     
-    public static void setHealth(float f) {
+    public void addMoney(int am) {
+        this.money += am;
+
+        moneyLabel.setText("$" + money);
+        
+        float t = (Fonts.getZombie().getBounds(moneyLabel.getText()).height * 2);
+        
+        // Reposition the money text
+        moneyLabel.setPosition(AppData.width - (Fonts.getZombie().getBounds(moneyLabel.getText()).width) - (t * 0.5f), 
+                               AppData.height - t);
+     
+        moneyLabel.addAction(Actions.sequence(
+                Actions.moveBy(10, 0,0.02f),
+                Actions.moveBy(-10, 0,0.02f),
+                Actions.moveBy(0, 10,0.02f),
+                Actions.moveBy(0, -10,0.02f)));
+        
+        updateMoneyToast(am);
+    }
+    
+    public void shakeAmmo() {
+        ammoLabel.addAction(Actions.repeat(2, Actions.sequence(
+                Actions.moveBy(20, 0, 0.1f),
+                Actions.moveBy(-20, 0, 0.1f))));
+    }
+    
+    public Touchpad getJoystick() {
+        return joystick;
+    }
+    
+    public void setGunIcon(Gun gun) {
+        if(gunIcon == null) {
+            gunIcon = new Sprite(gun.getRegion());
+        }
+        
+        // Position directly under player icon
+        gunIcon.setPosition(playerIcon.getX(), 
+                            playerIcon.getY() - (gunIcon.getHeight() * 2));
+        
+        // Position ammo label to the right of the gun icon
+        ammoLabel.setPosition(gunIcon.getX() + gunIcon.getWidth() + PADDING, 
+                              gunIcon.getY());
+    }
+    
+    public void setHealth(float f) {
         healthLabel.setText("Health: " + f);
-        
+System.err.println(healthBar.getWidth() * (f / 100));
         // Calculate the exp bar width
-        healthBar.setWidth((GameScreen.battle.getPlayer().getHealth() / 
-                               (float) GameScreen.battle.getPlayer().getMaxHealth()) * 100f);
+        healthBar.setSize(healthBar.getWidth() * (f / 100),
+                          healthBar.getHeight());
         
         healthLabel.setPosition((AppData.width - healthLabel.getWidth() * 4), healthLabel.getY());
     }

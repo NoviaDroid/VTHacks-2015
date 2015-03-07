@@ -3,101 +3,87 @@ skinPack.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-touchBackground
-  rotate: false
-  xy: 1, 17
-  size: 100, 100
-  orig: 100, 100
-  offset: 0, 0
-  index: -1
 Bomb Icon +
   rotate: false
-  xy: 103, 60
+  xy: 1, 1
   size: 57, 57
   orig: 57, 57
   offset: 0, 0
   index: -1
 Bomb Icon +Hover
   rotate: false
-  xy: 162, 60
+  xy: 60, 1
   size: 57, 57
   orig: 57, 57
   offset: 0, 0
   index: -1
 Bomb Icon Hover
   rotate: false
-  xy: 221, 60
+  xy: 119, 1
   size: 57, 57
   orig: 57, 57
   offset: 0, 0
   index: -1
 Bomb Icon
   rotate: false
-  xy: 280, 60
+  xy: 178, 1
   size: 57, 57
   orig: 57, 57
   offset: 0, 0
   index: -1
 Soldier Button + Hover
   rotate: false
-  xy: 339, 60
+  xy: 237, 1
   size: 57, 57
   orig: 57, 57
   offset: 0, 0
   index: -1
 Soldier Button +
   rotate: false
-  xy: 398, 60
+  xy: 296, 1
   size: 57, 57
   orig: 57, 57
   offset: 0, 0
   index: -1
 Tank Button +
   rotate: false
-  xy: 103, 1
+  xy: 355, 1
   size: 57, 57
   orig: 57, 57
   offset: 0, 0
   index: -1
 Tank Button +Hover
   rotate: false
-  xy: 162, 1
+  xy: 414, 1
   size: 57, 57
   orig: 57, 57
   offset: 0, 0
   index: -1
 Tank Button Hover
   rotate: false
-  xy: 221, 1
+  xy: 473, 1
   size: 57, 57
   orig: 57, 57
   offset: 0, 0
   index: -1
 Tank Button
   rotate: false
-  xy: 280, 1
+  xy: 532, 1
   size: 57, 57
   orig: 57, 57
   offset: 0, 0
   index: -1
 Troop Button Hover
   rotate: false
-  xy: 339, 1
+  xy: 591, 1
   size: 57, 57
   orig: 57, 57
   offset: 0, 0
   index: -1
 Troop Button
   rotate: false
-  xy: 398, 1
+  xy: 650, 1
   size: 57, 57
   orig: 57, 57
-  offset: 0, 0
-  index: -1
-touchKnob
-  rotate: false
-  xy: 457, 81
-  size: 36, 36
-  orig: 36, 36
   offset: 0, 0
   index: -1

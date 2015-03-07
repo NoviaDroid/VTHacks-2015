@@ -1,0 +1,96 @@
+
+Zombie1.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+zombie_
+  rotate: false
+  xy: 1, 1
+  size: 18, 29
+  orig: 18, 29
+  offset: 0, 0
+  index: 10
+zombie_
+  rotate: false
+  xy: 21, 1
+  size: 18, 29
+  orig: 18, 29
+  offset: 0, 0
+  index: 14
+zombie_
+  rotate: false
+  xy: 41, 1
+  size: 18, 29
+  orig: 18, 29
+  offset: 0, 0
+  index: 18
+zombie_
+  rotate: false
+  xy: 61, 1
+  size: 18, 29
+  orig: 18, 29
+  offset: 0, 0
+  index: 22
+zombie_
+  rotate: false
+  xy: 81, 1
+  size: 18, 29
+  orig: 18, 29
+  offset: 0, 0
+  index: 26
+zombie_
+  rotate: false
+  xy: 101, 1
+  size: 18, 29
+  orig: 18, 29
+  offset: 0, 0
+  index: 30
+zombie_
+  rotate: false
+  xy: 121, 1
+  size: 18, 29
+  orig: 18, 29
+  offset: 0, 0
+  index: 34
+zombie_
+  rotate: false
+  xy: 141, 1
+  size: 18, 29
+  orig: 18, 29
+  offset: 0, 0
+  index: 38
+zombie_
+  rotate: false
+  xy: 161, 1
+  size: 18, 29
+  orig: 18, 29
+  offset: 0, 0
+  index: 42
+zombie_
+  rotate: false
+  xy: 181, 1
+  size: 18, 29
+  orig: 18, 29
+  offset: 0, 0
+  index: 46
+zombie_
+  rotate: false
+  xy: 201, 1
+  size: 18, 29
+  orig: 18, 29
+  offset: 0, 0
+  index: 50
+zombie_
+  rotate: false
+  xy: 221, 1
+  size: 18, 29
+  orig: 18, 29
+  offset: 0, 0
+  index: 54
+zombie_
+  rotate: false
+  xy: 241, 1
+  size: 18, 29
+  orig: 18, 29
+  offset: 0, 0
+  index: 58
