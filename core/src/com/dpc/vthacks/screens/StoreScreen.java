@@ -10,12 +10,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.dpc.vthacks.App;
 import com.dpc.vthacks.Bank;
+import com.dpc.vthacks.PagedScrollPane;
 import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.data.Fonts;
@@ -24,6 +26,7 @@ import com.dpc.vthacks.properties.WeaponManager;
 
 public class StoreScreen implements Screen {
     private Stage stage;
+    private Table scrollTable;
     private TextButton backButton;
     private Label moneyLabel;
     private ImageButton[] weaponButtons;
@@ -108,7 +111,7 @@ public class StoreScreen implements Screen {
         labelStyle.font = Fonts.getZombieSmall();
         
         
-        backButton = new TextButton("back", textButtonStyle);
+        backButton = new TextButton("Back", textButtonStyle);
         
         backButton.setPosition(PADDING, 
                 AppData.height - 2 * textButtonStyle.font.getBounds(backButton.getText()).height);
@@ -130,7 +133,10 @@ public class StoreScreen implements Screen {
         
         weaponButtons = new ImageButton[WeaponManager.NUMBER_OF_WEAPONS];
         
-        float lastX = 50;
+        PagedScrollPane scroll = new PagedScrollPane();
+        scroll.setFlingTime(0.1f);
+        scroll.setPageSpacing(AppData.width / 6);
+        scroll.setWidth(AppData.width);
         
         for(int i = 0; i < weaponButtons.length; i++) {
             final Weapon weapon = WeaponManager.getWeapons().get(i);
@@ -139,8 +145,6 @@ public class StoreScreen implements Screen {
                     weaponIcons.getDrawable(WeaponManager.getWeapons().get(i)
                             .getIconPath()));
            
-            button.setPosition(lastX, 50);
-            
             weaponButtons[i] = button;
             
             final int a = i;
@@ -156,12 +160,12 @@ public class StoreScreen implements Screen {
                 
             });
             
-            stage.addActor(button);
             
-            lastX = button.getX() + button.getWidth() + 50;
+            scroll.addPage(button);
         }
         
-       
+        stage.addActor(scroll);
+        
         display(WeaponManager.getWeapons().get(0));
         positionElements();
         
@@ -190,11 +194,11 @@ public class StoreScreen implements Screen {
         }
         
         weaponInfo.icon.setDrawable(weaponIcons.getDrawable(weapon.getIconPath()));
-        weaponInfo.name.setText("name: " + weapon.getName());
-        weaponInfo.ammo.setText("ammo: " + weapon.getAmmo());
-        weaponInfo.damage.setText("damage: " + weapon.getMinDamage() + " to " + weapon.getMaxDamage());
-        weaponInfo.description.setText("description: " + weapon.getDescription());
-        weaponInfo.cost.setText("cost: " + weapon.getCost());
+        weaponInfo.name.setText(weapon.getName());
+        weaponInfo.ammo.setText("Ammo: " + weapon.getAmmo());
+        weaponInfo.damage.setText("Damage: " + weapon.getMinDamage() + " to " + weapon.getMaxDamage());
+        weaponInfo.description.setText("Description: " + weapon.getDescription());
+        weaponInfo.cost.setText("Cost: " + weapon.getCost());
         weaponInfo.id = weapon.getId();
         
         // Only allow purchase if enough money is there

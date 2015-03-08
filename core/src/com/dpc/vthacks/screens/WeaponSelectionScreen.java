@@ -61,7 +61,7 @@ public class WeaponSelectionScreen implements Screen {
             dStage = new Stage(new StretchViewport(AppData.width, AppData.height));
             table = new Table();
 
-            okay = new TextButton("okay", buttonStyle);
+            okay = new TextButton("Okay", buttonStyle);
             okay.setPosition(okay.getWidth() + PADDING, okay.getHeight() + PADDING);
 
             okay.addListener(new InputListener() {
@@ -191,7 +191,7 @@ public class WeaponSelectionScreen implements Screen {
             }
         });
         
-        backButton = new TextButton("back", buttonStyle);
+        backButton = new TextButton("Back", buttonStyle);
         backButton.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -202,7 +202,7 @@ public class WeaponSelectionScreen implements Screen {
         });
         
         backButton.setPosition(PADDING, 
-                               AppData.height - (buttonStyle.font.getBounds("back").height*2));
+                               AppData.height - (buttonStyle.font.getBounds("Back").height*2));
         
         weaponIconSkin = new Skin(Assets.weaponIconAtlas);
         
@@ -213,6 +213,7 @@ public class WeaponSelectionScreen implements Screen {
         
         masterTable = new Table();
         weaponSelectionTable = new Table();
+        
         VerticalGroup vgroup = new VerticalGroup();
         Table hgroup = new Table();
         

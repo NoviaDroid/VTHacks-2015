@@ -1,6 +1,6 @@
 [
 	{
-		"name": "shotgun",
+		"name": "Shotgun",
 		"id": 2,
 		"description": "Packs a punch",
 		"iconPath": "shotgun",
@@ -12,7 +12,7 @@
 	},
 	
 	{
-		"name": "handgun",
+		"name": "Handgun",
 		"id": 1,
 		"description": "Small but powerful",
 		"iconPath": "handgun",
@@ -36,7 +36,7 @@
 	},
 
 	{
-		"name": "magnum",
+		"name": "Magnum",
 		"id": 3,
 		"description": "Revolves around power",
 		"iconPath": "magnum",
@@ -48,7 +48,7 @@
 	},
 	
 	{
-		"name": "ak-47",
+		"name": "AK-47",
 		"id": 5,
 		"description": "Full auto. Enough said.",
 		"iconPath": "ak-47",
