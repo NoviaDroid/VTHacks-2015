@@ -9,7 +9,6 @@ import com.dpc.vthacks.App;
 import com.dpc.vthacks.GameCamera;
 import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
-import com.dpc.vthacks.properties.WeaponManager;
 
 public class MenuScreen implements Screen {
     private Sprite menu;
@@ -32,7 +31,12 @@ public class MenuScreen implements Screen {
             
             @Override
             public boolean keyDown(int keycode) {
-                context.setScreen(new StoreScreen(context));
+                if(keycode == Keys.S) {
+                    context.setScreen(new StoreScreen(context));
+                }
+                else {
+                    context.setScreen(new WeaponSelectionScreen(context));
+                }
                 
                 return super.keyDown(keycode);
             }

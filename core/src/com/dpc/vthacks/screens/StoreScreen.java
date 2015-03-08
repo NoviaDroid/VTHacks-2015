@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.dpc.vthacks.App;
 import com.dpc.vthacks.Bank;
@@ -120,20 +121,27 @@ public class StoreScreen implements Screen {
         });
         
         stage.addActor(backButton);
-        
+
         
         Skin skin = new Skin(Assets.storeAtlas);
         weaponIcons = new Skin(Assets.weaponIconAtlas);
         
         weaponButtons = new ImageButton[WeaponManager.NUMBER_OF_WEAPONS];
         
+        float lastX = 50;
+        
         for(int i = 0; i < weaponButtons.length; i++) {
             final Weapon weapon = WeaponManager.getWeapons().get(i);
-            
-            ImageButton button = new ImageButton(weaponIcons.getDrawable(weapon.getIconPath()));
-            button.setPosition(i * button.getWidth(), 0);
+
+            ImageButton button = new ImageButton(
+                    weaponIcons.getDrawable(WeaponManager.getWeapons().get(i)
+                            .getIconPath()));
+           
+            button.setPosition(lastX, 50);
             
             weaponButtons[i] = button;
+            
+            final int a = i;
             
             weaponButtons[i].addListener(new InputListener() {
                 
@@ -147,6 +155,8 @@ public class StoreScreen implements Screen {
             });
             
             stage.addActor(button);
+            
+            lastX = button.getX() + button.getWidth() + 50;
         }
         
        
@@ -173,7 +183,11 @@ public class StoreScreen implements Screen {
     }
     
     public void display(Weapon weapon) {
-        weaponInfo.icon = new Image(weaponIcons.getDrawable(weapon.getIconPath()));
+        if(weaponInfo.icon == null) {
+            weaponInfo.icon = new Image();
+        }
+        
+        weaponInfo.icon.setDrawable(weaponIcons.getDrawable(weapon.getIconPath()));
         weaponInfo.name.setText("name: " + weapon.getName());
         weaponInfo.ammo.setText("ammo: " + weapon.getAmmo());
         weaponInfo.damage.setText("damage: " + weapon.getMinDamage() + " to " + weapon.getMaxDamage());

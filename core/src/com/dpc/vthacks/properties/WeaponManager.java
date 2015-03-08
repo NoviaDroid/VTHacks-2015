@@ -31,14 +31,14 @@ public final class WeaponManager {
         prefs = Gdx.app.getPreferences(PREFS_PATH);
         
         // Handgun is always unlocked
-        prefs.putInteger("unlocked", 1);
+        prefs.putInteger("unlocked1", 1);
         prefs.flush();
-        
+
         unlockedWeapons = new Array<Weapon>();
         
         loadUnlockedWeapons();
     }
-    
+
     private static void loadUnlockedWeapons() {
         for(Object id : prefs.get().values()) {
             int inumb = Integer.valueOf((String) id);
@@ -58,6 +58,10 @@ public final class WeaponManager {
         // Unlock weapon with that ID
         prefs.putInteger("unlocked" + weaponID, weaponID);
         prefs.flush();
+    }
+    
+    public static Array<Weapon> getUnlockedWeapons() {
+        return unlockedWeapons;
     }
     
     public static Array<Weapon> getWeapons() {
