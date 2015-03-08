@@ -13,7 +13,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.dpc.vthacks.App;
 import com.dpc.vthacks.Bank;
@@ -76,6 +75,9 @@ public class StoreScreen implements Screen {
         weaponInfo.purchase.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                
+                if(WeaponManager.isUnlocked(weaponInfo.id)) return false;
+                
                 // Unlock the weapon
                 WeaponManager.unlock(weaponInfo.id);
                 

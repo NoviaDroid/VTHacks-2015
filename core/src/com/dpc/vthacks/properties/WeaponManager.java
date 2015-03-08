@@ -54,6 +54,16 @@ public final class WeaponManager {
         System.err.println(unlockedWeapons);
     }
     
+    public static boolean isUnlocked(int weaponID) {
+        for(Weapon weapon : unlockedWeapons) {
+            if(weapon.getId() == weaponID) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
     public static void unlock(int weaponID) {
         // Unlock weapon with that ID
         prefs.putInteger("unlocked" + weaponID, weaponID);

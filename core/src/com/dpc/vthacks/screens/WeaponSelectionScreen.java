@@ -2,6 +2,7 @@ package com.dpc.vthacks.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -13,9 +14,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.dpc.vthacks.App;
+import com.dpc.vthacks.PagedScrollPane;
 import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.data.Fonts;
@@ -29,8 +32,12 @@ public class WeaponSelectionScreen implements Screen {
     private WeaponSelectionDialog dialog;
     private LabelStyle labelStyle;
     private App context;
+    private Table weaponSelectionTable;
     private Table masterTable;
+    private TextButton selectLevelButton;
     private TextButton backButton;
+    private Label title;
+    private Weapon selectedWeapon;
     private TextButtonStyle buttonStyle;
     private int buttonContext; // Index of which button was pressed
     private static final int PADDING = 5;
@@ -45,16 +52,14 @@ public class WeaponSelectionScreen implements Screen {
         private Image[] weaponIcons;
         private Label name;
         private Table table;
-        private Weapon selectedWeapon;
+        private PagedScrollPane scrollPane;
         private TextButton okay;
         private Stage dStage;
+        private Label weaponName, weaponDamage, weaponAmmo, weaponDesc;
         
         public WeaponSelectionDialog() {   
-            dStage = new Stage(new StretchViewport(800, 480));
+            dStage = new Stage(new StretchViewport(AppData.width, AppData.height));
             table = new Table();
-            
-            int rowActors = 3;
-            int columnActors = 4;
 
             okay = new TextButton("okay", buttonStyle);
             okay.setPosition(okay.getWidth() + PADDING, okay.getHeight() + PADDING);
@@ -64,27 +69,33 @@ public class WeaponSelectionScreen implements Screen {
                 public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                     open = false;
 
-                    // Now swap the weapon out for the new one
-                    selectedWeapons[buttonContext].weapon = selectedWeapon;
-                    
-                    // Change the textureregion of the icon
-                    ((TextureRegionDrawable) selectedWeapons[buttonContext].button.getImage()
-                            .getDrawable()).setRegion(Assets.weaponIconAtlas
-                            .findRegion(selectedWeapon.getIconPath()));
-
-                    
-                    // Reassign the layout
-                    selectedWeapons[buttonContext].button.invalidateHierarchy();
-                    masterTable.invalidateHierarchy();
+                    if(selectedWeapon != null) {
+                        // Now swap the weapon out for the new one
+                        selectedWeapons[buttonContext].weapon = selectedWeapon;
+                        
+                        // Change the textureregion of the icon
+                        ((TextureRegionDrawable) selectedWeapons[buttonContext].button.getImage()
+                                .getDrawable()).setRegion(Assets.weaponIconAtlas
+                                .findRegion(selectedWeapon.getIconPath()));
+    
+                        
+                        // Reassign the layout
+                        selectedWeapons[buttonContext].button.invalidateHierarchy();
+                        weaponSelectionTable.invalidateHierarchy();
+                    }
                     
                     Gdx.input.setInputProcessor(stage);
                     
                     return super.touchDown(event, x, y, pointer, button);
                 }
             });
+
+            weaponIcons = new Image[WeaponManager.getUnlockedWeapons().size];
             
-            // Icon for every unlocked weapon
-            weaponIcons = new Image[rowActors * columnActors];
+            PagedScrollPane scroll = new PagedScrollPane();
+            scroll.setFlingTime(0.1f);
+
+            scroll.setPageSpacing(AppData.width / 6);
             
             for(int i = 0; i < weaponIcons.length; i++) {
                 if(i >= WeaponManager.getUnlockedWeapons().size) {
@@ -103,20 +114,30 @@ public class WeaponSelectionScreen implements Screen {
                     public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                         selectedWeapon = WeaponManager.getUnlockedWeapons().get(dex);
                         
+                        displaySelectedWeapon();
+                        
                         return super.touchDown(event, x, y, pointer, button);
                     }
                 });
-            }
-            
-            for(int i = 0; i < rowActors; i++) {
-                for(int j = 0; j < columnActors; j++) {
-                    Image actor = weaponIcons[(i * columnActors) + j];
-                    table.add(actor).width(actor.getWidth()).height(actor.getHeight()).pad(55);
-                }
-              
-                table.row();
+                
+                scroll.addPage(weaponIcons[i]);
             }
 
+            weaponName = new Label("", labelStyle);
+            weaponDamage = new Label("", labelStyle);
+            weaponAmmo = new Label("", labelStyle);
+            weaponDesc = new Label(" ", labelStyle);
+            
+            VerticalGroup vgroup = new VerticalGroup();
+            vgroup.addActor(weaponName);
+      
+      
+            table.add(vgroup);
+            table.row();
+            table.row();
+            table.row();
+            table.add(scroll);
+            table.row();
             table.add(okay);
             
             table.setFillParent(true);
@@ -125,8 +146,18 @@ public class WeaponSelectionScreen implements Screen {
                              labelStyle);
             
             dStage.addActor(table);
+            
+            stage.getViewport().update(AppData.width, AppData.height);
+            stage.getCamera().update();
         }
 
+        public void displaySelectedWeapon() {
+            weaponName.setText("" + selectedWeapon.getName());
+            weaponDamage.setText("damage: " + selectedWeapon.getMinDamage() + " to " + selectedWeapon.getMaxDamage());
+            weaponAmmo.setText("ammo: " + selectedWeapon.getAmmo());
+            weaponDesc.setText("description: " + selectedWeapon.getDescription());
+        }
+        
         private void updateAndRender(float delta) {
             dStage.act(delta);
             dStage.draw();
@@ -145,7 +176,20 @@ public class WeaponSelectionScreen implements Screen {
         buttonStyle.font = Fonts.getZombieSmall();
         
         labelStyle = new LabelStyle();
-        labelStyle.font = Fonts.getZombie();
+        labelStyle.font = Fonts.getZombieXSmall();
+        
+        title = new Label("Select your weapons", labelStyle);
+        
+        selectLevelButton = new TextButton("Select a level", buttonStyle);
+        
+        selectLevelButton.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                context.setScreen(new LevelSelectionScreen(context));
+                
+                return super.touchDown(event, x, y, pointer, button);
+            }
+        });
         
         backButton = new TextButton("back", buttonStyle);
         backButton.addListener(new InputListener() {
@@ -168,7 +212,12 @@ public class WeaponSelectionScreen implements Screen {
         selectedWeapons = new WeaponButton[2];
         
         masterTable = new Table();
+        weaponSelectionTable = new Table();
+        VerticalGroup vgroup = new VerticalGroup();
+        Table hgroup = new Table();
         
+        vgroup.addActor(title);
+
         for(int i = 0; i < selectedWeapons.length; i++) {
             
             selectedWeapons[i] = new WeaponButton();
@@ -190,28 +239,48 @@ public class WeaponSelectionScreen implements Screen {
                     // Save off the index of this button for when we figure out which weapon to replace
                     buttonContext = iter;
 
+                    // Reset the selected weapon
+                    selectedWeapon = selectedWeapons[iter].weapon;
+                    
+                    // Update the display
+                    dialog.displaySelectedWeapon();
+                    
                     // Open the dialog to select a weapon for that slot
                     openSelectionDialog();
                     
                     return super.touchDown(event, x, y, pointer, button);
                 }
                 
-            });
-           
+            });        
+            
+            hgroup.pad(title.getHeight());
             
             // Add the actual button
-            masterTable.add(selectedWeapons[i].button).fill().expand();
-           
-            
-            stage.addActor(masterTable);
+            hgroup.add(selectedWeapons[i].button).pad(15).fill().expand();
         }
 
+        vgroup.addActor(hgroup);
         
+        weaponSelectionTable.add(vgroup);
+        
+        weaponSelectionTable.setPosition(0, AppData.height - weaponSelectionTable.getHeight());
+        
+        masterTable.add(weaponSelectionTable);
+
         masterTable.addActor(backButton);
         
-        stage.addActor(masterTable);
-        
         masterTable.setFillParent(true);
+        
+        Table parent = new Table();
+        parent.setSize(AppData.width, AppData.height * 0.5f);
+    
+        parent.addActor(masterTable);
+
+        parent.setFillParent(true);
+        
+        
+        stage.addActor(parent);
+        
         
         Gdx.input.setInputProcessor(stage);
     }
@@ -255,6 +324,4 @@ public class WeaponSelectionScreen implements Screen {
         stage.dispose();
         dialog.dStage.dispose();
     }
-    
-    
 }
