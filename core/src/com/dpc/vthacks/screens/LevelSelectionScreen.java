@@ -1,5 +1,6 @@
 package com.dpc.vthacks.screens;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -25,6 +26,8 @@ public class LevelSelectionScreen implements Screen {
     public void show() {
         stage = new Stage(new StretchViewport(AppData.width, AppData.height));
         
+        levelTable = new Table();
+        
         labelStyle = new LabelStyle();
         labelStyle.font = Fonts.getZombie();
         
@@ -47,25 +50,12 @@ public class LevelSelectionScreen implements Screen {
         PagedScrollPane scroll = new PagedScrollPane();
         scroll.setFlingTime(0.1f);
         scroll.setPageSpacing(25);
-        
-        
-//        int c = 1;
-//        for (int l = 0; l < 10; l++) {
-//            Table levels = new Table().pad(50);
-//            levels.defaults().pad(20, 40, 20, 40);
-//            
-//            for (int y = 0; y < 3; y++) {
-//                levels.row();
-//                
-//                for (int x = 0; x < 4; x++) {
-//                    levels.add(getLevelButton(c++)).expand().fill();
-//                }
-//            }
-//            
-//            scroll.addPage(levels);
-//        }
+
+        scroll.addPage(levelTable);
         
         stage.addActor(scroll);
+        
+        Gdx.input.setInputProcessor(stage);
     }
 
     @Override

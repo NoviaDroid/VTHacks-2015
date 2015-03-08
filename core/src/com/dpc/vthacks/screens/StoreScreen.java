@@ -202,7 +202,12 @@ public class StoreScreen implements Screen {
         weaponInfo.id = weapon.getId();
         
         // Only allow purchase if enough money is there
-        weaponInfo.purchase.setDisabled(Bank.getBalance() >= weapon.getCost());
+        weaponInfo.purchase.setDisabled(Bank.getBalance() >= weapon.getCost() || 
+                                        WeaponManager.isUnlocked(weapon.getId()));
+        
+        if(WeaponManager.isUnlocked(weapon.getId())) {
+            weaponInfo.purchase.setText("Purchased");
+        }
     }
     
     public void update(float delta) {

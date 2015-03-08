@@ -37,6 +37,7 @@ public class WeaponSelectionScreen implements Screen {
     private TextButton selectLevelButton;
     private TextButton backButton;
     private Label title;
+    private TextButton next;
     private Weapon selectedWeapon;
     private TextButtonStyle buttonStyle;
     private int buttonContext; // Index of which button was pressed
@@ -178,6 +179,16 @@ public class WeaponSelectionScreen implements Screen {
         labelStyle = new LabelStyle();
         labelStyle.font = Fonts.getZombieXSmall();
         
+        next = new TextButton("Next", buttonStyle);
+        next.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                context.setScreen(new LevelSelectionScreen(context));
+                
+                return super.touchDown(event, x, y, pointer, button);
+            }
+        });
+        
         title = new Label("Select your weapons", labelStyle);
         
         selectLevelButton = new TextButton("Select a level", buttonStyle);
@@ -266,10 +277,14 @@ public class WeaponSelectionScreen implements Screen {
         
         weaponSelectionTable.setPosition(0, AppData.height - weaponSelectionTable.getHeight());
         
+        weaponSelectionTable.row();
+        weaponSelectionTable.add(next);
+        
         masterTable.add(weaponSelectionTable);
 
         masterTable.addActor(backButton);
         
+
         masterTable.setFillParent(true);
         
         Table parent = new Table();
@@ -278,7 +293,6 @@ public class WeaponSelectionScreen implements Screen {
         parent.addActor(masterTable);
 
         parent.setFillParent(true);
-        
         
         stage.addActor(parent);
         
