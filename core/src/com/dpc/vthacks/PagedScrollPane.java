@@ -16,6 +16,8 @@ public class PagedScrollPane extends ScrollPane {
 
     private Table content;
 
+    private Actor currentActor;
+    
     public PagedScrollPane () {
         super(null);
         setup();
@@ -105,12 +107,27 @@ public class PagedScrollPane extends ScrollPane {
             for (Actor a : pages) {
                 pageX = a.getX();
                 pageWidth = a.getWidth();
+                
+                currentActor = a;
+                
                 if (scrollX < (pageX + pageWidth * 0.5)) {
                     break;
                 }
             }
+            
             setScrollX(MathUtils.clamp(pageX - (width - pageWidth) / 2, 0, maxX));
         }
     }
 
+    public void setCurrentActor(Actor currentActor) {
+        this.currentActor = currentActor;
+    }
+    
+    public Table getContent() {
+        return content;
+    }
+    
+    public Actor getCurrentActor() {
+        return currentActor;
+    }
 }

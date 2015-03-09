@@ -78,18 +78,22 @@ public class StoreScreen implements Screen {
         weaponInfo.purchase.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                int cost = Integer.parseInt(weaponInfo.cost.getText()
+                        .toString().replace("Cost: ", ""));
                 
-                if(WeaponManager.isUnlocked(weaponInfo.id)) return false;
-                
-                // Unlock the weapon
-                WeaponManager.unlock(weaponInfo.id);
-                
-                // Withdrawal money
-                Bank.withdrawal(Integer.parseInt(weaponInfo.cost.getText()
-                        .toString().replace("cost: ", "")));
-                
-                // Update display
-                moneyLabel.setText("You have $" + Bank.getBalance());
+                if(Bank.getBalance() >= cost && !WeaponManager.isUnlocked(weaponInfo.id)) {
+                    if(WeaponManager.isUnlocked(weaponInfo.id)) return false;
+                    
+                    // Unlock the weapon
+                    WeaponManager.unlock(weaponInfo.id);
+                    
+                    // Withdrawal money
+                    Bank.withdrawal(cost);
+                    
+                    // Update display
+                    moneyLabel.setText("You have $" + Bank.getBalance());
+                    weaponInfo.purchase.setText("Purchased");
+                }
                 
                 return super.touchDown(event, x, y, pointer, button);
             }
@@ -202,11 +206,14 @@ public class StoreScreen implements Screen {
         weaponInfo.id = weapon.getId();
         
         // Only allow purchase if enough money is there
-        weaponInfo.purchase.setDisabled(Bank.getBalance() >= weapon.getCost() || 
-                                        WeaponManager.isUnlocked(weapon.getId()));
+       // weaponInfo.purchase.setDisabled(Bank.getBalance() >= weapon.getCost() || 
+                                 //       WeaponManager.isUnlocked(weapon.getId()));
         
         if(WeaponManager.isUnlocked(weapon.getId())) {
             weaponInfo.purchase.setText("Purchased");
+        }
+        else {
+            weaponInfo.purchase.setText("Purchase");
         }
     }
     

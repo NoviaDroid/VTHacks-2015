@@ -129,6 +129,7 @@ public class WeaponSelectionScreen implements Screen {
             weaponAmmo = new Label("", labelStyle);
             weaponDesc = new Label(" ", labelStyle);
             
+      
             VerticalGroup vgroup = new VerticalGroup();
             vgroup.addActor(weaponName);
       

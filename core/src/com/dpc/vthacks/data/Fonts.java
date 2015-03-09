@@ -22,7 +22,7 @@ public class Fonts {
    
         zombie = generator.generateFont(parameter); 
         
-        generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/RobotoCondensed-Bold.TTF"));
+        generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/RobotoCondensed-Bold.ttf"));
         
         parameter.size = Gdx.graphics.getWidth() * 54 / 1200;
         

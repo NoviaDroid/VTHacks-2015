@@ -1,0 +1,9 @@
+<level width="2400" height="800" zombieSpawnTime="1.2">
+  <Layer1 />
+  <background>
+    <skyline1 id="2" x="3" y="688" scrollable="true" scrollX="-0.1" scrollY="0"/>
+    <skyline2 id="1" x="0" y="855" scrollable="true" scrollX="0.05" scrollY="0"/>
+    <Road id="0" x="1" y="800" />
+  </background>
+  <GameLayer />
+</level>

@@ -4,14 +4,18 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
+import com.badlogic.gdx.utils.JsonWriter;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.dpc.vthacks.MathUtil;
 import com.dpc.vthacks.animation.AdvancedSpriteAnimation;
 import com.dpc.vthacks.animation.FrameData;
 import com.dpc.vthacks.animation.SpriteAnimation;
 import com.dpc.vthacks.factories.Factory;
+import com.dpc.vthacks.level.LevelProperties;
 import com.dpc.vthacks.objects.Weapon;
 import com.dpc.vthacks.properties.AnimatedUnitProperties;
 import com.dpc.vthacks.properties.Properties;
@@ -139,5 +143,21 @@ public class JSONManager {
         Factory.setPlayerProperties(playerProperties);
         
         Factory.setPrimaryGun(WeaponManager.getWeapons().get(0));
+    }
+    
+    public static void parseLevels() {
+        JsonReader reader = new JsonReader();
+        
+        JsonValue lvlRoot = reader.parse(Gdx.files.internal("json/levels.json"));
+        ObjectMap<String, String> levelMap = new ObjectMap<String, String>();
+        
+        int numbOfChildren = 6;
+        
+        for(int i = 0; i < numbOfChildren; i++) {
+            levelMap.put(lvlRoot.get(i).getString("level"),
+                         lvlRoot.get(i).getString("file"));
+        }
+        
+        LevelProperties.setLevels(levelMap);
     }
 }

@@ -130,8 +130,8 @@
   	"range": "250",
   	"health": "100",
     "max health": "80",
-    "minKillMoney": 10000,
-    "maxKillMoney": 12000,
+    "minKillMoney": 30,
+    "maxKillMoney": 50,
     "animations": [{
     	"walking": [{
     		"frame1": [{

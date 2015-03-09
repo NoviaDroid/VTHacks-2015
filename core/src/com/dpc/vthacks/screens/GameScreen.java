@@ -29,9 +29,12 @@ public class GameScreen implements Screen {
     private Player player;
     private FPSLogger logger;
     private GameToolbar toolbar;
+    private String levelName;
     
-    public GameScreen(App context) {
+    public GameScreen(App context, String levelName) {
         this.context = context;
+        this.levelName = levelName;
+        
         logger = new FPSLogger();
     }
     
@@ -125,7 +128,7 @@ public class GameScreen implements Screen {
             
             level.setPlayer(player);
             
-            OgmoParser.parse("mylevel.oel", level);  
+            OgmoParser.parse(levelName, level);  
           
             context.resize(w, h);
             
