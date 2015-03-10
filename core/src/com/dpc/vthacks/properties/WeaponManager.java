@@ -35,6 +35,7 @@ public final class WeaponManager {
          
         // Handgun is always unlocked
       prefs.putInteger("unlocked1", 1);
+      prefs.putInteger("unlocked2", 2);
        prefs.flush();
       
         unlockedWeapons = new Array<Weapon>();
@@ -44,7 +45,7 @@ public final class WeaponManager {
 
     private static void loadUnlockedWeapons() {
         for(Object id : prefs.get().values()) {
-            int inumb = Integer.valueOf((String) id);
+            int inumb = Integer.valueOf(String.valueOf(id));
             
             // Flag the proper weapon as unlocked
             for(Weapon w : weapons) {

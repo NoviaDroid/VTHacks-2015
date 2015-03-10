@@ -47,12 +47,12 @@ public class JSONManager {
                 new AnimatedUnitProperties<SpriteAnimation>()
                     .cost(tank.getInt("cost"))
                     .minDamage(tank.getFloat("minDamage"))
-                    .maxDamage(player.getFloat("maxDamage"))
+                    .maxDamage(tank.getFloat("maxDamage"))
                     .health(tank.getInt("health"))
                     .vel(tank.getFloat("velX"), tank.getFloat("velY"))
                     .range(tank.getFloat("range"))
                     .maxHealth(tank.getInt("max health"))
-                    .frameTime(soldier.getFloat("frameTime"));
+                    .frameTime(tank.getFloat("frameTime"));
         
         Factory.setTankProperties(tankProperties);
         
@@ -133,16 +133,12 @@ public class JSONManager {
         AnimatedUnitProperties<AdvancedSpriteAnimation> playerProperties = 
                 new AnimatedUnitProperties<AdvancedSpriteAnimation>()
                     .range(player.getFloat("range"))
-                    .minDamage(player.getFloat("minDamage"))
-                    .maxDamage(player.getFloat("maxDamage"))
                     .health(player.getFloat("health"))
                     .vel(player.getFloat("velX"), player.getFloat("velY"))
                     .maxHealth(player.getInt("max health"))
                     .stateAnimations(playerAnimationData);
         
         Factory.setPlayerProperties(playerProperties);
-        
-        Factory.setPrimaryGun(WeaponManager.getWeapons().get(0));
     }
     
     public static void parseLevels() {

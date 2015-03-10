@@ -123,6 +123,7 @@ public class Factory {
         
         p.setGunOffset(playerGunOffset);
         p.setPrimary(primaryGun);
+        p.setSecondary(secondaryGun);
         p.setCurrentWeapon(p.getPrimary());
         
         return p;

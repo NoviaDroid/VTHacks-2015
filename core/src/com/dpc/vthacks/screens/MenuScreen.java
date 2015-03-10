@@ -19,7 +19,6 @@ import com.dpc.vthacks.GameCamera;
 import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.data.Fonts;
-import com.dpc.vthacks.data.JSONManager;
 
 public class MenuScreen implements Screen {
     private Sprite menu;
@@ -33,8 +32,6 @@ public class MenuScreen implements Screen {
     
     public MenuScreen(App app) {
         context = app;
-        
-        JSONManager.parseLevels();
         
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override

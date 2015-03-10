@@ -22,6 +22,7 @@ import com.dpc.vthacks.PagedScrollPane;
 import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.data.Fonts;
+import com.dpc.vthacks.factories.Factory;
 import com.dpc.vthacks.objects.Weapon;
 import com.dpc.vthacks.properties.WeaponManager;
 
@@ -184,6 +185,10 @@ public class WeaponSelectionScreen implements Screen {
         next.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                // Save off these for the player
+                Factory.setPrimaryGun(selectedWeapons[0].weapon);
+                Factory.setSecondaryGun(selectedWeapons[1].weapon);
+        
                 context.setScreen(new LevelSelectionScreen(context));
                 
                 return super.touchDown(event, x, y, pointer, button);

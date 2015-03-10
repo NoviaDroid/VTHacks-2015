@@ -36,7 +36,7 @@ public class Player extends AdvancedAnimatedUnit {
         
         setPlaying(true);
         
-        setCurrentWeapon(primary);
+        currentWeapon = primary;
         
         shotDelayed = false;
     }
@@ -67,11 +67,20 @@ public class Player extends AdvancedAnimatedUnit {
     @Override
     public void attack(Unit enemy, float dmg) {
         if(currentWeapon.getAmmo() > 0) {
-            enemy.takeDamage(this, dmg * MathUtils.random(getProperties().getMinDamage(), 
-                                                getProperties().getMaxDamage()));
+            enemy.takeDamage(this, dmg * MathUtils.random(currentWeapon.getMinDamage(), currentWeapon.getMaxDamage()));
         }
     }
 
+    public void swapWeapon() {
+        // Change weapons
+        if(currentWeapon.equals(primary)) {
+            currentWeapon = secondary;
+        }
+        else {
+            currentWeapon = primary;
+        }
+    }
+    
     /**
      * Fire the gun even though it may not hit something
      */

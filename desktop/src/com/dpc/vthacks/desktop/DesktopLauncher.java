@@ -8,8 +8,8 @@ public class DesktopLauncher {
     public static void main(String[] arg) {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         config.title = "Strafer v 0.0.0";
-        config.width = 480;
-        config.height = 800;
+        config.width = 800;
+        config.height = 480;
         new LwjglApplication(new App(), config);
     }
 }
