@@ -10,12 +10,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.dpc.vthacks.App;
 import com.dpc.vthacks.Bank;
+import com.dpc.vthacks.PagedScrollPane;
 import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.data.Fonts;
@@ -24,6 +26,7 @@ import com.dpc.vthacks.properties.WeaponManager;
 
 public class StoreScreen implements Screen {
     private Stage stage;
+    private Table scrollTable;
     private TextButton backButton;
     private Label moneyLabel;
     private ImageButton[] weaponButtons;
@@ -75,15 +78,22 @@ public class StoreScreen implements Screen {
         weaponInfo.purchase.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                // Unlock the weapon
-                WeaponManager.unlock(weaponInfo.id);
+                int cost = Integer.parseInt(weaponInfo.cost.getText()
+                        .toString().replace("Cost: ", ""));
                 
-                // Withdrawal money
-                Bank.withdrawal(Integer.parseInt(weaponInfo.cost.getText()
-                        .toString().replace("cost: ", "")));
-                
-                // Update display
-                moneyLabel.setText("You have $" + Bank.getBalance());
+                if(Bank.getBalance() >= cost && !WeaponManager.isUnlocked(weaponInfo.id)) {
+                    if(WeaponManager.isUnlocked(weaponInfo.id)) return false;
+                    
+                    // Unlock the weapon
+                    WeaponManager.unlock(weaponInfo.id);
+                    
+                    // Withdrawal money
+                    Bank.withdrawal(cost);
+                    
+                    // Update display
+                    moneyLabel.setText("You have $" + Bank.getBalance());
+                    weaponInfo.purchase.setText("Purchased");
+                }
                 
                 return super.touchDown(event, x, y, pointer, button);
             }
@@ -105,7 +115,7 @@ public class StoreScreen implements Screen {
         labelStyle.font = Fonts.getZombieSmall();
         
         
-        backButton = new TextButton("back", textButtonStyle);
+        backButton = new TextButton("Back", textButtonStyle);
         
         backButton.setPosition(PADDING, 
                 AppData.height - 2 * textButtonStyle.font.getBounds(backButton.getText()).height);
@@ -120,20 +130,28 @@ public class StoreScreen implements Screen {
         });
         
         stage.addActor(backButton);
-        
+
         
         Skin skin = new Skin(Assets.storeAtlas);
         weaponIcons = new Skin(Assets.weaponIconAtlas);
         
         weaponButtons = new ImageButton[WeaponManager.NUMBER_OF_WEAPONS];
         
+        PagedScrollPane scroll = new PagedScrollPane();
+        scroll.setFlingTime(0.1f);
+        scroll.setPageSpacing(AppData.width / 6);
+        scroll.setWidth(AppData.width);
+        
         for(int i = 0; i < weaponButtons.length; i++) {
             final Weapon weapon = WeaponManager.getWeapons().get(i);
-            
-            ImageButton button = new ImageButton(weaponIcons.getDrawable(weapon.getIconPath()));
-            button.setPosition(i * button.getWidth(), 0);
-            
+
+            ImageButton button = new ImageButton(
+                    weaponIcons.getDrawable(WeaponManager.getWeapons().get(i)
+                            .getIconPath()));
+           
             weaponButtons[i] = button;
+            
+            final int a = i;
             
             weaponButtons[i].addListener(new InputListener() {
                 
@@ -146,10 +164,12 @@ public class StoreScreen implements Screen {
                 
             });
             
-            stage.addActor(button);
+            
+            scroll.addPage(button);
         }
         
-       
+        stage.addActor(scroll);
+        
         display(WeaponManager.getWeapons().get(0));
         positionElements();
         
@@ -173,16 +193,28 @@ public class StoreScreen implements Screen {
     }
     
     public void display(Weapon weapon) {
-        weaponInfo.icon = new Image(weaponIcons.getDrawable(weapon.getIconPath()));
-        weaponInfo.name.setText("name: " + weapon.getName());
-        weaponInfo.ammo.setText("ammo: " + weapon.getAmmo());
-        weaponInfo.damage.setText("damage: " + weapon.getMinDamage() + " to " + weapon.getMaxDamage());
-        weaponInfo.description.setText("description: " + weapon.getDescription());
-        weaponInfo.cost.setText("cost: " + weapon.getCost());
+        if(weaponInfo.icon == null) {
+            weaponInfo.icon = new Image();
+        }
+        
+        weaponInfo.icon.setDrawable(weaponIcons.getDrawable(weapon.getIconPath()));
+        weaponInfo.name.setText(weapon.getName());
+        weaponInfo.ammo.setText("Ammo: " + weapon.getAmmo());
+        weaponInfo.damage.setText("Damage: " + weapon.getMinDamage() + " to " + weapon.getMaxDamage());
+        weaponInfo.description.setText("Description: " + weapon.getDescription());
+        weaponInfo.cost.setText("Cost: " + weapon.getCost());
         weaponInfo.id = weapon.getId();
         
         // Only allow purchase if enough money is there
-        weaponInfo.purchase.setDisabled(Bank.getBalance() >= weapon.getCost());
+       // weaponInfo.purchase.setDisabled(Bank.getBalance() >= weapon.getCost() || 
+                                 //       WeaponManager.isUnlocked(weapon.getId()));
+        
+        if(WeaponManager.isUnlocked(weapon.getId())) {
+            weaponInfo.purchase.setText("Purchased");
+        }
+        else {
+            weaponInfo.purchase.setText("Purchase");
+        }
     }
     
     public void update(float delta) {

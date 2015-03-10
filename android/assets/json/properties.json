@@ -13,8 +13,6 @@
   
   "player": [{
     "health": "100",
-    "minDamage": "40",
-    "maxDamage": "60",
     "velX": "3", 
     "velY": "1.5",
     "range": "250",
@@ -129,9 +127,9 @@
     "maxDamage": "0.001",
   	"range": "250",
   	"health": "100",
-    "max health": "80",
-    "minKillMoney": "20",
-    "maxKillMoney": "35",
+    "max health": "100",
+    "minKillMoney": 30,
+    "maxKillMoney": 50,
     "animations": [{
     	"walking": [{
     		"frame1": [{

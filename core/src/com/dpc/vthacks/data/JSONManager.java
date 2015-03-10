@@ -4,14 +4,18 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
+import com.badlogic.gdx.utils.JsonWriter;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.dpc.vthacks.MathUtil;
 import com.dpc.vthacks.animation.AdvancedSpriteAnimation;
 import com.dpc.vthacks.animation.FrameData;
 import com.dpc.vthacks.animation.SpriteAnimation;
 import com.dpc.vthacks.factories.Factory;
+import com.dpc.vthacks.level.LevelProperties;
 import com.dpc.vthacks.objects.Weapon;
 import com.dpc.vthacks.properties.AnimatedUnitProperties;
 import com.dpc.vthacks.properties.Properties;
@@ -43,12 +47,12 @@ public class JSONManager {
                 new AnimatedUnitProperties<SpriteAnimation>()
                     .cost(tank.getInt("cost"))
                     .minDamage(tank.getFloat("minDamage"))
-                    .maxDamage(player.getFloat("maxDamage"))
+                    .maxDamage(tank.getFloat("maxDamage"))
                     .health(tank.getInt("health"))
                     .vel(tank.getFloat("velX"), tank.getFloat("velY"))
                     .range(tank.getFloat("range"))
                     .maxHealth(tank.getInt("max health"))
-                    .frameTime(soldier.getFloat("frameTime"));
+                    .frameTime(tank.getFloat("frameTime"));
         
         Factory.setTankProperties(tankProperties);
         
@@ -129,15 +133,27 @@ public class JSONManager {
         AnimatedUnitProperties<AdvancedSpriteAnimation> playerProperties = 
                 new AnimatedUnitProperties<AdvancedSpriteAnimation>()
                     .range(player.getFloat("range"))
-                    .minDamage(player.getFloat("minDamage"))
-                    .maxDamage(player.getFloat("maxDamage"))
                     .health(player.getFloat("health"))
                     .vel(player.getFloat("velX"), player.getFloat("velY"))
                     .maxHealth(player.getInt("max health"))
                     .stateAnimations(playerAnimationData);
         
         Factory.setPlayerProperties(playerProperties);
+    }
+    
+    public static void parseLevels() {
+        JsonReader reader = new JsonReader();
         
-        Factory.setPrimaryGun(WeaponManager.getWeapons().get(0));
+        JsonValue lvlRoot = reader.parse(Gdx.files.internal("json/levels.json"));
+        ObjectMap<String, String> levelMap = new ObjectMap<String, String>();
+        
+        int numbOfChildren = 6;
+        
+        for(int i = 0; i < numbOfChildren; i++) {
+            levelMap.put(lvlRoot.get(i).getString("level"),
+                         lvlRoot.get(i).getString("file"));
+        }
+        
+        LevelProperties.setLevels(levelMap);
     }
 }

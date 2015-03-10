@@ -1,0 +1,15 @@
+<level width="2400" height="800" zombieSpawnTime="1">
+  <Layer1 />
+  <background>
+      <skyline2 id="6" x="725" y="884" />
+    <Building1 id="0" x="0" y="675" />
+    <Building2 id="1" x="188" y="674" />
+    <Building4 id="2" x="379" y="674" />
+    <Building6 id="3" x="797" y="674" />
+    <Building1 id="4" x="961" y="675" />
+    <Building2 id="5" x="1169" y="673" />
+  </background>
+  <GameLayer>
+    <Road id="0" x="-1" y="801" />
+  </GameLayer>
+</level>

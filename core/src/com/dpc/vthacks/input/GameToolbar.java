@@ -3,12 +3,13 @@ package com.dpc.vthacks.input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
@@ -16,17 +17,20 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad.TouchpadStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.dpc.vthacks.Bank;
 import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.data.Fonts;
+import com.dpc.vthacks.factories.Factory;
 import com.dpc.vthacks.objects.Weapon;
 import com.dpc.vthacks.screens.GameScreen;
 
 public class GameToolbar {
     private Stage stage;
-    private static Sprite leftBg, healthBarBackground, healthBar, playerIcon, gunIcon;
+    private static Sprite leftBg, healthBarBackground, healthBar, playerIcon;
+    private static Image gunIcon;
     private Touchpad joystick;
     private Drawable background;
     private Button bombButton, strafeButton, soldierButton, tankButton, towerButton,
@@ -41,8 +45,9 @@ public class GameToolbar {
     private float killStreakTimer;
     private boolean killStreak, killCompleted;
     private int killstreakAmount;
+    private TextureRegionDrawable gunIconDrawable; // Drawable for the gun icon
     
-    public GameToolbar(GameScreen parent) {
+    public GameToolbar(final GameScreen parent) {
         this.parent = parent;
         
         Assets.loadSkins();
@@ -263,7 +268,7 @@ public class GameToolbar {
                 getBatch().begin();
                 
                 playerIcon.draw(getBatch());
-                gunIcon.draw(getBatch());
+                
                 healthBarBackground.draw(getBatch());
                 healthBar.draw(getBatch());
 
@@ -301,10 +306,10 @@ public class GameToolbar {
                                       0.4f,
                                       0, 1));
         
-        
+       
         
         //healthBar.setWidth(AppData.width - (soldierUpgradeButton.getX() + soldierUpgradeButton.getWidth() + PADDING));
-       
+      
         stage.addActor(joystick);
 //        stage.addActor(bombButton);
 //        stage.addActor(strafeButton);
@@ -319,6 +324,7 @@ public class GameToolbar {
 //          stage.addActor(experienceLabel);
 //          stage.addActor(healthLabel);
 //          stage.addActor(playerIcon);
+        
         
         BATCH_COLOR = stage.getBatch().getColor();
     }
@@ -479,7 +485,42 @@ public class GameToolbar {
     
     public void setGunIcon(Weapon gun) {
         if(gunIcon == null) {
-            gunIcon = new Sprite(Assets.weaponIconAtlas.findRegion(gun.getIconPath()));
+            gunIcon = new Image(Assets.weaponIconAtlas.findRegion(gun.getIconPath()));
+
+            gunIconDrawable = new TextureRegionDrawable(
+                    Assets.weaponIconAtlas.findRegion(parent.getLevel()
+                            .getPlayer().getCurrentWeapon()
+                            .getIconPath())); 
+                            
+            gunIcon.addListener(new InputListener() {
+                
+                @Override
+                public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                    // Swap weapons
+                    parent.getLevel().getPlayer().swapWeapon();
+
+                    // Set the new drawable
+                    gunIconDrawable.setRegion(Assets.weaponIconAtlas
+                            .findRegion(parent.getLevel().getPlayer()
+                                    .getCurrentWeapon().getIconPath()));
+               
+                    gunIcon.setDrawable(gunIconDrawable);
+                    
+                    gunIcon.setWidth(gunIconDrawable.getRegion().getRegionWidth());
+                    gunIcon.setHeight(gunIconDrawable.getRegion().getRegionHeight());
+                    
+                    // Update the ammo text
+                    setAmmo(parent.getLevel().getPlayer().getCurrentWeapon().getAmmo());
+                    
+                    ammoLabel.setX(gunIcon.getX() + gunIcon.getWidth());
+                    ammoLabel.setY(gunIcon.getY());
+                    
+                    return true;
+                }
+            });
+            
+            
+            stage.addActor(gunIcon);
         }
         
         // Position directly under player icon

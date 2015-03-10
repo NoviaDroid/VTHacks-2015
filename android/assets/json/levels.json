@@ -1,0 +1,26 @@
+[
+	{
+		"level": "level1",
+		"file": "mylevel.oel"
+	},
+	{
+		"level": "level2",
+		"file": "level2.oel"
+	},
+	{
+		"level": "level3",
+		"file": "level3.oel"
+	},
+	{
+		"level": "level4",
+		"file": "mylevel.oel"
+	},
+	{
+		"level": "level5",
+		"file": "mylevel.oel"
+	},
+	{
+		"level": "level6",
+		"file": "mylevel.oel"
+	}
+]

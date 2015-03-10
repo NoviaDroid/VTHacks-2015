@@ -1,10 +1,10 @@
 [
 	{
-		"name": "shotgun",
+		"name": "Shotgun",
 		"id": 2,
 		"description": "Packs a punch",
 		"iconPath": "shotgun",
-		"minDamage": 25,
+		"minDamage": 30,
 		"maxDamage": 50,
 		"ammo": 50,
 		"maxAmmo": 50,
@@ -12,12 +12,12 @@
 	},
 	
 	{
-		"name": "handgun",
+		"name": "Handgun",
 		"id": 1,
-		"description": "Small but powerful",
-		"iconPath": "shotgun",
-		"minDamage": 20,
-		"maxDamage": 30,
+		"description": "Weak but reliable",
+		"iconPath": "handgun",
+		"minDamage": 15,
+		"maxDamage": 25,
 		"ammo": 27,
 		"maxAmmo": 27,
 		"cost": 250
@@ -27,19 +27,19 @@
 		"name": "RPG",
 		"id": 4,
 		"description": "It might blow things up",
-		"iconPath": "shotgun",
-		"minDamage": 50,
-		"maxDamage": 70,
+		"iconPath": "rpg",
+		"minDamage": 85,
+		"maxDamage": 100,
 		"ammo": 6,
 		"maxAmmo": 6,
 		"cost": 5000
 	},
 
 	{
-		"name": "magnum",
+		"name": "Magnum",
 		"id": 3,
 		"description": "Revolves around power",
-		"iconPath": "shotgun",
+		"iconPath": "magnum",
 		"minDamage": 30,
 		"maxDamage": 40,
 		"ammo": 27,
@@ -48,12 +48,12 @@
 	},
 	
 	{
-		"name": "ak-47",
+		"name": "AK-47",
 		"id": 5,
 		"description": "Full auto. Enough said.",
-		"iconPath": "shotgun",
-		"minDamage": 35,
-		"maxDamage": 40,
+		"iconPath": "ak-47",
+		"minDamage": 40,
+		"maxDamage": 80,
 		"ammo": 250,
 		"maxAmmo": 250,
 		"cost": 15000

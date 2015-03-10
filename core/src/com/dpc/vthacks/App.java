@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Fonts;
+import com.dpc.vthacks.data.JSONManager;
 import com.dpc.vthacks.properties.WeaponManager;
 import com.dpc.vthacks.screens.MenuScreen;
 
@@ -17,6 +18,7 @@ public class App extends Game {
     
 	@Override
 	public void create () {
+        JSONManager.parseLevels();
         Fonts.load();
         WeaponManager.load();
         Bank.load();
