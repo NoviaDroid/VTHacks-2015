@@ -4,6 +4,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ObjectMap;
 
 public class LevelProperties {
+    public static final String ENDLESS_MODE = "ENDLESS";
+    public static final String CAMPAIGN_MODE = "CAMPAIGN";
     public static final float WIDTH = 2400;
     public static final float X_GRAV = 11;
     public static final Vector2 GRAVITY = new Vector2(X_GRAV, -5.5f);

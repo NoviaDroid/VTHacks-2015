@@ -197,6 +197,15 @@ public class Level {
         };
     }
     
+    /**
+     * Called when the game is over. Not abstract because 
+     * on android, this isn't a big enough of an excuse to 
+     * abstract something (hahahaha...) Remember to override....
+     */
+    public void onGameOver() {
+        
+    }
+    
     private void updateCamera(float delta) {
         float y = gameCamera.position.y;
         
@@ -243,7 +252,7 @@ public class Level {
         updateObjects(delta);
         checkForCollisions();
         updateCamera(delta);
-        
+                
         spawnTimer += delta;
         
         if(spawnTimer >= spawnTime) {

@@ -62,6 +62,7 @@ public class Player extends AdvancedAnimatedUnit {
 
     @Override
     public void onDeath(Unit killer) {
+        getParentLevel().onGameOver();
     }
 
     @Override
@@ -127,6 +128,11 @@ public class Player extends AdvancedAnimatedUnit {
     public void onDamageTaken(Unit attacker, float amount) {
         super.onDamageTaken(attacker, amount);
         getParentLevel().getContext().getToolbar().setHealth(getProperties().getHealth());
+        System.err.println("my health: " + getProperties().getHealth());
+        
+        if(getProperties().getHealth() <= 0) {
+             onDeath(attacker);
+        }
     }
 
     @Override

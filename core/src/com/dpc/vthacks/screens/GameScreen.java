@@ -21,21 +21,31 @@ import com.dpc.vthacks.infantry.Soldier;
 import com.dpc.vthacks.infantry.Tank;
 import com.dpc.vthacks.input.GameToolbar;
 import com.dpc.vthacks.level.Level;
+import com.dpc.vthacks.level.LevelProperties;
+import com.dpc.vthacks.modes.EndlessWaves;
 
 public class GameScreen implements Screen {
     private final App context;
-    private static Level level;
+    private static Level gameMode;
     private static float joystickPercentX, joystickPercentY;
     private Player player;
     private FPSLogger logger;
     private GameToolbar toolbar;
     private String levelName;
     
-    public GameScreen(App context, String levelName) {
+    public GameScreen(App context, String levelName, String mode) {
         this.context = context;
         this.levelName = levelName;
         
         logger = new FPSLogger();
+        
+        if(mode.equals(LevelProperties.ENDLESS_MODE)) {
+            gameMode = new EndlessWaves(this);
+        }
+        else if(mode.equals(LevelProperties.CAMPAIGN_MODE)) {
+            
+            
+        }
     }
     
     @Override
@@ -74,40 +84,40 @@ public class GameScreen implements Screen {
             public void tankButtonTouchDown() {
                 Tank s = Factory.tankPool.obtain();
                 
-                s.setX(level.getPlayer().getX());
+                s.setX(gameMode.getPlayer().getX());
                 s.setY(AppData.height + s.getHeight());
                 
-                s.setFallTargetX(MathUtils.random(level.getGameCamera().position.x - 
-                                              (level.getGameCamera().viewportWidth * 0.5f),
-                                              level.getGameCamera().position.x + 
-                                              (level.getGameCamera().viewportWidth * 0.5f)));
+                s.setFallTargetX(MathUtils.random(gameMode.getGameCamera().position.x - 
+                                              (gameMode.getGameCamera().viewportWidth * 0.5f),
+                                              gameMode.getGameCamera().position.x + 
+                                              (gameMode.getGameCamera().viewportWidth * 0.5f)));
                 
-                s.setFallTargetY(MathUtils.random(level.getPlayer().getGround().getY(),
-                                              level.getPlayer().getGround().getY() +
-                                              level.getPlayer().getGround().getHeight()));
+                s.setFallTargetY(MathUtils.random(gameMode.getPlayer().getGround().getY(),
+                                              gameMode.getPlayer().getGround().getY() +
+                                              gameMode.getPlayer().getGround().getHeight()));
                 
-                level.getPlayerArmy().add(s);
+                gameMode.getPlayerArmy().add(s);
             }
             
             @Override
             public void soldierButtonTouchDown() {
                 Soldier s = Factory.soldierPool.obtain();
-                s.setX(level.getPlayer().getX());
+                s.setX(gameMode.getPlayer().getX());
                 s.setY(AppData.height + s.getHeight());
                 
-                s.setFallTargetX(MathUtils.random(level.getGameCamera().position.x - 
-                                              (level.getGameCamera().viewportWidth * 0.5f),
-                                              level.getGameCamera().position.x + 
-                                              (level.getGameCamera().viewportWidth * 0.5f)));
+                s.setFallTargetX(MathUtils.random(gameMode.getGameCamera().position.x - 
+                                              (gameMode.getGameCamera().viewportWidth * 0.5f),
+                                              gameMode.getGameCamera().position.x + 
+                                              (gameMode.getGameCamera().viewportWidth * 0.5f)));
                 
-                s.setFallTargetY(MathUtils.random(level.getPlayer().getGround().getY(),
-                                              level.getPlayer().getGround().getY() +
-                                              level.getPlayer().getGround().getHeight()));
+                s.setFallTargetY(MathUtils.random(gameMode.getPlayer().getGround().getY(),
+                                              gameMode.getPlayer().getGround().getY() +
+                                              gameMode.getPlayer().getGround().getHeight()));
               
-                s.setCurrentTarget(level.getPlayer().getX(),
-                        level.getPlayer().getY());
+                s.setCurrentTarget(gameMode.getPlayer().getX(),
+                        gameMode.getPlayer().getY());
                 
-                level.getPlayerArmy().add(s);
+                gameMode.getPlayerArmy().add(s);
             }
             
             @Override
@@ -122,13 +132,13 @@ public class GameScreen implements Screen {
 
             context.resize(1200, 800);
             
-            level = new Level(this);
+            gameMode = new Level(this);
 
             player = Factory.createPlayer();
             
-            level.setPlayer(player);
+            gameMode.setPlayer(player);
             
-            OgmoParser.parse(levelName, level);  
+            OgmoParser.parse(levelName, gameMode);  
           
             context.resize(w, h);
             
@@ -147,9 +157,9 @@ public class GameScreen implements Screen {
         
         mplexer.addProcessor(toolbar.getStage());
         
-        mplexer.addProcessor(level.getGestureDetector());
+        mplexer.addProcessor(gameMode.getGestureDetector());
         
-        mplexer.addProcessor(level.getInputAdapter());
+        mplexer.addProcessor(gameMode.getInputAdapter());
         
         mplexer.addProcessor(new InputAdapter() {
             @Override
@@ -196,7 +206,7 @@ public class GameScreen implements Screen {
     }
 
     public void update(float delta) {
-        level.update(delta);
+        gameMode.update(delta);
         toolbar.update(delta);
         
         joystickPercentX = toolbar.getJoystick().getKnobPercentX();
@@ -212,7 +222,7 @@ public class GameScreen implements Screen {
         update(delta);
         logger.log();
         
-        level.render();
+        gameMode.render();
         toolbar.draw();
     }
 
@@ -243,7 +253,7 @@ public class GameScreen implements Screen {
     }
     
     public static Level getLevel() {
-        return level;
+        return gameMode;
     }
     
     public GameToolbar getToolbar() {

@@ -46,6 +46,7 @@ public class GameToolbar {
     private boolean killStreak, killCompleted;
     private int killstreakAmount;
     private TextureRegionDrawable gunIconDrawable; // Drawable for the gun icon
+    private float origHealthBarWidth; // Orig width of the health bar
     
     public GameToolbar(final GameScreen parent) {
         this.parent = parent;
@@ -242,6 +243,8 @@ public class GameToolbar {
         healthBar = new Sprite(Assets.healthbar);
         healthBar.setSize(Assets.healthBarBackground.getRegionWidth() - (Assets.healthBarBackground.getRegionHeight() * 0.135f * 2) ,
                           Assets.healthBarBackground.getRegionHeight() * 0.73f);
+        
+        origHealthBarWidth = healthBar.getWidth();
         
         healthBar.setPosition(healthBarBackground.getX() + (Assets.healthBarBackground.getRegionHeight() * 0.135f),
                               healthBarBackground.getY() + (Assets.healthBarBackground.getRegionHeight() * 0.135f));
@@ -540,7 +543,7 @@ public class GameToolbar {
         healthLabel.setText("Health: " + f);
 
         // Calculate the exp bar width
-        healthBar.setSize(healthBar.getWidth() * (f / 100),
+        healthBar.setSize(origHealthBarWidth * (f / parent.getLevel().getPlayer().getProperties().getMaxHealth()),
                           healthBar.getHeight());
         
         healthLabel.setPosition((AppData.width - healthLabel.getWidth() * 4), healthLabel.getY());
