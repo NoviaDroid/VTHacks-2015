@@ -94,7 +94,8 @@ public class JSONManager {
                     .maxKillMoney(zombie.getInt("maxKillMoney"))
                     .vel(MathUtil.rand(zombie.getFloat("minVelX"), zombie.getFloat("maxVelX")),
                          MathUtil.rand(zombie.getFloat("minVelY"), zombie.getFloat("maxVelY")))
-                    .stateAnimations(Assets.zombieAnimations);
+                    .stateAnimations(Assets.zombieAnimations)
+                    .attackSpeed(zombie.getFloat("attackSpeed"));
 
         
         ZombieSegment[] zombieSegments = new ZombieSegment[3];

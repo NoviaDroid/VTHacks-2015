@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -27,8 +28,9 @@ public class MenuScreen implements Screen {
     private boolean loading;
     private Stage stage;
     private TextButton play, shop;
-    private Label title;
+    private Label titleFore, titleBack;
     private Label footer;
+    private Image background;
     
     public MenuScreen(App app) {
         context = app;
@@ -61,6 +63,9 @@ public class MenuScreen implements Screen {
     public void show() {
         Assets.loadMenu();
         
+        background = new Image(Assets.menuBackground);
+        background.setSize(AppData.width, AppData.height);
+        
         TextButtonStyle style = new TextButtonStyle();
         style.font = Fonts.getZombieSmall();
         
@@ -72,7 +77,9 @@ public class MenuScreen implements Screen {
         
         lst.font = Fonts.getZombie();
         
-        title = new Label("Strafer", lst);
+        titleFore = new Label("Strafer", lst);
+        
+        titleFore.setColor(0.18f, 0, 0.18f, 1);
         
         play = new TextButton("Play", style);
         
@@ -101,7 +108,7 @@ public class MenuScreen implements Screen {
         
         Table t = new Table();
         
-        t.add(title);
+        t.add(titleFore);
         
         t.row();
         t.row();
@@ -114,10 +121,14 @@ public class MenuScreen implements Screen {
         t.row();
         t.row();
         t.add(footer);
-        
+
         t.setFillParent(true);
+ 
+        
         
         stage = new Stage(new StretchViewport(AppData.width, AppData.height));
+        
+        stage.addActor(background);
         
         stage.addActor(t);
         

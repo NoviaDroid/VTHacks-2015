@@ -392,20 +392,20 @@ public class Level {
             }
         }
         
-        for(Unit unit : playerArmy) {
-            for(Zombie zombie : zombies) {
-                if(zombie.getBoundingRectangle().overlaps(unit.getBoundingRectangle()) &&
-                   !zombie.isAttacking()) {
-                    zombie.setAttacking(true, unit);
-                    zombie.attack();
-
-                    if(unit.getProperties().getHealth() <= 0) {
-                //        zombie.setAttacking(false, null);
-                  //      zombie.resetPath();
-                    }
-                }
-            }
-        }
+//        for(Unit unit : playerArmy) {
+//            for(Zombie zombie : zombies) {
+//                if(zombie.getBoundingRectangle().overlaps(unit.getBoundingRectangle()) &&
+//                   !zombie.isAttacking()) {
+//                    zombie.setAttacking(true, unit);
+//                    zombie.attack();
+//
+//                    if(unit.getProperties().getHealth() <= 0) {
+//                //        zombie.setAttacking(false, null);
+//                  //      zombie.resetPath();
+//                    }
+//                }
+//            }
+//        }
     }
     
     public GameCamera getGameCamera() {

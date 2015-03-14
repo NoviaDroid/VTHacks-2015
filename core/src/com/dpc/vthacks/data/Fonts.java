@@ -25,7 +25,7 @@ public class Fonts {
         generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/RobotoCondensed-Bold.ttf"));
         
         parameter.size = Gdx.graphics.getWidth() * 54 / 1200;
-        
+      
         zombieSmall = generator.generateFont(parameter);
        
         parameter.size = Gdx.graphics.getWidth() * 36 / 1200;

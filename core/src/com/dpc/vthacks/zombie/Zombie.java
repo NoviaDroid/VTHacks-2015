@@ -3,7 +3,6 @@ package com.dpc.vthacks.zombie;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.dpc.vthacks.App;
-import com.dpc.vthacks.Bank;
 import com.dpc.vthacks.MathUtil;
 import com.dpc.vthacks.animation.AnimatedUnit;
 import com.dpc.vthacks.animation.SpriteAnimation;
@@ -15,6 +14,8 @@ import com.dpc.vthacks.properties.ZombieSegment;
 
 public class Zombie extends AnimatedUnit implements Poolable {
     private boolean walkingLeft;
+    private float attackSpeed; // Every x amount of time, attack
+    private float attackTimer; // Counts time for attack speed
     
     public Zombie(String currentState, 
                   AnimatedUnitProperties<SpriteAnimation> properties, 
@@ -22,6 +23,8 @@ public class Zombie extends AnimatedUnit implements Poolable {
         super(currentState,
               properties, x, y);
        
+        attackSpeed = ((ZombieProperties) properties).getAttackSpeed();
+        
         getProperties().maxHealth(MathUtils.random(getProperties().getHealth(), 
                                                    getProperties().getHealth() * 2) + 25);
         
@@ -45,6 +48,15 @@ public class Zombie extends AnimatedUnit implements Poolable {
     public void update(float delta) {
         super.update(delta);
     
+        if(isAttacking()) {
+            attackTimer += delta;
+            
+            if(attackTimer >= attackSpeed) {
+                attackTimer = 0;
+                attack();
+            }
+        }
+        
         // Set a random velocity
         getVelSCL().set(MathUtil.rand(getProperties().getMinVel().x,
                                       getProperties().getMaxVel().x),
