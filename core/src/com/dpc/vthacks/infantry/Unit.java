@@ -20,9 +20,9 @@ public abstract class Unit extends DynamicGameObject implements Poolable {
 
     @Override
     public void update(float delta) { 
-        if(attacking) {
-            attack();
-        }
+//        if(attacking) {
+//            attack();
+//        }
     }
     
     @Override
@@ -57,6 +57,10 @@ public abstract class Unit extends DynamicGameObject implements Poolable {
     
     public Properties getProperties() {
         return properties;
+    }
+    
+    public void setAttacking(boolean t) {
+        attacking = t;
     }
     
     public void subVel() {

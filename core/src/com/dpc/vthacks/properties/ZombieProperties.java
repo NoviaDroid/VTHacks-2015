@@ -6,6 +6,7 @@ import com.dpc.vthacks.animation.SpriteAnimation;
 public class ZombieProperties extends AnimatedUnitProperties<SpriteAnimation> {
     private int minKillMoney, maxKillMoney; // How much money played awarded when killed
     private ZombieSegment[] segments;
+    private float attackSpeed;
     
     public ZombieProperties() {
         super();
@@ -36,6 +37,17 @@ public class ZombieProperties extends AnimatedUnitProperties<SpriteAnimation> {
         
         minKillMoney = cpy.minKillMoney;
         maxKillMoney = cpy.maxKillMoney;
+        
+        attackSpeed = cpy.attackSpeed;
+    }
+    
+    public ZombieProperties attackSpeed(float speed) {
+        this.attackSpeed = speed;
+        return this;
+    }
+    
+    public float getAttackSpeed() {
+        return attackSpeed;
     }
     
     @Override

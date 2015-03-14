@@ -46,7 +46,7 @@ public class Assets {
     }
 
     public static void loadMenu() {
-        menuBackground = new TextureRegion(new Texture(Gdx.files.internal("MenuScreen.png")));
+        menuBackground = new TextureRegion(new Texture(Gdx.files.internal("Finished Kickstarter banner.png")));
         storeAtlas = new TextureAtlas("storePack.pack");
         weaponIconAtlas = new TextureAtlas("weaponIconPack.pack");
     }
