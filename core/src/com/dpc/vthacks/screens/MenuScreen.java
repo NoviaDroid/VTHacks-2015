@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -81,7 +82,7 @@ public class MenuScreen implements Screen {
         
         titleFore.setColor(0.18f, 0, 0.18f, 1);
         
-        play = new TextButton("Play", style);
+        play = new TextButton("Play", Assets.uiSkin);
         
         play.addListener(new InputListener() {
             
@@ -93,7 +94,7 @@ public class MenuScreen implements Screen {
             
         });
         
-        shop = new TextButton("Store", style);
+        shop = new TextButton("Store", Assets.uiSkin);
         
         shop.addListener(new InputListener() {
             

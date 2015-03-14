@@ -533,8 +533,12 @@ public class GameToolbar {
     }
     
     public void setHealth(float f) {
+        if(Float.isInfinite(f) || Float.isNaN(f) || f < 0) {
+            return;
+        }
+        
         healthLabel.setText("Health: " + f);
-System.err.println(healthBar.getWidth() * (f / 100));
+
         // Calculate the exp bar width
         healthBar.setSize(healthBar.getWidth() * (f / 100),
                           healthBar.getHeight());

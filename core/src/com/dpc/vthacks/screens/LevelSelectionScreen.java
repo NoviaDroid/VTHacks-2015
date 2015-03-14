@@ -40,7 +40,7 @@ public class LevelSelectionScreen implements Screen {
         buttonStyle = new TextButtonStyle();
         buttonStyle.font = Fonts.getZombie();
         
-        go = new TextButton("Go!", buttonStyle);
+        go = new TextButton("Go!", Assets.uiSkin);
         
         go.addListener(new InputListener() {
             

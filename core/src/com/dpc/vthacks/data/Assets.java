@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.dpc.vthacks.App;
@@ -17,6 +18,7 @@ import com.dpc.vthacks.animation.FrameData;
 import com.dpc.vthacks.animation.SpriteAnimation;
 
 public class Assets {
+    public static Skin uiSkin = new Skin(Gdx.files.internal("uiskin.json"));
     public static AssetManager manager = new AssetManager();
     public static TextureAtlas skinAtlas, storeAtlas, weaponIconAtlas, gameAtlas, zombieAtlas;
     
