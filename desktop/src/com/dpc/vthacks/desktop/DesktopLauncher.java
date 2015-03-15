@@ -16,7 +16,7 @@ public class DesktopLauncher {
 // 
 //        ObjectMap<String, Upgrade> s = new ObjectMap<String, Upgrade>();
 //        
-//        s.put("ammo1", new Upgrade(50, 50));
+//        s.put("ammo1", new Upgrade(50,0 50));
 //        s.put("ammo2", new Upgrade(100, 100));
 //        
 //        u.put("handgun", s);

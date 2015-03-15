@@ -3,9 +3,9 @@ package com.dpc.vthacks;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.ObjectMap;
 import com.dpc.vthacks.animation.AdvancedAnimatedUnit;
 import com.dpc.vthacks.animation.AdvancedSpriteAnimation;
+import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.infantry.Unit;
 import com.dpc.vthacks.level.LevelProperties;
@@ -23,26 +23,28 @@ public class Player extends AdvancedAnimatedUnit {
     private Vector2 gunOffset; // X and Y positions of tip of the gun relative to and inside of the bounding box
     private Weapon primary, secondary;
     private Weapon currentWeapon;
-   
+    private boolean deathCallbackCalled; // True when the player's onGameOver method is called
+    
     public Player(String currentState,
                   AnimatedUnitProperties<AdvancedSpriteAnimation> properties, 
                   float x, float y, float animationSpeed) {
+        
         super(currentState,
               properties,
               x, 
               y);
-        
+
         setSize(getWidth() * 2, getHeight() * 2);
         
         setPlaying(true);
         
         currentWeapon = primary;
-        
+
         shotDelayed = false;
     }
     
     @Override
-    public void render() {      
+    public void render() {  
         super.render();
     }
     
@@ -120,18 +122,38 @@ public class Player extends AdvancedAnimatedUnit {
     }
     
     @Override
+    public void reset() {
+        super.reset();
+        
+        shotDelayed = false;
+        deathCallbackCalled = false;
+        money = 0;
+        setPlaying(true);
+        drawBehind = false;
+        money = 0;
+        primary.setAmmo(primary.getMaxAmmo());
+        secondary.setAmmo(secondary.getMaxAmmo());
+        
+        centerInViewport();
+        
+        // Reset the toolbars info
+        getParentLevel().getContext().getToolbar().setMoney(0);
+        getParentLevel().getContext().getToolbar().setAmmo(currentWeapon.getAmmo());
+        getParentLevel().getContext().getToolbar().setHealth(getProperties().getMaxHealth());
+    }
+    
+    @Override
     public void attack() {
         
     }
     
     @Override
     public void onDamageTaken(Unit attacker, float amount) {
-        super.onDamageTaken(attacker, amount);
         getParentLevel().getContext().getToolbar().setHealth(getProperties().getHealth());
-        System.err.println("my health: " + getProperties().getHealth());
-        
-        if(getProperties().getHealth() <= 0) {
+
+        if(getProperties().getHealth() <= 0 && !deathCallbackCalled) {
              onDeath(attacker);
+             deathCallbackCalled = true;
         }
     }
 
@@ -303,5 +325,10 @@ public class Player extends AdvancedAnimatedUnit {
     
     public Weapon getSecondary() {
         return secondary;
+    }
+
+    public void centerInViewport() {
+        setPosition((AppData.width * 0.5f) - (getWidth() * 0.5f), 
+                (getGround().getY() + (getGround().getHeight() * 0.5f)));
     }
 }

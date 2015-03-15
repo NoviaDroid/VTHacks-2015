@@ -39,6 +39,8 @@ public class GameScreen implements Screen {
         
         logger = new FPSLogger();
         
+        gameMode = new EndlessWaves(this);
+        
         if(mode.equals(LevelProperties.ENDLESS_MODE)) {
             gameMode = new EndlessWaves(this);
         }
@@ -132,8 +134,6 @@ public class GameScreen implements Screen {
 
             context.resize(1200, 800);
             
-            gameMode = new Level(this);
-
             player = Factory.createPlayer();
             
             gameMode.setPlayer(player);
@@ -142,8 +142,7 @@ public class GameScreen implements Screen {
           
             context.resize(w, h);
             
-            player.setPosition((AppData.width * 0.5f) - (player.getWidth() * 0.5f), 
-                               (player.getGround().getY() + (player.getGround().getHeight() * 0.5f)));
+            player.centerInViewport();
             
             toolbar.setAmmo(player.getCurrentWeapon().getAmmo());
             
@@ -170,7 +169,7 @@ public class GameScreen implements Screen {
                 else if(keycode == Keys.S) {
                     toolbar.strafeButtonTouchDown();
                 }
-                
+
                 return false;
             }
             
@@ -212,7 +211,9 @@ public class GameScreen implements Screen {
         joystickPercentX = toolbar.getJoystick().getKnobPercentX();
         joystickPercentY = toolbar.getJoystick().getKnobPercentY();
         
-        player.walk(joystickPercentX, joystickPercentY);
+      //  if(gameMode.isActive()) {
+            player.walk(joystickPercentX, joystickPercentY);
+    //    }
         
         //level.scrollBackgrounds(joystickPercentX, joystickPercentY);
     }
@@ -250,6 +251,7 @@ public class GameScreen implements Screen {
     public void dispose() {
         Assets.unloadGameTextures();
         Assets.dispose();
+        gameMode.dispose();
     }
     
     public static Level getLevel() {
@@ -266,5 +268,9 @@ public class GameScreen implements Screen {
     
     public static float getJoystickPercentY() {
         return joystickPercentY;
+    }
+    
+    public App getContext() {
+        return context;
     }
 }

@@ -19,7 +19,7 @@ import com.dpc.vthacks.animation.SpriteAnimation;
 
 public class Assets {
     public static Skin uiSkin = new Skin(Gdx.files.internal("uiskin.json"));
-    public static AssetManager manager = new AssetManager();
+    public static AssetManager manager;
     public static TextureAtlas skinAtlas, storeAtlas, weaponIconAtlas, gameAtlas, zombieAtlas;
     
     public static ObjectMap<String, AdvancedSpriteAnimation> playerAnimations;
@@ -54,6 +54,8 @@ public class Assets {
     }
 
     public static void loadLoadingScreenTextures() {
+        manager = new AssetManager();
+        
         manager.load("barBackground.png", Texture.class);
         manager.load("barForeground.png", Texture.class);
         

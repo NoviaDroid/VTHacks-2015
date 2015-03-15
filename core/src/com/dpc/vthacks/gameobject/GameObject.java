@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.dpc.vthacks.level.Level;
 
 public abstract class GameObject extends Sprite {
-    private boolean scrollable;
+    private boolean scrollable, visible = true;
     private float scrollX, scrollY;
     private static Level parentLevel;
     
@@ -66,7 +66,15 @@ public abstract class GameObject extends Sprite {
         this.scrollable = scrollable;
     }
     
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+    
+    public boolean isVisible() {
+        return visible;
+    }
+    
     public void dispose() {
-        getTexture().dispose();
+     //   getTexture().dispose();
     }
 }

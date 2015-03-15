@@ -42,7 +42,9 @@ public abstract class AnimatedUnit extends Unit {
     }
     
     public void render() {
-        draw(App.batch);
+        if(isVisible()) {
+            draw(App.batch);
+        }
     }
     
     

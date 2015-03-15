@@ -9,7 +9,7 @@ import com.dpc.vthacks.objects.Weapon;
 
 public final class WeaponManager {
     public static final int NUMBER_OF_WEAPONS = 5;
-    private static final String PREFS_PATH = "pr";
+    private static final String PREFS_PATH = "mypropsya";
     private static Preferences prefs;
     private static Array<Weapon> weapons;
     private static Array<Weapon> unlockedWeapons;

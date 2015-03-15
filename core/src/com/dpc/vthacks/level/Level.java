@@ -9,6 +9,7 @@ import com.badlogic.gdx.input.GestureDetector.GestureListener;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.utils.Array;
 import com.dpc.vthacks.App;
 import com.dpc.vthacks.GameCamera;
@@ -35,6 +36,7 @@ public class Level {
     private InputAdapter inputAdapter;
     private GestureDetector gestureDetector;
     private Vector3 input;
+    private boolean active = true;
     private GameScreen context;
     private float spawnTime, spawnTimer;
     private float origCameraZoom;
@@ -52,6 +54,7 @@ public class Level {
         playerArmy = new Array<Unit>();
         zombies = new Array<Zombie>();
         ammoCrates = new Array<AmmoCrate>();
+        gameCamera = new GameCamera();
         
         initializeCamera();
         
@@ -197,13 +200,51 @@ public class Level {
         };
     }
     
+    public void setUnitsVisible(boolean b) {
+        if(!b) {
+            zombies.clear();
+            ammoCrates.clear();
+            playerArmy.clear();
+            player.setVisible(false);
+        }
+    }
+    
+    /**
+     * Resets the level to default state
+     */
+    public void reset() {
+        active = true;
+        player.reset();
+        spawnTimer = 0;
+        ammoCrates.clear();
+        zombies.clear();
+        playerArmy.clear();
+        initializeCamera();
+    }
+    
     /**
      * Called when the game is over. Not abstract because 
      * on android, this isn't a big enough of an excuse to 
      * abstract something (hahahaha...) Remember to override....
      */
     public void onGameOver() {
+
+    }
+    
+    /**
+     * Opens the dialog. Not abstract for same reason as {@link #onGameOver()}
+     */
+    public void openGameOverDialog() {
         
+    }
+    
+    /**
+     * Called from game toolbar as soon as it's stage is done with it's actions
+     */
+    public Dialog getGameOverDialog() {
+        Dialog dialog = new Dialog("game over!", Assets.uiSkin);
+        
+        return dialog;
     }
     
     private void updateCamera(float delta) {
@@ -238,7 +279,7 @@ public class Level {
         gameCamera.update();
     }
     
-    public void scrollBackgrounds(float amX, float amY) {
+    private void scrollBackgrounds(float amX, float amY) {
         for(LayerManager.Layer layer : layers.getLayers()) {
             if(layer.getName().equals("background")) {
                 layer.setScrollX(amX);
@@ -252,14 +293,20 @@ public class Level {
         updateObjects(delta);
         checkForCollisions();
         updateCamera(delta);
-                
+        generateAmmoCrate();
+        zombieGenerator(delta);
+    }
+    
+    private void zombieGenerator(float delta) {  
         spawnTimer += delta;
         
         if(spawnTimer >= spawnTime) {
             spawnTimer = 0;
             generateZombie();
         }
-        
+    }
+    
+    private void generateAmmoCrate() {
         // Possibly generate an ammo crate
         if(MathUtils.random() < AMMO_CRATE_SPAWN_TIME) {
             AmmoCrate c = Factory.ammoCratePool.obtain();
@@ -271,7 +318,7 @@ public class Level {
         }
     }
     
-    public void generateZombie() {
+    private void generateZombie() {
         Zombie z = Factory.zombiePool.obtain();
 
         // Calculate zombie x
@@ -333,8 +380,8 @@ public class Level {
         
         //debugRender();
     }
-    
-    public void debugRender() {
+
+    private void debugRender() {
         App.debugRenderer.setProjectionMatrix(gameCamera.combined);
         App.debugRenderer.setColor(1, 0, 0, 1);
         App.debugRenderer.begin(ShapeType.Filled);
@@ -366,7 +413,7 @@ public class Level {
         App.debugRenderer.end();
     }
     
-    public void updateObjects(float delta) {
+    private void updateObjects(float delta) {
         for(Zombie zombie : zombies) {
             zombie.update(delta);
             
@@ -385,7 +432,7 @@ public class Level {
         player.update(delta);
     }
     
-    public void checkForCollisions() { 
+    private void checkForCollisions() { 
         Iterator<AmmoCrate> iter = ammoCrates.iterator();
         AmmoCrate cur = null;
         
@@ -425,9 +472,7 @@ public class Level {
         return context;
     }
     
-    public void initializeCamera() {
-        gameCamera = new GameCamera();
-        
+    private void initializeCamera() {
         gameCamera.zoom = 0.45f;
         
         origCameraZoom = gameCamera.zoom;
@@ -436,6 +481,10 @@ public class Level {
                                 gameCamera.viewportHeight * gameCamera.zoom * 0.5f, 0);
         
         gameCamera.update();
+    }
+    
+    public void dispose() {
+        
     }
     
     public void addLayer(LayerManager.Layer layer) {
@@ -465,12 +514,7 @@ public class Level {
     public void setPlayerArmy(Array<Unit> playerArmy) {
         this.playerArmy = playerArmy;
     }
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        
-        return super.clone();
-    }
-    
+
     public void setPlayer(Player player) {
         this.player = player;
     }
@@ -505,5 +549,13 @@ public class Level {
     
     public float getSpawnTimer() {
         return spawnTimer;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+    
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }
