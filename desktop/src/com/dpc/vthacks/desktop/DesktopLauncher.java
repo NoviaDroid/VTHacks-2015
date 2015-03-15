@@ -7,7 +7,7 @@ import com.dpc.vthacks.App;
 public class DesktopLauncher {
     public static void main(String[] arg) {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-        config.title = "Strafer v 0.0.0";
+        config.title = "Metro Z v 0.0.0";
         config.width = 1024;
         config.height = 768;
         new LwjglApplication(new App(), config);
@@ -16,7 +16,7 @@ public class DesktopLauncher {
 // 
 //        ObjectMap<String, Upgrade> s = new ObjectMap<String, Upgrade>();
 //        
-//        s.put("ammo1", new Upgrade(50, 50));
+//        s.put("ammo1", new Upgrade(50,0 50));
 //        s.put("ammo2", new Upgrade(100, 100));
 //        
 //        u.put("handgun", s);

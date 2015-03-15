@@ -81,7 +81,7 @@ public class MenuScreen implements Screen {
         
         titleFore.setColor(0.18f, 0, 0.18f, 1);
         
-        play = new TextButton("Play", style);
+        play = new TextButton("Play", Assets.uiSkin);
         
         play.addListener(new InputListener() {
             
@@ -93,7 +93,7 @@ public class MenuScreen implements Screen {
             
         });
         
-        shop = new TextButton("Store", style);
+        shop = new TextButton("Store", Assets.uiSkin);
         
         shop.addListener(new InputListener() {
             

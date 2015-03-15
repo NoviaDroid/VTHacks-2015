@@ -56,7 +56,7 @@ public class Parachutist extends AnimatedUnit {
 
     @Override
     public void onDamageTaken(Unit attacker, float amount) {
-        super.onDamageTaken(attacker, amount);
+
     }
 
     public void setFalling(boolean isFalling) {

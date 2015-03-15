@@ -73,7 +73,7 @@ public class StoreScreen implements Screen {
         
         weaponInfo = new WeaponInfo();
         
-        weaponInfo.purchase = new TextButton("Purchase", textButtonStyle);
+        weaponInfo.purchase = new TextButton("Purchase", Assets.uiSkin);
         
         weaponInfo.purchase.addListener(new InputListener() {
             @Override
@@ -114,8 +114,7 @@ public class StoreScreen implements Screen {
         labelStyle = new LabelStyle();
         labelStyle.font = Fonts.getZombieSmall();
         
-        
-        backButton = new TextButton("Back", textButtonStyle);
+        backButton = new TextButton("Back", Assets.uiSkin);
         
         backButton.setPosition(PADDING, 
                 AppData.height - 2 * textButtonStyle.font.getBounds(backButton.getText()).height);

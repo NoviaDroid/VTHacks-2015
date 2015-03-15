@@ -40,7 +40,7 @@ public class LevelSelectionScreen implements Screen {
         buttonStyle = new TextButtonStyle();
         buttonStyle.font = Fonts.getZombie();
         
-        go = new TextButton("Go!", buttonStyle);
+        go = new TextButton("Go!", Assets.uiSkin);
         
         go.addListener(new InputListener() {
             
@@ -99,7 +99,9 @@ public class LevelSelectionScreen implements Screen {
 
         if(loading && Assets.lsUpdateRender(context)) {
             Assets.getGameTextures();
-            context.setScreen(new GameScreen(context, ((Label) scroll.getCurrentActor()).getUserObject().toString()));
+            context.setScreen(new GameScreen(context, 
+                                            ((Label) scroll.getCurrentActor()).getUserObject().toString(), 
+                                            LevelProperties.ENDLESS_MODE));
         }
     }
 

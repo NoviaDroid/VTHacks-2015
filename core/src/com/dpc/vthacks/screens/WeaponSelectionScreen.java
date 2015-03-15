@@ -63,7 +63,7 @@ public class WeaponSelectionScreen implements Screen {
             dStage = new Stage(new StretchViewport(AppData.width, AppData.height));
             table = new Table();
 
-            okay = new TextButton("Okay", buttonStyle);
+            okay = new TextButton("Okay", Assets.uiSkin);
             okay.setPosition(okay.getWidth() + PADDING, okay.getHeight() + PADDING);
 
             okay.addListener(new InputListener() {
@@ -181,7 +181,8 @@ public class WeaponSelectionScreen implements Screen {
         labelStyle = new LabelStyle();
         labelStyle.font = Fonts.getZombieXSmall();
         
-        next = new TextButton("Next", buttonStyle);
+        next = new TextButton("Next", Assets.uiSkin);
+        
         next.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {

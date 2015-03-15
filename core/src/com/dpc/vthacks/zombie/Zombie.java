@@ -143,7 +143,9 @@ public class Zombie extends AnimatedUnit implements Poolable {
 
     @Override
     public void onDamageTaken(Unit attacker, float amount) {
-        super.onDamageTaken(attacker, amount);
+        if(getProperties().getHealth() <= 0) {
+            onDeath(attacker);
+        }
     }
 
     public void resetPath() {

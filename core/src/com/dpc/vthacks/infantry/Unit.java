@@ -42,13 +42,7 @@ public abstract class Unit extends DynamicGameObject implements Poolable {
                              getX(), getY());
     }
     
-    public void onDamageTaken(Unit attacker, float amount) {
-
-        // Unit has died
-        if(properties.getHealth() <= 0) {
-            onDeath(attacker);
-        }
-    }
+    public abstract void onDamageTaken(Unit attacker, float amount);
 
     @Override
     public void reset() {
