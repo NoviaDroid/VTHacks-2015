@@ -48,6 +48,8 @@ public class GameToolbar {
     private boolean active = true; // Is the stage recieving input events ?
     private boolean transitionDone = false; // Is the stage done fading out ?
     
+    private Action moveGunComps, swap;
+    
     public GameToolbar(final GameScreen parent) {
         this.parent = parent;
         
@@ -172,6 +174,45 @@ public class GameToolbar {
         
         
         BATCH_COLOR = stage.getBatch().getColor();
+        
+        
+        
+        moveGunComps = new Action() {
+
+            @Override
+            public boolean act(float delta) {
+                gunIcon.addAction(moveTo(PADDING * 2, gunIcon.getY(), 0.1f));
+                
+                ammoLabel.addAction(fadeIn(0));
+                ammoLabel.addAction(moveTo(PADDING * 2 + gunIcon.getWidth(), gunIcon.getY(), 0.1f));
+                
+                return true;
+            }
+            
+        };
+        
+        // Action to swap guns
+        swap = new Action() {
+            
+            @Override
+            public boolean act(float delta) {
+             // Set the new drawable
+                gunIconDrawable.setRegion(Assets.weaponIconAtlas
+                        .findRegion(parent.getLevel().getPlayer()
+                                .getCurrentWeapon().getIconPath()));
+           
+                gunIcon.setDrawable(gunIconDrawable);
+                
+                gunIcon.setWidth(gunIconDrawable.getRegion().getRegionWidth());
+                gunIcon.setHeight(gunIconDrawable.getRegion().getRegionHeight());
+                
+                // Update the ammo text
+                setAmmo(parent.getLevel().getPlayer().getCurrentWeapon().getAmmo());
+                
+                return true;
+            }
+            
+        };
     }
    
     public void update(float delta) {
@@ -202,9 +243,6 @@ public class GameToolbar {
                                                    moneyToast.getY(), 0.25f)));
                }
            }
-       }
-       else {
-           
        }
     }
     
@@ -467,22 +505,14 @@ public class GameToolbar {
                     // Swap weapons
                     parent.getLevel().getPlayer().swapWeapon();
 
-                    // Set the new drawable
-                    gunIconDrawable.setRegion(Assets.weaponIconAtlas
-                            .findRegion(parent.getLevel().getPlayer()
-                                    .getCurrentWeapon().getIconPath()));
-               
-                    gunIcon.setDrawable(gunIconDrawable);
+                    // Hide the ammo label
+                    ammoLabel.addAction(fadeOut(0));
                     
-                    gunIcon.setWidth(gunIconDrawable.getRegion().getRegionWidth());
-                    gunIcon.setHeight(gunIconDrawable.getRegion().getRegionHeight());
-                    
-                    // Update the ammo text
-                    setAmmo(parent.getLevel().getPlayer().getCurrentWeapon().getAmmo());
-                    
-                    ammoLabel.setX(gunIcon.getX() + gunIcon.getWidth());
-                    ammoLabel.setY(gunIcon.getY());
-                    
+                    gunIcon.addAction(sequence(
+                                        moveTo(-gunIcon.getWidth(), gunIcon.getY(), 0.1f),
+                                        swap,
+                                        moveGunComps));
+
                     return true;
                 }
             });

@@ -209,7 +209,7 @@ public class WeaponSelectionScreen implements Screen {
             }
         });
         
-        backButton = new TextButton("Back", buttonStyle);
+        backButton = new TextButton("Back", Assets.uiSkin);
         backButton.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
