@@ -155,7 +155,7 @@ public class MenuScreen implements Screen {
         stage.draw();
         
         if(loading && Assets.lsUpdateRender(context)) {
-            Assets.getGameTextures();
+            Assets.getGameResources();
             //context.setScreen(new GameScreen(context));
         }
     }

@@ -7,6 +7,7 @@ import com.dpc.vthacks.animation.AdvancedAnimatedUnit;
 import com.dpc.vthacks.animation.AdvancedSpriteAnimation;
 import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
+import com.dpc.vthacks.data.Sounds;
 import com.dpc.vthacks.infantry.Unit;
 import com.dpc.vthacks.level.LevelProperties;
 import com.dpc.vthacks.objects.Weapon;
@@ -90,9 +91,8 @@ public class Player extends AdvancedAnimatedUnit {
     public void blindFire() {
         if(!shotDelayed) {
             if(currentWeapon.getAmmo() > 0) {
-                int dex = MathUtils.random(0, Assets.playerSounds.length - 1);
-                Assets.playerSounds[dex].stop();
-                Assets.playerSounds[dex].play();
+                Assets.sounds.get(Sounds.HEAVY_FIRE).stop();
+                Assets.sounds.get(Sounds.HEAVY_FIRE).play();
     
                 // Decrease ammo
                 currentWeapon.decAmmo(1);
@@ -112,8 +112,8 @@ public class Player extends AdvancedAnimatedUnit {
                 
             }
             else {
-                Assets.outOfAmmo.stop();
-                Assets.outOfAmmo.play();
+                Assets.sounds.get(Sounds.OUT_OF_AMMO).stop();
+                Assets.sounds.get(Sounds.OUT_OF_AMMO).play();
                 getParentLevel().getContext().getToolbar().shakeAmmo();
             }
         }

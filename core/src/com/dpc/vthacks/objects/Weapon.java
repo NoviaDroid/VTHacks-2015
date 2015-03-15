@@ -10,6 +10,7 @@ public class Weapon {
     private String name;
     private String description;
     private String iconPath;
+    private String sound; // Key to sounds map in assets
     private float minDamage;
     private float maxDamage;
     private int ammo;
@@ -26,9 +27,17 @@ public class Weapon {
         return "name: " + name + "\ndescription: " + 
                description + "\nminDamage" + 
                 minDamage + "\nammo" + 
-               ammo + "\nmaxAmmo" + maxAmmo + "\ncost" + cost + "\nid" + id;
+               ammo + "\nmaxAmmo" + maxAmmo + "\ncost" + cost + "\nid" + id + "\nsound " + sound;
     }
 
+    public String getSound() {
+        return sound;
+    }
+    
+    public void setSound(String sound) {
+        this.sound = sound;
+    }
+    
     public int getId() {
         return id;
     }

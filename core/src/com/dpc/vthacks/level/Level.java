@@ -16,6 +16,7 @@ import com.dpc.vthacks.GameCamera;
 import com.dpc.vthacks.MathUtil;
 import com.dpc.vthacks.Player;
 import com.dpc.vthacks.data.Assets;
+import com.dpc.vthacks.data.Sounds;
 import com.dpc.vthacks.factories.Factory;
 import com.dpc.vthacks.gameobject.GameObject;
 import com.dpc.vthacks.infantry.Unit;
@@ -443,7 +444,7 @@ public class Level {
             if(cur.getBoundingRectangle().overlaps(player.getBoundingRectangle())) {
                 player.refillAmmo();
                 Factory.ammoCratePool.free(cur);
-                Assets.outOfAmmo.play();
+                Assets.sounds.get(Sounds.OUT_OF_AMMO).play();
                 iter.remove();
             }
         }
