@@ -14,7 +14,7 @@ public final class Bank {
     private static Preferences prefs;
     
     public static final void load() {
-        prefs = Gdx.app.getPreferences("MY_PREFERENCES");
+        prefs = Gdx.app.getPreferences("MY_PREFFSSSSSSSSSS");
         
         balance = prefs.getInteger("balance");
     }

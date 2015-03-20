@@ -211,9 +211,9 @@ public class GameScreen implements Screen {
         joystickPercentX = toolbar.getJoystick().getKnobPercentX();
         joystickPercentY = toolbar.getJoystick().getKnobPercentY();
         
-      //  if(gameMode.isActive()) {
+        if(gameMode.isActive()) {
             player.walk(joystickPercentX, joystickPercentY);
-    //    }
+        }
         
         //level.scrollBackgrounds(joystickPercentX, joystickPercentY);
     }

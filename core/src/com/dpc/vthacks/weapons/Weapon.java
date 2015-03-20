@@ -1,4 +1,6 @@
-package com.dpc.vthacks.objects;
+package com.dpc.vthacks.weapons;
+
+import com.dpc.vthacks.data.Assets;
 
 /**
  * Encapsulates data for a weapon
@@ -22,14 +24,20 @@ public class Weapon {
         
     }
     
-    @Override
-    public String toString() {
-        return "name: " + name + "\ndescription: " + 
-               description + "\nminDamage" + 
-                minDamage + "\nammo" + 
-               ammo + "\nmaxAmmo" + maxAmmo + "\ncost" + cost + "\nid" + id + "\nsound " + sound;
+    /**
+     * Stops this weapon's shot 
+     */
+    public void stopSound() {
+        Assets.sounds.get(sound).stop();
     }
-
+    
+    /**
+     * Plays this weapon's shot 
+     */
+    public void playSound() {
+        Assets.sounds.get(sound).play();
+    }
+    
     public String getSound() {
         return sound;
     }

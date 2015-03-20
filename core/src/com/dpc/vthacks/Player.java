@@ -10,15 +10,14 @@ import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.data.Sounds;
 import com.dpc.vthacks.infantry.Unit;
 import com.dpc.vthacks.level.LevelProperties;
-import com.dpc.vthacks.objects.Weapon;
 import com.dpc.vthacks.properties.AnimatedUnitProperties;
+import com.dpc.vthacks.weapons.Gun;
+import com.dpc.vthacks.weapons.Weapon;
 import com.dpc.vthacks.zombie.Zombie;
 
 public class Player extends AdvancedAnimatedUnit {
     private int money;
-    private boolean shotDelayed, drawBehind;
-    private final float FIRE_DELAY = 0.15f; // Delay between shots
-    private float fireTimer; // Current time between shot
+    private boolean drawBehind;
     private boolean movingLeft;
     private Rectangle ground;
     private Vector2 gunOffset; // X and Y positions of tip of the gun relative to and inside of the bounding box
@@ -40,8 +39,6 @@ public class Player extends AdvancedAnimatedUnit {
         setPlaying(true);
         
         currentWeapon = primary;
-
-        shotDelayed = false;
     }
     
     @Override
@@ -53,13 +50,8 @@ public class Player extends AdvancedAnimatedUnit {
     public void update(float delta) {
         super.update(delta);
         
-        if(shotDelayed) {
-            fireTimer += delta;
-            
-            if(fireTimer >= FIRE_DELAY) {
-                fireTimer = 0;
-                shotDelayed = false;
-            }
+        if(currentWeapon instanceof Gun) {
+            ((Gun) currentWeapon).update(delta);
         }
     }
 
@@ -88,11 +80,11 @@ public class Player extends AdvancedAnimatedUnit {
     /**
      * Fire the gun even though it may not hit something
      */
-    public void blindFire() {
-        if(!shotDelayed) {
+    public void fireWeapon(Zombie z, float damageScale) {
+        if(((Gun) currentWeapon).canFire()) {
             if(currentWeapon.getAmmo() > 0) {
-                Assets.sounds.get(Sounds.HEAVY_FIRE).stop();
-                Assets.sounds.get(Sounds.HEAVY_FIRE).play();
+                currentWeapon.stopSound();
+                currentWeapon.playSound();
     
                 // Decrease ammo
                 currentWeapon.decAmmo(1);
@@ -108,8 +100,13 @@ public class Player extends AdvancedAnimatedUnit {
                     setX(getX() - 1);
                     setY(getY() + 1);
                 }
+                 
+                if(z != null) {
+                    attack(z, damageScale);
+                }
                 
-                
+                ((Gun) currentWeapon).setCanFire(false);
+                ((Gun) currentWeapon).fire();
             }
             else {
                 Assets.sounds.get(Sounds.OUT_OF_AMMO).stop();
@@ -117,15 +114,12 @@ public class Player extends AdvancedAnimatedUnit {
                 getParentLevel().getContext().getToolbar().shakeAmmo();
             }
         }
-        
-        shotDelayed = true;
     }
     
     @Override
     public void reset() {
         super.reset();
-        
-        shotDelayed = false;
+
         deathCallbackCalled = false;
         money = 0;
         setPlaying(true);

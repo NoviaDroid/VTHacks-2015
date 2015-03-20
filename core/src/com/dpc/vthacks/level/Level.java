@@ -1,5 +1,6 @@
 package com.dpc.vthacks.level;
 
+import java.sql.Date;
 import java.util.Iterator;
 
 import com.badlogic.gdx.InputAdapter;
@@ -25,6 +26,7 @@ import com.dpc.vthacks.objects.LayerManager;
 import com.dpc.vthacks.properties.ZombieProperties;
 import com.dpc.vthacks.properties.ZombieSegment;
 import com.dpc.vthacks.screens.GameScreen;
+import com.dpc.vthacks.weapons.Gun;
 import com.dpc.vthacks.zombie.Zombie;
 
 public class Level {
@@ -44,6 +46,8 @@ public class Level {
     private float AMMO_CRATE_SPAWN_TIME = 0.001f;
     private static final float MAX_ZOOM = 0.35f; // Most that can be zoomed in
     private static final float ZOOM_STEP = 0.05f; // How much zoom to add
+    private boolean fingerDown;
+    private Zombie currentPlayerTarget;
     
     public Level(final GameScreen context) {
         this.context = context;
@@ -62,103 +66,59 @@ public class Level {
         LayerManager.setCamera(gameCamera);
         
         GestureListener l = new GestureListener() {
-
+            
             @Override
             public boolean touchDown(float x, float y, int pointer, int button) {
+                fingerDown = true;
+                
                 gameCamera.unproject(input.set(x, y, 0));
-                // Fire a shot, it may not hit
-                player.blindFire();
-
-                // Calculate damage on a zombie
-                for (Zombie z : zombies) {
-
-                    // Check if the player is in range of the zombie
-                    if (Math.abs(z.getX() - player.getX()) < 250) {
-                        if (Math.abs(z.getY() - player.getY()) < 100) {
-                            if (player.getX() <= z.getX()
-                                    && !player.isMovingLeft()
-                                    || player.getX() >= z.getX()
-                                    && player.isMovingLeft()) {
-                                // Assume
-                                float segDmg = ((ZombieProperties) z
-                                        .getProperties()).getSegments()[0].damageFactor;
-
-                                // Grab the segments of the zombie
-                                ZombieSegment seg = null;
-                                int len = ((ZombieProperties) z.getProperties())
-                                        .getSegments().length;
-
-                                for (int i = 0; i < len; i++) {
-                                    seg = ((ZombieProperties) z.getProperties())
-                                            .getSegments()[i];
-
-                                    // Find out if the current seg is the right
-                                    // one
-                                    if (seg.bounds
-                                            .contains(
-                                                    seg.bounds.x + 1,
-                                                    player.getY()
-                                                            + player.getCurrentFrame()
-                                                                    .getAnchorOffsetY())) {
-                                        segDmg = seg.damageFactor;
-                                    }
-                                }
-
-                                // Attack the right zombie with the apropriate
-                                // damage
-                                player.attack(z, segDmg);
-
-                                return false;
-                            }
-                        }
-                    }
-                }
+                
+                firePlayerWeapon();
+                
                 return false;
             }
 
             @Override
             public boolean tap(float x, float y, int count, int button) {
-
-                
-                
-                return true;
+               
+                return false;
             }
 
             @Override
             public boolean longPress(float x, float y) {
                 
-                return true;
+                return false;
             }
 
             @Override
             public boolean fling(float velocityX, float velocityY, int button) {
                 
-                return true;
+                return false;
             }
 
             @Override
             public boolean pan(float x, float y, float deltaX, float deltaY) {
                 
-                return true;
+                return false;
             }
 
             @Override
             public boolean panStop(float x, float y, int pointer, int button) {
                 
-                return true;
+                return false;
             }
 
             @Override
             public boolean zoom(float initialDistance, float distance) {
 //                inputAdapter.scrolled((int) (distance/initialDistance));
-                return true;
+                return false;
             }
 
             @Override
             public boolean pinch(Vector2 initialPointer1,
                     Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2) {
                 
-                return true;
+                return false;
             }
             
         };
@@ -166,7 +126,7 @@ public class Level {
         gestureDetector = new GestureDetector(l);
         
         inputAdapter = new InputAdapter() {
-            
+
             @Override
             public boolean scrolled(int amount) {
                 // Make sure the amount of zoom is valid
@@ -193,12 +153,72 @@ public class Level {
             }
             
             @Override
-            public boolean touchDown(int screenX, int screenY, int pointer,
-                    int button) {
+            public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+                fingerDown = false;
                 
+                return super.touchUp(screenX, screenY, pointer, button);
+            }
+            
+            @Override
+            public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+  
                 return true;
             }
         };
+    }
+
+    /**
+     * Calculates the damage factor of a zombie segment
+     * based on where the player's gun is in relation to other zombies
+     * and fires the player's gun
+     */
+    private void firePlayerWeapon() {
+        // Mock
+        player.fireWeapon(null, 0);
+        
+        // Calculate damage on a zombie
+        for (Zombie z : zombies) {
+
+            // Check if the player is in range of the zombie
+            if (Math.abs(z.getX() - player.getX()) < 250) {
+                if (Math.abs(z.getY() - player.getY()) < 100) {
+                    if (player.getX() <= z.getX()
+                            && !player.isMovingLeft()
+                            || player.getX() >= z.getX()
+                            && player.isMovingLeft()) {
+                        // Assume
+                        float segDmg = ((ZombieProperties) z
+                                .getProperties()).getSegments()[0].damageFactor;
+
+                        // Grab the segments of the zombie
+                        ZombieSegment seg = null;
+                        int len = ((ZombieProperties) z.getProperties())
+                                .getSegments().length;
+
+                        
+                        for (int i = 0; i < len; i++) {
+                            seg = ((ZombieProperties) z.getProperties())
+                                    .getSegments()[i];
+
+                            // Find out if the current seg is the right
+                            // one
+                            if (seg.bounds
+                                    .contains(
+                                            seg.bounds.x + 1,
+                                            player.getY()
+                                                    + player.getCurrentFrame()
+                                                            .getAnchorOffsetY())) {
+                                segDmg = seg.damageFactor;
+                            }
+                        }
+                        
+                        player.attack(z, segDmg);
+                        
+                        return;
+                    }
+                }
+            }
+        }
     }
     
     public void setUnitsVisible(boolean b) {
@@ -215,6 +235,7 @@ public class Level {
      */
     public void reset() {
         active = true;
+        getContext().getToolbar().setMoney(0);
         player.reset();
         spawnTimer = 0;
         ammoCrates.clear();
@@ -296,6 +317,12 @@ public class Level {
         updateCamera(delta);
         generateAmmoCrate();
         zombieGenerator(delta);
+        
+        if(player.getCurrentWeapon() instanceof Gun) {
+            if(fingerDown && ((Gun) player.getCurrentWeapon()).isFullAuto()) {
+                firePlayerWeapon();
+            }
+        }
     }
     
     private void zombieGenerator(float delta) {  
@@ -362,9 +389,9 @@ public class Level {
         }
         
         for(Unit zombie : zombies) {
-            if(gameCamera.frustum.pointInFrustum(zombie.getX(), zombie.getY(), 0)) {
+           // if(gameCamera.frustum.pointInFrustum(zombie.getX(), zombie.getY(), 0)) {
                 zombie.render();
-            }
+           // }
         }
 
         for(AmmoCrate c : ammoCrates) {
@@ -516,6 +543,14 @@ public class Level {
         this.playerArmy = playerArmy;
     }
 
+    public void setFingerDown(boolean fingerDown) {
+        this.fingerDown = fingerDown;
+    }
+    
+    public boolean  isFingerDown () {
+        return fingerDown;
+    }
+    
     public void setPlayer(Player player) {
         this.player = player;
     }

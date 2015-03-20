@@ -16,12 +16,12 @@ import com.dpc.vthacks.animation.FrameData;
 import com.dpc.vthacks.animation.SpriteAnimation;
 import com.dpc.vthacks.factories.Factory;
 import com.dpc.vthacks.level.LevelProperties;
-import com.dpc.vthacks.objects.Weapon;
 import com.dpc.vthacks.properties.AnimatedUnitProperties;
 import com.dpc.vthacks.properties.Properties;
-import com.dpc.vthacks.properties.WeaponManager;
 import com.dpc.vthacks.properties.ZombieProperties;
 import com.dpc.vthacks.properties.ZombieSegment;
+import com.dpc.vthacks.weapons.Weapon;
+import com.dpc.vthacks.weapons.WeaponManager;
 
 public class JSONManager {
     private static final String PROPERTIES_PATH = "json/properties.json";

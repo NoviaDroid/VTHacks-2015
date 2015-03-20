@@ -2,7 +2,6 @@ package com.dpc.vthacks.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -23,8 +22,8 @@ import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.data.Fonts;
 import com.dpc.vthacks.factories.Factory;
-import com.dpc.vthacks.objects.Weapon;
-import com.dpc.vthacks.properties.WeaponManager;
+import com.dpc.vthacks.weapons.Weapon;
+import com.dpc.vthacks.weapons.WeaponManager;
 
 public class WeaponSelectionScreen implements Screen {
     private Stage stage;

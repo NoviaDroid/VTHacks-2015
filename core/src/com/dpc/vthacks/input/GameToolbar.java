@@ -1,6 +1,7 @@
 package com.dpc.vthacks.input;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
+
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.Action;
@@ -22,8 +23,8 @@ import com.dpc.vthacks.Bank;
 import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.data.Fonts;
-import com.dpc.vthacks.objects.Weapon;
 import com.dpc.vthacks.screens.GameScreen;
+import com.dpc.vthacks.weapons.Weapon;
 
 public class GameToolbar {
     private Stage stage;
@@ -568,5 +569,6 @@ public class GameToolbar {
 
     public void setMoney(int i) {
         moneyLabel.setText("$" + i);
+        money = 0;
     }
 }

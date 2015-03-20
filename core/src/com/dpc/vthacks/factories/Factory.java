@@ -12,10 +12,10 @@ import com.dpc.vthacks.infantry.Soldier;
 import com.dpc.vthacks.infantry.Tank;
 import com.dpc.vthacks.objects.AmmoCrate;
 import com.dpc.vthacks.objects.GameSprite;
-import com.dpc.vthacks.objects.Weapon;
 import com.dpc.vthacks.properties.AnimatedUnitProperties;
 import com.dpc.vthacks.properties.Properties;
 import com.dpc.vthacks.properties.ZombieProperties;
+import com.dpc.vthacks.weapons.Weapon;
 import com.dpc.vthacks.zombie.Zombie;
 
 public class Factory {

@@ -125,6 +125,9 @@ public class Assets {
         shot = manager.get("sounds/shot.wav", Music.class);
         strafe = manager.get("sounds/strafe.wav", Music.class);
         sounds.put("outofammo", manager.get("sounds/outofammo.wav", Sound.class));
+        sounds.put("shot1", manager.get("sounds/shot1.wav", Sound.class));
+        sounds.put("shot2", manager.get("sounds/shot2.wav", Sound.class));
+        sounds.put("shot3", manager.get("sounds/shot3.wav", Sound.class));
         
         tankAnimations = new ObjectMap<String, SpriteAnimation>();
         playerAnimations = new ObjectMap<String, AdvancedSpriteAnimation>();
@@ -159,8 +162,6 @@ public class Assets {
         bomb = gameAtlas.findRegion("bomb");
         road = gameAtlas.findRegion("road");
         ammoCrate = gameAtlas.findRegion("Ammo Crate");
-        
-        sounds.put("shot1", manager.get("sounds/shot1.wav", Sound.class));
     }
     
     public static AdvancedSpriteAnimation getAdvancedAnimation(JsonValue root, 
