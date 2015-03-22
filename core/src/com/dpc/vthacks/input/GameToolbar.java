@@ -581,4 +581,5 @@ public class GameToolbar {
         moneyLabel.setText("$" + i);
         money = 0;
     }
+    
 }

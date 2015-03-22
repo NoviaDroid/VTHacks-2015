@@ -234,6 +234,7 @@ public class Level {
     public void reset() {
         active = true;
         getContext().getToolbar().setMoney(0);
+        getContext().getToolbar().getStage().cancelTouchFocus();
         player.reset();
         spawnTimer = 0;
         ammoCrates.clear();
