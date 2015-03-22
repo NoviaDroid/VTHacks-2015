@@ -14,7 +14,6 @@ public class Tank extends Parachutist {
                 float y) {
         super(currentState, properties, x, y);
 
-        setSize(getWidth() * 2, getHeight() * 2);
         setPlaying(true);
     }
 
@@ -31,11 +30,6 @@ public class Tank extends Parachutist {
     @Override
     public void reset() {
         super.reset();
-    }
-    
-    @Override
-    public void attack() {
-       Assets.explosion.play();
     }
 
     @Override

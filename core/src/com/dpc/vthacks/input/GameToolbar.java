@@ -34,7 +34,7 @@ public class GameToolbar {
     private Drawable background;
     private Button bombButton, strafeButton, soldierButton, tankButton, towerButton,
                    tankUpgradeButton, towerUpgradeButton, soldierUpgradeButton;
-    private Label moneyLabel, experienceLabel, healthLabel, ammoLabel;
+    private Label moneyLabel, experienceLabel, healthLabel, ammoLabel, waveLabel;
     private int money;
     private final Color BATCH_COLOR;
     private static final int PADDING = 5;
@@ -165,6 +165,12 @@ public class GameToolbar {
                                       0.4f,
                                       0, 1));
         
+        waveLabel = new Label("Wave ", style);
+        
+        waveLabel.setPosition((AppData.width * 0.5f) - (waveLabel.getWidth() * 0.5f), 
+                              (AppData.height) - (waveLabel.getHeight()));
+        
+        stage.addActor(waveLabel);
         stage.addActor(joystick);
         stage.addActor(playerIcon);
         stage.addActor(healthBarBackground);
@@ -488,6 +494,10 @@ public class GameToolbar {
     
     public Touchpad getJoystick() {
         return joystick;
+    }
+   
+    public void setWave(int wave) {
+        waveLabel.setText("Wave " + wave);
     }
     
     public void setGunIcon(Weapon gun) {

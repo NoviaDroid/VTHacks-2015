@@ -16,21 +16,19 @@ public abstract class Unit extends DynamicGameObject implements Poolable {
         super(region, properties, x, y);
 
         this.properties = properties;
+        
+        setSize(getWidth() * properties.getScaleX(), getHeight() * properties.getScaleY());
     }
 
     @Override
     public void update(float delta) { 
-//        if(attacking) {
-//            attack();
-//        }
+        
     }
     
     @Override
     public abstract void render();
 
     public abstract void onDeath(Unit killer);
-    
-    public abstract void attack();
     
     public abstract void attack(Unit enemy, float dmg);
     

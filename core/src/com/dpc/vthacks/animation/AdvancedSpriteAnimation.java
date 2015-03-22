@@ -16,11 +16,21 @@ public class AdvancedSpriteAnimation implements Disposable {
     private int index;
     private float time;
     
-    public AdvancedSpriteAnimation(AdvancedSpriteAnimation cpy) {
-        animation = new Animation(cpy.time, cpy.getAnimation().getKeyFrames());
+    public AdvancedSpriteAnimation(AdvancedSpriteAnimation cpy, boolean flipFrames) {
+        TextureRegion[] frames = cpy.getAnimation().getKeyFrames();
+        
+        if(flipFrames) {
+            frames = new TextureRegion[cpy.animation.getKeyFrames().length];
+            
+            for(int i = 0; i < frames.length; i++) {
+                frames[i] = new TextureRegion(cpy.animation.getKeyFrames()[i]);
+                frames[i].flip(true, false);
+            }
+        }
+        
+        animation = new Animation(cpy.time, frames);
         frameData = cpy.frameData;
         time = cpy.time;
-        System.err.println("advancedspriteanimation time: " + time);
     }
     
     public AdvancedSpriteAnimation(FrameData[] frameData) {

@@ -13,6 +13,10 @@ import com.dpc.vthacks.properties.ZombieProperties;
 import com.dpc.vthacks.properties.ZombieSegment;
 
 public class Zombie extends AnimatedUnit implements Poolable {
+    public static final int TIER_1 = 1;
+    public static final int TIER_2 = 2;
+    public static final int TIER_3 = 3;
+    private int tier;
     private boolean walkingLeft;
     private float attackSpeed; // Every x amount of time, attack
     private float attackTimer; // Counts time for attack speed
@@ -27,8 +31,6 @@ public class Zombie extends AnimatedUnit implements Poolable {
         
         getProperties().maxHealth(MathUtils.random(getProperties().getHealth(), 
                                                    getProperties().getHealth() * 2) + 25);
-        
-        setSize(getWidth() * 3, getHeight() * 3);
         
         init();
     }
@@ -53,7 +55,9 @@ public class Zombie extends AnimatedUnit implements Poolable {
             
             if(attackTimer >= attackSpeed) {
                 attackTimer = 0;
-                attack();
+                
+                attack(getTargetEnemy(), MathUtil.rand(getProperties().getMinDamage(), 
+                                                       getProperties().getMaxDamage()));
             }
         }
         
@@ -134,14 +138,6 @@ public class Zombie extends AnimatedUnit implements Poolable {
     }
 
     @Override
-    public void attack() {
-        float rand = MathUtil.rand(getProperties().getMinDamage(), 
-                                   getProperties().getMaxDamage());
-        
-        getTargetEnemy().takeDamage(this, rand);
-    }
-
-    @Override
     public void onDamageTaken(Unit attacker, float amount) {
         if(getProperties().getHealth() <= 0) {
             onDeath(attacker);
@@ -170,5 +166,14 @@ public class Zombie extends AnimatedUnit implements Poolable {
 
     @Override
     public void attack(Unit enemy, float dmg) {
+        enemy.takeDamage(this, dmg);
+    }
+    
+    public int getTier() {
+        return tier;
+    }
+    
+    public void setTier(int tier) {
+        this.tier = tier;
     }
 }

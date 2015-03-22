@@ -41,6 +41,30 @@ public class ZombieProperties extends AnimatedUnitProperties<SpriteAnimation> {
         attackSpeed = cpy.attackSpeed;
     }
     
+    @Override
+    public String toString() {
+        return super.toString() + 
+               String.format("%s,\n%s,\n%s,\n%s,\n", 
+                             "Min Kill Money: " + minKillMoney,
+                             "Max Kill Money: " + maxKillMoney,
+                             "Segments: " + segments,
+                             "Attack Speed: " + attackSpeed);
+    }
+    
+    @Override
+    public ZombieProperties scaleX(float scaleX) {
+        super.scaleX(scaleX);
+        
+        return this;
+    }
+    
+    @Override
+    public ZombieProperties scaleY(float scaleY) {
+        super.scaleY(scaleY);
+        
+        return this;
+    }
+    
     public ZombieProperties attackSpeed(float speed) {
         this.attackSpeed = speed;
         return this;

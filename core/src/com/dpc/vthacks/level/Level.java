@@ -186,28 +186,26 @@ public class Level {
                             && !player.isMovingLeft()
                             || player.getX() >= z.getX()
                             && player.isMovingLeft()) {
+                        
                         // Assume
-                        float segDmg = ((ZombieProperties) z
-                                .getProperties()).getSegments()[0].damageFactor;
+                        float segDmg = ((ZombieProperties) z.getProperties())
+                                                            .getSegments()[0]
+                                                            .damageFactor;
 
                         // Grab the segments of the zombie
                         ZombieSegment seg = null;
                         int len = ((ZombieProperties) z.getProperties())
-                                .getSegments().length;
+                                                       .getSegments().length;
 
                         
                         for (int i = 0; i < len; i++) {
                             seg = ((ZombieProperties) z.getProperties())
-                                    .getSegments()[i];
+                                                       .getSegments()[i];
 
-                            // Find out if the current seg is the right
-                            // one
-                            if (seg.bounds
-                                    .contains(
-                                            seg.bounds.x + 1,
-                                            player.getY()
-                                                    + player.getCurrentFrame()
-                                                            .getAnchorOffsetY())) {
+                            // Find out if the current segment is the right one
+                            if (seg.bounds.contains(seg.bounds.x + 1,
+                                                    player.getY() + player.getCurrentFrame()
+                                                                          .getAnchorOffsetY())) {
                                 segDmg = seg.damageFactor;
                             }
                         }
@@ -475,21 +473,6 @@ public class Level {
                 iter.remove();
             }
         }
-        
-//        for(Unit unit : playerArmy) {
-//            for(Zombie zombie : zombies) {
-//                if(zombie.getBoundingRectangle().overlaps(unit.getBoundingRectangle()) &&
-//                   !zombie.isAttacking()) {
-//                    zombie.setAttacking(true, unit);
-//                    zombie.attack();
-//
-//                    if(unit.getProperties().getHealth() <= 0) {
-//                //        zombie.setAttacking(false, null);
-//                  //      zombie.resetPath();
-//                    }
-//                }
-//            }
-//        }
     }
     
     public GameCamera getGameCamera() {
