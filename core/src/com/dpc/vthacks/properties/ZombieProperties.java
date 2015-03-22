@@ -2,6 +2,7 @@ package com.dpc.vthacks.properties;
 
 import com.badlogic.gdx.utils.ObjectMap;
 import com.dpc.vthacks.animation.SpriteAnimation;
+import com.dpc.vthacks.zombie.ZombieSegment;
 
 public class ZombieProperties extends AnimatedUnitProperties<SpriteAnimation> {
     private int minKillMoney, maxKillMoney; // How much money played awarded when killed

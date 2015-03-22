@@ -42,6 +42,29 @@ public class Assets {
     public static float shotTimer;
     public static int loaded;
     
+    public static TextureRegion[] shallowCopy(TextureRegion[] input) {
+        TextureRegion[] output = new TextureRegion[input.length];
+        
+        for(int i = 0; i < input.length; i++) {
+            output[i] = new TextureRegion(input[i]);
+        }
+        
+        return output;
+    }
+
+    public static void flip(TextureRegion[] input, boolean x, boolean y) {
+        for(int i = 0; i < input.length; i++) {
+            input[i].flip(x, y);
+        }
+    }
+    
+    public static TextureRegion[] copyFlip(TextureRegion[] input, boolean x, boolean y) {
+        input = shallowCopy(input);
+        flip(input, x, y);
+        
+        return input;
+    }
+    
     public static void loadSkins() {
         skinAtlas = new TextureAtlas("skinPack.pack");
     }

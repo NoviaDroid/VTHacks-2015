@@ -15,7 +15,7 @@ import com.dpc.vthacks.level.LevelProperties;
 import com.dpc.vthacks.properties.AnimatedUnitProperties;
 import com.dpc.vthacks.properties.Properties;
 import com.dpc.vthacks.properties.ZombieProperties;
-import com.dpc.vthacks.properties.ZombieSegment;
+import com.dpc.vthacks.zombie.ZombieSegment;
 
 public class JSONParser {
     private static final String PROPERTIES_PATH = "json/properties.json";

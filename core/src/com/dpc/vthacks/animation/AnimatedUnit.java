@@ -1,7 +1,6 @@
 package com.dpc.vthacks.animation;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.dpc.vthacks.App;
 import com.dpc.vthacks.infantry.Unit;

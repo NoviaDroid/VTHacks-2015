@@ -24,10 +24,10 @@ import com.dpc.vthacks.infantry.Unit;
 import com.dpc.vthacks.objects.AmmoCrate;
 import com.dpc.vthacks.objects.LayerManager;
 import com.dpc.vthacks.properties.ZombieProperties;
-import com.dpc.vthacks.properties.ZombieSegment;
 import com.dpc.vthacks.screens.GameScreen;
 import com.dpc.vthacks.weapons.Gun;
 import com.dpc.vthacks.zombie.Zombie;
+import com.dpc.vthacks.zombie.ZombieSegment;
 
 public class Level {
     private Player player;
