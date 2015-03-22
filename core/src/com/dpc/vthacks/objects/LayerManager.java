@@ -13,15 +13,17 @@ public class LayerManager {
         private Array<GameObject> objects;
         private String name;
         private boolean scrolling;
+        private float scrollFactor;
         private float scrollX, scrollY;
         
         public Layer(String name) {
-            this(name, 0, 0, false);
+            this(name, 0, 0, 0, false);
         }
         
-        public Layer(String name, float scrollX, float scrollY, boolean scrolling) {
+        public Layer(String name, float scrollX, float scrollY, float scrollFactor, boolean scrolling) {
             this.name = name;
             this.scrollX = scrollX;
+            this.scrollFactor = scrollFactor;
             this.scrolling = scrolling;
             this.scrollY = scrollY;
             objects = new Array<GameObject>();
@@ -48,6 +50,14 @@ public class LayerManager {
             for(GameObject o : go) {
                 objects.add(o);
             }
+        }
+        
+        public float getScrollFactor() {
+            return scrollFactor;
+        }
+        
+        public void setScrollFactor(float scrollFactor) {
+            this.scrollFactor = scrollFactor;
         }
         
         public Array<GameObject> getObjects() {

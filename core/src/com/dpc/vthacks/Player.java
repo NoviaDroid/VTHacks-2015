@@ -47,9 +47,7 @@ public class Player extends AdvancedAnimatedUnit {
     @Override
     public void update(float delta) {
         super.update(delta);
-        
-        System.err.println(getCurrentState());
-        
+
         if(currentWeapon instanceof Gun) {
             ((Gun) currentWeapon).update(delta);
         }

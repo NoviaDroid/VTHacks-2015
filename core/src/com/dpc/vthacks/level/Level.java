@@ -288,8 +288,9 @@ public class Level {
             wasClamped = true;
         }
          
-         if(!wasClamped) {
-             scrollBackgrounds(GameScreen.getJoystickPercentX(), GameScreen.getJoystickPercentY());
+         if(!wasClamped && active) {
+             scrollBackgrounds(GameScreen.getJoystickPercentX() * 0.5f, 
+                               GameScreen.getJoystickPercentY() * 0.5f);
          }
          else {
              scrollBackgrounds(0, 0);
