@@ -1,8 +1,8 @@
 package com.dpc.vthacks.level;
 
-import java.sql.Date;
 import java.util.Iterator;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.input.GestureDetector;
@@ -17,12 +17,10 @@ import com.dpc.vthacks.GameCamera;
 import com.dpc.vthacks.MathUtil;
 import com.dpc.vthacks.Player;
 import com.dpc.vthacks.data.Assets;
-import com.dpc.vthacks.data.Sounds;
 import com.dpc.vthacks.factories.Factory;
 import com.dpc.vthacks.gameobject.GameObject;
 import com.dpc.vthacks.infantry.Unit;
 import com.dpc.vthacks.objects.AmmoCrate;
-import com.dpc.vthacks.objects.LayerManager;
 import com.dpc.vthacks.properties.ZombieProperties;
 import com.dpc.vthacks.screens.GameScreen;
 import com.dpc.vthacks.weapons.Gun;
@@ -34,7 +32,7 @@ public class Level {
     private Array<AmmoCrate> ammoCrates;
     private Array<Unit> playerArmy;
     private Array<Zombie> zombies;
-    private LayerManager layers;
+    private Array<Array<GameObject>> layers;
     private GameCamera gameCamera;
     private InputAdapter inputAdapter;
     private GestureDetector gestureDetector;
@@ -54,16 +52,14 @@ public class Level {
         GameObject.setParentLevel(this);
         
         input = new Vector3();
-        layers = new LayerManager(2);
+        layers = new Array<Array<GameObject>>();
         playerArmy = new Array<Unit>();
         zombies = new Array<Zombie>();
         ammoCrates = new Array<AmmoCrate>();
         gameCamera = new GameCamera();
         
         initializeCamera();
-        
-        LayerManager.setCamera(gameCamera);
-        
+
         GestureListener l = new GestureListener() {
             
             @Override
@@ -292,19 +288,16 @@ public class Level {
              scrollBackgrounds(GameScreen.getJoystickPercentX() * 0.5f, 
                                GameScreen.getJoystickPercentY() * 0.5f);
          }
-         else {
-             scrollBackgrounds(0, 0);
-         }
-         
+
         gameCamera.update();
     }
     
     private void scrollBackgrounds(float amX, float amY) {
-        for(LayerManager.Layer layer : layers.getLayers()) {
-            if(layer.getName().equals("background")) {
-                layer.setScrollX(amX);
-                layer.setScrollY(amY);
-                layer.setScrolling(true);
+        for(Array<GameObject> sub : layers) {
+            for(GameObject layer : sub) {
+                if(layer.isScrollable()) {
+                    layer.scroll(amX, amY);
+                }
             }
         }
     }
@@ -374,7 +367,11 @@ public class Level {
         App.batch.setProjectionMatrix(gameCamera.combined);
         App.batch.begin();
 
-        layers.updateAndRender();
+        for(Array<GameObject> sub : layers) {
+            for(GameObject o : sub) {
+                o.render();
+            }
+        }
         
         if(player.isDrawingBehind()) {
             player.render();
@@ -460,16 +457,14 @@ public class Level {
     
     private void checkForCollisions() { 
         Iterator<AmmoCrate> iter = ammoCrates.iterator();
-        AmmoCrate cur = null;
+        AmmoCrate current = null;
         
         while(iter.hasNext()) {
-            cur = iter.next();
+            current = iter.next();
             
             // If the player obtains an ammo crate, refill ammo and remove it
-            if(cur.getBoundingRectangle().overlaps(player.getBoundingRectangle())) {
-                player.refillAmmo();
-                Factory.ammoCratePool.free(cur);
-                Assets.sounds.get(Sounds.OUT_OF_AMMO).play();
+            if(current.getBoundingRectangle().overlaps(player.getBoundingRectangle())) {
+                current.onPickedUp(player);
                 iter.remove();
             }
         }
@@ -484,7 +479,7 @@ public class Level {
     }
     
     private void initializeCamera() {
-        gameCamera.zoom = 0.45f;
+        gameCamera.zoom = 0.38f;
         
         origCameraZoom = gameCamera.zoom;
 
@@ -497,9 +492,9 @@ public class Level {
     public void dispose() {
         
     }
-    
-    public void addLayer(LayerManager.Layer layer) {
-        layers.addLayer(layer);
+
+    public void setLayers(Array<Array<GameObject>> layers) {
+        this.layers = layers;
     }
     
     public void addZombie(Zombie zombie) {

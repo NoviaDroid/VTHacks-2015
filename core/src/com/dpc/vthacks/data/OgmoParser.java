@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap.Entry;
 import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.XmlReader.Element;
@@ -11,9 +12,7 @@ import com.dpc.vthacks.factories.Factory;
 import com.dpc.vthacks.gameobject.GameObject;
 import com.dpc.vthacks.level.Level;
 import com.dpc.vthacks.level.LevelProperties;
-import com.dpc.vthacks.objects.Base;
 import com.dpc.vthacks.objects.GameSprite;
-import com.dpc.vthacks.objects.LayerManager;
 import com.dpc.vthacks.objects.Road;
 
 public class OgmoParser {
@@ -29,15 +28,17 @@ public class OgmoParser {
         GameObject obj = null;
         
         int rootChildCount = root.getChildCount();
+
+        Array<Array<GameObject>> parsedLayers = new Array<Array<GameObject>>(rootChildCount);
         
-        // Not recursive because this XML file isn't complex..
         for(int i = 0; i < rootChildCount; i++) {
             child = root.getChild(i);
            
-            int len = child.getChildCount();
-            LayerManager.Layer parsed = new LayerManager.Layer(child.getName());
+            int numberOfChildren = child.getChildCount();
+
+            Array<GameObject> childObjects = new Array<GameObject>();
             
-            for(int j = 0; j < len; j++) {
+            for(int j = 0; j < numberOfChildren; j++) {
                 child2 = child.getChild(j);
                 
                 String name = child2.getName();
@@ -62,6 +63,9 @@ public class OgmoParser {
                     level.getPlayer().setGround(obj.getBoundingRectangle());
                 }
                 
+                // Index of where the object will be placed into the array
+                int zOrder = 0;
+                
                 for(Entry<String, String> entry : child2.getAttributes()) {
                     switch(entry.key) {
                     case "x":
@@ -80,10 +84,6 @@ public class OgmoParser {
                         }
                         
                         break;
-                    case "w":
-                        break;
-                    case "h":
-                        break;
                     case "scrollable":
                         if(entry.value.equals("true")) {
                             obj.setScrollable(true);
@@ -94,16 +94,18 @@ public class OgmoParser {
                         break;
                     case "scrollY":
                         obj.setScrollY(Float.parseFloat(entry.value));
+                    case "zOrder": 
+                        zOrder = Integer.parseInt(entry.value);
                     }
-                    
+
+                    childObjects.add(obj);
                 }
-                
-                parsed.addObject(obj);
             }
             
-            level.addLayer(parsed);
+            parsedLayers.add(childObjects);
         }
         
         level.setSpawnTime(root.getFloat("zombieSpawnTime"));
+        level.setLayers(parsedLayers);
     }
 }
