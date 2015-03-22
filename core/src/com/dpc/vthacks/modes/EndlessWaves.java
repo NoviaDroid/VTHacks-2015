@@ -37,6 +37,8 @@ public class EndlessWaves extends Level {
     
     @Override
     public void onGameOver() {
+        super.onGameOver();
+        
         // Disable the controls
         getContext().getToolbar().setActive(false);
         setActive(false);

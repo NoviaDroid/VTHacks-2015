@@ -16,7 +16,6 @@ public class Zombie extends AnimatedUnit implements Poolable {
     public static final int TIER_2 = 2;
     public static final int TIER_3 = 3;
     private int tier;
-    private boolean walkingLeft;
     private float attackSpeed; // Every x amount of time, attack
     private float attackTimer; // Counts time for attack speed
     
@@ -124,6 +123,7 @@ public class Zombie extends AnimatedUnit implements Poolable {
     @Override
     public void onDeath(Unit killer) {
         Factory.zombiePool.free(this);
+        
         getParentLevel().getZombies().removeValue(this, false);
         
         // Add money to the money total

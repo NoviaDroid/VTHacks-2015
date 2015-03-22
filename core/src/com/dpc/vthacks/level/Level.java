@@ -47,8 +47,7 @@ public class Level {
     private static final float MAX_ZOOM = 0.35f; // Most that can be zoomed in
     private static final float ZOOM_STEP = 0.05f; // How much zoom to add
     private boolean fingerDown;
-    private Zombie currentPlayerTarget;
-    
+
     public Level(final GameScreen context) {
         this.context = context;
         
@@ -244,12 +243,11 @@ public class Level {
     }
     
     /**
-     * Called when the game is over. Not abstract because 
-     * on android, this isn't a big enough of an excuse to 
-     * abstract something (hahahaha...) Remember to override....
+     * Called when the game is over.
      */
     public void onGameOver() {
-
+        Factory.zombiePool.clear();
+        Factory.ammoCratePool.clear();
     }
     
     /**
