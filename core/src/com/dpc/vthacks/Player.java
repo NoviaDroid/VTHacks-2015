@@ -2,6 +2,7 @@ package com.dpc.vthacks;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.dpc.vthacks.animation.AdvancedAnimatedUnit;
 import com.dpc.vthacks.animation.AdvancedSpriteAnimation;
 import com.dpc.vthacks.data.AppData;
@@ -20,7 +21,7 @@ public class Player extends AdvancedAnimatedUnit {
     public static final String RUN_RIGHT = "runRight";
     public static final String RUN_LEFT = "runLeft";
     
-    private boolean drawBehind, movingLeft;
+    private boolean drawBehind, movingLeft, slowed;
     private boolean deathCallbackCalled; // True when the player's onGameOver method is called
     private Rectangle ground;
     private Weapon primary, secondary, currentWeapon;
@@ -167,8 +168,14 @@ public class Player extends AdvancedAnimatedUnit {
             break;
         }
         
-        setX(getX() + amX * getVelocityScalarX());
-        setY(getY() + amY * getVelocityScalarY());
+        if(slowed) {
+            setX(getX() + amX * (getVelocityScalarX() * 0.5f));
+            setY(getY() + amY * (getVelocityScalarY() * 0.5f));
+        }
+        else {
+            setX(getX() + amX * getVelocityScalarX());
+            setY(getY() + amY * getVelocityScalarY());
+        }
         
 //        float tamY = (float) Math.abs(amX * 1f);
 //        float tamX = (float) Math.abs(amY * 1.5f);
@@ -257,6 +264,10 @@ public class Player extends AdvancedAnimatedUnit {
     
     public Weapon getPrimary() {
         return primary;
+    }
+    
+    public void setSlowed(boolean slowed) {
+        this.slowed = slowed;
     }
     
     public Weapon getSecondary() {

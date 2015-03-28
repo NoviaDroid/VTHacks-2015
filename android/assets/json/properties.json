@@ -14,11 +14,11 @@
   }],
   
   "player": [{
-    "health": "100",
-    "velX": "3", 
+    "health": "250",
+    "velX": "2.5", 
     "velY": "1.5",
     "range": "250",
-    "max health": "100",
+    "max health": "250",
     "scaleX": "2",
     "scaleY": "2",
     "ammo": "25", 

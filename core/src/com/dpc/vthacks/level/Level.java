@@ -1,8 +1,8 @@
 package com.dpc.vthacks.level;
 
+import java.util.Comparator;
 import java.util.Iterator;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.input.GestureDetector;
@@ -33,6 +33,7 @@ public class Level {
     private Array<Unit> playerArmy;
     private Array<Zombie> zombies;
     private Array<Array<GameObject>> layers;
+    private Array<GameObject> objectDrawOrder;
     private GameCamera gameCamera;
     private InputAdapter inputAdapter;
     private GestureDetector gestureDetector;
@@ -57,6 +58,7 @@ public class Level {
         zombies = new Array<Zombie>();
         ammoCrates = new Array<AmmoCrate>();
         gameCamera = new GameCamera();
+        objectDrawOrder = new Array<GameObject>();
         
         initializeCamera();
 
@@ -308,6 +310,27 @@ public class Level {
         updateCamera(delta);
         generateAmmoCrate();
         zombieGenerator(delta);
+   
+        objectDrawOrder.sort(new Comparator<GameObject>() {
+
+            @Override
+            public int compare(GameObject o1, GameObject o2) {
+                if(o1.getY() > o2.getY()) {
+                    return -1;
+                }
+                
+                if(o1.getY() == o2.getY()) {
+                    return 0;
+                }
+                
+                if(o1.getY() < o2.getY()) {
+                    return 1;
+                }
+                
+                return 0;
+            }
+            
+        });
         
         if(player.getCurrentWeapon() instanceof Gun) {
             if(fingerDown && ((Gun) player.getCurrentWeapon()).isFullAuto()) {
@@ -334,6 +357,7 @@ public class Level {
             c.setY(MathUtils.random(0, player.getGround().height));
             
             ammoCrates.add(c);
+            objectDrawOrder.add(c);
         }
     }
     
@@ -361,6 +385,7 @@ public class Level {
         }
 
         zombies.add(z);
+        objectDrawOrder.add(z);
     }
     
     public void render() {
@@ -373,37 +398,25 @@ public class Level {
             }
         }
         
-        if(player.isDrawingBehind()) {
-            player.render();
-        }
-        
-        for(Unit u : playerArmy) {
-            if(gameCamera.frustum.pointInFrustum(u.getX(), u.getY(), 0)) {
-                u.render();
-            }
-        }
-        
-        for(Unit zombie : zombies) {
-           // if(gameCamera.frustum.pointInFrustum(zombie.getX(), zombie.getY(), 0)) {
-                zombie.render();
-           // }
+        for(GameObject o : objectDrawOrder) {
+            o.render();
         }
 
-        for(AmmoCrate c : ammoCrates) {
-            if(gameCamera.frustum.pointInFrustum(c.getX(), c.getY(), 0)) {
-                c.render();
-            }
-        }
-        
-        if(!player.isDrawingBehind()) {
-            player.render();
-        }
-        
         App.batch.end();
         
         //debugRender();
     }
 
+    public void remove(Zombie z) {
+        objectDrawOrder.removeValue(z, false);
+        zombies.removeValue(z, false);
+    }
+    
+    public void remove(AmmoCrate c) {
+        objectDrawOrder.removeValue(c, false);
+        ammoCrates.removeValue(c, false);
+    }
+    
     private void debugRender() {
         App.debugRenderer.setProjectionMatrix(gameCamera.combined);
         App.debugRenderer.setColor(1, 0, 0, 1);
@@ -437,8 +450,14 @@ public class Level {
     }
     
     private void updateObjects(float delta) {
+        boolean noZombiesAttackingPlayer = true;
+        
         for(Zombie zombie : zombies) {
             zombie.update(delta);
+           
+            if(zombie.getBoundingRectangle().overlaps(player.getBoundingRectangle())) {
+                noZombiesAttackingPlayer = false;
+            }
             
             for(Unit u : playerArmy) {
                 u.update(delta);
@@ -452,6 +471,11 @@ public class Level {
             }
         }
         
+        if(noZombiesAttackingPlayer) {
+            player.setSlowed(false);    
+        }
+        
+        System.out.println("zombies: " + noZombiesAttackingPlayer);
         player.update(delta);
     }
     
@@ -466,6 +490,7 @@ public class Level {
             if(current.getBoundingRectangle().overlaps(player.getBoundingRectangle())) {
                 current.onPickedUp(player);
                 iter.remove();
+                objectDrawOrder.removeValue(current, false);
             }
         }
     }
@@ -543,6 +568,10 @@ public class Level {
     
     public void removeUnit(Unit u) {
         playerArmy.removeValue(u, false);
+    }
+    
+    public Array<GameObject> getObjectDrawOrder() {
+        return objectDrawOrder;
     }
     
     public void setSpawnTime(float spawnTime) {

@@ -72,6 +72,9 @@ public class Zombie extends AnimatedUnit implements Poolable {
                     setAttacking(true, getParentLevel().getPlayer());
                 //    setState("attacking");
                 }
+                
+                // Slow the player
+                getParentLevel().getPlayer().setSlowed(true);
             }
             else {
                 if(isAttacking()) {
@@ -123,8 +126,7 @@ public class Zombie extends AnimatedUnit implements Poolable {
     @Override
     public void onDeath(Unit killer) {
         Factory.zombiePool.free(this);
-        
-        getParentLevel().getZombies().removeValue(this, false);
+        getParentLevel().remove(this);
         
         // Add money to the money total
         getParentLevel()

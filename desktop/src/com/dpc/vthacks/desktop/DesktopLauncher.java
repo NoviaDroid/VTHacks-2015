@@ -11,6 +11,7 @@ public class DesktopLauncher {
         config.width = 1024;
         config.height = 768;
         new LwjglApplication(new App(), config);
+
         
 //        ObjectMap<String, ObjectMap<String, Upgrade>> u = new ObjectMap<String, ObjectMap<String, Upgrade>>();
 // 

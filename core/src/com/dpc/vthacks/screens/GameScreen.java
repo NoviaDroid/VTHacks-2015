@@ -138,6 +138,8 @@ public class GameScreen implements Screen {
             
             gameMode.setPlayer(player);
             
+            gameMode.getObjectDrawOrder().add(player);
+            
             OgmoParser.parse(levelName, gameMode);  
           
             context.resize(w, h);
