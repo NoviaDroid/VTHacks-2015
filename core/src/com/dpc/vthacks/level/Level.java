@@ -238,6 +238,13 @@ public class Level {
         zombies.clear();
         playerArmy.clear();
         initializeCamera();
+        
+        playerArmy = new Array<Unit>();
+        ammoCrates = new Array<AmmoCrate>();
+        zombies = new Array<Zombie>();
+        objectDrawOrder = new Array<GameObject>();
+        
+        objectDrawOrder.add(player);
     }
     
     /**
@@ -246,6 +253,9 @@ public class Level {
     public void onGameOver() {
         Factory.zombiePool.clear();
         Factory.ammoCratePool.clear();
+        
+        zombies.clear();
+        objectDrawOrder.clear();
     }
     
     /**
@@ -333,7 +343,8 @@ public class Level {
         });
         
         if(player.getCurrentWeapon() instanceof Gun) {
-            if(fingerDown && ((Gun) player.getCurrentWeapon()).isFullAuto()) {
+            if(fingerDown && ((Gun) player.getCurrentWeapon()).isFullAuto() 
+               && player.getCurrentWeapon().getAmmo() > 0) {
                 firePlayerWeapon();
             }
         }
