@@ -1,6 +1,5 @@
 package com.dpc.vthacks.animation;
 
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.dpc.vthacks.App;
 import com.dpc.vthacks.infantry.Unit;
@@ -14,8 +13,8 @@ import com.dpc.vthacks.properties.AnimatedUnitProperties;
  */
 public abstract class AdvancedAnimatedUnit extends Unit {
     private ObjectMap<String, AdvancedSpriteAnimation> stateAnimations;
-    private boolean playing;
     private String currentState;
+    private boolean playing;
     
     public AdvancedAnimatedUnit(String currentState,
                                 AnimatedUnitProperties<AdvancedSpriteAnimation> properties,
@@ -33,7 +32,6 @@ public abstract class AdvancedAnimatedUnit extends Unit {
         super.update(delta);
 
         if(playing) {
-            //System.out.println("setRegion(animation.update(delta));");
             setRegion(stateAnimations.get(currentState).update(delta));
         }
     }
@@ -41,19 +39,6 @@ public abstract class AdvancedAnimatedUnit extends Unit {
     public void render() {
         if(isVisible()) {
             draw(App.batch);
-        }
-    }
-    
-    /**
-     * Flips every animation
-     * @param x Flip on the x axis ?
-     * @param y Flip on the y axis ?
-     */
-    public void flipAll(boolean x, boolean y) {
-        for(AdvancedSpriteAnimation animation : stateAnimations.values()) {
-            for(TextureRegion region : animation.getAnimation().getKeyFrames()) {
-                region.flip(x, y);
-            }
         }
     }
     
@@ -88,6 +73,10 @@ public abstract class AdvancedAnimatedUnit extends Unit {
         this.stateAnimations = stateAnimations;
     }
     
+    public String getCurrentState() {
+        return currentState;
+    }
+   
     public ObjectMap<String, AdvancedSpriteAnimation> getStateAnimations() {
         return stateAnimations;
     }

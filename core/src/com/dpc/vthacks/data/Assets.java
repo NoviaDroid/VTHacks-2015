@@ -22,6 +22,7 @@ public class Assets {
     public static AssetManager manager;
     public static TextureAtlas skinAtlas, storeAtlas, weaponIconAtlas, gameAtlas, zombieAtlas;
     
+    public static ObjectMap<String, Sound> sounds;
     public static ObjectMap<String, AdvancedSpriteAnimation> playerAnimations;
     public static ObjectMap<String, SpriteAnimation> tankAnimations;
     public static ObjectMap<String, SpriteAnimation> zombieAnimations;
@@ -35,13 +36,34 @@ public class Assets {
                                  zombie, bomb, road, background, 
                                  menuBackground, healthbar, ammoCrate;
 
-    public static Sound[] playerSounds;
     public static Music pressDown, pressUp, shot, strafe;
     public static Sound strafeEnd, explosion;
     public static TextureRegion healthBarBackground;
-    public static Sound outOfAmmo;
     public static float shotTimer;
     public static int loaded;
+    
+    public static TextureRegion[] shallowCopy(TextureRegion[] input) {
+        TextureRegion[] output = new TextureRegion[input.length];
+        
+        for(int i = 0; i < input.length; i++) {
+            output[i] = new TextureRegion(input[i]);
+        }
+        
+        return output;
+    }
+
+    public static void flip(TextureRegion[] input, boolean x, boolean y) {
+        for(int i = 0; i < input.length; i++) {
+            input[i].flip(x, y);
+        }
+    }
+    
+    public static TextureRegion[] copyFlip(TextureRegion[] input, boolean x, boolean y) {
+        input = shallowCopy(input);
+        flip(input, x, y);
+        
+        return input;
+    }
     
     public static void loadSkins() {
         skinAtlas = new TextureAtlas("skinPack.pack");
@@ -114,7 +136,9 @@ public class Assets {
         return false;
     }
     
-    public static void getGameTextures() {
+    public static void getGameResources() {
+        sounds = new ObjectMap<String, Sound>();
+        
         gameAtlas = manager.get("gamePack.pack", TextureAtlas.class);
         zombieAtlas = manager.get("Zombie1.pack", TextureAtlas.class);
         pressDown = manager.get("sounds/pressDown.wav", Music.class); 
@@ -123,7 +147,10 @@ public class Assets {
         explosion = manager.get("sounds/explosion.wav", Sound.class); 
         shot = manager.get("sounds/shot.wav", Music.class);
         strafe = manager.get("sounds/strafe.wav", Music.class);
-        outOfAmmo = manager.get("sounds/outofammo.wav", Sound.class);
+        sounds.put("outofammo", manager.get("sounds/outofammo.wav", Sound.class));
+        sounds.put("shot1", manager.get("sounds/shot1.wav", Sound.class));
+        sounds.put("shot2", manager.get("sounds/shot2.wav", Sound.class));
+        sounds.put("shot3", manager.get("sounds/shot3.wav", Sound.class));
         
         tankAnimations = new ObjectMap<String, SpriteAnimation>();
         playerAnimations = new ObjectMap<String, AdvancedSpriteAnimation>();
@@ -132,7 +159,6 @@ public class Assets {
         planeAnimations = new ObjectMap<String, SpriteAnimation>();
         explosionAnimations = new ObjectMap<String, SpriteAnimation>();
         
-        playerSounds = new Sound[1];
         buildings = new AtlasRegion[6];
         skylines = new AtlasRegion[2];
         
@@ -159,8 +185,6 @@ public class Assets {
         bomb = gameAtlas.findRegion("bomb");
         road = gameAtlas.findRegion("road");
         ammoCrate = gameAtlas.findRegion("Ammo Crate");
-        
-        playerSounds[0] = manager.get("sounds/shot1.wav", Sound.class);
     }
     
     public static AdvancedSpriteAnimation getAdvancedAnimation(JsonValue root, 
@@ -283,11 +307,10 @@ public class Assets {
         shot.dispose();
         pressUp.dispose();
         pressDown.dispose();
-        outOfAmmo.dispose();
         storeAtlas.dispose();
         weaponIconAtlas.dispose();
         
-        for(Sound s : playerSounds) {
+        for(Sound s : sounds.values()) {
             s.dispose();
         }
     }

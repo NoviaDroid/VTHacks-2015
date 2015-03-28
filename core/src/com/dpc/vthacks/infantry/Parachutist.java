@@ -47,10 +47,6 @@ public class Parachutist extends AnimatedUnit {
     }
 
     @Override
-    public void attack() {
-    }
-
-    @Override
     public void attack(Unit enemy, float dmg) {
     }
 

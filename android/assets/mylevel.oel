@@ -1,20 +1,21 @@
 <level width="2400" height="800" zombieSpawnTime="1">
   <background>
-      <skyline1 id="1" x="2" y="801" scrollable="true" scrollX="0.5" scrollY="0"/>
-      <skyline2 id="0" x="0" y="801" scrollable="true" scrollX="-0.1" scrollY="0"/>
-    <Building6 id="2" x="1" y="674" />
+      <skyline1 zOrder="0" id="1" x="2" y="801" scrollable="true" scrollX="0.05" scrollY="0"/>
+      <skyline2 zOrder="1" id="0" x="0" y="801" scrollable="true" scrollX="-0.05" scrollY="0"/>
   </background>
+  
     <Layer1>
-    <Building1 id="0" x="160" y="670" />
-    <Building2 id="1" x="352" y="670" />
-    <Building4 id="2" x="546" y="670" />
-    <Building1 id="3" x="964" y="670" />
-    <Building6 id="4" x="1158" y="670" />
-    <Building2 id="5" x="1322" y="670" />
-    <Building1 id="6" x="1516" y="670" />
-    <Building4 id="7" x="1788" y="670" />
-    <Building3 id="8" x="2228" y="670" />
+    <Building1 zOrder="2" id="0" x="160" y="670" />
+    <Building2 zOrder="3" id="1" x="352" y="670" />
+    <Building4 zOrder="4" id="2" x="546" y="670" />
+    <Building1 zOrder="5" id="3" x="964" y="670" />
+    <Building6 zOrder="6" id="4" x="1158" y="670" />
+    <Building2 zOrder="7" id="5" x="1322" y="670" />
+    <Building1 zOrder="8" id="6" x="1516" y="670" />
+    <Building4 zOrder="9" id="7" x="1788" y="670" />
+    <Building3 zOrder="10" id="8" x="2228" y="670" />
   </Layer1>
+  
   <GameLayer>
     <Road id="0" x="0" y="801" />
   </GameLayer>

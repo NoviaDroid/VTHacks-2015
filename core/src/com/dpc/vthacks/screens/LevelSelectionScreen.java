@@ -98,7 +98,7 @@ public class LevelSelectionScreen implements Screen {
         stage.draw();
 
         if(loading && Assets.lsUpdateRender(context)) {
-            Assets.getGameTextures();
+            Assets.getGameResources();
             context.setScreen(new GameScreen(context, 
                                             ((Label) scroll.getCurrentActor()).getUserObject().toString(), 
                                             LevelProperties.ENDLESS_MODE));

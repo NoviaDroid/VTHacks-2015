@@ -10,11 +10,13 @@ import com.dpc.vthacks.data.AppData;
 public class GameCamera extends OrthographicCamera {
     private Viewport viewport;
     private Vector3 target;
-    private float cameraSpeed = 7;
+    private static final int CAMERA_SPEED = 7;
     
     public GameCamera() {
         target = new Vector3();
+        
         setToOrtho(false, AppData.width, AppData.height);
+        
         viewport = new StretchViewport(AppData.width, AppData.height, this);
     }
 
@@ -30,12 +32,13 @@ public class GameCamera extends OrthographicCamera {
         viewport = new ExtendViewport(AppData.width, AppData.height, this);
         viewport.update(width, height);
         position.set(width * 0.5f, height * 0.5f, 0);
+        
         setToOrtho(false, width, height);
         update();
     }
     
     public void lerp(float x, float y, float delta) {
-        position.lerp(target.set(x, y, 0), delta * cameraSpeed);
+        position.lerp(target.set(x, y, 0), delta * CAMERA_SPEED);
         update();
     }
 }

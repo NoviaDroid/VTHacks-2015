@@ -24,6 +24,11 @@ public abstract class GameObject extends Sprite {
     public abstract void update(float delta);
     public abstract void render();
    
+    public void scroll(float fx, float fy) {
+        setX(getX() + (scrollX * fx)); 
+        setY(getY() + (scrollY * fy));
+    }
+    
     public static void setParentLevel(Level parentLevel) {
         GameObject.parentLevel = parentLevel;
     }

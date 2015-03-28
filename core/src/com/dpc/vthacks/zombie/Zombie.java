@@ -10,10 +10,12 @@ import com.dpc.vthacks.factories.Factory;
 import com.dpc.vthacks.infantry.Unit;
 import com.dpc.vthacks.properties.AnimatedUnitProperties;
 import com.dpc.vthacks.properties.ZombieProperties;
-import com.dpc.vthacks.properties.ZombieSegment;
 
 public class Zombie extends AnimatedUnit implements Poolable {
-    private boolean walkingLeft;
+    public static final int TIER_1 = 1;
+    public static final int TIER_2 = 2;
+    public static final int TIER_3 = 3;
+    private int tier;
     private float attackSpeed; // Every x amount of time, attack
     private float attackTimer; // Counts time for attack speed
     
@@ -27,8 +29,6 @@ public class Zombie extends AnimatedUnit implements Poolable {
         
         getProperties().maxHealth(MathUtils.random(getProperties().getHealth(), 
                                                    getProperties().getHealth() * 2) + 25);
-        
-        setSize(getWidth() * 3, getHeight() * 3);
         
         init();
     }
@@ -53,7 +53,9 @@ public class Zombie extends AnimatedUnit implements Poolable {
             
             if(attackTimer >= attackSpeed) {
                 attackTimer = 0;
-                attack();
+                
+                attack(getTargetEnemy(), MathUtil.rand(getProperties().getMinDamage(), 
+                                                       getProperties().getMaxDamage()));
             }
         }
         
@@ -70,6 +72,9 @@ public class Zombie extends AnimatedUnit implements Poolable {
                     setAttacking(true, getParentLevel().getPlayer());
                 //    setState("attacking");
                 }
+                
+                // Slow the player
+                getParentLevel().getPlayer().setSlowed(true);
             }
             else {
                 if(isAttacking()) {
@@ -121,7 +126,7 @@ public class Zombie extends AnimatedUnit implements Poolable {
     @Override
     public void onDeath(Unit killer) {
         Factory.zombiePool.free(this);
-        getParentLevel().getZombies().removeValue(this, false);
+        getParentLevel().remove(this);
         
         // Add money to the money total
         getParentLevel()
@@ -131,14 +136,6 @@ public class Zombie extends AnimatedUnit implements Poolable {
                                                     .getMinKillMoney(),
                                                 ((ZombieProperties) getProperties())
                                                     .getMaxKillMoney()));
-    }
-
-    @Override
-    public void attack() {
-        float rand = MathUtil.rand(getProperties().getMinDamage(), 
-                                   getProperties().getMaxDamage());
-        
-        getTargetEnemy().takeDamage(this, rand);
     }
 
     @Override
@@ -170,5 +167,14 @@ public class Zombie extends AnimatedUnit implements Poolable {
 
     @Override
     public void attack(Unit enemy, float dmg) {
+        enemy.takeDamage(this, dmg);
+    }
+    
+    public int getTier() {
+        return tier;
+    }
+    
+    public void setTier(int tier) {
+        this.tier = tier;
     }
 }

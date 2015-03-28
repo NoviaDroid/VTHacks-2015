@@ -1,6 +1,7 @@
 package com.dpc.vthacks.input;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
+
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.Action;
@@ -22,8 +23,8 @@ import com.dpc.vthacks.Bank;
 import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.data.Fonts;
-import com.dpc.vthacks.objects.Weapon;
 import com.dpc.vthacks.screens.GameScreen;
+import com.dpc.vthacks.weapons.Weapon;
 
 public class GameToolbar {
     private Stage stage;
@@ -33,7 +34,7 @@ public class GameToolbar {
     private Drawable background;
     private Button bombButton, strafeButton, soldierButton, tankButton, towerButton,
                    tankUpgradeButton, towerUpgradeButton, soldierUpgradeButton;
-    private Label moneyLabel, experienceLabel, healthLabel, ammoLabel;
+    private Label moneyLabel, experienceLabel, healthLabel, ammoLabel, waveLabel;
     private int money;
     private final Color BATCH_COLOR;
     private static final int PADDING = 5;
@@ -47,6 +48,8 @@ public class GameToolbar {
     private float origHealthBarWidth; // Orig width of the health bar
     private boolean active = true; // Is the stage recieving input events ?
     private boolean transitionDone = false; // Is the stage done fading out ?
+    
+    private Action moveGunComps, swap;
     
     public GameToolbar(final GameScreen parent) {
         this.parent = parent;
@@ -162,6 +165,12 @@ public class GameToolbar {
                                       0.4f,
                                       0, 1));
         
+        waveLabel = new Label("Wave ", style);
+        
+        waveLabel.setPosition((AppData.width * 0.5f) - (waveLabel.getWidth() * 0.5f), 
+                              (AppData.height) - (waveLabel.getHeight()));
+        
+        stage.addActor(waveLabel);
         stage.addActor(joystick);
         stage.addActor(playerIcon);
         stage.addActor(healthBarBackground);
@@ -172,6 +181,45 @@ public class GameToolbar {
         
         
         BATCH_COLOR = stage.getBatch().getColor();
+        
+        
+        
+        moveGunComps = new Action() {
+
+            @Override
+            public boolean act(float delta) {
+                gunIcon.addAction(moveTo(PADDING * 2, gunIcon.getY(), 0.1f));
+                
+                ammoLabel.addAction(fadeIn(0));
+                ammoLabel.addAction(moveTo(PADDING * 2 + gunIcon.getWidth(), gunIcon.getY(), 0.1f));
+                
+                return true;
+            }
+            
+        };
+        
+        // Action to swap guns
+        swap = new Action() {
+            
+            @Override
+            public boolean act(float delta) {
+             // Set the new drawable
+                gunIconDrawable.setRegion(Assets.weaponIconAtlas
+                        .findRegion(parent.getLevel().getPlayer()
+                                .getCurrentWeapon().getIconPath()));
+           
+                gunIcon.setDrawable(gunIconDrawable);
+                
+                gunIcon.setWidth(gunIconDrawable.getRegion().getRegionWidth());
+                gunIcon.setHeight(gunIconDrawable.getRegion().getRegionHeight());
+                
+                // Update the ammo text
+                setAmmo(parent.getLevel().getPlayer().getCurrentWeapon().getAmmo());
+                
+                return true;
+            }
+            
+        };
     }
    
     public void update(float delta) {
@@ -202,9 +250,6 @@ public class GameToolbar {
                                                    moneyToast.getY(), 0.25f)));
                }
            }
-       }
-       else {
-           
        }
     }
     
@@ -450,6 +495,10 @@ public class GameToolbar {
     public Touchpad getJoystick() {
         return joystick;
     }
+   
+    public void setWave(int wave) {
+        waveLabel.setText("Wave " + wave);
+    }
     
     public void setGunIcon(Weapon gun) {
         if(gunIcon == null) {
@@ -467,22 +516,14 @@ public class GameToolbar {
                     // Swap weapons
                     parent.getLevel().getPlayer().swapWeapon();
 
-                    // Set the new drawable
-                    gunIconDrawable.setRegion(Assets.weaponIconAtlas
-                            .findRegion(parent.getLevel().getPlayer()
-                                    .getCurrentWeapon().getIconPath()));
-               
-                    gunIcon.setDrawable(gunIconDrawable);
+                    // Hide the ammo label
+                    ammoLabel.addAction(fadeOut(0));
                     
-                    gunIcon.setWidth(gunIconDrawable.getRegion().getRegionWidth());
-                    gunIcon.setHeight(gunIconDrawable.getRegion().getRegionHeight());
-                    
-                    // Update the ammo text
-                    setAmmo(parent.getLevel().getPlayer().getCurrentWeapon().getAmmo());
-                    
-                    ammoLabel.setX(gunIcon.getX() + gunIcon.getWidth());
-                    ammoLabel.setY(gunIcon.getY());
-                    
+                    gunIcon.addAction(sequence(
+                                        moveTo(-gunIcon.getWidth(), gunIcon.getY(), 0.1f),
+                                        swap,
+                                        moveGunComps));
+
                     return true;
                 }
             });
@@ -538,5 +579,7 @@ public class GameToolbar {
 
     public void setMoney(int i) {
         moneyLabel.setText("$" + i);
+        money = 0;
     }
+    
 }

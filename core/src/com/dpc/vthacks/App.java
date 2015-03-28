@@ -8,9 +8,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Fonts;
-import com.dpc.vthacks.data.JSONManager;
-import com.dpc.vthacks.properties.WeaponManager;
+import com.dpc.vthacks.data.JSONParser;
 import com.dpc.vthacks.screens.MenuScreen;
+import com.dpc.vthacks.weapons.WeaponManager;
 
 public class App extends Game {
     public static SpriteBatch batch;
@@ -18,7 +18,7 @@ public class App extends Game {
     
 	@Override
 	public void create () {
-        JSONManager.parseLevels();
+        JSONParser.parseLevels();
         Fonts.load();
         WeaponManager.load();
         Bank.load();

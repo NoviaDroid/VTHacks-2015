@@ -21,6 +21,26 @@ public class AnimatedUnitProperties<T> extends Properties {
         stateAnimations = cpy.stateAnimations;
     }
     
+    
+    @Override
+    public String toString() {
+        return super.toString() + String.format("%s", stateAnimations.toString());
+    }
+    
+    @Override
+    public AnimatedUnitProperties<T> scaleX(float scaleX) {
+        super.scaleX(scaleX);
+        
+        return this;
+    }
+    
+    @Override
+    public AnimatedUnitProperties<T> scaleY(float scaleY) {
+        super.scaleY(scaleY);
+        
+        return this;
+    }
+    
     @Override
     public AnimatedUnitProperties<T> frameTime(float frameTime) {
         super.frameTime(frameTime);

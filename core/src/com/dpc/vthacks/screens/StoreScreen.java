@@ -21,8 +21,8 @@ import com.dpc.vthacks.PagedScrollPane;
 import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.data.Fonts;
-import com.dpc.vthacks.objects.Weapon;
-import com.dpc.vthacks.properties.WeaponManager;
+import com.dpc.vthacks.weapons.Weapon;
+import com.dpc.vthacks.weapons.WeaponManager;
 
 public class StoreScreen implements Screen {
     private Stage stage;

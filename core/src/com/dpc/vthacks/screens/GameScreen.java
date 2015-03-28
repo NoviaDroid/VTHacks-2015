@@ -14,7 +14,7 @@ import com.dpc.vthacks.Player;
 import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.data.Fonts;
-import com.dpc.vthacks.data.JSONManager;
+import com.dpc.vthacks.data.JSONParser;
 import com.dpc.vthacks.data.OgmoParser;
 import com.dpc.vthacks.factories.Factory;
 import com.dpc.vthacks.infantry.Soldier;
@@ -52,7 +52,7 @@ public class GameScreen implements Screen {
     
     @Override
     public void show() {
-        JSONManager.parseProperties();
+        JSONParser.parseProperties();
         AppData.onResize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         Factory.init();
 
@@ -138,6 +138,8 @@ public class GameScreen implements Screen {
             
             gameMode.setPlayer(player);
             
+            gameMode.getObjectDrawOrder().add(player);
+            
             OgmoParser.parse(levelName, gameMode);  
           
             context.resize(w, h);
@@ -211,9 +213,9 @@ public class GameScreen implements Screen {
         joystickPercentX = toolbar.getJoystick().getKnobPercentX();
         joystickPercentY = toolbar.getJoystick().getKnobPercentY();
         
-      //  if(gameMode.isActive()) {
+        if(gameMode.isActive()) {
             player.walk(joystickPercentX, joystickPercentY);
-    //    }
+        }
         
         //level.scrollBackgrounds(joystickPercentX, joystickPercentY);
     }

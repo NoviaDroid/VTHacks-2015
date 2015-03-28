@@ -3,6 +3,7 @@ package com.dpc.vthacks.factories;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Pool;
 import com.dpc.vthacks.Player;
 import com.dpc.vthacks.animation.AdvancedSpriteAnimation;
@@ -12,10 +13,10 @@ import com.dpc.vthacks.infantry.Soldier;
 import com.dpc.vthacks.infantry.Tank;
 import com.dpc.vthacks.objects.AmmoCrate;
 import com.dpc.vthacks.objects.GameSprite;
-import com.dpc.vthacks.objects.Weapon;
 import com.dpc.vthacks.properties.AnimatedUnitProperties;
 import com.dpc.vthacks.properties.Properties;
 import com.dpc.vthacks.properties.ZombieProperties;
+import com.dpc.vthacks.weapons.Weapon;
 import com.dpc.vthacks.zombie.Zombie;
 
 public class Factory {
@@ -25,17 +26,17 @@ public class Factory {
     private static Properties bombProperties;
     private static Properties buildingProperties;
     private static Weapon primaryGun, secondaryGun;
-    private static ZombieProperties zombieProperties;
+    private static ObjectMap<Integer, ZombieProperties> zombieProperties = new ObjectMap<Integer, ZombieProperties>();
     private static Vector2 playerGunOffset;
-    
-    private static final int NUMBER_OF_BOMBS = 15;
+    private static int currentZombieCreationTier = 1; // Current tier of zombie to obtain from the pool
+    private static final int BASE_SIZE = 15;
     
     public static void init() {
 //        myArmyY = GameScreen.battle.getMyArmy().getBase().getY();
 //        myArmyX = GameScreen.battle.getMyArmy().getBase().getX();
     }
     
-    public static final Pool<AmmoCrate> ammoCratePool = new Pool<AmmoCrate>(NUMBER_OF_BOMBS) {
+    public static final Pool<AmmoCrate> ammoCratePool = new Pool<AmmoCrate>(BASE_SIZE) {
 
         @Override
         protected AmmoCrate newObject() {
@@ -53,7 +54,7 @@ public class Factory {
         
     };
     
-    public static final Pool<Soldier> soldierPool = new Pool<Soldier>(NUMBER_OF_BOMBS) {
+    public static final Pool<Soldier> soldierPool = new Pool<Soldier>(BASE_SIZE) {
 
         @Override
         protected Soldier newObject() {
@@ -62,7 +63,7 @@ public class Factory {
         
     };
     
-    public static final Pool<Zombie> zombiePool = new Pool<Zombie>(NUMBER_OF_BOMBS) {
+    public static final Pool<Zombie> zombiePool = new Pool<Zombie>(BASE_SIZE) {
 
         @Override
         protected Zombie newObject() {
@@ -71,9 +72,15 @@ public class Factory {
         
     };
 
+    /**
+     * Creates a zombie with the properties matching the tier string
+     * Tier is defined in zombie.
+     * @param tier
+     * @return
+     */
     public static Zombie createZombie() {
         ZombieProperties cpy = 
-                new ZombieProperties(zombieProperties);
+                new ZombieProperties(zombieProperties.get(currentZombieCreationTier));
 
         Zombie z = new Zombie("walking-right", 
                               cpy,
@@ -114,15 +121,13 @@ public class Factory {
                 new AnimatedUnitProperties<AdvancedSpriteAnimation>(playerProperties);
 
         for(AdvancedSpriteAnimation a : cpy.getStateAnimations().values()) {
-            a = new AdvancedSpriteAnimation(a);
+            a = new AdvancedSpriteAnimation(a, false);
         }
         
-        Player p = new Player("idle",
+        Player p = new Player(Player.IDLE_RIGHT,
                               cpy, 
                               0, 0, 0.15f);
-        
-        p.setGunOffset(playerGunOffset);
-        
+
         primaryGun.setAmmo(primaryGun.getMaxAmmo());
         secondaryGun.setAmmo(secondaryGun.getMaxAmmo());
         
@@ -181,7 +186,7 @@ public class Factory {
     }
 
     public static int getNumberOfBombs() {
-        return NUMBER_OF_BOMBS;
+        return BASE_SIZE;
     }
     
     public static Pool<Tank> getTankpool() {
@@ -192,9 +197,6 @@ public class Factory {
         return soldierPool;
     }
     
-    public static Properties getZombieProperties() {
-        return zombieProperties;
-    }
     
     public static Vector2 getPlayerGunOffset() {
         return playerGunOffset;
@@ -204,8 +206,8 @@ public class Factory {
         Factory.playerGunOffset = playerGunOffset;
     }
     
-    public static void setZombieProperties(ZombieProperties zombieProperties) {
-        Factory.zombieProperties = zombieProperties;
+    public static void addZombieProperty(int tier, ZombieProperties props) {
+        zombieProperties.put(tier, props);
     }
     
     public static Properties getBuildingProperties() {
@@ -230,5 +232,9 @@ public class Factory {
     
     public static void setBuildingProperties(Properties buildingProperties) {
         Factory.buildingProperties = buildingProperties;
+    }
+    
+    public static void setCurrentZombieCreationTier(int currentZombieCreationTier) {
+        Factory.currentZombieCreationTier = currentZombieCreationTier;
     }
 }

@@ -1,15 +1,14 @@
-package com.dpc.vthacks.properties;
+package com.dpc.vthacks.weapons;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter;
-import com.dpc.vthacks.objects.Weapon;
 
 public final class WeaponManager {
     public static final int NUMBER_OF_WEAPONS = 5;
-    private static final String PREFS_PATH = "mypropsya";
+    private static final String PREFS_PATH = "sdfasdf";
     private static Preferences prefs;
     private static Array<Weapon> weapons;
     private static Array<Weapon> unlockedWeapons;
@@ -24,7 +23,7 @@ public final class WeaponManager {
         json.setOutputType(JsonWriter.OutputType.json);
 
         // Load every weapon in from the json file
-        for (Object obj : json.fromJson(Array.class, Weapon.class, Gdx.files.internal("json/weapons.json"))) {
+        for (Object obj : json.fromJson(Array.class, Gun.class, Gdx.files.internal("json/weapons.json"))) {
             weapons.add((Weapon) obj);
         }
         
@@ -34,9 +33,9 @@ public final class WeaponManager {
      //    prefs.flush();
          
         // Handgun is always unlocked
-      prefs.putInteger("unlocked1", 1);
-      prefs.putInteger("unlocked2", 2);
-       prefs.flush();
+        prefs.putInteger("unlocked1", 1);
+        prefs.putInteger("unlocked2", 2);
+        prefs.flush();
       
         unlockedWeapons = new Array<Weapon>();
         

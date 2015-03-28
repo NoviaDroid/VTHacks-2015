@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Disposable;
+import com.dpc.vthacks.data.Assets;
 
 /**
  * Provides meta-data for each frame
@@ -13,14 +14,19 @@ import com.badlogic.gdx.utils.Disposable;
 public class AdvancedSpriteAnimation implements Disposable {
     private Animation animation;
     private FrameData[] frameData;
-    private int index;
     private float time;
+    private int index;
     
-    public AdvancedSpriteAnimation(AdvancedSpriteAnimation cpy) {
-        animation = new Animation(cpy.time, cpy.getAnimation().getKeyFrames());
+    public AdvancedSpriteAnimation(AdvancedSpriteAnimation cpy, boolean flipFramesX) {
+        TextureRegion[] frames = cpy.getAnimation().getKeyFrames();
+        
+        if(flipFramesX) {
+            frames = Assets.copyFlip(frames, true, false);
+        }
+        
+        animation = new Animation(cpy.time, frames);
         frameData = cpy.frameData;
         time = cpy.time;
-        System.err.println("advancedspriteanimation time: " + time);
     }
     
     public AdvancedSpriteAnimation(FrameData[] frameData) {
@@ -46,7 +52,7 @@ public class AdvancedSpriteAnimation implements Disposable {
         time += delta;
         
         index = animation.getKeyFrameIndex(time);
-       // System.err.println(frameData[index].getAnchorOffsetY());
+
         return animation.getKeyFrame(time, true);
     }
     
