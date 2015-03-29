@@ -247,7 +247,7 @@ public class Level {
     }
     
     /**
-     * Called when the game is over.
+     * Called when the game is over. Not abstract for better performance :)
      */
     public void onGameOver() {
         Factory.zombiePool.clear();
@@ -358,6 +358,10 @@ public class Level {
         }
     }
     
+    public void setSpawnTime(int spawnTime) {
+        this.spawnTime = spawnTime;
+    }
+    
     private void generateAmmoCrate() {
         // Possibly generate an ammo crate
         if(MathUtils.random() < AMMO_CRATE_SPAWN_TIME) {
@@ -371,7 +375,14 @@ public class Level {
         }
     }
     
-    private void generateZombie() {
+    /**
+     * Called by zombie instances when they die
+     */
+    public void onZombieKilled() {
+        
+    }
+    
+    public void generateZombie() {
         Zombie z = Factory.zombiePool.obtain();
 
         // Calculate zombie x
@@ -499,7 +510,7 @@ public class Level {
     public void dispose() {
         
     }
-
+    
     public void setLayers(Array<Array<GameObject>> layers) {
         this.layers = layers;
     }

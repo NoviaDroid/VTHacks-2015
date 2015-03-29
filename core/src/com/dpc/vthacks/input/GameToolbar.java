@@ -1,12 +1,7 @@
 package com.dpc.vthacks.input;
 
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeIn;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeOut;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.moveBy;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.moveTo;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.parallel;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.repeat;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
+
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -121,12 +116,14 @@ public class GameToolbar {
                                       0.4f,
                                       0, 1));
         
-        waveLabel = new Label("Wave ", Assets.labelStyle);
+        waveLabel = new Label("Wave 1", Assets.labelStyle);
         
         waveLabel.setPosition((AppData.width * 0.5f) - (waveLabel.getWidth() * 0.5f), 
-                              (AppData.height) - (waveLabel.getHeight()));
+                               AppData.height);
         
-       // stage.addActor(waveLabel);
+        waveLabel.addAction(moveTo(waveLabel.getX(), (AppData.height) - (waveLabel.getHeight()), 0.25f));
+        
+        stage.addActor(waveLabel);
         stage.addActor(joystick);
         stage.addActor(playerIcon);
         stage.addActor(healthBarBackground);
@@ -312,6 +309,12 @@ public class GameToolbar {
     }
    
     public void setWave(int wave) {
+        float oldY = waveLabel.getY();
+        
+        waveLabel.addAction(sequence(moveTo(waveLabel.getX(), AppData.height + waveLabel.getHeight(), 0.1f),
+                                     moveTo(waveLabel.getX(), oldY, 0.1f),
+                                     repeat(5, sequence(moveBy(5, 0, 0.05f), moveBy(-5, 0, 0.05f)))));
+        
         waveLabel.setText("Wave " + wave);
     }
     
@@ -363,9 +366,12 @@ public class GameToolbar {
    
         healthLabel.setText("Health: " + f);
 
+        healthBar.clearActions();
+        
         // Calculate the exp bar width
-        healthBar.setSize(origHealthBarWidth * (f / parent.getLevel().getPlayer().getProperties().getMaxHealth()),
-                          healthBar.getHeight());
+        healthBar.addAction(parallel(scaleTo((f / parent.getLevel().getPlayer().getProperties().getMaxHealth()),
+                1, 0.15f), sequence(alpha(0.5f, 0.075f), alpha(1, 0.075f))));
+        
         
         healthLabel.setPosition((AppData.width - healthLabel.getWidth() * 4), healthLabel.getY());
     }

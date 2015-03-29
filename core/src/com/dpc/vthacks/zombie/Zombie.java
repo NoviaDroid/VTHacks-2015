@@ -142,6 +142,7 @@ public class Zombie extends AnimatedUnit implements Poolable {
                                                     .getMinKillMoney(),
                                                 ((ZombieProperties) getProperties())
                                                     .getMaxKillMoney()));
+        getParentLevel().onZombieKilled();
     }
 
     @Override
