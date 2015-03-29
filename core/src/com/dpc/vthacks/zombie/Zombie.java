@@ -3,7 +3,6 @@ package com.dpc.vthacks.zombie;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.dpc.vthacks.App;
-import com.dpc.vthacks.MathUtil;
 import com.dpc.vthacks.animation.AnimatedUnit;
 import com.dpc.vthacks.animation.SpriteAnimation;
 import com.dpc.vthacks.factories.Factory;
@@ -54,15 +53,15 @@ public class Zombie extends AnimatedUnit implements Poolable {
             if(attackTimer >= attackSpeed) {
                 attackTimer = 0;
                 
-                attack(getTargetEnemy(), MathUtil.rand(getProperties().getMinDamage(), 
+                attack(getTargetEnemy(), App.rand(getProperties().getMinDamage(), 
                                                        getProperties().getMaxDamage()));
             }
         }
         
         // Set a random velocity
-        getVelSCL().set(MathUtil.rand(getProperties().getMinVel().x,
+        getVelSCL().set(App.rand(getProperties().getMinVel().x,
                                       getProperties().getMaxVel().x),
-                        MathUtil.rand(getProperties().getMaxVel().y,
+                                      App.rand(getProperties().getMaxVel().y,
                                       getProperties().getMaxVel().y));
         
         // If in range of the player, attack
@@ -94,7 +93,14 @@ public class Zombie extends AnimatedUnit implements Poolable {
         }
         else {
             // If there is no target near, reset the path
-            resetPath();
+         //   resetPath();
+            if (getVelX() < 0) {
+                setCurrentTarget(getParentLevel().getPlayer().getX()
+                        - getWidth(), getParentLevel().getPlayer().getY());
+            } else {
+                setCurrentTarget(getParentLevel().getPlayer().getX(),
+                        getParentLevel().getPlayer().getY());
+            }
         }
 
         // Continue to move if not attacking

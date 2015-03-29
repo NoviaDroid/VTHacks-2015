@@ -53,6 +53,8 @@ public class SpriteAnimation implements Disposable {
     
     @Override
     public void dispose() {
-
+        for(TextureRegion f : animation.getKeyFrames()) {
+            f.getTexture().dispose();
+        }
     }
 }

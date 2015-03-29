@@ -10,16 +10,13 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.dpc.vthacks.App;
 import com.dpc.vthacks.GameCamera;
 import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
-import com.dpc.vthacks.data.Fonts;
 
 public class MenuScreen implements Screen {
     private Sprite menu;
@@ -36,6 +33,7 @@ public class MenuScreen implements Screen {
         context = app;
         
         Gdx.input.setInputProcessor(new InputAdapter() {
+            
             @Override
             public boolean touchDown(int screenX, int screenY, int pointer, int button) {
                 
@@ -44,40 +42,21 @@ public class MenuScreen implements Screen {
                 
                 return super.touchDown(screenX, screenY, pointer, button);
             }
-            
-            @Override
-            public boolean keyDown(int keycode) {
-                if(keycode == Keys.S) {
-                    context.setScreen(new StoreScreen(context));
-                }
-                else {
-                    context.setScreen(new WeaponSelectionScreen(context));
-                }
-                
-                return super.keyDown(keycode);
-            }
         });
     }
     
     @Override
     public void show() {
-        Assets.loadMenu();
+        Assets.allocateMenuScreen();
         
         background = new Image(Assets.menuBackground);
         background.setSize(AppData.width, AppData.height);
-        
-        TextButtonStyle style = new TextButtonStyle();
-        style.font = Fonts.getZombieSmall();
-        
-        LabelStyle lst = new LabelStyle();
-        lst.font = Fonts.getZombieXSmall();
-        
-        footer = new Label("Made with love at VT Hacks", lst);
+
+        footer = new Label("Made with love at VT Hacks", Assets.labelStyle);
         footer.setColor(0.5f, 0, 0, 1);
         
-        lst.font = Fonts.getZombie();
-        
-        titleFore = new Label("Strafer", lst);
+
+        titleFore = new Label("Strafer", Assets.labelStyle);
         
         titleFore.setColor(0.18f, 0, 0.18f, 1);
         
@@ -155,6 +134,8 @@ public class MenuScreen implements Screen {
         stage.draw();
         
         if(loading && Assets.lsUpdateRender(context)) {
+            loading = false;
+            
             Assets.getGameResources();
             //context.setScreen(new GameScreen(context));
         }
@@ -172,7 +153,7 @@ public class MenuScreen implements Screen {
 
     @Override
     public void resume() {
-        Assets.loadMenu();
+        
     }
 
     @Override
@@ -182,7 +163,7 @@ public class MenuScreen implements Screen {
 
     @Override
     public void dispose() {
-        Assets.unloadSkins();
+        Assets.deallocateMenuScreen();
         stage.dispose();
     }
 

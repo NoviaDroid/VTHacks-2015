@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.dpc.vthacks.Player;
 import com.dpc.vthacks.data.Assets;
-import com.dpc.vthacks.data.Sounds;
 import com.dpc.vthacks.factories.Factory;
 
 public class AmmoCrate extends GameSprite implements Poolable {
@@ -22,7 +21,7 @@ public class AmmoCrate extends GameSprite implements Poolable {
     public void onPickedUp(Player p) {
         p.refillAmmo();
         Factory.ammoCratePool.free(this);
-        Assets.sounds.get(Sounds.OUT_OF_AMMO).play();
+        Assets.sounds.get(Assets.OUT_OF_AMMO).play();
     }
 
 }

@@ -8,7 +8,7 @@
 		"shotDelay": 0.25f,
 		"fullAuto": false,
 		"minDamage": 30,
-		"maxDamage": 50,
+		"maxDamage": 35,
 		"ammo": 50,
 		"maxAmmo": 50,
 		"cost": 150,
@@ -23,7 +23,7 @@
 		"shotDelay": 0.15,
 		"fullAuto": false,
 		"minDamage": 15,
-		"maxDamage": 25,
+		"maxDamage": 20,
 		"ammo": 27,
 		"maxAmmo": 27,
 		"cost": 250

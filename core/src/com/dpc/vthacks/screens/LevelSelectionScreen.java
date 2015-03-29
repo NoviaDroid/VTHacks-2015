@@ -5,27 +5,21 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button.ButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.utils.ObjectMap.Entry;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.dpc.vthacks.App;
 import com.dpc.vthacks.PagedScrollPane;
 import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
-import com.dpc.vthacks.data.Fonts;
 import com.dpc.vthacks.level.LevelProperties;
 
 public class LevelSelectionScreen implements Screen {
-    private LabelStyle labelStyle;
     private Stage stage;
     private App context;
     private TextButton go;
-    private TextButtonStyle buttonStyle;
     private PagedScrollPane scroll;
     private boolean loading;
     
@@ -35,11 +29,10 @@ public class LevelSelectionScreen implements Screen {
     
     @Override
     public void show() {
+        Assets.allocateLevelSelectionScreen();
+        
         stage = new Stage(new StretchViewport(AppData.width, AppData.height));
-        
-        buttonStyle = new TextButtonStyle();
-        buttonStyle.font = Fonts.getZombie();
-        
+
         go = new TextButton("Go!", Assets.uiSkin);
         
         go.addListener(new InputListener() {
@@ -54,9 +47,6 @@ public class LevelSelectionScreen implements Screen {
             }
             
         });
-        
-        labelStyle = new LabelStyle();
-        labelStyle.font = Fonts.getZombie();
 
         Table wrapper = new Table();
         
@@ -65,10 +55,10 @@ public class LevelSelectionScreen implements Screen {
         scroll.setPageSpacing(AppData.width * 0.5f);
 
         // Blank
-        scroll.addPage(new Label("", labelStyle));
+        scroll.addPage(new Label("", Assets.labelStyle));
         
         for(Entry<String, String> levels : LevelProperties.getLevels()) {
-            Label label = new Label(levels.key, labelStyle);
+            Label label = new Label(levels.key, Assets.labelStyle);
             label.setUserObject(levels.value);
             scroll.addPage(label);
         }
@@ -76,7 +66,7 @@ public class LevelSelectionScreen implements Screen {
         scroll.setCurrentActor(scroll.getContent().getChildren().get(1));
         
         // Blank
-        scroll.addPage(new Label("", labelStyle));
+        scroll.addPage(new Label("", Assets.labelStyle));
 
         wrapper.center();
         
@@ -98,7 +88,13 @@ public class LevelSelectionScreen implements Screen {
         stage.draw();
 
         if(loading && Assets.lsUpdateRender(context)) {
+            loading = false; 
+            
             Assets.getGameResources();
+            
+            Assets.barBackground.getTexture().dispose();
+            Assets.progressBar.getTexture().dispose();
+            
             context.setScreen(new GameScreen(context, 
                                             ((Label) scroll.getCurrentActor()).getUserObject().toString(), 
                                             LevelProperties.ENDLESS_MODE));
@@ -123,6 +119,7 @@ public class LevelSelectionScreen implements Screen {
 
     @Override
     public void dispose() {
+        Assets.deallocateLevelSelectionScreen();
         stage.dispose();
     }
     

@@ -80,6 +80,9 @@ public class AdvancedSpriteAnimation implements Disposable {
     
     @Override
     public void dispose() {
+        for(TextureRegion t : animation.getKeyFrames()) {
+            t.getTexture().dispose();
+        }
     }
 
 }

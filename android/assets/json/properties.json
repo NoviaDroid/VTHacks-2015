@@ -15,8 +15,8 @@
   
   "player": [{
     "health": "250",
-    "velX": "3", 
-    "velY": "1.5",
+    "velX": "4", 
+    "velY": "2",
     "range": "250",
     "max health": "250",
     "scaleX": "2",

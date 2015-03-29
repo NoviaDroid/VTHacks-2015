@@ -3,7 +3,7 @@ package com.dpc.vthacks.infantry;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pool.Poolable;
-import com.dpc.vthacks.MathUtil;
+import com.dpc.vthacks.App;
 import com.dpc.vthacks.gameobject.DynamicGameObject;
 import com.dpc.vthacks.properties.Properties;
 
@@ -36,7 +36,7 @@ public abstract class Unit extends DynamicGameObject implements Poolable {
      * Returns the distance between two units
      */
     public float dst(Unit u) {
-        return MathUtil.dst(u.getX(), u.getY(),
+        return App.dst(u.getX(), u.getY(),
                              getX(), getY());
     }
     
@@ -74,7 +74,7 @@ public abstract class Unit extends DynamicGameObject implements Poolable {
     }
     
     public boolean inRange(Unit u1) {
-        return MathUtil.dst(getX(), getY(), u1.getX(), u1.getY()) <= properties.getRange();
+        return App.dst(getX(), getY(), u1.getX(), u1.getY()) <= properties.getRange();
     }
 
     public boolean isMoving() {
