@@ -41,12 +41,15 @@ public class GameToolbar {
     private float origHealthBarWidth; // Orig width of the health bar
     private boolean active = true; // Is the stage recieving input events ?
     private boolean transitionDone = false; // Is the stage done fading out ?
+    private Color transformColor;
     
     private Action moveGunComps, swap;
     
     public GameToolbar(final GameScreen parent) {
         this.parent = parent;
 
+        transformColor = new Color();
+        
         Skin skin = new Skin();
         skin.addRegions(Assets.skinAtlas);
         
@@ -191,6 +194,7 @@ public class GameToolbar {
                    killCompleted = false;
                    killstreakAmount = 0;
                    killStreak = false;
+                   moneyToast.getColor().set(1, 1, 1, 1);
                    
                    // Move off screen
                    moneyToast.addAction(parallel(
@@ -247,6 +251,9 @@ public class GameToolbar {
         ammoLabel.setText(parent.getLevel().getPlayer().getCurrentWeapon().getAmmo() + " / " +
                           parent.getLevel().getPlayer().getCurrentWeapon().getMaxAmmo());
         
+        ammoLabel.addAction(repeat(2, parallel(sequence(moveBy(2, 0, 0.05f), moveBy(-2, 0, 0.05f)),
+                                               sequence(moveBy(0, 2, 0.05f), moveBy(0, -2, 0.05f)))));
+        
     //    shakeAmmo();
     }
     
@@ -256,6 +263,8 @@ public class GameToolbar {
             killStreakTimer = 0;
             killstreakAmount += am;
             moneyToast.setText("+" + killstreakAmount);
+            moneyToast.getColor().g -= 0.1f;
+            moneyToast.getColor().b -= 0.1f;
         }
         
         float x = moneyLabel.getX();
@@ -290,8 +299,8 @@ public class GameToolbar {
                                AppData.height - t);
      
         moneyLabel.addAction(sequence(
-                moveBy(10, 0,0.02f),
-                moveBy(-10, 0,0.02f),
+                moveBy(30, 0,0.02f),
+                moveBy(-30, 0,0.02f),
                 moveBy(0, 10,0.02f),
                 moveBy(0, -10,0.02f)));
         
@@ -314,6 +323,7 @@ public class GameToolbar {
         waveLabel.addAction(sequence(moveTo(waveLabel.getX(), AppData.height + waveLabel.getHeight(), 0.1f),
                                      moveTo(waveLabel.getX(), oldY, 0.1f),
                                      repeat(5, sequence(moveBy(5, 0, 0.05f), moveBy(-5, 0, 0.05f)))));
+        waveLabel.addAction(repeat(5, sequence(alpha(0.5f, 0.1f), alpha(1, 0.1f))));
         
         waveLabel.setText("Wave " + wave);
     }

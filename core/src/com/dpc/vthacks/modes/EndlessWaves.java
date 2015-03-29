@@ -29,9 +29,9 @@ public class EndlessWaves extends Level {
     private Stage dialogStage; // Game over dialog stage
     private InputProcessor mplex; // Saved off and put back as the input processor after play again touched
     private boolean isDialogOpen;
-    private static final float TIME_DEC = 0.03f;
+    private static final float TIME_DEC = 0.04f;
     private int wave = 1;
-    private int zombiesInWave = 2;
+    private int zombiesInWave = 4;
     private int zombiesGenerated; 
     private int zombiesKilled;
     
