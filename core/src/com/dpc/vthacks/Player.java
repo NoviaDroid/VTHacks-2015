@@ -2,12 +2,10 @@ package com.dpc.vthacks;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 import com.dpc.vthacks.animation.AdvancedAnimatedUnit;
 import com.dpc.vthacks.animation.AdvancedSpriteAnimation;
 import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
-import com.dpc.vthacks.data.Sounds;
 import com.dpc.vthacks.infantry.Unit;
 import com.dpc.vthacks.level.LevelProperties;
 import com.dpc.vthacks.properties.AnimatedUnitProperties;
@@ -102,8 +100,8 @@ public class Player extends AdvancedAnimatedUnit {
                 ((Gun) currentWeapon).fire();
             }
             else {
-                Assets.sounds.get(Sounds.OUT_OF_AMMO).stop();
-                Assets.sounds.get(Sounds.OUT_OF_AMMO).play();
+                Assets.sounds.get(Assets.OUT_OF_AMMO).stop();
+                Assets.sounds.get(Assets.OUT_OF_AMMO).play();
                 
                 getParentLevel().getContext().getToolbar().shakeAmmo();
             }

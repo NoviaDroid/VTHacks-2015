@@ -12,7 +12,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.dpc.vthacks.App;
@@ -20,7 +19,6 @@ import com.dpc.vthacks.Bank;
 import com.dpc.vthacks.PagedScrollPane;
 import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
-import com.dpc.vthacks.data.Fonts;
 import com.dpc.vthacks.weapons.Weapon;
 import com.dpc.vthacks.weapons.WeaponManager;
 
@@ -33,18 +31,29 @@ public class StoreScreen implements Screen {
     private WeaponInfo weaponInfo; // Info on selected weapon
     private Skin weaponIcons;
     private App context;
-    private static LabelStyle labelStyle;
     private static final int PADDING = 5;
     
     private static class WeaponInfo {
-        private Label name = new Label("", labelStyle);
-        private Label description = new Label("", labelStyle);
-        private Label damage = new Label("", labelStyle);
-        private Label ammo = new Label("", labelStyle);
-        private Label cost = new Label("", labelStyle);
+        private Label name;
+        private Label description;
+        private Label damage;
+        private Label ammo;
+        private Label cost;
         private int id;
         private Image icon;
         private TextButton purchase;
+        
+        private WeaponInfo() {
+            Assets.labelStyle.font = Assets.zombieXSmallFont;
+            
+            cost = new Label("", Assets.labelStyle);
+            ammo = new Label("", Assets.labelStyle);;
+            damage = new Label("", Assets.labelStyle);;
+            description = new Label("", Assets.labelStyle);;
+            name = new Label("", Assets.labelStyle);
+            
+            Assets.labelStyle.font = Assets.zombieFont;
+        }
         
         private void add(Stage stage) {
             stage.addActor(name);
@@ -63,14 +72,10 @@ public class StoreScreen implements Screen {
     
     @Override
     public void show() {
+        Assets.allocateStoreScreen();
+        
         stage = new Stage(new StretchViewport(AppData.width, AppData.height));
 
-        TextButtonStyle textButtonStyle = new TextButtonStyle();
-        textButtonStyle.font = Fonts.getZombieXSmall();
-        
-        labelStyle = new LabelStyle();
-        labelStyle.font = Fonts.getZombieSmall();
-        
         weaponInfo = new WeaponInfo();
         
         weaponInfo.purchase = new TextButton("Purchase", Assets.uiSkin);
@@ -99,7 +104,7 @@ public class StoreScreen implements Screen {
             }
         });
         
-        moneyLabel = new Label("You have $" + Bank.getBalance(), labelStyle);
+        moneyLabel = new Label("You have $" + Bank.getBalance(), Assets.labelStyle);
         
         moneyLabel.setColor(0, 0.4f, 0, 1);
         
@@ -111,13 +116,10 @@ public class StoreScreen implements Screen {
         
     //    stage.addActor(moneyLabel);
         
-        labelStyle = new LabelStyle();
-        labelStyle.font = Fonts.getZombieSmall();
-        
         backButton = new TextButton("Back", Assets.uiSkin);
         
         backButton.setPosition(PADDING, 
-                AppData.height - 2 * textButtonStyle.font.getBounds(backButton.getText()).height);
+                AppData.height - 2 * Assets.textButtonStyle.font.getBounds(backButton.getText()).height);
         
         
         backButton.addListener(new InputListener() {
@@ -130,8 +132,6 @@ public class StoreScreen implements Screen {
         
         stage.addActor(backButton);
 
-        
-        Skin skin = new Skin(Assets.storeAtlas);
         weaponIcons = new Skin(Assets.weaponIconAtlas);
         
         weaponButtons = new ImageButton[WeaponManager.NUMBER_OF_WEAPONS];
@@ -243,10 +243,12 @@ public class StoreScreen implements Screen {
 
     @Override
     public void hide() {
+        dispose();
     }
 
     @Override
     public void dispose() {
+        Assets.deallocateStoreScreen();
         stage.dispose();
     }
 

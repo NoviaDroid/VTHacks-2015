@@ -4,7 +4,6 @@ import java.util.Comparator;
 import java.util.Iterator;
 
 import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.input.GestureDetector.GestureListener;
 import com.badlogic.gdx.math.MathUtils;
@@ -14,7 +13,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.utils.Array;
 import com.dpc.vthacks.App;
 import com.dpc.vthacks.GameCamera;
-import com.dpc.vthacks.MathUtil;
 import com.dpc.vthacks.Player;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.factories.Factory;
@@ -46,7 +44,8 @@ public class Level {
     private static final float MAX_ZOOM = 0.35f; // Most that can be zoomed in
     private static final float ZOOM_STEP = 0.05f; // How much zoom to add
     private boolean fingerDown;
-
+    private int renderCalls;
+    
     public Level(final GameScreen context) {
         this.context = context;
         
@@ -410,12 +409,17 @@ public class Level {
         }
         
         for(GameObject o : objectDrawOrder) {
-            o.render();
+            if(gameCamera.frustum.boundsInFrustum(o.getX(), 
+                                                  o.getY(), 
+                                                  0, 
+                                                  o.getWidth() * 0.5f, 
+                                                  o.getHeight() * 0.5f, 
+                                                  0)) {
+                o.render();
+            }
         }
 
         App.batch.end();
-        
-        //debugRender();
     }
 
     public void remove(Zombie z) {
@@ -426,38 +430,6 @@ public class Level {
     public void remove(AmmoCrate c) {
         objectDrawOrder.removeValue(c, false);
         ammoCrates.removeValue(c, false);
-    }
-    
-    private void debugRender() {
-        App.debugRenderer.setProjectionMatrix(gameCamera.combined);
-        App.debugRenderer.setColor(1, 0, 0, 1);
-        App.debugRenderer.begin(ShapeType.Filled);
-
-        App.debugRenderer.rect(player.getX(), 
-                               player.getY() + player.getCurrentFrame().getAnchorOffsetY(),
-                               50,
-                               50);
-        
-        App.debugRenderer.end();
-        
-        App.debugRenderer.setColor(1, 1, 1, 1);
-        App.debugRenderer.begin(ShapeType.Line);
-        
-        for(Unit u : playerArmy) {
-            App.debugRenderer.rect(u.getBoundingRectangle().x, 
-                                   u.getBoundingRectangle().y,
-                                   u.getBoundingRectangle().width,
-                                   u.getBoundingRectangle().height);
-        }
-        
-        for(Unit zombie : zombies) {
-            App.debugRenderer.rect(zombie.getX(), zombie.getY(), zombie.getWidth(), zombie.getHeight());
-            for(ZombieSegment s : ((ZombieProperties) zombie.getProperties()).getSegments()) {
-                App.debugRenderer.rect(s.bounds.x, s.bounds.y, s.bounds.width, s.bounds.height);
-            }
-        }
-        
-        App.debugRenderer.end();
     }
     
     private void updateObjects(float delta) {
@@ -473,7 +445,7 @@ public class Level {
             for(Unit u : playerArmy) {
                 u.update(delta);
                 
-                if(MathUtil.dst(zombie.getX(), zombie.getY(), u.getX(), u.getY()) <= 100) {
+                if(App.dst(zombie.getX(), zombie.getY(), u.getX(), u.getY()) <= 100) {
                     zombie.setCurrentTarget(u.getX(), u.getY());
                 }
                 else {
@@ -486,7 +458,6 @@ public class Level {
             player.setSlowed(false);    
         }
         
-        System.out.println("zombies: " + noZombiesAttackingPlayer);
         player.update(delta);
     }
     
@@ -515,7 +486,7 @@ public class Level {
     }
     
     private void initializeCamera() {
-        gameCamera.zoom = 0.38f;
+        gameCamera.zoom = 0.45f;
         
         origCameraZoom = gameCamera.zoom;
 

@@ -9,8 +9,6 @@ import com.dpc.vthacks.Player;
 import com.dpc.vthacks.animation.AdvancedSpriteAnimation;
 import com.dpc.vthacks.animation.SpriteAnimation;
 import com.dpc.vthacks.data.Assets;
-import com.dpc.vthacks.infantry.Soldier;
-import com.dpc.vthacks.infantry.Tank;
 import com.dpc.vthacks.objects.AmmoCrate;
 import com.dpc.vthacks.objects.GameSprite;
 import com.dpc.vthacks.properties.AnimatedUnitProperties;
@@ -29,36 +27,18 @@ public class Factory {
     private static ObjectMap<Integer, ZombieProperties> zombieProperties = new ObjectMap<Integer, ZombieProperties>();
     private static Vector2 playerGunOffset;
     private static int currentZombieCreationTier = 1; // Current tier of zombie to obtain from the pool
-    private static final int BASE_SIZE = 15;
+    private static final int BASE_SIZE = 10;
     
     public static void init() {
 //        myArmyY = GameScreen.battle.getMyArmy().getBase().getY();
 //        myArmyX = GameScreen.battle.getMyArmy().getBase().getX();
     }
     
-    public static final Pool<AmmoCrate> ammoCratePool = new Pool<AmmoCrate>(BASE_SIZE) {
+    public static final Pool<AmmoCrate> ammoCratePool = new Pool<AmmoCrate>(5) {
 
         @Override
         protected AmmoCrate newObject() {
             return new AmmoCrate(Assets.ammoCrate, 0, 0);
-        }
-        
-    };
-    
-    public static final Pool<Tank> tankPool = new Pool<Tank>() {
-
-        @Override
-        protected Tank newObject() {
-            return Factory.createTank();
-        }
-        
-    };
-    
-    public static final Pool<Soldier> soldierPool = new Pool<Soldier>(BASE_SIZE) {
-
-        @Override
-        protected Soldier newObject() {
-            return Factory.createSoldier();
         }
         
     };
@@ -138,20 +118,6 @@ public class Factory {
         
         return p;
     }
-    
-    public static Tank createTank() {
-        return new Tank("", 
-                        new AnimatedUnitProperties<SpriteAnimation>(tankProperties),
-                        0,
-                        0);
-    }
-    
-    public static Soldier createSoldier() {
-        return new Soldier("",
-                          new AnimatedUnitProperties<SpriteAnimation>(soldierProperties),
-                          0,
-                          0);
-    }
 
     public static Properties getPlayerProperties() {
         return playerProperties;
@@ -188,15 +154,6 @@ public class Factory {
     public static int getNumberOfBombs() {
         return BASE_SIZE;
     }
-    
-    public static Pool<Tank> getTankpool() {
-        return tankPool;
-    }
-
-    public static Pool<Soldier> getSoldierpool() {
-        return soldierPool;
-    }
-    
     
     public static Vector2 getPlayerGunOffset() {
         return playerGunOffset;
