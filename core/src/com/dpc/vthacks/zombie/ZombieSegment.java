@@ -1,6 +1,7 @@
-package com.dpc.vthacks.properties;
+package com.dpc.vthacks.zombie;
 
 import com.badlogic.gdx.math.Rectangle;
+import com.dpc.vthacks.properties.Segment;
 
 public class ZombieSegment extends Segment {
     public float damageFactor; // How much extra damage for hitting this segment?

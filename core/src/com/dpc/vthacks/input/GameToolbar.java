@@ -1,6 +1,12 @@
 package com.dpc.vthacks.input;
 
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeIn;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeOut;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.moveBy;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.moveTo;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.parallel;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.repeat;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -8,11 +14,8 @@ import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad.TouchpadStyle;
@@ -22,21 +25,16 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.dpc.vthacks.Bank;
 import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
-import com.dpc.vthacks.data.Fonts;
 import com.dpc.vthacks.screens.GameScreen;
 import com.dpc.vthacks.weapons.Weapon;
 
 public class GameToolbar {
     private Stage stage;
-    private Image leftBg, healthBarBackground, healthBar, playerIcon;
+    private Image healthBarBackground, healthBar, playerIcon;
     private Image gunIcon;
     private Touchpad joystick;
-    private Drawable background;
-    private Button bombButton, strafeButton, soldierButton, tankButton, towerButton,
-                   tankUpgradeButton, towerUpgradeButton, soldierUpgradeButton;
-    private Label moneyLabel, experienceLabel, healthLabel, ammoLabel;
+    private Label moneyLabel, healthLabel, ammoLabel, waveLabel;
     private int money;
-    private final Color BATCH_COLOR;
     private static final int PADDING = 5;
     private GameScreen parent;
     private Label moneyToast;
@@ -53,24 +51,9 @@ public class GameToolbar {
     
     public GameToolbar(final GameScreen parent) {
         this.parent = parent;
-        
-        Assets.loadSkins();
-        
+
         Skin skin = new Skin();
         skin.addRegions(Assets.skinAtlas);
-        
-        background = skin.getDrawable("Bomb Icon");
-        
-
-        bombButton = new ImageButton(skin.getDrawable("Bomb Icon"), skin.getDrawable("Bomb Icon Hover"));   
-        strafeButton = new ImageButton(skin.getDrawable("Bomb Icon"), skin.getDrawable("Bomb Icon Hover"));
-        soldierButton = new ImageButton(skin.getDrawable("Troop Button"), skin.getDrawable("Troop Button Hover"));
-        towerButton = new ImageButton(skin.getDrawable("Bomb Icon"));
-        tankButton = new ImageButton(skin.getDrawable("Tank Button"), skin.getDrawable("Tank Button Hover"));
-        tankUpgradeButton = new ImageButton(skin.getDrawable("Tank Button +"), skin.getDrawable("Tank Button +Hover"));
-        towerUpgradeButton = new ImageButton(skin.getDrawable("Bomb Icon"));
-        soldierUpgradeButton = new ImageButton(skin.getDrawable("Soldier Button +"), skin.getDrawable("Soldier Button + Hover"));
-        
         
         TouchpadStyle touchpadStyle = new TouchpadStyle();
         Drawable touchBackground = skin.getDrawable("touchBackground");
@@ -86,40 +69,24 @@ public class GameToolbar {
         joystick.setBounds(15, 15, AppData.width / 8, AppData.width / 8);
         
         joystick.getColor().a = 0.75f;
-        soldierUpgradeButton.getColor().a = 0.75f;
-        towerUpgradeButton.getColor().a = 0.75f;
-        tankUpgradeButton.getColor().a = 0.75f;
-        towerButton.getColor().a = 0.75f;
-        soldierButton.getColor().a = 0.75f;
-        strafeButton.getColor().a = 0.75f;
-        tankButton.getColor().a = 0.75f;
-        bombButton.getColor().a = 0.75f;
+
         
-        LabelStyle style = new LabelStyle();
-        style.font = Fonts.getZombie();
-        
-        moneyToast = new Label("", style);
-        moneyLabel = new Label("Money: 0", style);
-        experienceLabel = new Label("Experience: ", style);
-        healthLabel = new Label("Health: 100", style);
+        moneyToast = new Label("", Assets.labelStyle);
+        moneyLabel = new Label("Money: 0", Assets.labelStyle);
+        healthLabel = new Label("Health: 100", Assets.labelStyle);
         
         moneyToast.setColor(new Color(0, 0.5f, 0, 1));
         
-        style = new LabelStyle();
-        style.font = Fonts.getZombieSmall();
-        
-        ammoLabel = new Label("", style);   
-        
-        style = new LabelStyle();
-        style.font = Fonts.getZombie();
+        ammoLabel = new Label("", Assets.labelStyle);   
 
-        style = new LabelStyle();
-        style.font = Fonts.getVisitor();
-        
-        moneyToast = new Label("", style);
-        
-        addButtonListeners();
+        Assets.labelStyle.font = Assets.zombieSmallFont;
 
+        Assets.labelStyle.font = Assets.visitorFont;
+        
+        moneyToast = new Label("", Assets.labelStyle);
+        
+        Assets.labelStyle.font = Assets.zombieFont;
+        
         playerIcon = new Image(Assets.playerIcon);
         playerIcon.setSize(Assets.playerIcon.getRegionWidth() * 10,
                            Assets.playerIcon.getRegionHeight() * 10);
@@ -142,20 +109,9 @@ public class GameToolbar {
         healthBar.setPosition(healthBarBackground.getX() + (Assets.healthBarBackground.getRegionHeight() * 0.135f),
                               healthBarBackground.getY() + (Assets.healthBarBackground.getRegionHeight() * 0.135f));
         
-        experienceLabel.setPosition(soldierUpgradeButton.getX() + soldierUpgradeButton.getWidth() + PADDING, getTop() - experienceLabel.getHeight());
-        
-        
         stage = new Stage(new StretchViewport(AppData.width, AppData.height));
 
         joystick.setPosition(PADDING, PADDING);
-        bombButton.setPosition(AppData.width - bombButton.getWidth(), PADDING);
-        strafeButton.setPosition(bombButton.getX() - strafeButton.getWidth() - PADDING, PADDING);
-        tankButton.setPosition(strafeButton.getX() - tankButton.getWidth() - PADDING, PADDING);
-        soldierButton.setPosition(tankButton.getX() - soldierButton.getWidth() - PADDING, PADDING);
-        tankUpgradeButton.setPosition(soldierButton.getX() - tankUpgradeButton.getWidth() - PADDING, PADDING);
-        towerUpgradeButton.setPosition(tankUpgradeButton.getX() - towerUpgradeButton.getWidth() - PADDING, PADDING);
-        soldierUpgradeButton.setPosition(towerUpgradeButton.getX() - soldierUpgradeButton.getWidth() - PADDING, PADDING);
-        healthLabel.setPosition(soldierUpgradeButton.getX() + soldierUpgradeButton.getWidth() + PADDING, experienceLabel.getY() - healthLabel.getHeight());
         addMoney(0);
 
         moneyToast.setColor(1, 1, 1, 1);
@@ -165,6 +121,12 @@ public class GameToolbar {
                                       0.4f,
                                       0, 1));
         
+        waveLabel = new Label("Wave ", Assets.labelStyle);
+        
+        waveLabel.setPosition((AppData.width * 0.5f) - (waveLabel.getWidth() * 0.5f), 
+                              (AppData.height) - (waveLabel.getHeight()));
+        
+       // stage.addActor(waveLabel);
         stage.addActor(joystick);
         stage.addActor(playerIcon);
         stage.addActor(healthBarBackground);
@@ -173,11 +135,7 @@ public class GameToolbar {
         stage.addActor(healthBar);
         stage.addActor(ammoLabel);
         
-        
-        BATCH_COLOR = stage.getBatch().getColor();
-        
-        
-        
+       
         moveGunComps = new Action() {
 
             @Override
@@ -245,143 +203,6 @@ public class GameToolbar {
                }
            }
        }
-    }
-    
-    private void addButtonListeners() {
-        soldierUpgradeButton.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                soldierUpgradeButtonTouchDown();
-                Assets.playPressDown();
-                return true;
-            }
-            
-            @Override
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                Assets.playPressUp();
-            }
-        });
-        
-        towerUpgradeButton.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                towerUpgradeButtonTouchedDown();
-                Assets.playPressDown();
-                return true;
-            }
-            
-            @Override
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                Assets.playPressUp();
-            }
-        });
-        
-        tankUpgradeButton.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                tankUpgradeButtonTouchDown();
-                Assets.playPressDown();
-                return true;
-            }
-            
-            @Override
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                Assets.playPressUp();
-            }
-        });
-        
-        tankButton.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                tankButtonTouchDown();
-                Assets.playPressDown();
-                return true;
-            }
-            
-            @Override
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                Assets.playPressUp();
-            }
-        });
-        
-        towerButton.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                towerButtonTouchDown();
-                Assets.playPressDown();
-                return true;
-            }
-            
-            @Override
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                Assets.playPressUp();
-            }
-        });
-        
-        soldierButton.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                soldierButtonTouchDown();
-                Assets.playPressDown();
-                return true;
-            }
-            
-            @Override
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                Assets.playPressUp();
-            }
-        });
-        
-        bombButton.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                bombButtonTouchDown();
-                Assets.playPressDown();
-                return true;
-            }
-            
-            @Override
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                bombButtonTouchUp();
-                Assets.playPressUp();
-            }
-        });
-        
-        strafeButton.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                strafeButtonTouchDown();
-                Assets.playPressDown();
-                return true;
-            }
-            
-            @Override
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                strafeButtonTouchUp();
-            }
-        });
-    }
-    
-    public void strafeButtonTouchUp() {
-        Assets.playPressUp();
-    }
-    
-    public void towerButtonTouchDown() {
-    }
-
-    public void towerUpgradeButtonTouchedDown() {
-    }
-    
-    public void soldierUpgradeButtonTouchDown() {
-    }
-
-    public float getTop() {
-        if(bombButton.getY() + bombButton.getHeight() >= healthLabel.getY() + healthLabel.getHeight()) {
-            return bombButton.getY() + bombButton.getHeight() + PADDING;
-        }
-        else {
-            return experienceLabel.getHeight() + moneyLabel.getHeight() + healthLabel.getHeight();
-        }
     }
     
     public void draw() {
@@ -465,10 +286,10 @@ public class GameToolbar {
         
         moneyLabel.setText("$" + money);
         
-        float t = (Fonts.getZombie().getBounds(moneyLabel.getText()).height * 2);
+        float t = (Assets.zombieFont.getBounds(moneyLabel.getText()).height * 2);
         
         // Reposition the money text
-        moneyLabel.setPosition(AppData.width - (Fonts.getZombie().getBounds(moneyLabel.getText()).width) - (t * 0.5f), 
+        moneyLabel.setPosition(AppData.width - (Assets.zombieFont.getBounds(moneyLabel.getText()).width) - (t * 0.5f), 
                                AppData.height - t);
      
         moneyLabel.addAction(sequence(
@@ -488,6 +309,10 @@ public class GameToolbar {
     
     public Touchpad getJoystick() {
         return joystick;
+    }
+   
+    public void setWave(int wave) {
+        waveLabel.setText("Wave " + wave);
     }
     
     public void setGunIcon(Weapon gun) {
@@ -571,4 +396,5 @@ public class GameToolbar {
         moneyLabel.setText("$" + i);
         money = 0;
     }
+    
 }

@@ -24,6 +24,10 @@ public class Weapon {
         
     }
     
+    public void refillAmmo() {
+        ammo = maxAmmo;
+    }
+    
     /**
      * Stops this weapon's shot 
      */

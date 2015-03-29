@@ -3,6 +3,7 @@ package com.dpc.vthacks.animation;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Disposable;
+import com.dpc.vthacks.data.Assets;
 
 /**
  * Simple sprite animation with no frame data
@@ -16,14 +17,7 @@ public class SpriteAnimation implements Disposable {
     public SpriteAnimation(SpriteAnimation cpy) {
         this.time = cpy.time;
         
-        TextureRegion[] regions = new TextureRegion[cpy.getAnimation().getKeyFrames().length];
-        
-        // Make a copy of each region
-        for(int i = 0; i < regions.length; i++) {
-            regions[i] = new TextureRegion(cpy.getAnimation().getKeyFrames()[i]);
-        }
-        
-        animation = new Animation(time, regions);   
+        animation = new Animation(time, Assets.shallowCopy(cpy.getAnimation().getKeyFrames()));   
     }
     
     public SpriteAnimation(TextureRegion[] frames, float frameTime) {
@@ -59,6 +53,8 @@ public class SpriteAnimation implements Disposable {
     
     @Override
     public void dispose() {
-
+        for(TextureRegion f : animation.getKeyFrames()) {
+            f.getTexture().dispose();
+        }
     }
 }

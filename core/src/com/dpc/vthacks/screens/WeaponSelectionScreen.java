@@ -8,11 +8,9 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
@@ -20,7 +18,6 @@ import com.dpc.vthacks.App;
 import com.dpc.vthacks.PagedScrollPane;
 import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
-import com.dpc.vthacks.data.Fonts;
 import com.dpc.vthacks.factories.Factory;
 import com.dpc.vthacks.weapons.Weapon;
 import com.dpc.vthacks.weapons.WeaponManager;
@@ -30,7 +27,6 @@ public class WeaponSelectionScreen implements Screen {
     private WeaponButton[] selectedWeapons; // The weapons that can be selected. 2 slots.
     private Skin weaponIconSkin;
     private WeaponSelectionDialog dialog;
-    private LabelStyle labelStyle;
     private App context;
     private Table weaponSelectionTable;
     private Table masterTable;
@@ -39,7 +35,6 @@ public class WeaponSelectionScreen implements Screen {
     private Label title;
     private TextButton next;
     private Weapon selectedWeapon;
-    private TextButtonStyle buttonStyle;
     private int buttonContext; // Index of which button was pressed
     private static final int PADDING = 5;
     
@@ -124,10 +119,10 @@ public class WeaponSelectionScreen implements Screen {
                 scroll.addPage(weaponIcons[i]);
             }
 
-            weaponName = new Label("", labelStyle);
-            weaponDamage = new Label("", labelStyle);
-            weaponAmmo = new Label("", labelStyle);
-            weaponDesc = new Label(" ", labelStyle);
+            weaponName = new Label("", Assets.labelStyle);
+            weaponDamage = new Label("", Assets.labelStyle);
+            weaponAmmo = new Label("", Assets.labelStyle);
+            weaponDesc = new Label(" ", Assets.labelStyle);
             
       
             VerticalGroup vgroup = new VerticalGroup();
@@ -145,7 +140,7 @@ public class WeaponSelectionScreen implements Screen {
             table.setFillParent(true);
             
             name = new Label(WeaponManager.getUnlockedWeapons().get(0).getName(),
-                             labelStyle);
+                    Assets.labelStyle);
             
             dStage.addActor(table);
             
@@ -172,14 +167,10 @@ public class WeaponSelectionScreen implements Screen {
     
     @Override
     public void show() {
+        Assets.allocateWeaponSelectionScreen();
+        
         stage = new Stage(new StretchViewport(AppData.width, AppData.height));
 
-        buttonStyle = new TextButtonStyle();
-        buttonStyle.font = Fonts.getZombieSmall();
-        
-        labelStyle = new LabelStyle();
-        labelStyle.font = Fonts.getZombieXSmall();
-        
         next = new TextButton("Next", Assets.uiSkin);
         
         next.addListener(new InputListener() {
@@ -195,9 +186,9 @@ public class WeaponSelectionScreen implements Screen {
             }
         });
         
-        title = new Label("Select your weapons", labelStyle);
+        title = new Label("Select your weapons", Assets.labelStyle);
         
-        selectLevelButton = new TextButton("Select a level", buttonStyle);
+        selectLevelButton = new TextButton("Select a level", Assets.textButtonStyle);
         
         selectLevelButton.addListener(new InputListener() {
             @Override
@@ -219,7 +210,7 @@ public class WeaponSelectionScreen implements Screen {
         });
         
         backButton.setPosition(PADDING, 
-                               AppData.height - (buttonStyle.font.getBounds("Back").height*2));
+                               AppData.height - (Assets.textButtonStyle.font.getBounds("Back").height*2));
         
         weaponIconSkin = new Skin(Assets.weaponIconAtlas);
         
@@ -338,10 +329,13 @@ public class WeaponSelectionScreen implements Screen {
 
     @Override
     public void hide() {
+        dispose();
     }
 
     @Override
     public void dispose() {
+        Assets.deallocateWeaponSelectionScreen();
+        
         stage.dispose();
         dialog.dStage.dispose();
     }

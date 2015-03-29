@@ -27,15 +27,18 @@ import com.dpc.vthacks.screens.MenuScreen;
  */
 public class EndlessWaves extends Level {
     private Stage dialogStage; // Game over dialog stage
-    private boolean isDialogOpen;
     private InputProcessor mplex; // Saved off and put back as the input processor after play again touched
-    
+    private boolean isDialogOpen;
+    private int wave;
+   
     public EndlessWaves(GameScreen context) {
         super(context);
     }
     
     @Override
     public void onGameOver() {
+        super.onGameOver();
+        
         // Disable the controls
         getContext().getToolbar().setActive(false);
         setActive(false);
@@ -55,6 +58,7 @@ public class EndlessWaves extends Level {
         tb1.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                
                 getContext().getContext().setScreen(new MenuScreen(getContext().getContext()));
                 
                 return super.touchDown(event, x, y, pointer, button);
@@ -137,6 +141,11 @@ public class EndlessWaves extends Level {
         if(isDialogOpen) {
             dialogStage.draw();
         }
+    }
+    
+    private void onWaveEnd() {
+        wave++;
+        getContext().getToolbar().setWave(wave);
     }
     
     public void dispose() {

@@ -2,6 +2,8 @@
   "tank": [{
     "cost": "150",
     "health": "150",
+    "scaleX": "2",
+    "scaleY": "2",
     "minDamage": "30",
     "maxDamage": "35",
     "velX": "6",
@@ -12,15 +14,15 @@
   }],
   
   "player": [{
-    "health": "100",
-    "velX": "3", 
-    "velY": "1.5",
+    "health": "250",
+    "velX": "4", 
+    "velY": "2",
     "range": "250",
-    "max health": "100",
+    "max health": "250",
     "scaleX": "2",
     "scaleY": "2",
     "ammo": "25", 
-    "running": [{
+    "runRight": [{
     	"frame1": [{
     		"img": "ETroop2Running1", 
     		"time": "1",
@@ -46,7 +48,7 @@
     		"handOffsetY": "42"
     	}]
     }],
-    "idle": [{
+    "idleRight": [{
     	"frame1": [{
     		"img": "ETroopTier2Idle1", 
     		"time": "5",
@@ -73,6 +75,8 @@
     "minDamage": "10",
     "maxDamage": "20",
     "health": "100",
+    "scaleX": "2",
+    "scaleY": "2",
     "range": "150",
     "velX": "3",
     "velY": "0", 
@@ -85,6 +89,8 @@
     "maxDamage": "150",
 	"velX": "3",
 	"velY": "12",
+    "scaleX": "1",
+    "scaleY": "1",
 	"animations": [{
     	"walking": [{
     		"frame1": [{
@@ -115,52 +121,8 @@
     "minDamage": "30",
     "maxDamage": "35",
   	"velX": "50",
-  	"velY": "14"
-  }],
-  
-  "zombie": [{
-  	"minVelX": "0.25",
-  	"maxVelX": "0.5",
-  	"minVelY": "0.25",
-  	"maxVelY": "0.5",
-    "minDamage": "3",
-    "maxDamage": "5",
-    "attackSpeed": "0.5",
-  	"range": "250",
-  	"health": "100",
-    "max health": "100",
-    "minKillMoney": 30,
-    "maxKillMoney": 50,
-    "animations": [{
-    	"walking": [{
-    		"frame1": [{
-    			"img": "zombie", 
-    			"time": "5"
-    		}]
-    	}]
-    }],
-    "segments": [{
-    	"head": [{
-    		"width": "31",
-    		"height": "21",
-    		"x": "4",
-    		"y": "59",
-    		"damageFactor": "4"
-    	}],
-    	"upperTorso": [{
-    		"width": "37",
-    		"height": "17",
-    		"x": "9",
-    		"y": "42",
-    		"damageFactor": "1.75"
-    	}],
-    	"lowerTorso": [{
-    		"width": "41",
-    		"height": "42",
-    		"x": "0",
-    		"y": "1",
-    		"damageFactor": "1"
-    	}]
-    }]
+  	"velY": "14",
+    "scaleX": "1",
+    "scaleY": "1",
   }]
 }

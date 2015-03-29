@@ -2,6 +2,7 @@ package com.dpc.vthacks.properties;
 
 import com.badlogic.gdx.utils.ObjectMap;
 import com.dpc.vthacks.animation.SpriteAnimation;
+import com.dpc.vthacks.zombie.ZombieSegment;
 
 public class ZombieProperties extends AnimatedUnitProperties<SpriteAnimation> {
     private int minKillMoney, maxKillMoney; // How much money played awarded when killed
@@ -39,6 +40,30 @@ public class ZombieProperties extends AnimatedUnitProperties<SpriteAnimation> {
         maxKillMoney = cpy.maxKillMoney;
         
         attackSpeed = cpy.attackSpeed;
+    }
+    
+    @Override
+    public String toString() {
+        return super.toString() + 
+               String.format("%s,\n%s,\n%s,\n%s,\n", 
+                             "Min Kill Money: " + minKillMoney,
+                             "Max Kill Money: " + maxKillMoney,
+                             "Segments: " + segments,
+                             "Attack Speed: " + attackSpeed);
+    }
+    
+    @Override
+    public ZombieProperties scaleX(float scaleX) {
+        super.scaleX(scaleX);
+        
+        return this;
+    }
+    
+    @Override
+    public ZombieProperties scaleY(float scaleY) {
+        super.scaleY(scaleY);
+        
+        return this;
     }
     
     public ZombieProperties attackSpeed(float speed) {

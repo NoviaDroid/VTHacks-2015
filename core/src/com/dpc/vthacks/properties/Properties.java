@@ -11,7 +11,7 @@ import com.badlogic.gdx.math.Vector2;
 public class Properties {
     private Vector2 minVel, maxVel, vel;
     private float frameTime;
-    private float range, minDamage, maxDamage, health, maxHealth;
+    private float range, minDamage, maxDamage, health, maxHealth, scaleX, scaleY;
     private int cost;
     
     public Properties(Properties cpy) {
@@ -25,6 +25,8 @@ public class Properties {
         maxVel = cpy.maxVel.cpy();
         minVel = cpy.minVel.cpy();
         frameTime = cpy.frameTime;
+        scaleX = cpy.scaleX;
+        scaleY = cpy.scaleY;
     }
     
     public Properties() {
@@ -33,6 +35,43 @@ public class Properties {
         maxVel = new Vector2();
     }
 
+    @Override
+    public String toString() {
+        return String.format("%s,\n%s,\n%s,\n%s,\n%s,\n%s,\n%s,\n%s,\n%s,\n%s,\n%s,\n%s,\n",
+                            "Min Vel: " + minVel,
+                            "Max Vel: " + maxVel,
+                            "Vel: " + vel,
+                            "Frame Time: " + frameTime,
+                            "Range: " + range,
+                            "Min Damage: " + minDamage,
+                            "Max Damage: " + maxDamage,
+                            "Health: " + health,
+                            "Max Health: " + maxHealth,
+                            "Scale X: " + scaleX,
+                            "Scale Y: " + scaleY,
+                            "Cost: " + cost);
+    }
+    
+    public float getScaleX() {
+        return scaleX;
+    }
+    
+    public float getScaleY() {
+        return scaleY;
+    }
+    
+    public Properties scaleX(float scaleX) {
+        this.scaleX = scaleX;
+        
+        return this;
+    }
+    
+    public Properties scaleY(float scaleY) {
+        this.scaleY = scaleY;
+        
+        return this;
+    }
+    
     public Properties frameTime(float frameTime) {
         this.frameTime = frameTime;
         
