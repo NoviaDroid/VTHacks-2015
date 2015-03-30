@@ -9,7 +9,7 @@
 	    "scaleY": "3",
 	    "maxDamage": "15",
 	    "attackSpeed": "1",
-	  	"range": "250",
+	  	"range": "175",
 	  	"health": "30",
 	    "maxHealth": "30",
 	    "minKillMoney": 30,

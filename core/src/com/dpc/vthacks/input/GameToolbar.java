@@ -121,10 +121,11 @@ public class GameToolbar {
         
         waveLabel = new Label("Wave 1", Assets.labelStyle);
         
-        waveLabel.setPosition((AppData.width * 0.5f) - (waveLabel.getWidth() * 0.5f), 
+        waveLabel.setPosition(healthBar.getX() + healthBar.getWidth() + (PADDING * 3), 
                                AppData.height);
         
         waveLabel.addAction(moveTo(waveLabel.getX(), (AppData.height) - (waveLabel.getHeight()), 0.25f));
+        
         
         stage.addActor(waveLabel);
         stage.addActor(joystick);
@@ -268,7 +269,7 @@ public class GameToolbar {
         }
         
         float x = moneyLabel.getX();
-        float y = moneyLabel.getY() - moneyToast.getStyle().font.getBounds(moneyToast.getText()).height;
+        float y = moneyLabel.getY() - (moneyToast.getHeight() * 4);
         
         moneyToast.setPosition(x, y);
      
@@ -362,7 +363,7 @@ public class GameToolbar {
         
         // Position directly under player icon
         gunIcon.setPosition(playerIcon.getX(), 
-                            playerIcon.getY() - (gunIcon.getHeight() * 2));
+                            playerIcon.getY() - (gunIcon.getHeight() * 2.85f));
         
         // Position ammo label to the right of the gun icon
         ammoLabel.setPosition(gunIcon.getX() + gunIcon.getWidth() + PADDING, 

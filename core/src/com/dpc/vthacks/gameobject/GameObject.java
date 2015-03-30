@@ -24,6 +24,16 @@ public abstract class GameObject extends Sprite {
     public abstract void update(float delta);
     public abstract void render();
    
+    @Override
+    public float getWidth() {
+        return super.getWidth() * getScaleX();
+    }
+    
+    @Override
+    public float getHeight() {
+        return super.getHeight() * getScaleY();
+    }
+    
     public void scroll(float fx, float fy) {
         setX(getX() + (scrollX * fx)); 
         setY(getY() + (scrollY * fy));

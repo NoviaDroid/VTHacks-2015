@@ -29,9 +29,9 @@ public class EndlessWaves extends Level {
     private Stage dialogStage; // Game over dialog stage
     private InputProcessor mplex; // Saved off and put back as the input processor after play again touched
     private boolean isDialogOpen;
-    private static final float TIME_DEC = 0.04f;
+    private static final float TIME_DEC = 0.05f;
     private int wave = 1;
-    private int zombiesInWave = 4;
+    private int zombiesInWave = 3;
     private int zombiesGenerated; 
     private int zombiesKilled;
     
@@ -46,6 +46,17 @@ public class EndlessWaves extends Level {
         // Disable the controls
         getContext().getToolbar().setActive(false);
         setActive(false);
+    }
+    
+    @Override
+    public void reset() {
+        super.reset();
+        
+        zombiesGenerated = 0;
+        zombiesKilled = 0;
+        zombiesInWave = 4;
+        wave = 1;
+        getContext().getToolbar().setWave(1);
     }
     
     @Override
@@ -168,10 +179,12 @@ public class EndlessWaves extends Level {
     }
     
     private void onWaveEnd() {
+        Assets.sounds.get(Assets.WAVE_UP).play(1);
+        
         wave++;
         zombiesKilled = 0;
         zombiesGenerated = 0;
-        zombiesInWave += wave * zombiesInWave;
+        zombiesInWave += wave * 1.5f;
         getZombies().clear();
         getObjectDrawOrder().clear();
         

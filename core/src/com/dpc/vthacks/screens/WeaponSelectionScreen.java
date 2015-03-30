@@ -5,6 +5,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -35,6 +36,7 @@ public class WeaponSelectionScreen implements Screen {
     private Label title;
     private TextButton next;
     private Weapon selectedWeapon;
+    private Image background;
     private int buttonContext; // Index of which button was pressed
     private static final int PADDING = 5;
     
@@ -55,6 +57,22 @@ public class WeaponSelectionScreen implements Screen {
         
         public WeaponSelectionDialog() {   
             dStage = new Stage(new StretchViewport(AppData.width, AppData.height));
+            
+            background = new Image(Assets.menuBackground);
+            background.setWidth(AppData.width);
+            background.setHeight(AppData.height);
+            background.addAction(alpha(0.5f, 1));
+            
+            stage.addActor(background);
+            
+            Image background1 = new Image(Assets.menuBackground);
+            background1.setWidth(AppData.width);
+            background1.setHeight(AppData.height);
+            background1.addAction(alpha(0.5f));
+            
+            dStage.addActor(background1);
+            
+            
             table = new Table();
 
             okay = new TextButton("Okay", Assets.uiSkin);

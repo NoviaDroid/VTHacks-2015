@@ -280,8 +280,8 @@ public class Level {
         if(player.getY() > gameCamera.position.y + (gameCamera.viewportHeight * gameCamera.zoom * 0.5f)) {
             y = player.getY();
         }
-        
-        gameCamera.lerp(player.getX(), y, delta);
+
+            gameCamera.lerp(player.getX(), y, delta);
 
         boolean wasClamped = false;
         

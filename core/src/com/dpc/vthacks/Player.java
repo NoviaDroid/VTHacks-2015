@@ -84,7 +84,7 @@ public class Player extends AdvancedAnimatedUnit {
             if(currentWeapon.getAmmo() > 0) {
                 
                 currentWeapon.stopSound();
-                currentWeapon.playSound();
+                currentWeapon.playSound(0.5f);
     
                 // Decrease ammo
                 currentWeapon.decAmmo(1);
