@@ -5,6 +5,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -16,11 +17,14 @@ import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.level.LevelProperties;
 
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
+
 public class LevelSelectionScreen implements Screen {
     private Stage stage;
     private App context;
     private TextButton go;
     private PagedScrollPane scroll;
+    private Image background;
     private boolean loading;
     
     public LevelSelectionScreen(App context) {
@@ -33,6 +37,13 @@ public class LevelSelectionScreen implements Screen {
         
         stage = new Stage(new StretchViewport(AppData.width, AppData.height));
 
+        background = new Image(Assets.menuBackground);
+        background.setWidth(AppData.width);
+        background.setHeight(AppData.height);
+        background.addAction(alpha(0.5f));
+        
+        stage.addActor(background);
+       
         go = new TextButton("Go!", Assets.uiSkin);
         
         go.addListener(new InputListener() {

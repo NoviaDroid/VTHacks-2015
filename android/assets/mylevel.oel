@@ -1,6 +1,6 @@
 <level width="2400" height="768" zombieSpawnTime="1">
   <background>
-      <skyline2 zOrder="1" id="0" x="0" y="650" scrollable="true" scrollX="-0.01" scrollY="0"/>
+      <skyline2 zOrder="1" id="0" x="-5" y="650" scrollable="true" scrollX="-0.01" scrollY="0"/>
   </background>
   
     <Layer1>

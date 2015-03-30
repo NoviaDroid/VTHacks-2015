@@ -5,10 +5,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Parser;
-import com.dpc.vthacks.screens.MenuScreen;
+import com.dpc.vthacks.screens.GameScreen;
+import com.dpc.vthacks.screens.SplashScreen;
 import com.dpc.vthacks.weapons.WeaponManager;
 
 public class App extends Game {
@@ -33,14 +33,20 @@ public class App extends Game {
 	    
 	    batch = new SpriteBatch();
 
-	    setScreen(new MenuScreen(this));
+	    setScreen(new SplashScreen(this));
 	}
 
 	@Override
 	public void render () {
-		Gdx.gl.glClearColor(0, 0.53f, 0.57f, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		
+	    if(getScreen() instanceof GameScreen) {
+	        Gdx.gl.glClearColor(0, 0.53f, 0.57f, 1);
+		    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+	    }
+	    else {
+	        Gdx.gl.glClearColor(0, 0, 0, 1);
+	        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+	    }
+	    
 		super.render();
 	}
 

@@ -38,8 +38,8 @@ public class Weapon {
     /**
      * Plays this weapon's shot 
      */
-    public void playSound() {
-        Assets.sounds.get(sound).play();
+    public void playSound(float volume) {
+        Assets.sounds.get(sound).play(volume);
     }
     
     public String getSound() {

@@ -1,12 +1,7 @@
 package com.dpc.vthacks.input;
 
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeIn;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeOut;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.moveBy;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.moveTo;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.parallel;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.repeat;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
+
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -46,12 +41,15 @@ public class GameToolbar {
     private float origHealthBarWidth; // Orig width of the health bar
     private boolean active = true; // Is the stage recieving input events ?
     private boolean transitionDone = false; // Is the stage done fading out ?
+    private Color transformColor;
     
     private Action moveGunComps, swap;
     
     public GameToolbar(final GameScreen parent) {
         this.parent = parent;
 
+        transformColor = new Color();
+        
         Skin skin = new Skin();
         skin.addRegions(Assets.skinAtlas);
         
@@ -121,12 +119,15 @@ public class GameToolbar {
                                       0.4f,
                                       0, 1));
         
-        waveLabel = new Label("Wave ", Assets.labelStyle);
+        waveLabel = new Label("Wave 1", Assets.labelStyle);
         
-        waveLabel.setPosition((AppData.width * 0.5f) - (waveLabel.getWidth() * 0.5f), 
-                              (AppData.height) - (waveLabel.getHeight()));
+        waveLabel.setPosition(healthBar.getX() + healthBar.getWidth() + (PADDING * 3), 
+                               AppData.height);
         
-       // stage.addActor(waveLabel);
+        waveLabel.addAction(moveTo(waveLabel.getX(), (AppData.height) - (waveLabel.getHeight()), 0.25f));
+        
+        
+        stage.addActor(waveLabel);
         stage.addActor(joystick);
         stage.addActor(playerIcon);
         stage.addActor(healthBarBackground);
@@ -194,6 +195,7 @@ public class GameToolbar {
                    killCompleted = false;
                    killstreakAmount = 0;
                    killStreak = false;
+                   moneyToast.getColor().set(1, 1, 1, 1);
                    
                    // Move off screen
                    moneyToast.addAction(parallel(
@@ -250,6 +252,9 @@ public class GameToolbar {
         ammoLabel.setText(parent.getLevel().getPlayer().getCurrentWeapon().getAmmo() + " / " +
                           parent.getLevel().getPlayer().getCurrentWeapon().getMaxAmmo());
         
+        ammoLabel.addAction(repeat(2, parallel(sequence(moveBy(2, 0, 0.05f), moveBy(-2, 0, 0.05f)),
+                                               sequence(moveBy(0, 2, 0.05f), moveBy(0, -2, 0.05f)))));
+        
     //    shakeAmmo();
     }
     
@@ -259,10 +264,12 @@ public class GameToolbar {
             killStreakTimer = 0;
             killstreakAmount += am;
             moneyToast.setText("+" + killstreakAmount);
+            moneyToast.getColor().g -= 0.1f;
+            moneyToast.getColor().b -= 0.1f;
         }
         
         float x = moneyLabel.getX();
-        float y = moneyLabel.getY() - moneyToast.getStyle().font.getBounds(moneyToast.getText()).height;
+        float y = moneyLabel.getY() - (moneyToast.getHeight() * 4);
         
         moneyToast.setPosition(x, y);
      
@@ -293,8 +300,8 @@ public class GameToolbar {
                                AppData.height - t);
      
         moneyLabel.addAction(sequence(
-                moveBy(10, 0,0.02f),
-                moveBy(-10, 0,0.02f),
+                moveBy(30, 0,0.02f),
+                moveBy(-30, 0,0.02f),
                 moveBy(0, 10,0.02f),
                 moveBy(0, -10,0.02f)));
         
@@ -312,6 +319,13 @@ public class GameToolbar {
     }
    
     public void setWave(int wave) {
+        float oldY = waveLabel.getY();
+        
+        waveLabel.addAction(sequence(moveTo(waveLabel.getX(), AppData.height + waveLabel.getHeight(), 0.1f),
+                                     moveTo(waveLabel.getX(), oldY, 0.1f),
+                                     repeat(5, sequence(moveBy(5, 0, 0.05f), moveBy(-5, 0, 0.05f)))));
+        waveLabel.addAction(repeat(5, sequence(alpha(0.5f, 0.1f), alpha(1, 0.1f))));
+        
         waveLabel.setText("Wave " + wave);
     }
     
@@ -349,7 +363,7 @@ public class GameToolbar {
         
         // Position directly under player icon
         gunIcon.setPosition(playerIcon.getX(), 
-                            playerIcon.getY() - (gunIcon.getHeight() * 2));
+                            playerIcon.getY() - (gunIcon.getHeight() * 2.85f));
         
         // Position ammo label to the right of the gun icon
         ammoLabel.setPosition(gunIcon.getX() + gunIcon.getWidth() + PADDING, 
@@ -363,9 +377,12 @@ public class GameToolbar {
    
         healthLabel.setText("Health: " + f);
 
+        healthBar.clearActions();
+        
         // Calculate the exp bar width
-        healthBar.setSize(origHealthBarWidth * (f / parent.getLevel().getPlayer().getProperties().getMaxHealth()),
-                          healthBar.getHeight());
+        healthBar.addAction(parallel(scaleTo((f / parent.getLevel().getPlayer().getProperties().getMaxHealth()),
+                1, 0.15f), sequence(alpha(0.5f, 0.075f), alpha(1, 0.075f))));
+        
         
         healthLabel.setPosition((AppData.width - healthLabel.getWidth() * 4), healthLabel.getY());
     }

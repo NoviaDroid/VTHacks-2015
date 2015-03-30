@@ -37,6 +37,7 @@ public class Assets {
     public static final String SHOT1 = "shot1";
     public static final String SHOT2 = "shot2";
     public static final String SHOT3 = "shot3";
+    public static final String WAVE_UP = "wave up";
     public static final String OUT_OF_AMMO = "outofammo";
     public static ObjectMap<String, Sound> sounds;
     public static ObjectMap<String, AdvancedSpriteAnimation> playerAnimations;
@@ -86,8 +87,8 @@ public class Assets {
     public static void allocateMenuScreen() {
         System.out.println("allocateMenuScreen()");
         
-        if(!manager.isLoaded("Finished Kickstarter banner.png")) {
-            manager.load("Finished Kickstarter banner.png", Texture.class);
+        if(!manager.isLoaded("Metro Z.png")) {
+            manager.load("Metro Z.png", Texture.class);
         }
         
         if(!manager.isLoaded("uiskin.json")) {
@@ -96,7 +97,8 @@ public class Assets {
 
         manager.finishLoading();
         
-        menuBackground = new TextureRegion(manager.get("Finished Kickstarter banner.png", Texture.class));
+        menuBackground = new TextureRegion(manager.get("Metro Z.png", Texture.class));
+        
         uiSkin = manager.get("uiskin.json", Skin.class);    
         
         if(!fontsLoaded) {
@@ -152,8 +154,6 @@ public class Assets {
     
     public static void allocateWeaponSelectionScreen() {
         System.out.println("allocateWeaponSelectionScreen()");
-        manager.unload("Finished Kickstarter banner.png");
-        menuBackground.getTexture().dispose();
         
         if(!manager.isLoaded("weaponIconPack.pack")) {
             manager.load("weaponIconPack.pack", TextureAtlas.class);
@@ -177,6 +177,8 @@ public class Assets {
     public static void deallocateLevelSelectionScreen() {
         System.out.println("deallocateLevelSelectionScreen()");
         uiSkin.dispose();
+        menuBackground.getTexture().dispose();
+        manager.unload("Metro Z.png");
         manager.unload("uiskin.json");
     }
     
@@ -201,6 +203,7 @@ public class Assets {
         manager.unload("sounds/shot1.wav");
         manager.unload("sounds/shot2.wav");
         manager.unload("sounds/shot3.wav");
+        manager.unload("sounds/wave up.wav");
         manager.unload("sounds/outofammo.wav"); 
         manager.unload("skinPack.pack");
 
@@ -243,14 +246,29 @@ public class Assets {
         manager = new AssetManager();
     }
 
+    public static void allocateSplashScreen() {
+        System.out.println("allocateSplashScreen()");
+        
+        if(!manager.isLoaded("Metro Z.png")) {
+            manager.load("Metro Z.png", Texture.class);
+            manager.finishLoading();
+        }
+        
+        menuBackground = new TextureRegion(manager.get("Metro Z.png", Texture.class));
+    }
+    
+    public static void deallocateSplashScreen() {
+        System.out.println("deallocateSplashScreen()");
+    }
+    
     public static void loadLoadingScreenTextures() {
         manager.load("barBackground.png", Texture.class);
-        manager.load("barForeground.png", Texture.class);
+        manager.load("healthBar.png", Texture.class);
         
         manager.finishLoading();
         
         barBackground = new TextureRegion(manager.get("barBackground.png", Texture.class));
-        progressBar = new TextureRegion(manager.get("barForeground.png", Texture.class));
+        progressBar = new TextureRegion(manager.get("healthBar.png", Texture.class));
         
         loadGameTextures();
     }
@@ -263,6 +281,7 @@ public class Assets {
         manager.load("sounds/shot2.wav", Sound.class);
         manager.load("sounds/shot3.wav", Sound.class);
         manager.load("sounds/outofammo.wav", Sound.class); 
+        manager.load("sounds/wave up.wav", Sound.class);
         manager.load("skinPack.pack", TextureAtlas.class);
     }
     
@@ -311,10 +330,21 @@ public class Assets {
         zombieAtlas = manager.get("Zombie1.pack", TextureAtlas.class);
         skinAtlas = manager.get("skinPack.pack", TextureAtlas.class);
         
-        sounds.put("outofammo", manager.get("sounds/outofammo.wav", Sound.class));
-        sounds.put("shot1", manager.get("sounds/shot1.wav", Sound.class));
-        sounds.put("shot2", manager.get("sounds/shot2.wav", Sound.class));
-        sounds.put("shot3", manager.get("sounds/shot3.wav", Sound.class));
+        sounds.put(OUT_OF_AMMO, manager.get("sounds/outofammo.wav", Sound.class));
+        sounds.put(SHOT1, manager.get("sounds/shot1.wav", Sound.class));
+        sounds.put(SHOT2, manager.get("sounds/shot2.wav", Sound.class));
+        sounds.put(SHOT3, manager.get("sounds/shot3.wav", Sound.class));
+        sounds.put(WAVE_UP, manager.get("sounds/wave up.wav", Sound.class));
+        
+        int pri = 0;
+        
+        for(Sound s : sounds.values()) {
+            s.setPriority(s.play(0), pri);
+            
+            pri++;
+        }
+        
+        sounds.get(WAVE_UP).setPriority(sounds.get(WAVE_UP).play(0), sounds.size + 1);
         
         playerAnimations = new ObjectMap<String, AdvancedSpriteAnimation>();
         zombieAnimations = new ObjectMap<String, SpriteAnimation>();

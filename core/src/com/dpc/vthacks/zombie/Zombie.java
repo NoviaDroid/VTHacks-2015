@@ -66,7 +66,22 @@ public class Zombie extends AnimatedUnit implements Poolable {
         
         // If in range of the player, attack
         if(inRange(getParentLevel().getPlayer())) {
-            if(getBoundingRectangle().overlaps(getParentLevel().getPlayer().getBoundingRectangle())) {
+            
+            float range = 0;
+            
+            if(getX() < getParentLevel().getPlayer().getX()) {
+                range = getWidth();
+            }
+            else if(getX() > getParentLevel().getPlayer().getX()) {
+                range = getParentLevel().getPlayer().getWidth();
+            }
+            
+            if(App.dst(getX(), 
+                       getY(),
+                       getParentLevel().getPlayer().getX(), 
+                       getParentLevel().getPlayer().getY()) <= range &&
+               App.dst(0, getY(), 0, getParentLevel().getPlayer().getY()) < getParentLevel().getPlayer().getHeight() * 0.15f) {
+                
                 if(!isAttacking()) {
                     setAttacking(true, getParentLevel().getPlayer());
                 //    setState("attacking");
@@ -142,6 +157,7 @@ public class Zombie extends AnimatedUnit implements Poolable {
                                                     .getMinKillMoney(),
                                                 ((ZombieProperties) getProperties())
                                                     .getMaxKillMoney()));
+        getParentLevel().onZombieKilled();
     }
 
     @Override

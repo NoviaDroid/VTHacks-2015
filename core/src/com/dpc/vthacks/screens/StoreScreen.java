@@ -1,5 +1,7 @@
 package com.dpc.vthacks.screens;
 
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.alpha;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -8,7 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -31,6 +32,7 @@ public class StoreScreen implements Screen {
     private WeaponInfo weaponInfo; // Info on selected weapon
     private Skin weaponIcons;
     private App context;
+    private Image background;
     private static final int PADDING = 5;
     
     private static class WeaponInfo {
@@ -76,6 +78,13 @@ public class StoreScreen implements Screen {
         
         stage = new Stage(new StretchViewport(AppData.width, AppData.height));
 
+        background = new Image(Assets.menuBackground);
+        background.setWidth(AppData.width);
+        background.setHeight(AppData.height);
+        background.addAction(alpha(0.5f, 1));
+        
+        stage.addActor(background);
+        
         weaponInfo = new WeaponInfo();
         
         weaponInfo.purchase = new TextButton("Purchase", Assets.uiSkin);

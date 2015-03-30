@@ -29,8 +29,12 @@ public class EndlessWaves extends Level {
     private Stage dialogStage; // Game over dialog stage
     private InputProcessor mplex; // Saved off and put back as the input processor after play again touched
     private boolean isDialogOpen;
-    private int wave;
-   
+    private static final float TIME_DEC = 0.05f;
+    private int wave = 1;
+    private int zombiesInWave = 3;
+    private int zombiesGenerated; 
+    private int zombiesKilled;
+    
     public EndlessWaves(GameScreen context) {
         super(context);
     }
@@ -42,6 +46,17 @@ public class EndlessWaves extends Level {
         // Disable the controls
         getContext().getToolbar().setActive(false);
         setActive(false);
+    }
+    
+    @Override
+    public void reset() {
+        super.reset();
+        
+        zombiesGenerated = 0;
+        zombiesKilled = 0;
+        zombiesInWave = 4;
+        wave = 1;
+        getContext().getToolbar().setWave(1);
     }
     
     @Override
@@ -126,6 +141,26 @@ public class EndlessWaves extends Level {
         Gdx.input.setInputProcessor(dialogStage);
     }
     
+    @Override
+    public void generateZombie() {
+        if(zombiesGenerated < zombiesInWave) {
+            super.generateZombie();
+            
+            zombiesGenerated--;
+        }
+    }
+   
+    @Override
+    public void onZombieKilled() {
+        zombiesKilled++;
+        
+        if(zombiesKilled >= zombiesInWave) {
+            onWaveEnd();
+        }
+        
+        System.out.println(zombiesKilled + "    KILLED");
+    }
+    
     public void update(float delta) {
         if(!isDialogOpen) {
             super.update(delta);
@@ -144,7 +179,21 @@ public class EndlessWaves extends Level {
     }
     
     private void onWaveEnd() {
+        Assets.sounds.get(Assets.WAVE_UP).play(1);
+        
         wave++;
+        zombiesKilled = 0;
+        zombiesGenerated = 0;
+        zombiesInWave += wave * 1.5f;
+        getZombies().clear();
+        getObjectDrawOrder().clear();
+        
+        getObjectDrawOrder().add(getPlayer());
+        
+        if(getSpawnTime() - TIME_DEC > 0.1) {
+            setSpawnTime(getSpawnTime() - TIME_DEC);
+        }
+        
         getContext().getToolbar().setWave(wave);
     }
     

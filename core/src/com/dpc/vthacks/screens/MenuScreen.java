@@ -1,7 +1,6 @@
 package com.dpc.vthacks.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -12,11 +11,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.dpc.vthacks.App;
 import com.dpc.vthacks.GameCamera;
 import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 
 public class MenuScreen implements Screen {
     private Sprite menu;
@@ -25,7 +26,6 @@ public class MenuScreen implements Screen {
     private boolean loading;
     private Stage stage;
     private TextButton play, shop;
-    private Label titleFore, titleBack;
     private Label footer;
     private Image background;
     
@@ -51,14 +51,10 @@ public class MenuScreen implements Screen {
         
         background = new Image(Assets.menuBackground);
         background.setSize(AppData.width, AppData.height);
-
+        background.addAction(sequence(alpha(0.5f), alpha(1, 0.5f)));
+        
         footer = new Label("Made with love at VT Hacks", Assets.labelStyle);
         footer.setColor(0.5f, 0, 0, 1);
-        
-
-        titleFore = new Label("Strafer", Assets.labelStyle);
-        
-        titleFore.setColor(0.18f, 0, 0.18f, 1);
         
         play = new TextButton("Play", Assets.uiSkin);
         
@@ -86,24 +82,18 @@ public class MenuScreen implements Screen {
         });
         
         Table t = new Table();
-        
-        t.add(titleFore);
-        
-        t.row();
-        t.row();
-        
+
         t.add(play);
         t.row();
         
         t.add(shop);
-        
-        t.row();
-        t.row();
-        t.add(footer);
 
         t.setFillParent(true);
- 
+        t.center();
+        t.right();
         
+        //t.add(footer);
+
         
         stage = new Stage(new StretchViewport(AppData.width, AppData.height));
         
@@ -148,7 +138,6 @@ public class MenuScreen implements Screen {
 
     @Override
     public void pause() {
-        dispose();
     }
 
     @Override
