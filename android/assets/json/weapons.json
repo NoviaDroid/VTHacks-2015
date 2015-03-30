@@ -5,13 +5,33 @@
 		"description": "Packs a punch",
 		"iconPath": "shotgun",
 		"sound": "shot3",
-		"shotDelay": 0.25f,
+		"shotDelay": 0.25,
 		"fullAuto": false,
 		"minDamage": 30,
 		"maxDamage": 35,
 		"ammo": 50,
 		"maxAmmo": 50,
 		"cost": 150,
+		"upgrades": [
+			{
+				"class": "com.dpc.vthacks.desktop.DesktopLauncher$Upgrade",
+				"cost": 750,
+				"ammo": 5,
+				"dmg": 4
+			},
+			{
+				"class": "com.dpc.vthacks.desktop.DesktopLauncher$Upgrade",
+				"cost": 1500,
+				"ammo": 8,
+				"dmg": 8
+			},
+			{
+				"class": "com.dpc.vthacks.desktop.DesktopLauncher$Upgrade",
+				"cost": 3000,
+				"ammo": 10,
+				"dmg": 10
+			}
+		]
 	},
 	
 	{
@@ -26,7 +46,27 @@
 		"maxDamage": 20,
 		"ammo": 27,
 		"maxAmmo": 27,
-		"cost": 250
+		"cost": 250,
+		"upgrades": [
+			{
+				"class": "com.dpc.vthacks.desktop.DesktopLauncher$Upgrade",
+				"cost": 750,
+				"ammo": 5,
+				"dmg": 4
+			},
+			{
+				"class": "com.dpc.vthacks.desktop.DesktopLauncher$Upgrade",
+				"cost": 1500,
+				"ammo": 8,
+				"dmg": 8
+			},
+			{
+				"class": "com.dpc.vthacks.desktop.DesktopLauncher$Upgrade",
+				"cost": 3000,
+				"ammo": 10,
+				"dmg": 10
+			}
+		]
 	},
 
 	{
@@ -41,7 +81,27 @@
 		"maxDamage": 100,
 		"ammo": 6,
 		"maxAmmo": 6,
-		"cost": 5000
+		"cost": 5000,
+		"upgrades": [
+			{
+				"class": "com.dpc.vthacks.desktop.DesktopLauncher$Upgrade",
+				"cost": 750,
+				"ammo": 5,
+				"dmg": 4
+			},
+			{
+				"class": "com.dpc.vthacks.desktop.DesktopLauncher$Upgrade",
+				"cost": 1500,
+				"ammo": 8,
+				"dmg": 8
+			},
+			{
+				"class": "com.dpc.vthacks.desktop.DesktopLauncher$Upgrade",
+				"cost": 3000,
+				"ammo": 10,
+				"dmg": 10
+			}
+		]
 	},
 
 	{
@@ -56,7 +116,27 @@
 		"maxDamage": 40,
 		"ammo": 27,
 		"maxAmmo": 27,
-		"cost": 7000
+		"cost": 7000,
+		"upgrades": [
+			{
+				"class": "com.dpc.vthacks.desktop.DesktopLauncher$Upgrade",
+				"cost": 750,
+				"ammo": 5,
+				"dmg": 4
+			},
+			{
+				"class": "com.dpc.vthacks.desktop.DesktopLauncher$Upgrade",
+				"cost": 1500,
+				"ammo": 8,
+				"dmg": 8
+			},
+			{
+				"class": "com.dpc.vthacks.desktop.DesktopLauncher$Upgrade",
+				"cost": 3000,
+				"ammo": 10,
+				"dmg": 10
+			}
+		]
 	},
 	
 	{
@@ -71,6 +151,26 @@
 		"maxDamage": 5,
 		"ammo": 250,
 		"maxAmmo": 250,
-		"cost": 15000
+		"cost": 15000,
+		"upgrades": [
+			{
+				"class": "com.dpc.vthacks.desktop.DesktopLauncher$Upgrade",
+				"cost": 750,
+				"ammo": 5,
+				"dmg": 4
+			},
+			{
+				"class": "com.dpc.vthacks.desktop.DesktopLauncher$Upgrade",
+				"cost": 1500,
+				"ammo": 8,
+				"dmg": 8
+			},
+			{
+				"class": "com.dpc.vthacks.desktop.DesktopLauncher$Upgrade",
+				"cost": 3000,
+				"ammo": 10,
+				"dmg": 10
+			}
+		]
 	}
 ]

@@ -44,14 +44,13 @@ public class StoreScreen implements Screen {
         private int id;
         private Image icon;
         private TextButton purchase;
+        private TextButton upgrade;
         
         private WeaponInfo() {
             Assets.labelStyle.font = Assets.zombieXSmallFont;
             
             cost = new Label("", Assets.labelStyle);
-            ammo = new Label("", Assets.labelStyle);;
-            damage = new Label("", Assets.labelStyle);;
-            description = new Label("", Assets.labelStyle);;
+            description = new Label("", Assets.labelStyle);
             name = new Label("", Assets.labelStyle);
             
             Assets.labelStyle.font = Assets.zombieFont;
@@ -60,10 +59,7 @@ public class StoreScreen implements Screen {
         private void add(Stage stage) {
             stage.addActor(name);
             stage.addActor(description);
-            stage.addActor(damage);
-            stage.addActor(ammo);
             stage.addActor(icon);
-            stage.addActor(cost);
             stage.addActor(purchase);
         }
     }
@@ -191,8 +187,6 @@ public class StoreScreen implements Screen {
         v.addActor(moneyLabel);
         v.addActor(weaponInfo.icon);
         v.addActor(weaponInfo.name);
-        v.addActor(weaponInfo.ammo);
-        v.addActor(weaponInfo.damage);
         v.addActor(weaponInfo.description);
         v.addActor(weaponInfo.cost);
         v.addActor(weaponInfo.purchase);
@@ -207,8 +201,6 @@ public class StoreScreen implements Screen {
         
         weaponInfo.icon.setDrawable(weaponIcons.getDrawable(weapon.getIconPath()));
         weaponInfo.name.setText(weapon.getName());
-        weaponInfo.ammo.setText("Ammo: " + weapon.getAmmo());
-        weaponInfo.damage.setText("Damage: " + weapon.getMinDamage() + " to " + weapon.getMaxDamage());
         weaponInfo.description.setText("Description: " + weapon.getDescription());
         weaponInfo.cost.setText("Cost: " + weapon.getCost());
         weaponInfo.id = weapon.getId();
