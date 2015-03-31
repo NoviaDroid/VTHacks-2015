@@ -2,7 +2,6 @@ package com.dpc.vthacks.data;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -33,6 +32,10 @@ public class Assets {
     
     // Level selection screen assets
     
+    public static final Color RED = new Color(0.85f, 0.05f, 0.24f, 1);
+    public static TextureRegion campaignPreview;
+    public static TextureRegion endlessWavesPreview;
+    
     // Game screen assets
     public static final String SHOT1 = "shot1";
     public static final String SHOT2 = "shot2";
@@ -47,6 +50,7 @@ public class Assets {
     public static TextureRegion[] buildings, skylines;
     public static TextureRegion  playerIcon, barBackground, road, background, 
                                  healthbar, ammoCrate, healthBarBackground;
+    public static TextureRegion splashLogo;
     
     // Loading screen textures
     public static TextureRegion progressBar;
@@ -86,6 +90,7 @@ public class Assets {
     
     public static void allocateMenuScreen() {
         System.out.println("allocateMenuScreen()");
+       
         
         if(!manager.isLoaded("Metro Z.png")) {
             manager.load("Metro Z.png", Texture.class);
@@ -103,11 +108,11 @@ public class Assets {
         
         if(!fontsLoaded) {
             FreeTypeFontGenerator generator = new FreeTypeFontGenerator(
-                    Gdx.files.internal("fonts/RobotoCondensed-Bold.ttf"));
+                    Gdx.files.internal("fonts/LEVIBRUSH.TTF"));
             
             FreeTypeFontParameter parameter = new FreeTypeFontParameter();
     
-            parameter.size = Gdx.graphics.getWidth() * 104 / 1200;
+            parameter.size = Gdx.graphics.getWidth() * 74 / 1200;
     
             zombieFont = generator.generateFont(parameter);
     
@@ -117,7 +122,7 @@ public class Assets {
     
             visitorFont = generator.generateFont(parameter);
     
-            parameter.size = Gdx.graphics.getWidth() * 24 / 1200;
+            parameter.size = Gdx.graphics.getWidth() * 44 / 1200;
     
             zombieXSmallFont = generator.generateFont(parameter);
     
@@ -251,14 +256,45 @@ public class Assets {
         
         if(!manager.isLoaded("Metro Z.png")) {
             manager.load("Metro Z.png", Texture.class);
-            manager.finishLoading();
         }
+        
+        if(!manager.isLoaded("logoSplash.png")) {
+            manager.load("logoSplash.png", Texture.class);
+        }
+ 
+        manager.finishLoading();
+        
+        splashLogo = new TextureRegion(manager.get("logoSplash.png", Texture.class));
         
         menuBackground = new TextureRegion(manager.get("Metro Z.png", Texture.class));
     }
     
     public static void deallocateSplashScreen() {
         System.out.println("deallocateSplashScreen()");
+        
+        splashLogo.getTexture().dispose();
+        manager.unload("logoSplash.png");
+    }
+    
+    public static void allocateModeSelectionScreen() {
+        if(!manager.isLoaded("endlessWavesPreview.png")) {
+            manager.load("endlessWavesPreview.png", Texture.class);
+        }
+        
+        if(!manager.isLoaded("campaignPreview.png")) {
+            manager.load("campaignPreview.png", Texture.class);
+        }
+        
+        manager.finishLoading();
+        endlessWavesPreview = new TextureRegion(manager.get("endlessWavesPreview.png", Texture.class));
+        campaignPreview = new TextureRegion(manager.get("campaignPreview.png", Texture.class));
+    }
+    
+    public static void deallocateModeSelectionScreen() {
+        endlessWavesPreview.getTexture().dispose();
+        campaignPreview.getTexture().dispose();
+        manager.unload("endlessWavesPreview.png");
+        manager.unload("campaignPreview.png");
     }
     
     public static void loadLoadingScreenTextures() {
@@ -271,6 +307,22 @@ public class Assets {
         progressBar = new TextureRegion(manager.get("healthBar.png", Texture.class));
         
         loadGameTextures();
+    }
+    
+    public static void allocateCampaignMapScreen() {
+        
+    }
+    
+    public static void deallocateCampaignMapScreen() {
+        
+    }
+    
+    public static void  allocateEndlessWavesLSScreen() {
+        
+    }
+    
+    public static void  deallocateEndlessWavesLSScreen() {
+        
     }
     
     public static void loadGameTextures() {

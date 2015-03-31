@@ -32,6 +32,18 @@ public class Parser {
     private static final String PROPERTIES_PATH = "json/properties.json";
     private static final String WEAPONS_PATH = "json/weapons.json";
     private static final String ZOMBIES_PATH = "json/zombies.json";
+    private static final String GAME_MODES_PATH = "json/Modes.json";
+    
+    public static ObjectMap<String, String> parseGameModes() {
+        JsonValue root = new JsonReader().parse(Gdx.files.internal(GAME_MODES_PATH));
+        
+        ObjectMap<String, String> modes = new ObjectMap<String, String>();
+        
+        modes.put(Level.WAVES_MODE, root.getString(Level.WAVES_MODE));
+        modes.put(Level.CAMPAIGN_MODE, root.getString(Level.CAMPAIGN_MODE));
+        
+        return modes;
+    }
     
     public static void parseProperties() {
         FileHandle handle = Gdx.files.internal(PROPERTIES_PATH);

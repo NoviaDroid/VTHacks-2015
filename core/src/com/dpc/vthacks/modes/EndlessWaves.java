@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.dpc.vthacks.data.AppData;
@@ -29,9 +30,9 @@ public class EndlessWaves extends Level {
     private Stage dialogStage; // Game over dialog stage
     private InputProcessor mplex; // Saved off and put back as the input processor after play again touched
     private boolean isDialogOpen;
-    private static final float TIME_DEC = 0.05f;
+    private static final float TIME_DEC = 0.08f;
     private int wave = 1;
-    private int zombiesInWave = 3;
+    private int zombiesInWave = 10;
     private int zombiesGenerated; 
     private int zombiesKilled;
     
@@ -68,7 +69,7 @@ public class EndlessWaves extends Level {
 
         final Dialog dialog = getGameOverDialog();
         
-        TextButton tb1 = new TextButton("menu", Assets.uiSkin);
+        Label tb1 = new Label("menu", Assets.labelStyle);
         
         tb1.addListener(new InputListener() {
             @Override
@@ -82,7 +83,7 @@ public class EndlessWaves extends Level {
         
         dialog.getButtonTable().add(tb1).width(100).height(25);
         
-        tb1 = new TextButton("play again", Assets.uiSkin);
+        tb1 = new Label("play again", Assets.labelStyle);
         
         tb1.addListener(new InputListener() {
             @Override

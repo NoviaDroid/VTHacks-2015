@@ -1,17 +1,17 @@
 package com.dpc.vthacks.screens;
 
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.alpha;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
@@ -31,10 +31,10 @@ public class WeaponSelectionScreen implements Screen {
     private App context;
     private Table weaponSelectionTable;
     private Table masterTable;
-    private TextButton selectLevelButton;
-    private TextButton backButton;
+    private Label selectLevelButton;
+    private Label backButton;
     private Label title;
-    private TextButton next;
+    private Label next;
     private Weapon selectedWeapon;
     private Image background;
     private int buttonContext; // Index of which button was pressed
@@ -51,7 +51,7 @@ public class WeaponSelectionScreen implements Screen {
         private Label name;
         private Table table;
         private PagedScrollPane scrollPane;
-        private TextButton okay;
+        private Label okay;
         private Stage dStage;
         private Label weaponName, weaponDamage, weaponAmmo, weaponDesc;
         
@@ -75,9 +75,11 @@ public class WeaponSelectionScreen implements Screen {
             
             table = new Table();
 
-            okay = new TextButton("Okay", Assets.uiSkin);
+            okay = new Label("Okay", Assets.labelStyle);
             okay.setPosition(okay.getWidth() + PADDING, okay.getHeight() + PADDING);
-
+            
+            okay.setColor(Assets.RED);
+            
             okay.addListener(new InputListener() {
                 @Override
                 public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -189,7 +191,7 @@ public class WeaponSelectionScreen implements Screen {
         
         stage = new Stage(new StretchViewport(AppData.width, AppData.height));
 
-        next = new TextButton("Next", Assets.uiSkin);
+        next = new Label("Next", Assets.labelStyle);
         
         next.addListener(new InputListener() {
             @Override
@@ -198,15 +200,17 @@ public class WeaponSelectionScreen implements Screen {
                 Factory.setPrimaryGun(selectedWeapons[0].weapon);
                 Factory.setSecondaryGun(selectedWeapons[1].weapon);
         
-                context.setScreen(new LevelSelectionScreen(context));
+                context.setScreen(new ModeSelectionScreen(context));
                 
                 return super.touchDown(event, x, y, pointer, button);
             }
         });
         
+        next.setColor(Assets.RED);
+        
         title = new Label("Select your weapons", Assets.labelStyle);
         
-        selectLevelButton = new TextButton("Select a level", Assets.textButtonStyle);
+        selectLevelButton = new Label("Select a level", Assets.labelStyle);
         
         selectLevelButton.addListener(new InputListener() {
             @Override
@@ -217,7 +221,7 @@ public class WeaponSelectionScreen implements Screen {
             }
         });
         
-        backButton = new TextButton("Back", Assets.uiSkin);
+        backButton = new Label("Back", Assets.labelStyle);
         backButton.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -227,8 +231,10 @@ public class WeaponSelectionScreen implements Screen {
             }
         });
         
-        backButton.setPosition(PADDING, 
-                               AppData.height - (Assets.textButtonStyle.font.getBounds("Back").height*2));
+        backButton.setColor(Assets.RED);
+        
+        backButton.setX(backButton.getWidth() * 0.2f);
+        backButton.setY(AppData.height - backButton.getHeight());
         
         weaponIconSkin = new Skin(Assets.weaponIconAtlas);
         

@@ -26,6 +26,8 @@ import com.dpc.vthacks.zombie.Zombie;
 import com.dpc.vthacks.zombie.ZombieSegment;
 
 public class Level {
+    public static final String WAVES_MODE = "Endless Waves";
+    public static final String CAMPAIGN_MODE = "Campaign";
     private Player player;
     private Array<AmmoCrate> ammoCrates;
     private Array<Unit> playerArmy;

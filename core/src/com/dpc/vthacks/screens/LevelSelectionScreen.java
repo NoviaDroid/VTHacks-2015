@@ -1,5 +1,7 @@
 package com.dpc.vthacks.screens;
 
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.alpha;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -8,7 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.ObjectMap.Entry;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.dpc.vthacks.App;
@@ -17,12 +18,10 @@ import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.level.LevelProperties;
 
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
-
 public class LevelSelectionScreen implements Screen {
     private Stage stage;
     private App context;
-    private TextButton go;
+    private Label go;
     private PagedScrollPane scroll;
     private Image background;
     private boolean loading;
@@ -44,7 +43,27 @@ public class LevelSelectionScreen implements Screen {
         
         stage.addActor(background);
        
-        go = new TextButton("Go!", Assets.uiSkin);
+        Label back = new Label("Back", Assets.labelStyle);
+        
+        back.setX(back.getWidth() * 0.2f);
+        back.setY(AppData.height - back.getHeight());
+        
+        back.setColor(Assets.RED);
+        
+        back.addListener(new InputListener() {
+           
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                context.setScreen(new ModeSelectionScreen(context));
+                
+                return true;
+            }
+            
+        });
+        
+        go = new Label("Go!", Assets.labelStyle);
+        
+        go.setColor(Assets.RED);
         
         go.addListener(new InputListener() {
             
@@ -89,6 +108,7 @@ public class LevelSelectionScreen implements Screen {
         wrapper.setFillParent(true);
         
         stage.addActor(wrapper);
+        stage.addActor(back);
         
         Gdx.input.setInputProcessor(stage);
     }
