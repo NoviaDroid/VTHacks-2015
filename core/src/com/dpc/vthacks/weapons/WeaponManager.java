@@ -8,7 +8,8 @@ import com.badlogic.gdx.utils.JsonWriter;
 
 public final class WeaponManager {
     public static final int NUMBER_OF_WEAPONS = 5;
-    private static final String PREFS_PATH = "sdfasdf";
+    private static final String UPGRADE_KEY = "currentUpgrade";
+    private static final String PREFS_PATH = "WEAPON_PREFFS";
     private static Preferences prefs;
     private static Array<Weapon> weapons;
     private static Array<Weapon> unlockedWeapons;
@@ -40,6 +41,8 @@ public final class WeaponManager {
         unlockedWeapons = new Array<Weapon>();
         
         loadUnlockedWeapons();
+        
+        unlockNextUpgrade(1);
     }
 
     private static void loadUnlockedWeapons() {
@@ -65,16 +68,36 @@ public final class WeaponManager {
         return false;
     }
     
+    public static void unlockNextUpgrade(int weaponID) {
+        int current = prefs.getInteger(weaponID + UPGRADE_KEY, 0);
+        
+        if(current < getWeapon(weaponID).getUpgrades().length) {
+            prefs.putInteger(weaponID + UPGRADE_KEY, current + 1);
+            prefs.flush();
+            
+            System.out.println("unlocked upgrade " + current + " for weapon " + weaponID);
+        }
+        else {
+            System.out.println("unable to unlock upgrade for weapon " + weaponID);
+        }
+    }
+    
+    private static Weapon getWeapon(int weaponID) {
+        for(Weapon w : weapons) {
+            if(w.getId() == weaponID) {
+                return w;
+            }
+        }
+        
+        return null;
+    }
+    
     public static void unlock(int weaponID) {
         // Unlock weapon with that ID
         prefs.putInteger("unlocked" + weaponID, weaponID);
         prefs.flush();
         
-        for(int i = 0; i < weapons.size; i++) {
-            if(weaponID == weapons.get(i).getId()) {
-                unlockedWeapons.add(weapons.get(i));
-            }
-        }
+        unlockedWeapons.add(getWeapon(weaponID));
     }
     
     public static Array<Weapon> getUnlockedWeapons() {

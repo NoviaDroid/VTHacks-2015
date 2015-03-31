@@ -19,6 +19,8 @@ public class Weapon {
     private int maxAmmo;
     private int cost;
     private int id;
+    private int currentUpgradeIndex;
+    private Upgrade[] upgrades;
     
     public Weapon() {
         
@@ -116,5 +118,13 @@ public class Weapon {
     
     public void setMaxAmmo(int maxAmmo) {
         this.maxAmmo = maxAmmo;
+    }
+    
+    public Upgrade[] getUpgrades() {
+        return upgrades;
+    }
+    
+    public int getCurrentUpgradeIndex() {
+        return currentUpgradeIndex;
     }
 }

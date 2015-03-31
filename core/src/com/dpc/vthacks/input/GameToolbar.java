@@ -38,18 +38,14 @@ public class GameToolbar {
     private boolean killStreak, killCompleted;
     private int killstreakAmount;
     private TextureRegionDrawable gunIconDrawable; // Drawable for the gun icon
-    private float origHealthBarWidth; // Orig width of the health bar
     private boolean active = true; // Is the stage recieving input events ?
     private boolean transitionDone = false; // Is the stage done fading out ?
-    private Color transformColor;
-    
+
     private Action moveGunComps, swap;
     
     public GameToolbar(final GameScreen parent) {
         this.parent = parent;
 
-        transformColor = new Color();
-        
         Skin skin = new Skin();
         skin.addRegions(Assets.skinAtlas);
         
@@ -101,9 +97,7 @@ public class GameToolbar {
         healthBar = new Image(Assets.healthbar);
         healthBar.setSize(Assets.healthBarBackground.getRegionWidth() - (Assets.healthBarBackground.getRegionHeight() * 0.135f * 2) ,
                           Assets.healthBarBackground.getRegionHeight() * 0.73f);
-        
-        origHealthBarWidth = healthBar.getWidth();
-        
+
         healthBar.setPosition(healthBarBackground.getX() + (Assets.healthBarBackground.getRegionHeight() * 0.135f),
                               healthBarBackground.getY() + (Assets.healthBarBackground.getRegionHeight() * 0.135f));
         
@@ -124,7 +118,7 @@ public class GameToolbar {
         waveLabel.setPosition(healthBar.getX() + healthBar.getWidth() + (PADDING * 3), 
                                AppData.height);
         
-        waveLabel.addAction(moveTo(waveLabel.getX(), (AppData.height) - (waveLabel.getHeight()), 0.25f));
+        waveLabel.addAction(moveTo(waveLabel.getX(), (AppData.height) - (waveLabel.getHeight() * 0.8f), 0.25f));
         
         
         stage.addActor(waveLabel);
@@ -269,7 +263,7 @@ public class GameToolbar {
         }
         
         float x = moneyLabel.getX();
-        float y = moneyLabel.getY() - (moneyToast.getHeight() * 4);
+        float y = moneyLabel.getY() - (moneyToast.getHeight() * 1.5f);
         
         moneyToast.setPosition(x, y);
      

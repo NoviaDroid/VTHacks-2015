@@ -224,7 +224,9 @@ public class Player extends AdvancedAnimatedUnit {
     }
 
     public void refillAmmo() {
-        currentWeapon.setAmmo(currentWeapon.getMaxAmmo());
+        primary.setAmmo(primary.getMaxAmmo());
+        secondary.setAmmo(secondary.getMaxAmmo());
+        
         getParentLevel().getContext().getToolbar().setAmmo(currentWeapon.getAmmo());
     }
     

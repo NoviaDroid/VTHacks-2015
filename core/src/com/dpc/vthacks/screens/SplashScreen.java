@@ -24,7 +24,7 @@ public class SplashScreen implements Screen {
     public void show() {
         Assets.allocateSplashScreen();
         
-        splash = new Image(Assets.menuBackground);
+        splash = new Image(Assets.splashLogo);
         splash.setSize(AppData.width, AppData.height);
         
         stage = new Stage(new StretchViewport(AppData.width, AppData.height));

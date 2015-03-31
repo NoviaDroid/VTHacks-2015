@@ -26,7 +26,7 @@ import com.dpc.vthacks.weapons.WeaponManager;
 public class StoreScreen implements Screen {
     private Stage stage;
     private Table scrollTable;
-    private TextButton backButton;
+    private Label backButton;
     private Label moneyLabel;
     private ImageButton[] weaponButtons;
     private WeaponInfo weaponInfo; // Info on selected weapon
@@ -43,15 +43,14 @@ public class StoreScreen implements Screen {
         private Label cost;
         private int id;
         private Image icon;
-        private TextButton purchase;
+        private Label purchase;
+        private Label upgrade;
         
         private WeaponInfo() {
             Assets.labelStyle.font = Assets.zombieXSmallFont;
             
             cost = new Label("", Assets.labelStyle);
-            ammo = new Label("", Assets.labelStyle);;
-            damage = new Label("", Assets.labelStyle);;
-            description = new Label("", Assets.labelStyle);;
+            description = new Label("", Assets.labelStyle);
             name = new Label("", Assets.labelStyle);
             
             Assets.labelStyle.font = Assets.zombieFont;
@@ -60,10 +59,7 @@ public class StoreScreen implements Screen {
         private void add(Stage stage) {
             stage.addActor(name);
             stage.addActor(description);
-            stage.addActor(damage);
-            stage.addActor(ammo);
             stage.addActor(icon);
-            stage.addActor(cost);
             stage.addActor(purchase);
         }
     }
@@ -87,7 +83,9 @@ public class StoreScreen implements Screen {
         
         weaponInfo = new WeaponInfo();
         
-        weaponInfo.purchase = new TextButton("Purchase", Assets.uiSkin);
+        weaponInfo.purchase = new Label("Purchase", Assets.labelStyle);
+        
+        weaponInfo.purchase.setColor(Assets.RED);
         
         weaponInfo.purchase.addListener(new InputListener() {
             @Override
@@ -125,7 +123,7 @@ public class StoreScreen implements Screen {
         
     //    stage.addActor(moneyLabel);
         
-        backButton = new TextButton("Back", Assets.uiSkin);
+        backButton = new Label("Back", Assets.labelStyle);
         
         backButton.setPosition(PADDING, 
                 AppData.height - 2 * Assets.textButtonStyle.font.getBounds(backButton.getText()).height);
@@ -138,6 +136,8 @@ public class StoreScreen implements Screen {
                 return super.touchDown(event, x, y, pointer, button);
             }
         });
+        
+        backButton.setColor(Assets.RED);
         
         stage.addActor(backButton);
 
@@ -191,8 +191,6 @@ public class StoreScreen implements Screen {
         v.addActor(moneyLabel);
         v.addActor(weaponInfo.icon);
         v.addActor(weaponInfo.name);
-        v.addActor(weaponInfo.ammo);
-        v.addActor(weaponInfo.damage);
         v.addActor(weaponInfo.description);
         v.addActor(weaponInfo.cost);
         v.addActor(weaponInfo.purchase);
@@ -207,8 +205,6 @@ public class StoreScreen implements Screen {
         
         weaponInfo.icon.setDrawable(weaponIcons.getDrawable(weapon.getIconPath()));
         weaponInfo.name.setText(weapon.getName());
-        weaponInfo.ammo.setText("Ammo: " + weapon.getAmmo());
-        weaponInfo.damage.setText("Damage: " + weapon.getMinDamage() + " to " + weapon.getMaxDamage());
         weaponInfo.description.setText("Description: " + weapon.getDescription());
         weaponInfo.cost.setText("Cost: " + weapon.getCost());
         weaponInfo.id = weapon.getId();
