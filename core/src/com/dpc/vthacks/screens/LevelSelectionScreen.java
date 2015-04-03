@@ -43,7 +43,7 @@ public class LevelSelectionScreen implements Screen {
         
         stage.addActor(background);
        
-        Label back = new Label("Back", Assets.labelStyle);
+        Label back = new Label("Back", Assets.aerialLabelStyle);
         
         back.setX(back.getWidth() * 0.2f);
         back.setY(AppData.height - back.getHeight());
@@ -61,7 +61,7 @@ public class LevelSelectionScreen implements Screen {
             
         });
         
-        go = new Label("Go!", Assets.labelStyle);
+        go = new Label("Go!", Assets.aerialLabelStyle);
         
         go.setColor(Assets.RED);
         
@@ -85,10 +85,10 @@ public class LevelSelectionScreen implements Screen {
         scroll.setPageSpacing(AppData.width * 0.5f);
 
         // Blank
-        scroll.addPage(new Label("", Assets.labelStyle));
+        scroll.addPage(new Label("", Assets.aerialLabelStyle));
         
         for(Entry<String, String> levels : LevelProperties.getLevels()) {
-            Label label = new Label(levels.key, Assets.labelStyle);
+            Label label = new Label(levels.key, Assets.aerialLabelStyle);
             label.setUserObject(levels.value);
             scroll.addPage(label);
         }
@@ -96,7 +96,7 @@ public class LevelSelectionScreen implements Screen {
         scroll.setCurrentActor(scroll.getContent().getChildren().get(1));
         
         // Blank
-        scroll.addPage(new Label("", Assets.labelStyle));
+        scroll.addPage(new Label("", Assets.aerialLabelStyle));
 
         wrapper.center();
         

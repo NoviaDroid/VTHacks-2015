@@ -75,7 +75,7 @@ public class WeaponSelectionScreen implements Screen {
             
             table = new Table();
 
-            okay = new Label("Okay", Assets.labelStyle);
+            okay = new Label("Okay", Assets.aerialLabelStyle);
             okay.setPosition(okay.getWidth() + PADDING, okay.getHeight() + PADDING);
             
             okay.setColor(Assets.RED);
@@ -139,10 +139,10 @@ public class WeaponSelectionScreen implements Screen {
                 scroll.addPage(weaponIcons[i]);
             }
 
-            weaponName = new Label("", Assets.labelStyle);
-            weaponDamage = new Label("", Assets.labelStyle);
-            weaponAmmo = new Label("", Assets.labelStyle);
-            weaponDesc = new Label(" ", Assets.labelStyle);
+            weaponName = new Label("", Assets.aerialLabelStyle);
+            weaponDamage = new Label("", Assets.aerialLabelStyle);
+            weaponAmmo = new Label("", Assets.aerialLabelStyle);
+            weaponDesc = new Label(" ", Assets.aerialLabelStyle);
             
       
             VerticalGroup vgroup = new VerticalGroup();
@@ -160,7 +160,7 @@ public class WeaponSelectionScreen implements Screen {
             table.setFillParent(true);
             
             name = new Label(WeaponManager.getUnlockedWeapons().get(0).getName(),
-                    Assets.labelStyle);
+                    Assets.aerialLabelStyle);
             
             dStage.addActor(table);
             
@@ -191,7 +191,7 @@ public class WeaponSelectionScreen implements Screen {
         
         stage = new Stage(new StretchViewport(AppData.width, AppData.height));
 
-        next = new Label("Next", Assets.labelStyle);
+        next = new Label("Next", Assets.aerialLabelStyle);
         
         next.addListener(new InputListener() {
             @Override
@@ -208,9 +208,9 @@ public class WeaponSelectionScreen implements Screen {
         
         next.setColor(Assets.RED);
         
-        title = new Label("Select your weapons", Assets.labelStyle);
+        title = new Label("Select your weapons", Assets.aerialLabelStyle);
         
-        selectLevelButton = new Label("Select a level", Assets.labelStyle);
+        selectLevelButton = new Label("Select a level", Assets.aerialLabelStyle);
         
         selectLevelButton.addListener(new InputListener() {
             @Override
@@ -221,7 +221,7 @@ public class WeaponSelectionScreen implements Screen {
             }
         });
         
-        backButton = new Label("Back", Assets.labelStyle);
+        backButton = new Label("Back", Assets.aerialLabelStyle);
         backButton.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -286,10 +286,11 @@ public class WeaponSelectionScreen implements Screen {
                 
             });        
             
+         
             hgroup.pad(title.getHeight());
             
             // Add the actual button
-            hgroup.add(selectedWeapons[i].button).pad(15).fill().expand();
+            hgroup.add(selectedWeapons[i].button).width(AppData.width * 0.25f).height(AppData.height * 0.5f).fill().expand();
         }
 
         vgroup.addActor(hgroup);

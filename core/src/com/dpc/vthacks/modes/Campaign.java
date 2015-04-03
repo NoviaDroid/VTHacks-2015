@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
+import com.dpc.vthacks.data.CampaignData;
 import com.dpc.vthacks.data.Parser;
 import com.dpc.vthacks.level.Level;
 import com.dpc.vthacks.screens.GameScreen;
@@ -28,26 +29,26 @@ import com.dpc.vthacks.screens.MenuScreen;
  * @version 3/14/15
  *
  */
-public class EndlessWaves extends Level {
+public class Campaign extends Level {
+    private static final String PATH = "campaign levels/campaign";
+    private static final String EXTENSION = ".oel";
     private Stage dialogStage; // Game over dialog stage
     private InputProcessor mplex; // Saved off and put back as the input processor after play again touched
     private boolean isDialogOpen;
-    private String levelName;
-    private static final float TIME_DEC = 0.08f;
-    private int wave = 1;
-    private int zombiesInWave = 10;
-    private int zombiesGenerated; 
-    private int zombiesKilled;
+    private int levelID;
+    private float survivalTime;
+    private float elapsed;
     
-    public EndlessWaves(GameScreen context, String levelName) {
-        super(context);  
-        this.levelName = levelName;
+    public Campaign(GameScreen context, int levelID) {
+        super(context);
+        
+        this.levelID = levelID;
     }
     
     @Override
     public void loadLevels() {
         try {
-            Parser.parseOgmoLevels(levelName, this);
+            Parser.parseOgmoLevels(PATH + levelID + EXTENSION, this);
         } catch (IOException e) {   
             e.printStackTrace();
         }
@@ -65,12 +66,6 @@ public class EndlessWaves extends Level {
     @Override
     public void reset() {
         super.reset();
-        
-        zombiesGenerated = 0;
-        zombiesKilled = 0;
-        zombiesInWave = 4;
-        wave = 1;
-        getContext().getToolbar().setWave(1);
     }
     
     @Override
@@ -105,7 +100,7 @@ public class EndlessWaves extends Level {
                 Action callback = new Action() {
                     @Override
                     public boolean act(float delta) {
-                        EndlessWaves.this.reset();
+                        Campaign.this.reset();
                         
                         getContext().getToolbar().setActive(true);
                
@@ -155,27 +150,17 @@ public class EndlessWaves extends Level {
         Gdx.input.setInputProcessor(dialogStage);
     }
     
-    @Override
-    public void generateZombie() {
-        if(zombiesGenerated < zombiesInWave) {
-            super.generateZombie();
-            
-            zombiesGenerated--;
-        }
-    }
-   
-    @Override
-    public void onZombieKilled() {
-        zombiesKilled++;
-        
-        if(zombiesKilled >= zombiesInWave) {
-            onWaveEnd();
-        }
-        
-        System.out.println(zombiesKilled + "    KILLED");
-    }
-    
     public void update(float delta) {
+        if(isEnabled()) {
+            elapsed += delta;
+            
+            getContext().getToolbar().setRemainingTime((int)(survivalTime - elapsed));
+            
+            if(elapsed >= survivalTime) {
+                onLevelEnded();
+            }
+        }
+        
         if(!isDialogOpen) {
             super.update(delta);
         }
@@ -184,6 +169,19 @@ public class EndlessWaves extends Level {
         }
     }
     
+    private void onLevelEnded() {
+        setEnabled(false);
+        
+        if(levelID == CampaignData.getCurrentLevel()) {
+            CampaignData.setCurrentLevel(CampaignData.getCurrentLevel() + 1);
+        }
+        
+        isDialogOpen = true;
+        
+        elapsed = 0;
+        survivalTime = 0;
+    }
+
     public void render() {
         super.render();
         
@@ -192,26 +190,19 @@ public class EndlessWaves extends Level {
         }
     }
     
-    private void onWaveEnd() {
-        Assets.sounds.get(Assets.WAVE_UP).play(1);
-        
-        wave++;
-        zombiesKilled = 0;
-        zombiesGenerated = 0;
-        zombiesInWave += wave * 1.5f;
-        getZombies().clear();
-        getObjectDrawOrder().clear();
-        
-        getObjectDrawOrder().add(getPlayer());
-        
-        if(getSpawnTime() - TIME_DEC > 0.1) {
-            setSpawnTime(getSpawnTime() - TIME_DEC);
-        }
-        
-        getContext().getToolbar().setWave(wave);
+    public void setNumber(int number) {
+        this.levelID = number;
     }
     
-    public void dispose() {
-
+    public int getNumber() {
+        return levelID;
+    }
+    
+    public void setSurvivalTime(float survivalTime) {
+        this.survivalTime = survivalTime;
+    }
+    
+    public float getSurvivalTime() {
+        return survivalTime;
     }
 }

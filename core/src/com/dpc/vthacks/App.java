@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.dpc.vthacks.data.AppData;
+import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.data.Parser;
 import com.dpc.vthacks.screens.GameScreen;
 import com.dpc.vthacks.screens.SplashScreen;
@@ -13,7 +14,7 @@ import com.dpc.vthacks.weapons.WeaponManager;
 
 public class App extends Game {
     public static SpriteBatch batch;
-    
+
     public static float rand(float min, float max) {
         return min + (float)(Math.random() * (max - min + 1));
     }
@@ -70,6 +71,7 @@ public class App extends Game {
     public void dispose() {
         super.dispose();
         batch.dispose();
+        Assets.deallocateFonts();
     }
     
     public void setScreen(Screen screen) {

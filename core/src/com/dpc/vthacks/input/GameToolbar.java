@@ -3,8 +3,9 @@ package com.dpc.vthacks.input;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 
+import java.sql.Time;
+
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -16,7 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad.TouchpadStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.dpc.vthacks.AndroidCamera;
 import com.dpc.vthacks.Bank;
 import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
@@ -28,6 +29,7 @@ public class GameToolbar {
     private Image healthBarBackground, healthBar, playerIcon;
     private Image gunIcon;
     private Touchpad joystick;
+    private Label remainingTime;
     private Label moneyLabel, healthLabel, ammoLabel, waveLabel;
     private int money;
     private static final int PADDING = 5;
@@ -40,10 +42,12 @@ public class GameToolbar {
     private TextureRegionDrawable gunIconDrawable; // Drawable for the gun icon
     private boolean active = true; // Is the stage recieving input events ?
     private boolean transitionDone = false; // Is the stage done fading out ?
-
+    private static float cameraX = 0;
+    private static float cameraY = 0;
+    
     private Action moveGunComps, swap;
     
-    public GameToolbar(final GameScreen parent) {
+    public GameToolbar(final GameScreen parent, boolean campaignMode) {
         this.parent = parent;
 
         Skin skin = new Skin();
@@ -53,39 +57,34 @@ public class GameToolbar {
         Drawable touchBackground = skin.getDrawable("touchBackground");
         Drawable touchKnob = skin.getDrawable("touchKnob");
         
-        touchKnob.setMinWidth(AppData.width / 25);
-        touchKnob.setMinHeight(AppData.width / 25);
+        touchKnob.setMinWidth(AppData.TARGET_WIDTH / 25);
+        touchKnob.setMinHeight(AppData.TARGET_WIDTH / 25);
         
         touchpadStyle.background = touchBackground;
         touchpadStyle.knob = touchKnob;
         
         joystick = new Touchpad(10, touchpadStyle);
-        joystick.setBounds(15, 15, AppData.width / 8, AppData.width / 8);
+        joystick.setBounds(15, 15, AppData.TARGET_WIDTH / 8, AppData.TARGET_WIDTH / 8);
         
         joystick.getColor().a = 0.75f;
-
         
-        moneyToast = new Label("", Assets.labelStyle);
-        moneyLabel = new Label("Money: 0", Assets.labelStyle);
-        healthLabel = new Label("Health: 100", Assets.labelStyle);
+        moneyToast = new Label("", Assets.aerialLabelStyle);
+        moneyLabel = new Label("Money: 0", Assets.aerialLabelStyle);
+        healthLabel = new Label("Health: 100", Assets.aerialLabelStyle);
+        
         
         moneyToast.setColor(new Color(0, 0.5f, 0, 1));
         
-        ammoLabel = new Label("", Assets.labelStyle);   
+        ammoLabel = new Label("", Assets.aerialLabelStyle);   
 
-        Assets.labelStyle.font = Assets.zombieSmallFont;
+        
+        moneyToast = new Label("", Assets.aerialLabelStyle);
 
-        Assets.labelStyle.font = Assets.visitorFont;
-        
-        moneyToast = new Label("", Assets.labelStyle);
-        
-        Assets.labelStyle.font = Assets.zombieFont;
-        
         playerIcon = new Image(Assets.playerIcon);
         playerIcon.setSize(Assets.playerIcon.getRegionWidth() * 10,
                            Assets.playerIcon.getRegionHeight() * 10);
 
-        playerIcon.setPosition(PADDING, (AppData.height - playerIcon.getHeight()) - PADDING);
+        playerIcon.setPosition(PADDING, (AppData.TARGET_HEIGHT - playerIcon.getHeight()) - PADDING);
         
         float h = (playerIcon.getHeight() * 0.5f);
         
@@ -101,8 +100,13 @@ public class GameToolbar {
         healthBar.setPosition(healthBarBackground.getX() + (Assets.healthBarBackground.getRegionHeight() * 0.135f),
                               healthBarBackground.getY() + (Assets.healthBarBackground.getRegionHeight() * 0.135f));
         
-        stage = new Stage(new StretchViewport(AppData.width, AppData.height));
-
+        stage = new Stage();
+        
+        cameraX = AppData.TARGET_WIDTH * 0.5f;
+        cameraY = AppData.TARGET_HEIGHT * 0.5f;
+        
+        stage.getViewport().setCamera(new AndroidCamera(AppData.TARGET_WIDTH, AppData.TARGET_HEIGHT, cameraX, cameraY));
+        
         joystick.setPosition(PADDING, PADDING);
         addMoney(0);
 
@@ -113,15 +117,59 @@ public class GameToolbar {
                                       0.4f,
                                       0, 1));
         
-        waveLabel = new Label("Wave 1", Assets.labelStyle);
+        if(!campaignMode) {
+            waveLabel = new Label("Wave 1", Assets.aerialLabelStyle);
+            
+            waveLabel.setPosition(healthBar.getX() + healthBar.getWidth() + (PADDING * 3), 
+                                   AppData.TARGET_HEIGHT);
+            
+            waveLabel.addAction(moveTo(waveLabel.getX(), healthBar.getY(), 0.25f));
+            
+           
+            stage.addActor(waveLabel);
+        }
+        else {
+            remainingTime = new Label("Ready!", Assets.aerialLabelStyle);
+            
+            remainingTime.setPosition(healthBar.getX() + healthBar.getWidth() + (PADDING * 3), 
+                                   AppData.TARGET_HEIGHT);
+            
+            remainingTime.addAction(sequence(moveTo(remainingTime.getX(), healthBar.getY(), 0.25f),
+                                             delay(1),
+                                             new Action() {
+
+                                                @Override
+                                                public boolean act(float delta) {
+                                                    remainingTime.setText("Set!");
+                                                    return true;
+                                                }
+                
+                                             },
+                                             delay(1),
+                                             new Action() {
+                                                @Override
+                                                public boolean act(float delta) {
+                                                    remainingTime.setText("Go!");
+                                                    
+                                                    return true;
+                                                }
+                                
+                                             },
+                                             delay(0.5f),
+                                             new Action() {
+                                                 
+                                                 @Override
+                                                public boolean act(float delta) {
+                                                    parent.getLevel().setEnabled(true);   
+                                                    return true;
+                                                }
+                                                 
+                                             }));
+            
+            
+            stage.addActor(remainingTime);
+        }
         
-        waveLabel.setPosition(healthBar.getX() + healthBar.getWidth() + (PADDING * 3), 
-                               AppData.height);
-        
-        waveLabel.addAction(moveTo(waveLabel.getX(), (AppData.height) - (waveLabel.getHeight() * 0.8f), 0.25f));
-        
-        
-        stage.addActor(waveLabel);
         stage.addActor(joystick);
         stage.addActor(playerIcon);
         stage.addActor(healthBarBackground);
@@ -194,7 +242,7 @@ public class GameToolbar {
                    // Move off screen
                    moneyToast.addAction(parallel(
                                            fadeOut(0.25f),
-                                           moveTo(AppData.width + (PADDING * 2), 
+                                           moveTo(AppData.TARGET_WIDTH + (PADDING * 2), 
                                                    moneyToast.getY(), 0.25f)));
                }
            }
@@ -206,36 +254,11 @@ public class GameToolbar {
     }
     
     public void onResize(int w, int h) {
-        stage.getViewport().update(w, h, true);
-        ((OrthographicCamera) stage.getCamera()).update();
+        stage.getViewport().setCamera(new AndroidCamera(AppData.TARGET_WIDTH, AppData.TARGET_HEIGHT, cameraX, cameraY));
     }
     
     public void dispose() {
-
-    }
-    
-    public void tankUpgradeButtonTouchDown() {
-        
-    }
-    
-    public void soldierButtonTouchDown() {
-        
-    }
-    
-    public void tankButtonTouchDown() {
-        
-    }
-    
-    public void bombButtonTouchUp() {
-        
-    }
-    
-    public void bombButtonTouchDown() {
-        
-    }
-   
-    public void strafeButtonTouchDown() {
-        
+        stage.dispose();
     }
     
     public Stage getStage() {
@@ -263,7 +286,7 @@ public class GameToolbar {
         }
         
         float x = moneyLabel.getX();
-        float y = moneyLabel.getY() - (moneyToast.getHeight() * 1.5f);
+        float y = moneyLabel.getY() - (lh(moneyToast) * 1.5f);
         
         moneyToast.setPosition(x, y);
      
@@ -287,11 +310,11 @@ public class GameToolbar {
         
         moneyLabel.setText("$" + money);
         
-        float t = (Assets.zombieFont.getBounds(moneyLabel.getText()).height * 2);
+        float t = (moneyLabel.getStyle().font.getBounds(moneyLabel.getText()).height * 2);
         
         // Reposition the money text
-        moneyLabel.setPosition(AppData.width - (Assets.zombieFont.getBounds(moneyLabel.getText()).width) - (t * 0.5f), 
-                               AppData.height - t);
+        moneyLabel.setPosition(AppData.TARGET_WIDTH - (moneyLabel.getStyle().font.getBounds(moneyLabel.getText()).width) - (t * 0.5f), 
+                               AppData.TARGET_HEIGHT - t);
      
         moneyLabel.addAction(sequence(
                 moveBy(30, 0,0.02f),
@@ -312,10 +335,18 @@ public class GameToolbar {
         return joystick;
     }
    
+    private float lh(Label l) {
+        return l.getStyle().font.getBounds(l.getText()).height;
+    }
+    
+    private float lw(Label l) {
+        return l.getStyle().font.getBounds(l.getText()).width;
+    }
+    
     public void setWave(int wave) {
         float oldY = waveLabel.getY();
         
-        waveLabel.addAction(sequence(moveTo(waveLabel.getX(), AppData.height + waveLabel.getHeight(), 0.1f),
+        waveLabel.addAction(sequence(moveTo(waveLabel.getX(), AppData.TARGET_HEIGHT + lh(waveLabel), 0.1f),
                                      moveTo(waveLabel.getX(), oldY, 0.1f),
                                      repeat(5, sequence(moveBy(5, 0, 0.05f), moveBy(-5, 0, 0.05f)))));
         waveLabel.addAction(repeat(5, sequence(alpha(0.5f, 0.1f), alpha(1, 0.1f))));
@@ -378,7 +409,7 @@ public class GameToolbar {
                 1, 0.15f), sequence(alpha(0.5f, 0.075f), alpha(1, 0.075f))));
         
         
-        healthLabel.setPosition((AppData.width - healthLabel.getWidth() * 4), healthLabel.getY());
+        healthLabel.setPosition((AppData.TARGET_WIDTH - healthLabel.getWidth() * 4), healthLabel.getY());
     }
     
     public void setActive(boolean active) {
@@ -397,6 +428,11 @@ public class GameToolbar {
         else {
             stage.addAction(fadeIn(1));
         }
+    }
+    
+    public void setRemainingTime(int time) {
+        // Parse from seconds to a displayable time
+        remainingTime.setText(String.format("%02d:%02d", time / 60, time % 60));
     }
     
     public boolean isActive() {

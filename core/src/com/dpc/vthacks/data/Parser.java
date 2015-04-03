@@ -6,6 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
@@ -21,6 +22,7 @@ import com.dpc.vthacks.factories.Factory;
 import com.dpc.vthacks.gameobject.GameObject;
 import com.dpc.vthacks.level.Level;
 import com.dpc.vthacks.level.LevelProperties;
+import com.dpc.vthacks.modes.Campaign;
 import com.dpc.vthacks.objects.GameSprite;
 import com.dpc.vthacks.objects.Road;
 import com.dpc.vthacks.properties.AnimatedUnitProperties;
@@ -33,6 +35,7 @@ public class Parser {
     private static final String WEAPONS_PATH = "json/weapons.json";
     private static final String ZOMBIES_PATH = "json/zombies.json";
     private static final String GAME_MODES_PATH = "json/Modes.json";
+    private static final String CAMPAIGN_PATH = "json/campaignMap.oel";
     
     public static ObjectMap<String, String> parseGameModes() {
         JsonValue root = new JsonReader().parse(Gdx.files.internal(GAME_MODES_PATH));
@@ -67,6 +70,49 @@ public class Parser {
         parsePlayer(root.getChild("player"));
     }
 
+    public static Array<Image> parseCampaignMap() throws IOException {
+        XmlReader reader = new XmlReader();
+        
+        Element root = reader.parse(Gdx.files.internal(CAMPAIGN_PATH));
+        
+        int childrenCount = root.getChildCount();
+        Element child = null;
+        Image point = null;
+        Array<Image> points = new Array<Image>();
+        
+        for(int i = 0; i < childrenCount; i++) {
+            child = root.getChild(i);
+            
+            float x = 0, y = 0;
+            
+            int levelNumber = 1;
+            
+            for(Entry<String, String> entry : child.getAttributes()) {
+                switch(entry.key) {
+                case "x":
+                    x = Float.parseFloat(entry.value);
+                    break;
+                case "y":
+                    y = Float.parseFloat(entry.value);
+                    break;
+                case "id":
+                    levelNumber = Integer.parseInt(entry.value);
+                    break;
+                }
+            }
+            
+            point = new Image(Assets.campaignMapPoint);
+            point.setPosition(x, y);
+            
+            // Save off the level number so it can be retrieved later
+            point.setUserObject(levelNumber);
+            
+            points.add(point);
+        }
+            
+        return points;
+    }
+    
     /**
      * Parses building properties from JSON and gives it to the factory
      * @param building
@@ -255,6 +301,9 @@ public class Parser {
         Element child2 = null;
         GameObject obj = null;
         
+        ((Campaign) level).setSurvivalTime(Integer.parseInt(root.getAttribute("survivalTime")));
+        System.out.println(((Campaign) level).getSurvivalTime());
+    
         int rootChildCount = root.getChildCount();
 
         Array<Array<GameObject>> parsedLayers = new Array<Array<GameObject>>(rootChildCount);
@@ -310,7 +359,7 @@ public class Parser {
                         if(obj instanceof GameObject) {
                             obj.setY(y);
                         }
-                        
+
                         break;
                     case "scrollable":
                         if(entry.value.equals("true")) {
@@ -322,8 +371,10 @@ public class Parser {
                         break;
                     case "scrollY":
                         obj.setScrollY(Float.parseFloat(entry.value));
+                        break;
                     case "zOrder": 
                         zOrder = Integer.parseInt(entry.value);
+                        break;
                     }
 
                     childObjects.add(obj);
@@ -335,5 +386,6 @@ public class Parser {
         
         level.setSpawnTime(root.getFloat("zombieSpawnTime"));
         level.setLayers(parsedLayers);
+    System.out.println(level.getSpawnTime());
     }
 }

@@ -1,4 +1,4 @@
-<level width="2400" height="768" zombieSpawnTime="1">
+<level width="2400" height="768" zombieSpawnTime="1" survivalTime="100">
   <background>
       <skyline2 zOrder="0" id="0" x="-5" y="768" scrollable="true" scrollX="-0.01" scrollY="0"/>
           <Road id="1" x="0" y="769" />

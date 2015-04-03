@@ -12,7 +12,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.dpc.vthacks.App;
@@ -47,13 +46,11 @@ public class StoreScreen implements Screen {
         private Label upgrade;
         
         private WeaponInfo() {
-            Assets.labelStyle.font = Assets.zombieXSmallFont;
-            
-            cost = new Label("", Assets.labelStyle);
-            description = new Label("", Assets.labelStyle);
-            name = new Label("", Assets.labelStyle);
-            
-            Assets.labelStyle.font = Assets.zombieFont;
+
+            cost = new Label("", Assets.aerialLabelStyle);
+            description = new Label("", Assets.aerialLabelStyle);
+            name = new Label("", Assets.aerialLabelStyle);
+
         }
         
         private void add(Stage stage) {
@@ -73,7 +70,7 @@ public class StoreScreen implements Screen {
         Assets.allocateStoreScreen();
         
         stage = new Stage(new StretchViewport(AppData.width, AppData.height));
-
+        
         background = new Image(Assets.menuBackground);
         background.setWidth(AppData.width);
         background.setHeight(AppData.height);
@@ -83,7 +80,7 @@ public class StoreScreen implements Screen {
         
         weaponInfo = new WeaponInfo();
         
-        weaponInfo.purchase = new Label("Purchase", Assets.labelStyle);
+        weaponInfo.purchase = new Label("Purchase", Assets.aerialLabelStyle);
         
         weaponInfo.purchase.setColor(Assets.RED);
         
@@ -111,7 +108,7 @@ public class StoreScreen implements Screen {
             }
         });
         
-        moneyLabel = new Label("You have $" + Bank.getBalance(), Assets.labelStyle);
+        moneyLabel = new Label("You have $" + Bank.getBalance(), Assets.aerialLabelStyle);
         
         moneyLabel.setColor(0, 0.4f, 0, 1);
         
@@ -123,7 +120,7 @@ public class StoreScreen implements Screen {
         
     //    stage.addActor(moneyLabel);
         
-        backButton = new Label("Back", Assets.labelStyle);
+        backButton = new Label("Back", Assets.aerialLabelStyle);
         
         backButton.setPosition(PADDING, 
                 AppData.height - 2 * Assets.textButtonStyle.font.getBounds(backButton.getText()).height);

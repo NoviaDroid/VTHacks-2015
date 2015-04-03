@@ -35,7 +35,7 @@ public class SplashScreen implements Screen {
 
             @Override
             public boolean act(float delta) {
-                context.setScreen(new MenuScreen(context));
+                context.setScreen(new TouchOnceScreen(context));
                 
                 return true;
             }

@@ -11,9 +11,10 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.utils.Array;
+import com.dpc.vthacks.AndroidCamera;
 import com.dpc.vthacks.App;
-import com.dpc.vthacks.GameCamera;
 import com.dpc.vthacks.Player;
+import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.factories.Factory;
 import com.dpc.vthacks.gameobject.GameObject;
@@ -25,7 +26,7 @@ import com.dpc.vthacks.weapons.Gun;
 import com.dpc.vthacks.zombie.Zombie;
 import com.dpc.vthacks.zombie.ZombieSegment;
 
-public class Level {
+public abstract class Level {
     public static final String WAVES_MODE = "Endless Waves";
     public static final String CAMPAIGN_MODE = "Campaign";
     private Player player;
@@ -34,11 +35,12 @@ public class Level {
     private Array<Zombie> zombies;
     private Array<Array<GameObject>> layers;
     private Array<GameObject> objectDrawOrder;
-    private GameCamera gameCamera;
+    private AndroidCamera gameCamera;
     private InputAdapter inputAdapter;
     private GestureDetector gestureDetector;
     private Vector3 input;
     private boolean active = true;
+    private boolean enabled = false;
     private GameScreen context;
     private float spawnTime, spawnTimer;
     private float origCameraZoom;
@@ -58,7 +60,7 @@ public class Level {
         playerArmy = new Array<Unit>();
         zombies = new Array<Zombie>();
         ammoCrates = new Array<AmmoCrate>();
-        gameCamera = new GameCamera();
+        gameCamera = new AndroidCamera(AppData.TARGET_WIDTH, AppData.TARGET_HEIGHT);
         objectDrawOrder = new Array<GameObject>();
         
         initializeCamera();
@@ -141,8 +143,7 @@ public class Level {
                 }
                 
                 // Reposition the camera
-                gameCamera.position.set(player.getX() - (gameCamera.viewportWidth * 0f), 
-                                       gameCamera.viewportHeight * gameCamera.zoom * 0.5f, 0);
+                repositionCamera();
 
                 gameCamera.update();
                 
@@ -165,6 +166,15 @@ public class Level {
         };
     }
 
+    public Array<Array<GameObject>> getLayers() {
+        return layers;
+    }
+    
+    public void repositionCamera() {
+        gameCamera.position.set(player.getX() - (gameCamera.viewportWidth * 0f), 
+                               gameCamera.viewportHeight * gameCamera.zoom * 0.5f, 0);
+    }
+    
     /**
      * Calculates the damage factor of a zombie segment
      * based on where the player's gun is in relation to other zombies
@@ -215,6 +225,12 @@ public class Level {
                 }
             }
         }
+    }
+    
+    public abstract void loadLevels();
+    
+    public void setGameCamera(AndroidCamera gameCamera) {
+        this.gameCamera = gameCamera;
     }
     
     public void setUnitsVisible(boolean b) {
@@ -283,7 +299,7 @@ public class Level {
             y = player.getY();
         }
 
-            gameCamera.lerp(player.getX(), y, delta);
+        gameCamera.lerp(player.getX(), y, delta);
 
         boolean wasClamped = false;
         
@@ -319,29 +335,32 @@ public class Level {
         updateObjects(delta);
         checkForCollisions();
         updateCamera(delta);
-        generateAmmoCrate();
-        zombieGenerator(delta);
-   
-        objectDrawOrder.sort(new Comparator<GameObject>() {
+        
+        if(enabled) {
+            generateAmmoCrate();
+            zombieGenerator(delta);
+      
+            objectDrawOrder.sort(new Comparator<GameObject>() {
 
-            @Override
-            public int compare(GameObject o1, GameObject o2) {
-                if(o1.getY() > o2.getY()) {
-                    return -1;
-                }
-                
-                if(o1.getY() == o2.getY()) {
+                @Override
+                public int compare(GameObject o1, GameObject o2) {
+                    if (o1.getY() > o2.getY()) {
+                        return -1;
+                    }
+
+                    if (o1.getY() == o2.getY()) {
+                        return 0;
+                    }
+
+                    if (o1.getY() < o2.getY()) {
+                        return 1;
+                    }
+
                     return 0;
                 }
-                
-                if(o1.getY() < o2.getY()) {
-                    return 1;
-                }
-                
-                return 0;
-            }
-            
-        });
+
+            });
+        }
         
         if(player.getCurrentWeapon() instanceof Gun) {
             if(fingerDown && ((Gun) player.getCurrentWeapon()).isFullAuto() 
@@ -353,7 +372,7 @@ public class Level {
     
     private void zombieGenerator(float delta) {  
         spawnTimer += delta;
-        
+  
         if(spawnTimer >= spawnTime) {
             spawnTimer = 0;
             generateZombie();
@@ -490,7 +509,7 @@ public class Level {
         }
     }
     
-    public GameCamera getGameCamera() {
+    public AndroidCamera getGameCamera() {
         return gameCamera;
     }
     
@@ -547,6 +566,14 @@ public class Level {
     
     public boolean  isFingerDown () {
         return fingerDown;
+    }
+    
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+    
+    public boolean isEnabled() {
+        return enabled;
     }
     
     public void setPlayer(Player player) {

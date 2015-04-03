@@ -1,0 +1,10 @@
+<level width="1024" height="768">
+    <LevelPoint id="1" x="288" y="560" />
+    <LevelPoint id="2" x="480" y="512" />
+    <LevelPoint id="3" x="560" y="416" />
+    <LevelPoint id="4" x="752" y="400" />
+    <LevelPoint id="5" x="720" y="256" />
+    <LevelPoint id="6" x="800" y="176" />
+    <LevelPoint id="7" x="624" y="112" />
+    <LevelPoint id="8" x="512" y="64" />
+</level>
