@@ -55,6 +55,16 @@ public class Campaign extends Level {
     }
     
     @Override
+    public void dispose() {
+        dialogStage.dispose();
+    }
+
+    @Override
+    public void onZombieKilled() {
+        
+    }
+    
+    @Override
     public void onGameOver() {
         super.onGameOver();
         
@@ -130,7 +140,6 @@ public class Campaign extends Level {
         dialog.getButtonTable().add(tb1).width(100).height(25);
         
         final float centerX = (AppData.width * 0.5f) - (dialog.getWidth() * 0.5f);
-        final float centerY = (AppData.height * 0.5f) - (dialog.getHeight() * 0.5f);
         
         dialog.setX(centerX);
         

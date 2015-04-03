@@ -1,9 +1,16 @@
 package com.dpc.vthacks.input;
 
 
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
-
-import java.sql.Time;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.alpha;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.delay;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeIn;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeOut;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.moveBy;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.moveTo;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.parallel;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.repeat;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.scaleTo;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Action;
@@ -21,7 +28,7 @@ import com.dpc.vthacks.AndroidCamera;
 import com.dpc.vthacks.Bank;
 import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
-import com.dpc.vthacks.screens.GameScreen;
+import com.dpc.vthacks.level.LevelManager;
 import com.dpc.vthacks.weapons.Weapon;
 
 public class GameToolbar {
@@ -33,7 +40,6 @@ public class GameToolbar {
     private Label moneyLabel, healthLabel, ammoLabel, waveLabel;
     private int money;
     private static final int PADDING = 5;
-    private GameScreen parent;
     private Label moneyToast;
     private final int KS_INTERVAL = 3; // If a sequential kill isn't done within this time, killstreak over
     private float killStreakTimer;
@@ -47,9 +53,7 @@ public class GameToolbar {
     
     private Action moveGunComps, swap;
     
-    public GameToolbar(final GameScreen parent, boolean campaignMode) {
-        this.parent = parent;
-
+    public GameToolbar(int mode) {
         Skin skin = new Skin();
         skin.addRegions(Assets.skinAtlas);
         
@@ -117,18 +121,49 @@ public class GameToolbar {
                                       0.4f,
                                       0, 1));
         
-        if(!campaignMode) {
-            waveLabel = new Label("Wave 1", Assets.aerialLabelStyle);
+        if(mode == LevelManager.ENDLESS_WAVES_MODE) {
+            waveLabel = new Label("Ready", Assets.aerialLabelStyle);
             
             waveLabel.setPosition(healthBar.getX() + healthBar.getWidth() + (PADDING * 3), 
                                    AppData.TARGET_HEIGHT);
             
-            waveLabel.addAction(moveTo(waveLabel.getX(), healthBar.getY(), 0.25f));
-            
+            waveLabel.addAction(sequence(moveTo(waveLabel.getX(), healthBar.getY(), 0.25f),
+                    delay(1),
+                    new Action() {
+
+                       @Override
+                       public boolean act(float delta) {
+                           waveLabel.setText("Set!");
+                           return true;
+                       }
+
+                    },
+                    delay(1),
+                    new Action() {
+                       @Override
+                       public boolean act(float delta) {
+                           waveLabel.setText("Go!");
+                           
+                           return true;
+                       }
+       
+                    },
+                    delay(0.5f),
+                    new Action() {
+                        
+                        @Override
+                       public boolean act(float delta) {
+                           LevelManager.getCurrentLevel().setEnabled(true);   
+                           waveLabel.setText("Wave 1");
+                           
+                           return true;
+                       }
+                        
+                    }));
            
             stage.addActor(waveLabel);
         }
-        else {
+        else if(mode == LevelManager.CAMPAIGN_MODE){
             remainingTime = new Label("Ready!", Assets.aerialLabelStyle);
             
             remainingTime.setPosition(healthBar.getX() + healthBar.getWidth() + (PADDING * 3), 
@@ -160,7 +195,7 @@ public class GameToolbar {
                                                  
                                                  @Override
                                                 public boolean act(float delta) {
-                                                    parent.getLevel().setEnabled(true);   
+                                                    LevelManager.getCurrentLevel().setEnabled(true);   
                                                     return true;
                                                 }
                                                  
@@ -200,7 +235,7 @@ public class GameToolbar {
             public boolean act(float delta) {
              // Set the new drawable
                 gunIconDrawable.setRegion(Assets.weaponIconAtlas
-                        .findRegion(parent.getLevel().getPlayer()
+                        .findRegion(LevelManager.getPlayer()
                                 .getCurrentWeapon().getIconPath()));
            
                 gunIcon.setDrawable(gunIconDrawable);
@@ -209,7 +244,7 @@ public class GameToolbar {
                 gunIcon.setHeight(gunIconDrawable.getRegion().getRegionHeight());
                 
                 // Update the ammo text
-                setAmmo(parent.getLevel().getPlayer().getCurrentWeapon().getAmmo());
+                setAmmo(LevelManager.getPlayer().getCurrentWeapon().getAmmo());
                 
                 return true;
             }
@@ -223,7 +258,7 @@ public class GameToolbar {
        // Transition is complete
        if(transitionDone) {
            // Notify the level
-           parent.getLevel().openGameOverDialog();
+           LevelManager.getCurrentLevel().openGameOverDialog();
            
            transitionDone = false;
        }
@@ -266,9 +301,9 @@ public class GameToolbar {
     }
     
     public void setAmmo(int ammo) {
-        ammoLabel.setText(parent.getLevel().getPlayer().getCurrentWeapon().getAmmo() + " / " +
-                          parent.getLevel().getPlayer().getCurrentWeapon().getMaxAmmo());
-        
+        ammoLabel.setText(LevelManager.getPlayer().getCurrentWeapon().getAmmo() + " / " +
+                          LevelManager.getPlayer().getCurrentWeapon().getMaxAmmo());
+         
         ammoLabel.addAction(repeat(2, parallel(sequence(moveBy(2, 0, 0.05f), moveBy(-2, 0, 0.05f)),
                                                sequence(moveBy(0, 2, 0.05f), moveBy(0, -2, 0.05f)))));
         
@@ -339,10 +374,6 @@ public class GameToolbar {
         return l.getStyle().font.getBounds(l.getText()).height;
     }
     
-    private float lw(Label l) {
-        return l.getStyle().font.getBounds(l.getText()).width;
-    }
-    
     public void setWave(int wave) {
         float oldY = waveLabel.getY();
         
@@ -359,8 +390,8 @@ public class GameToolbar {
             gunIcon = new Image(Assets.weaponIconAtlas.findRegion(gun.getIconPath()));
 
             gunIconDrawable = new TextureRegionDrawable(
-                    Assets.weaponIconAtlas.findRegion(parent.getLevel()
-                            .getPlayer().getCurrentWeapon()
+                    Assets.weaponIconAtlas.findRegion(
+                            LevelManager.getPlayer().getCurrentWeapon()
                             .getIconPath())); 
                             
             gunIcon.addListener(new InputListener() {
@@ -368,7 +399,7 @@ public class GameToolbar {
                 @Override
                 public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                     // Swap weapons
-                    parent.getLevel().getPlayer().swapWeapon();
+                    LevelManager.getPlayer().swapWeapon();
 
                     // Hide the ammo label
                     ammoLabel.addAction(fadeOut(0));
@@ -405,7 +436,7 @@ public class GameToolbar {
         healthBar.clearActions();
         
         // Calculate the exp bar width
-        healthBar.addAction(parallel(scaleTo((f / parent.getLevel().getPlayer().getProperties().getMaxHealth()),
+        healthBar.addAction(parallel(scaleTo((f / LevelManager.getPlayer().getProperties().getMaxHealth()),
                 1, 0.15f), sequence(alpha(0.5f, 0.075f), alpha(1, 0.075f))));
         
         

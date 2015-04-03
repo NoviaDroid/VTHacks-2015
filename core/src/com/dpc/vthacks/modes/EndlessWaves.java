@@ -45,6 +45,11 @@ public class EndlessWaves extends Level {
     }
     
     @Override
+    public void dispose() {
+        dialogStage.dispose();
+    }
+    
+    @Override
     public void loadLevels() {
         try {
             Parser.parseOgmoLevels(levelName, this);
@@ -209,9 +214,5 @@ public class EndlessWaves extends Level {
         }
         
         getContext().getToolbar().setWave(wave);
-    }
-    
-    public void dispose() {
-
     }
 }

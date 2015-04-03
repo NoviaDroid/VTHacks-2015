@@ -27,8 +27,6 @@ import com.dpc.vthacks.zombie.Zombie;
 import com.dpc.vthacks.zombie.ZombieSegment;
 
 public abstract class Level {
-    public static final String WAVES_MODE = "Endless Waves";
-    public static final String CAMPAIGN_MODE = "Campaign";
     private Player player;
     private Array<AmmoCrate> ammoCrates;
     private Array<Unit> playerArmy;
@@ -51,8 +49,6 @@ public abstract class Level {
     
     public Level(final GameScreen context) {
         this.context = context;
-        
-        GameObject.setParentLevel(this);
         
         input = new Vector3();
         layers = new Array<Array<GameObject>>();
@@ -258,10 +254,7 @@ public abstract class Level {
         
         objectDrawOrder.add(player);
     }
-    
-    /**
-     * Called when the game is over. Not abstract for better performance :)
-     */
+   
     public void onGameOver() {
         Factory.zombiePool.clear();
         Factory.ammoCratePool.clear();
@@ -270,12 +263,7 @@ public abstract class Level {
         objectDrawOrder.clear();
     }
     
-    /**
-     * Opens the dialog. Not abstract for same reason as {@link #onGameOver()}
-     */
-    public void openGameOverDialog() {
-        
-    }
+    public abstract void openGameOverDialog();
     
     /**
      * Called from game toolbar as soon as it's stage is done with it's actions
@@ -374,10 +362,6 @@ public abstract class Level {
         }
     }
     
-    public void setSpawnTime(int spawnTime) {
-        this.spawnTime = spawnTime;
-    }
-    
     private void generateAmmoCrate() {
         // Possibly generate an ammo crate
         if(MathUtils.random() < AMMO_CRATE_SPAWN_TIME) {
@@ -394,9 +378,7 @@ public abstract class Level {
     /**
      * Called by zombie instances when they die
      */
-    public void onZombieKilled() {
-        
-    }
+    public abstract void onZombieKilled();
     
     public void generateZombie() {
         Zombie z = Factory.zombiePool.obtain();
@@ -467,17 +449,6 @@ public abstract class Level {
            
             if(zombie.getBoundingRectangle().overlaps(player.getBoundingRectangle())) {
                 noZombiesAttackingPlayer = false;
-            }
-            
-            for(Unit u : playerArmy) {
-                u.update(delta);
-                
-                if(App.dst(zombie.getX(), zombie.getY(), u.getX(), u.getY()) <= 100) {
-                    zombie.setCurrentTarget(u.getX(), u.getY());
-                }
-                else {
-                    zombie.resetPath();
-                }
             }
         }
         
@@ -607,6 +578,10 @@ public abstract class Level {
     
     public void setActive(boolean active) {
         this.active = active;
+    }
+    
+    public void setSpawnTime(int spawnTime) {
+        this.spawnTime = spawnTime;
     }
     
     public Array<Array<GameObject>> getLayers() {

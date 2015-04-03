@@ -7,6 +7,7 @@ import com.dpc.vthacks.animation.AdvancedSpriteAnimation;
 import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.infantry.Unit;
+import com.dpc.vthacks.level.LevelManager;
 import com.dpc.vthacks.level.LevelProperties;
 import com.dpc.vthacks.properties.AnimatedUnitProperties;
 import com.dpc.vthacks.weapons.Gun;
@@ -54,7 +55,7 @@ public class Player extends AdvancedAnimatedUnit {
 
     @Override
     public void onDeath(Unit killer) {
-        getParentLevel().onGameOver();
+        LevelManager.getCurrentLevel().onGameOver();
     }
 
     @Override
@@ -90,7 +91,7 @@ public class Player extends AdvancedAnimatedUnit {
                 currentWeapon.decAmmo(1);
                 
                 // Update the ammo label
-                getParentLevel().getContext().getToolbar().setAmmo(currentWeapon.getAmmo());
+                LevelManager.getCurrentLevel().getContext().getToolbar().setAmmo(currentWeapon.getAmmo());
                 
                 if(z != null) {
                     attack(z, damageScale);
@@ -103,7 +104,7 @@ public class Player extends AdvancedAnimatedUnit {
                 Assets.sounds.get(Assets.OUT_OF_AMMO).stop();
                 Assets.sounds.get(Assets.OUT_OF_AMMO).play();
                 
-                getParentLevel().getContext().getToolbar().shakeAmmo();
+                LevelManager.getCurrentLevel().getContext().getToolbar().shakeAmmo();
             }
         }
     }
@@ -121,14 +122,14 @@ public class Player extends AdvancedAnimatedUnit {
         centerInViewport();
         
         // Reset the toolbars info
-        getParentLevel().getContext().getToolbar().setMoney(0);
-        getParentLevel().getContext().getToolbar().setAmmo(primary.getAmmo());
-        getParentLevel().getContext().getToolbar().setHealth(getProperties().getMaxHealth());
+        LevelManager.getCurrentLevel().getContext().getToolbar().setMoney(0);
+        LevelManager.getCurrentLevel().getContext().getToolbar().setAmmo(primary.getAmmo());
+        LevelManager.getCurrentLevel().getContext().getToolbar().setHealth(getProperties().getMaxHealth());
     }
 
     @Override
     public void onDamageTaken(Unit attacker, float amount) {
-        getParentLevel().getContext().getToolbar().setHealth(getProperties().getHealth());
+        LevelManager.getCurrentLevel().getContext().getToolbar().setHealth(getProperties().getHealth());
 
         if(getProperties().getHealth() <= 0 && !deathCallbackCalled) {
              onDeath(attacker);
@@ -156,7 +157,7 @@ public class Player extends AdvancedAnimatedUnit {
             }
         }
 
-        for (Zombie z : getParentLevel().getZombies()) {
+        for (Zombie z : LevelManager.getCurrentLevel().getZombies()) {
             if (getY() > z.getY()) {
                 drawBehind = true;
             } else {
@@ -227,7 +228,7 @@ public class Player extends AdvancedAnimatedUnit {
         primary.setAmmo(primary.getMaxAmmo());
         secondary.setAmmo(secondary.getMaxAmmo());
         
-        getParentLevel().getContext().getToolbar().setAmmo(currentWeapon.getAmmo());
+        LevelManager.getCurrentLevel().getContext().getToolbar().setAmmo(currentWeapon.getAmmo());
     }
     
     public void setGround(Rectangle rect) {

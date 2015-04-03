@@ -16,6 +16,7 @@ import com.dpc.vthacks.App;
 import com.dpc.vthacks.PagedScrollPane;
 import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
+import com.dpc.vthacks.level.LevelManager;
 import com.dpc.vthacks.level.LevelProperties;
 
 public class LevelSelectionScreen implements Screen {
@@ -128,7 +129,7 @@ public class LevelSelectionScreen implements Screen {
             
             context.setScreen(new GameScreen(context, 
                                             ((Label) scroll.getCurrentActor()).getUserObject().toString(), 
-                                            LevelProperties.ENDLESS_MODE));
+                                            LevelManager.ENDLESS_WAVES_MODE));
         }
     }
 

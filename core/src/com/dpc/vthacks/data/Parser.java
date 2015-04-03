@@ -21,6 +21,7 @@ import com.dpc.vthacks.animation.SpriteAnimation;
 import com.dpc.vthacks.factories.Factory;
 import com.dpc.vthacks.gameobject.GameObject;
 import com.dpc.vthacks.level.Level;
+import com.dpc.vthacks.level.LevelManager;
 import com.dpc.vthacks.level.LevelProperties;
 import com.dpc.vthacks.modes.Campaign;
 import com.dpc.vthacks.objects.GameSprite;
@@ -37,13 +38,13 @@ public class Parser {
     private static final String GAME_MODES_PATH = "json/Modes.json";
     private static final String CAMPAIGN_PATH = "json/campaignMap.oel";
     
-    public static ObjectMap<String, String> parseGameModes() {
+    public static ObjectMap<Integer, String> parseGameModes() {
         JsonValue root = new JsonReader().parse(Gdx.files.internal(GAME_MODES_PATH));
         
-        ObjectMap<String, String> modes = new ObjectMap<String, String>();
+        ObjectMap<Integer, String> modes = new ObjectMap<Integer, String>();
         
-        modes.put(Level.WAVES_MODE, root.getString(Level.WAVES_MODE));
-        modes.put(Level.CAMPAIGN_MODE, root.getString(Level.CAMPAIGN_MODE));
+        modes.put(LevelManager.ENDLESS_WAVES_MODE, root.getString(LevelManager.ENDLESS_WAVES_MODE));
+        modes.put(LevelManager.CAMPAIGN_MODE, root.getString(LevelManager.CAMPAIGN_MODE));
         
         return modes;
     }
@@ -301,9 +302,10 @@ public class Parser {
         Element child2 = null;
         GameObject obj = null;
         
-        ((Campaign) level).setSurvivalTime(Integer.parseInt(root.getAttribute("survivalTime")));
-        System.out.println(((Campaign) level).getSurvivalTime());
-    
+        if(level instanceof Campaign) {
+            ((Campaign) level).setSurvivalTime(Integer.parseInt(root.getAttribute("survivalTime")));
+        }
+
         int rootChildCount = root.getChildCount();
 
         Array<Array<GameObject>> parsedLayers = new Array<Array<GameObject>>(rootChildCount);

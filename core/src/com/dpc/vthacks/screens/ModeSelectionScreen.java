@@ -21,6 +21,7 @@ import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.data.Parser;
 import com.dpc.vthacks.level.Level;
+import com.dpc.vthacks.level.LevelManager;
 
 public class ModeSelectionScreen implements Screen {
     private Stage stage;
@@ -108,7 +109,7 @@ public class ModeSelectionScreen implements Screen {
         waves.setHeight(AppData.height * 0.5f);
         
         
-        final ObjectMap<String, String> modes = Parser.parseGameModes();
+        final ObjectMap<Integer, String> modes = Parser.parseGameModes();
         
         final float centerX = AppData.width * 0.5f;
         final float centerY = AppData.height * 0.5f;
@@ -123,7 +124,7 @@ public class ModeSelectionScreen implements Screen {
                 back.addAction(alpha(0.25f, 0.25f));
                 next.addAction(alpha(1, 0.25f));
                 
-                description.setText(modes.get(Level.CAMPAIGN_MODE));
+                description.setText(modes.get(LevelManager.CAMPAIGN_MODE));
                 sp.setHeight(description.getHeight());
                 
                 modeSelected = true;
@@ -143,7 +144,7 @@ public class ModeSelectionScreen implements Screen {
                 back.addAction(alpha(0.25f, 0.25f));
                 next.addAction(alpha(1, 0.25f));
                 
-                description.setText(modes.get(Level.WAVES_MODE));
+                description.setText(modes.get(LevelManager.ENDLESS_WAVES_MODE));
                 sp.setHeight(description.getHeight());
                 sp.setPosition(centerX - (sp.getWidth() * 0.5f), 0);
                 

@@ -2,13 +2,11 @@ package com.dpc.vthacks.gameobject;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.dpc.vthacks.level.Level;
 
 public abstract class GameObject extends Sprite {
     private boolean scrollable, visible = true;
     private float scrollX, scrollY;
-    private static Level parentLevel;
-    
+
     public GameObject() {
     
     }
@@ -37,14 +35,6 @@ public abstract class GameObject extends Sprite {
     public void scroll(float fx, float fy) {
         setX(getX() + (scrollX * fx)); 
         setY(getY() + (scrollY * fy));
-    }
-    
-    public static void setParentLevel(Level parentLevel) {
-        GameObject.parentLevel = parentLevel;
-    }
-    
-    public static Level getParentLevel() {
-        return parentLevel;
     }
     
     public void addPos(float x, float y) {

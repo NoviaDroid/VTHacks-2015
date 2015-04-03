@@ -7,6 +7,7 @@ import com.dpc.vthacks.animation.AnimatedUnit;
 import com.dpc.vthacks.animation.SpriteAnimation;
 import com.dpc.vthacks.factories.Factory;
 import com.dpc.vthacks.infantry.Unit;
+import com.dpc.vthacks.level.LevelManager;
 import com.dpc.vthacks.properties.AnimatedUnitProperties;
 import com.dpc.vthacks.properties.ZombieProperties;
 
@@ -65,30 +66,29 @@ public class Zombie extends AnimatedUnit implements Poolable {
                                       getProperties().getMaxVel().y));
         
         // If in range of the player, attack
-        if(inRange(getParentLevel().getPlayer())) {
+        if(inRange(LevelManager.getPlayer())) {
             
             float range = 0;
             
-            if(getX() < getParentLevel().getPlayer().getX()) {
+            if(getX() < LevelManager.getPlayer().getX()) {
                 range = getWidth();
             }
-            else if(getX() > getParentLevel().getPlayer().getX()) {
-                range = getParentLevel().getPlayer().getWidth();
+            else if(getX() > LevelManager.getPlayer().getX()) {
+                range = LevelManager.getPlayer().getWidth();
             }
             
             if(App.dst(getX(), 
                        getY(),
-                       getParentLevel().getPlayer().getX(), 
-                       getParentLevel().getPlayer().getY()) <= range &&
-               App.dst(0, getY(), 0, getParentLevel().getPlayer().getY()) < getParentLevel().getPlayer().getHeight() * 0.15f) {
+                       LevelManager.getPlayer().getX(), 
+                       LevelManager.getPlayer().getY()) <= range &&
+               App.dst(0, getY(), 0, LevelManager.getPlayer().getY()) < LevelManager.getPlayer().getHeight() * 0.15f) {
                 
                 if(!isAttacking()) {
-                    setAttacking(true, getParentLevel().getPlayer());
-                //    setState("attacking");
+                    setAttacking(true, LevelManager.getPlayer());
                 }
                 
                 // Slow the player
-                getParentLevel().getPlayer().setSlowed(true);
+                LevelManager.getPlayer().setSlowed(true);
             }
             else {
                 if(isAttacking()) {
@@ -98,11 +98,11 @@ public class Zombie extends AnimatedUnit implements Poolable {
             
             // Set target based on where currently is
             if (getVelX() < 0) {
-                setCurrentTarget(getParentLevel().getPlayer().getX()
-                        - getWidth(), getParentLevel().getPlayer().getY());
+                setCurrentTarget(LevelManager.getPlayer().getX()
+                        - getWidth(), LevelManager.getPlayer().getY());
             } else {
-                setCurrentTarget(getParentLevel().getPlayer().getX(),
-                        getParentLevel().getPlayer().getY());
+                setCurrentTarget(LevelManager.getPlayer().getX(),
+                                 LevelManager.getPlayer().getY());
             }
             
         }
@@ -110,11 +110,11 @@ public class Zombie extends AnimatedUnit implements Poolable {
             // If there is no target near, reset the path
          //   resetPath();
             if (getVelX() < 0) {
-                setCurrentTarget(getParentLevel().getPlayer().getX()
-                        - getWidth(), getParentLevel().getPlayer().getY());
+                setCurrentTarget(LevelManager.getPlayer().getX()
+                        - getWidth(), LevelManager.getPlayer().getY());
             } else {
-                setCurrentTarget(getParentLevel().getPlayer().getX(),
-                        getParentLevel().getPlayer().getY());
+                setCurrentTarget(LevelManager.getPlayer().getX(),
+                                 LevelManager.getPlayer().getY());
             }
         }
 
@@ -147,17 +147,17 @@ public class Zombie extends AnimatedUnit implements Poolable {
     @Override
     public void onDeath(Unit killer) {
         Factory.zombiePool.free(this);
-        getParentLevel().remove(this);
+        LevelManager.getCurrentLevel().remove(this);
         
         // Add money to the money total
-        getParentLevel()
+        LevelManager.getCurrentLevel()
                 .getContext()
                 .getToolbar()
                 .addMoney((int) MathUtils.random(((ZombieProperties) getProperties())
                                                     .getMinKillMoney(),
                                                 ((ZombieProperties) getProperties())
                                                     .getMaxKillMoney()));
-        getParentLevel().onZombieKilled();
+        LevelManager.getCurrentLevel().onZombieKilled();
     }
 
     @Override
@@ -165,10 +165,6 @@ public class Zombie extends AnimatedUnit implements Poolable {
         if(getProperties().getHealth() <= 0) {
             onDeath(attacker);
         }
-    }
-
-    public void resetPath() {
-        setCurrentTarget(getFinalDestination().x, getFinalDestination().y);
     }
 
     @Override

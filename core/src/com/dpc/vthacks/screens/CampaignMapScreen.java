@@ -22,7 +22,7 @@ import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.data.CampaignData;
 import com.dpc.vthacks.data.Parser;
-import com.dpc.vthacks.level.LevelProperties;
+import com.dpc.vthacks.level.LevelManager;
 
 public class CampaignMapScreen implements Screen {
     private Stage stage;
@@ -30,7 +30,6 @@ public class CampaignMapScreen implements Screen {
     private Table t;
     private Image background;
     private int selectedLevel;
-    private static final int POINT_RADIUS = 16;
     private boolean loading;
     
     public CampaignMapScreen(App context) {
@@ -160,7 +159,7 @@ public class CampaignMapScreen implements Screen {
             
             context.setScreen(new GameScreen(context, 
                                              selectedLevel + "", 
-                                             LevelProperties.CAMPAIGN_MODE));
+                                             LevelManager.CAMPAIGN_MODE));
         }
     }
 

@@ -15,6 +15,7 @@ import com.dpc.vthacks.data.Parser;
 import com.dpc.vthacks.factories.Factory;
 import com.dpc.vthacks.input.GameToolbar;
 import com.dpc.vthacks.level.Level;
+import com.dpc.vthacks.level.LevelManager;
 import com.dpc.vthacks.level.LevelProperties;
 import com.dpc.vthacks.modes.Campaign;
 import com.dpc.vthacks.modes.EndlessWaves;
@@ -24,25 +25,20 @@ public class GameScreen implements Screen {
     private static Level gameMode;
     private static float joystickPercentX, joystickPercentY;
     private Player player;
-    private FPSLogger logger;
     private GameToolbar toolbar;
-    private String levelName;
     private static final float CAMERA_ZOOM = 0.45f;
     
-    public GameScreen(App context, String levelName, String mode) {
+    public GameScreen(App context, String levelName, int mode) {
         this.context = context;
-        this.levelName = levelName;
-        
-        logger = new FPSLogger();
 
-        if(mode.equals(LevelProperties.ENDLESS_MODE)) {
+        if(mode == LevelManager.ENDLESS_WAVES_MODE) {
             gameMode = new EndlessWaves(this, levelName);
-            toolbar = new GameToolbar(this, false);
         }
-        else if(mode.equals(LevelProperties.CAMPAIGN_MODE)) {
+        else if(mode == LevelManager.CAMPAIGN_MODE) {
             gameMode = new Campaign(this, Integer.parseInt(levelName));
-            toolbar = new GameToolbar(this, true);
         }
+        
+        toolbar = new GameToolbar(mode);
     }
     
     @Override
@@ -55,8 +51,6 @@ public class GameScreen implements Screen {
 
         gameMode.setGameCamera(new AndroidCamera(AppData.TARGET_WIDTH, AppData.TARGET_HEIGHT, CAMERA_ZOOM));
        
-        int w = AppData.width;
-        int h = AppData.height;
 
         resize(1024, 768);
 
@@ -67,11 +61,15 @@ public class GameScreen implements Screen {
         gameMode.getObjectDrawOrder().add(player);
 
         gameMode.loadLevels();
+
+        LevelManager.setCurrentLevel(gameMode);
+        LevelManager.setPlayer(player);
         
         toolbar.setAmmo(player.getCurrentWeapon().getAmmo());
 
         toolbar.setGunIcon(player.getCurrentWeapon());
 
+        
         InputMultiplexer mplexer = new InputMultiplexer(); 
         
         mplexer.addProcessor(toolbar.getStage());
