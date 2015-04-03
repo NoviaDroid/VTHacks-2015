@@ -39,16 +39,15 @@ public abstract class Level {
     private InputAdapter inputAdapter;
     private GestureDetector gestureDetector;
     private Vector3 input;
+    private GameScreen context;
     private boolean active = true;
     private boolean enabled = false;
-    private GameScreen context;
     private float spawnTime, spawnTimer;
     private float origCameraZoom;
     private float AMMO_CRATE_SPAWN_TIME = 0.001f;
     private static final float MAX_ZOOM = 0.35f; // Most that can be zoomed in
     private static final float ZOOM_STEP = 0.05f; // How much zoom to add
     private boolean fingerDown;
-    private int renderCalls;
     
     public Level(final GameScreen context) {
         this.context = context;
@@ -110,7 +109,7 @@ public abstract class Level {
 
             @Override
             public boolean zoom(float initialDistance, float distance) {
-//                inputAdapter.scrolled((int) (distance/initialDistance));
+
                 return false;
             }
 
@@ -164,10 +163,6 @@ public abstract class Level {
                 return true;
             }
         };
-    }
-
-    public Array<Array<GameObject>> getLayers() {
-        return layers;
     }
     
     public void repositionCamera() {
@@ -509,14 +504,6 @@ public abstract class Level {
         }
     }
     
-    public AndroidCamera getGameCamera() {
-        return gameCamera;
-    }
-    
-    public GameScreen getContext() {
-        return context;
-    }
-    
     private void initializeCamera() {
         gameCamera.zoom = 0.45f;
         
@@ -528,9 +515,7 @@ public abstract class Level {
         gameCamera.update();
     }
     
-    public void dispose() {
-        
-    }
+    public abstract void dispose();
     
     public void setLayers(Array<Array<GameObject>> layers) {
         this.layers = layers;
@@ -622,5 +607,17 @@ public abstract class Level {
     
     public void setActive(boolean active) {
         this.active = active;
+    }
+    
+    public Array<Array<GameObject>> getLayers() {
+        return layers;
+    }
+
+    public AndroidCamera getGameCamera() {
+        return gameCamera;
+    }
+    
+    public GameScreen getContext() {
+        return context;
     }
 }
