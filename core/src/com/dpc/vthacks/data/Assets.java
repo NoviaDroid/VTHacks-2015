@@ -154,13 +154,12 @@ public class Assets {
             generator = new FreeTypeFontGenerator(
                     Gdx.files.internal("fonts/aerial.ttf"));
             
-            parameter.size = Gdx.graphics.getWidth() * 34 / AppData.TARGET_HEIGHT;
+            parameter.size = Gdx.graphics.getWidth() * 35 / AppData.TARGET_HEIGHT;
             
             aerial = generator.generateFont(parameter);
     
+            aerial.setFixedWidthGlyphs(":");
             
-            aerial = generator.generateFont(parameter);
-    
             generator.dispose();
     
             aerialLabelStyle = new LabelStyle();

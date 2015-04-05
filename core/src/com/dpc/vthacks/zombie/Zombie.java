@@ -27,6 +27,8 @@ public class Zombie extends AnimatedUnit implements Poolable {
        
         attackSpeed = ((ZombieProperties) properties).getAttackSpeed();
         
+        attackTimer = attackSpeed;
+        
         getProperties().maxHealth(MathUtils.random(getProperties().getHealth(), 
                                                    getProperties().getHealth() * 2) + 25);
         
@@ -65,27 +67,29 @@ public class Zombie extends AnimatedUnit implements Poolable {
                                       App.rand(getProperties().getMaxVel().y,
                                       getProperties().getMaxVel().y));
         
+        float px = LevelManager.getPlayer().getX();
+        float py = LevelManager.getPlayer().getY();
+        float x = getX();
+        float y = getY();
+        
         // If in range of the player, attack
         if(inRange(LevelManager.getPlayer())) {
             
             float range = 0;
             
-            if(getX() < LevelManager.getPlayer().getX()) {
-                range = getWidth();
+            if(x < px) {
+                range = getWidth() * 0.65f;
             }
-            else if(getX() > LevelManager.getPlayer().getX()) {
-                range = LevelManager.getPlayer().getWidth();
+            else if(x > px) {
+                range = LevelManager.getPlayer().getWidth() * 0.65f;
             }
             
-            if(App.dst(getX(), 
-                       getY(),
-                       LevelManager.getPlayer().getX(), 
-                       LevelManager.getPlayer().getY()) <= range &&
-               App.dst(0, getY(), 0, LevelManager.getPlayer().getY()) < LevelManager.getPlayer().getHeight() * 0.15f) {
+            if(App.dst(x, y, px, py) <= range &&
+               App.dst(0, getY(), 0, py) < LevelManager.getPlayer().getHeight()) {
                 
-                if(!isAttacking()) {
+                //if(!isAttacking()) {
                     setAttacking(true, LevelManager.getPlayer());
-                }
+                //}
                 
                 // Slow the player
                 LevelManager.getPlayer().setSlowed(true);
@@ -98,11 +102,11 @@ public class Zombie extends AnimatedUnit implements Poolable {
             
             // Set target based on where currently is
             if (getVelX() < 0) {
-                setCurrentTarget(LevelManager.getPlayer().getX()
-                        - getWidth(), LevelManager.getPlayer().getY());
+                setCurrentTarget(px
+                        - getWidth(), py);
             } else {
-                setCurrentTarget(LevelManager.getPlayer().getX(),
-                                 LevelManager.getPlayer().getY());
+                setCurrentTarget(px,
+                                 py);
             }
             
         }
@@ -110,11 +114,11 @@ public class Zombie extends AnimatedUnit implements Poolable {
             // If there is no target near, reset the path
          //   resetPath();
             if (getVelX() < 0) {
-                setCurrentTarget(LevelManager.getPlayer().getX()
-                        - getWidth(), LevelManager.getPlayer().getY());
+                setCurrentTarget(px
+                        - getWidth(), py);
             } else {
-                setCurrentTarget(LevelManager.getPlayer().getX(),
-                                 LevelManager.getPlayer().getY());
+                setCurrentTarget(px,
+                                 py);
             }
         }
 

@@ -1,8 +1,8 @@
 {
 	"1": [{
-	  	"minVelX": "0.25",
-	  	"maxVelX": "0.5",
-	  	"minVelY": "0.25",
+	  	"minVelX": "0.5",
+	  	"maxVelX": "0.65",
+	  	"minVelY": "0.3",
 	  	"maxVelY": "0.5",
 	    "minDamage": "3",
 	    "scaleX": "3",

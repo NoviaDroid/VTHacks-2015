@@ -168,8 +168,8 @@ public class Player extends AdvancedAnimatedUnit {
         }
         
         if(slowed) {
-            setX(getX() + amX * (getVelocityScalarX() * 0.85f));
-            setY(getY() + amY * (getVelocityScalarY() * 0.85f));
+            setX(getX() + amX * (getVelocityScalarX() * 0.65f));
+            setY(getY() + amY * (getVelocityScalarY() * 0.65f));
         }
         else {
             setX(getX() + amX * getVelocityScalarX());
