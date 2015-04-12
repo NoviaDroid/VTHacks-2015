@@ -27,7 +27,7 @@ public class SplashScreen implements Screen {
         splash = new Image(Assets.splashLogo);
         splash.setSize(AppData.width, AppData.height);
         
-        stage = new Stage(new StretchViewport(AppData.width, AppData.height));
+        stage = new Stage(new StretchViewport(AppData.width, AppData.height), App.batch);
         
         stage.addActor(splash);
         
@@ -35,7 +35,7 @@ public class SplashScreen implements Screen {
 
             @Override
             public boolean act(float delta) {
-                context.setScreen(new MenuScreen(context));
+                context.setScreen(new TouchOnceScreen(context));
                 
                 return true;
             }

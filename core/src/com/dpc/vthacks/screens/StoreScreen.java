@@ -4,6 +4,8 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.alpha;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -12,20 +14,22 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Scaling;
+import com.badlogic.gdx.utils.viewport.ScalingViewport;
+import com.dpc.vthacks.AndroidCamera;
 import com.dpc.vthacks.App;
-import com.dpc.vthacks.Bank;
-import com.dpc.vthacks.PagedScrollPane;
 import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
+import com.dpc.vthacks.data.Bank;
 import com.dpc.vthacks.weapons.Weapon;
 import com.dpc.vthacks.weapons.WeaponManager;
 
 public class StoreScreen implements Screen {
+    private Weapon currentWeapon;
     private Stage stage;
-    private Table scrollTable;
+    private Table rootTable;
+    private Table lTable;
     private Label backButton;
     private Label moneyLabel;
     private ImageButton[] weaponButtons;
@@ -44,23 +48,12 @@ public class StoreScreen implements Screen {
         private int id;
         private Image icon;
         private Label purchase;
-        private Label upgrade;
         
         private WeaponInfo() {
-            Assets.labelStyle.font = Assets.zombieXSmallFont;
-            
-            cost = new Label("", Assets.labelStyle);
-            description = new Label("", Assets.labelStyle);
-            name = new Label("", Assets.labelStyle);
-            
-            Assets.labelStyle.font = Assets.zombieFont;
-        }
-        
-        private void add(Stage stage) {
-            stage.addActor(name);
-            stage.addActor(description);
-            stage.addActor(icon);
-            stage.addActor(purchase);
+            cost = new Label("", Assets.storeLabelStyle);
+            description = new Label("", Assets.storeLabelStyle);
+            description.setColor(Color.GRAY);
+            name = new Label("", Assets.storeLabelStyle);
         }
     }
     
@@ -72,32 +65,40 @@ public class StoreScreen implements Screen {
     public void show() {
         Assets.allocateStoreScreen();
         
-        stage = new Stage(new StretchViewport(AppData.width, AppData.height));
-
+        stage = new Stage(new ScalingViewport(Scaling.stretch, 
+                                              AppData.width,
+                                              AppData.height,
+                                              new AndroidCamera(AppData.TARGET_WIDTH, AppData.TARGET_HEIGHT)),
+                                              App.batch);
+        
         background = new Image(Assets.menuBackground);
-        background.setWidth(AppData.width);
-        background.setHeight(AppData.height);
+        background.setWidth(AppData.TARGET_WIDTH);
+        background.setHeight(AppData.TARGET_HEIGHT);
         background.addAction(alpha(0.5f, 1));
         
         stage.addActor(background);
         
         weaponInfo = new WeaponInfo();
         
-        weaponInfo.purchase = new Label("Purchase", Assets.labelStyle);
+        weaponInfo.purchase = new Label("Purchase", Assets.storeLabelStyle);
         
         weaponInfo.purchase.setColor(Assets.RED);
         
         weaponInfo.purchase.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                int cost = Integer.parseInt(weaponInfo.cost.getText()
-                        .toString().replace("Cost: ", ""));
+                int cost = Integer.parseInt(weaponInfo.cost.getText().toString().replace("$", ""));
                 
                 if(Bank.getBalance() >= cost && !WeaponManager.isUnlocked(weaponInfo.id)) {
                     if(WeaponManager.isUnlocked(weaponInfo.id)) return false;
                     
-                    // Unlock the weapon
-                    WeaponManager.unlock(weaponInfo.id);
+                    if(currentWeapon.isPrimary()) {
+                        // Unlock the weapon
+                        WeaponManager.unlockPrimary(weaponInfo.id);
+                    }
+                    else {
+                        WeaponManager.unlockSecondary(weaponInfo.id);
+                    }
                     
                     // Withdrawal money
                     Bank.withdrawal(cost);
@@ -111,22 +112,22 @@ public class StoreScreen implements Screen {
             }
         });
         
-        moneyLabel = new Label("You have $" + Bank.getBalance(), Assets.labelStyle);
+        moneyLabel = new Label("You have $" + Bank.getBalance(), Assets.storeLabelStyle);
         
-        moneyLabel.setColor(0, 0.4f, 0, 1);
+        moneyLabel.setColor(Assets.GREEN);
         
-        moneyLabel.setPosition(AppData.width-
+        moneyLabel.setPosition(AppData.TARGET_WIDTH-
                                (moneyLabel.getStyle().font.getBounds(moneyLabel.getText()).width),
-                               AppData.height -
+                               AppData.TARGET_HEIGHT -
                                (moneyLabel.getStyle().font.getBounds(moneyLabel.getText()).height*2));
                                
         
     //    stage.addActor(moneyLabel);
         
-        backButton = new Label("Back", Assets.labelStyle);
+        backButton = new Label("Back", Assets.storeLabelStyle);
         
         backButton.setPosition(PADDING, 
-                AppData.height - 2 * Assets.textButtonStyle.font.getBounds(backButton.getText()).height);
+                AppData.TARGET_HEIGHT - 2 * Assets.textButtonStyle.font.getBounds(backButton.getText()).height);
         
         
         backButton.addListener(new InputListener() {
@@ -145,16 +146,21 @@ public class StoreScreen implements Screen {
         
         weaponButtons = new ImageButton[WeaponManager.NUMBER_OF_WEAPONS];
         
-        PagedScrollPane scroll = new PagedScrollPane();
-        scroll.setFlingTime(0.1f);
-        scroll.setPageSpacing(AppData.width / 6);
-        scroll.setWidth(AppData.width);
+//        PagedScrollPane scroll = new PagedScrollPane();
+//        scroll.setFlingTime(0.1f);
+//        scroll.setPageSpacing(AppData.TARGET_WIDTH / 6);
+//        scroll.setWidth(AppData.TARGET_WIDTH);
+//        scroll.setHeight(AppData.TARGET_HEIGHT * 0.35f);
+//       
+        rootTable = new Table();
+        
+        Array<Weapon> all = WeaponManager.getAllWeapons();
         
         for(int i = 0; i < weaponButtons.length; i++) {
-            final Weapon weapon = WeaponManager.getWeapons().get(i);
+            final Weapon weapon = all.get(i);
 
             ImageButton button = new ImageButton(
-                    weaponIcons.getDrawable(WeaponManager.getWeapons().get(i)
+                    weaponIcons.getDrawable(all.get(i)
                             .getIconPath()));
            
             weaponButtons[i] = button;
@@ -172,30 +178,57 @@ public class StoreScreen implements Screen {
                 
             });
             
+            rootTable.add(weaponButtons[i]).width(weaponButtons[i].getWidth() * 2)
+                                       .height(weaponButtons[i].getHeight() * 2);
             
-            scroll.addPage(button);
+            if((i + 1) % 3 == 0) {
+                rootTable.row();
+            }
+            
         }
+
+        rootTable.bottom();
         
-        stage.addActor(scroll);
+      
+        stage.addActor(rootTable);
         
-        display(WeaponManager.getWeapons().get(0));
+        display(all.get(0));
         positionElements();
-        
+
         Gdx.input.setInputProcessor(stage);
     }
 
     public void positionElements() {
-        VerticalGroup v = new VerticalGroup();
-        v.setFillParent(true);
+        lTable = new Table();
         
-        v.addActor(moneyLabel);
-        v.addActor(weaponInfo.icon);
-        v.addActor(weaponInfo.name);
-        v.addActor(weaponInfo.description);
-        v.addActor(weaponInfo.cost);
-        v.addActor(weaponInfo.purchase);
+        moneyLabel.setPosition((AppData.TARGET_WIDTH * 0.5f) - (moneyLabel.getWidth() * 0.5f),
+                               AppData.TARGET_HEIGHT - 3 * moneyLabel.getHeight() + PADDING);
         
-        stage.addActor(v);
+        stage.addActor(moneyLabel);
+        
+        Label header1 = new Label("Description:", Assets.storeLabelStyle);
+        header1.setColor(Assets.RED);
+
+        Label header2 = new Label("Cost:      ", Assets.storeLabelStyle);
+        header2.setColor(Assets.RED);
+       
+        lTable.pad(25);
+        
+        weaponInfo.name.setColor(Assets.RED);
+        weaponInfo.cost.setColor(Assets.GREEN);
+        
+        if(weaponInfo.icon.getScaleX() != 2) {
+            weaponInfo.icon.setScale(2);
+        }
+
+        lTable.add(weaponInfo.icon).row();
+        lTable.add(weaponInfo.name).row();
+        lTable.add(weaponInfo.description).row();
+        lTable.add(weaponInfo.cost).row();
+        lTable.add(weaponInfo.purchase).row();
+        
+     
+        stage.addActor(lTable);
     }
     
     public void display(Weapon weapon) {
@@ -205,9 +238,11 @@ public class StoreScreen implements Screen {
         
         weaponInfo.icon.setDrawable(weaponIcons.getDrawable(weapon.getIconPath()));
         weaponInfo.name.setText(weapon.getName());
-        weaponInfo.description.setText("Description: " + weapon.getDescription());
-        weaponInfo.cost.setText("Cost: " + weapon.getCost());
+        weaponInfo.description.setText(weapon.getDescription());
+        weaponInfo.cost.setText("$" + weapon.getCost());
         weaponInfo.id = weapon.getId();
+        
+        this.currentWeapon = weapon;
         
         // Only allow purchase if enough money is there
        // weaponInfo.purchase.setDisabled(Bank.getBalance() >= weapon.getCost() || 
@@ -220,22 +255,21 @@ public class StoreScreen implements Screen {
             weaponInfo.purchase.setText("Purchase");
         }
     }
-    
-    public void update(float delta) {
-        stage.act(delta);
-    }
-    
+
     @Override
     public void render(float delta) {
-        update(delta);
-        
+        stage.act(delta);
         stage.draw();
     }
 
     @Override
     public void resize(int width, int height) {
-        stage.getViewport().update(width, height);
-        stage.getCamera().update();
+        stage.getViewport().setCamera(new AndroidCamera(AppData.TARGET_WIDTH, AppData.TARGET_HEIGHT));
+        lTable.invalidateHierarchy();
+        lTable.setSize(AppData.TARGET_WIDTH, AppData.TARGET_HEIGHT);
+        rootTable.invalidateHierarchy();
+        rootTable.setSize(AppData.TARGET_WIDTH, AppData.TARGET_HEIGHT); 
+        background.setSize(AppData.TARGET_WIDTH, AppData.TARGET_HEIGHT);
     }
 
     @Override

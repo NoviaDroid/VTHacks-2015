@@ -6,6 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
@@ -16,11 +17,12 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 import com.dpc.vthacks.App;
 import com.dpc.vthacks.Player;
 import com.dpc.vthacks.animation.AdvancedSpriteAnimation;
-import com.dpc.vthacks.animation.SpriteAnimation;
 import com.dpc.vthacks.factories.Factory;
 import com.dpc.vthacks.gameobject.GameObject;
 import com.dpc.vthacks.level.Level;
+import com.dpc.vthacks.level.LevelManager;
 import com.dpc.vthacks.level.LevelProperties;
+import com.dpc.vthacks.modes.Campaign;
 import com.dpc.vthacks.objects.GameSprite;
 import com.dpc.vthacks.objects.Road;
 import com.dpc.vthacks.properties.AnimatedUnitProperties;
@@ -33,14 +35,15 @@ public class Parser {
     private static final String WEAPONS_PATH = "json/weapons.json";
     private static final String ZOMBIES_PATH = "json/zombies.json";
     private static final String GAME_MODES_PATH = "json/Modes.json";
+    private static final String CAMPAIGN_PATH = "json/campaignMap.oel";
     
-    public static ObjectMap<String, String> parseGameModes() {
+    public static ObjectMap<Integer, String> parseGameModes() {
         JsonValue root = new JsonReader().parse(Gdx.files.internal(GAME_MODES_PATH));
         
-        ObjectMap<String, String> modes = new ObjectMap<String, String>();
+        ObjectMap<Integer, String> modes = new ObjectMap<Integer, String>();
         
-        modes.put(Level.WAVES_MODE, root.getString(Level.WAVES_MODE));
-        modes.put(Level.CAMPAIGN_MODE, root.getString(Level.CAMPAIGN_MODE));
+        modes.put(LevelManager.ENDLESS_WAVES_MODE, root.getString(LevelManager.ENDLESS_WAVES_MODE));
+        modes.put(LevelManager.CAMPAIGN_MODE, root.getString(LevelManager.CAMPAIGN_MODE));
         
         return modes;
     }
@@ -54,12 +57,6 @@ public class Parser {
         JsonValue root = reader.parse(handle);
         JsonValue root1 = reader.parse(handle1);
 
-        parseTanks(root.getChild("tank"));
-        
-        parseSoldiers(root.getChild("soldier"));
-        
-        parseBomb(root.getChild("bomb"));
-
         parseZombieProperties();
         
         parseBuildings();
@@ -67,70 +64,55 @@ public class Parser {
         parsePlayer(root.getChild("player"));
     }
 
+    public static Array<Image> parseCampaignMap() throws IOException {
+        XmlReader reader = new XmlReader();
+        
+        Element root = reader.parse(Gdx.files.internal(CAMPAIGN_PATH));
+        
+        int childrenCount = root.getChildCount();
+        Element child = null;
+        Image point = null;
+        Array<Image> points = new Array<Image>();
+        
+        for(int i = 0; i < childrenCount; i++) {
+            child = root.getChild(i);
+            
+            float x = 0, y = 0;
+            
+            int levelNumber = 1;
+            
+            for(Entry<String, String> entry : child.getAttributes()) {
+                switch(entry.key) {
+                case "x":
+                    x = Float.parseFloat(entry.value);
+                    break;
+                case "y":
+                    y = Float.parseFloat(entry.value);
+                    break;
+                case "id":
+                    levelNumber = Integer.parseInt(entry.value);
+                    break;
+                }
+            }
+            
+            point = new Image(Assets.campaignMapPoint);
+            point.setPosition(x, y);
+            
+            // Save off the level number so it can be retrieved later
+            point.setUserObject(levelNumber);
+            
+            points.add(point);
+        }
+            
+        return points;
+    }
+    
     /**
      * Parses building properties from JSON and gives it to the factory
      * @param building
      */
     private static void parseBuildings() {
         Factory.setBuildingProperties(new Properties());
-    }
-    
-    /**
-     * Parses tank properties from JSON and gives it to the factory
-     * @param tank
-     */
-    private static void parseTanks(JsonValue tank) {
-        AnimatedUnitProperties<SpriteAnimation> tankProperties = 
-                new AnimatedUnitProperties<SpriteAnimation>()
-                    .cost(tank.getInt("cost"))
-                    .minDamage(tank.getFloat("minDamage"))
-                    .maxDamage(tank.getFloat("maxDamage"))
-                    .health(tank.getInt("health"))
-                    .vel(tank.getFloat("velX"), tank.getFloat("velY"))
-                    .range(tank.getFloat("range"))
-                    .maxHealth(tank.getInt("max health"))
-                    .frameTime(tank.getFloat("frameTime"))
-                    .scaleX(tank.getFloat("scaleX"))
-                    .scaleY(tank.getFloat("scaleY"));
-        
-        Factory.setTankProperties(tankProperties);
-    }
-
-    /**
-     * Parses soldier properties from JSON and gives it to the factory
-     * @param soldier
-     */
-    private static void parseSoldiers(JsonValue soldier) {
-        AnimatedUnitProperties<SpriteAnimation> soldierProperties = 
-                new AnimatedUnitProperties<SpriteAnimation>()
-                    .cost(soldier.getInt("cost"))
-                    .minDamage(soldier.getFloat("minDamage"))
-                    .maxDamage(soldier.getFloat("maxDamage"))
-                    .health(soldier.getInt("health"))
-                    .range(soldier.getFloat("range"))
-                    .vel(soldier.getFloat("velX"), soldier.getFloat("velY"))
-                    .maxHealth(soldier.getInt("max health"))
-                    .frameTime(soldier.getFloat("frameTime"))
-                    .scaleX(soldier.getFloat("scaleX")) 
-                    .scaleY(soldier.getFloat("scaleY"));
-        
-        Factory.setSoldierProperties(soldierProperties);
-    }
-
-    /**
-     * Parses bomb properties from JSON and gives it to the factory
-     * @param bomb
-     */
-    private static void parseBomb(JsonValue bomb) {
-        Properties bombProperties = 
-                new Properties()
-                    .minDamage(bomb.getFloat("minDamage"))
-                    .maxDamage(bomb.getFloat("maxDamage"))
-                    .vel(bomb.getFloat("velX"), bomb.getFloat("velY"))
-                    .scaleX(bomb.getFloat("scaleX"))
-                    .scaleY(bomb.getFloat("scaleY"));
-        
-        Factory.setBombProperties(bombProperties);
     }
 
     /**
@@ -255,6 +237,10 @@ public class Parser {
         Element child2 = null;
         GameObject obj = null;
         
+        if(level instanceof Campaign) {
+            ((Campaign) level).setSurvivalTime(Integer.parseInt(root.getAttribute("survivalTime")));
+        }
+
         int rootChildCount = root.getChildCount();
 
         Array<Array<GameObject>> parsedLayers = new Array<Array<GameObject>>(rootChildCount);
@@ -310,7 +296,7 @@ public class Parser {
                         if(obj instanceof GameObject) {
                             obj.setY(y);
                         }
-                        
+
                         break;
                     case "scrollable":
                         if(entry.value.equals("true")) {
@@ -322,8 +308,10 @@ public class Parser {
                         break;
                     case "scrollY":
                         obj.setScrollY(Float.parseFloat(entry.value));
+                        break;
                     case "zOrder": 
                         zOrder = Integer.parseInt(entry.value);
+                        break;
                     }
 
                     childObjects.add(obj);

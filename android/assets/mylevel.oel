@@ -1,9 +1,10 @@
 <level width="2400" height="768" zombieSpawnTime="1">
   <background>
-      <skyline2 zOrder="1" id="0" x="-5" y="650" scrollable="true" scrollX="-0.01" scrollY="0"/>
+      <skyline2 zOrder="0" id="0" x="-5" y="768" scrollable="true" scrollX="-0.01" scrollY="0"/>
+      <Road id="1" x="0" y="769" />
   </background>
   
-    <Layer1>
+  <Layer1>
     <Building1 zOrder="2" id="0" x="160" y="638" />
     <Building2 zOrder="3" id="1" x="352" y="638" />
     <Building4 zOrder="4" id="2" x="546" y="638" />
@@ -16,6 +17,6 @@
   </Layer1>
   
   <GameLayer>
-    <Road id="0" x="0" y="769" />
+
   </GameLayer>
 </level>

@@ -7,7 +7,6 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Pool;
 import com.dpc.vthacks.Player;
 import com.dpc.vthacks.animation.AdvancedSpriteAnimation;
-import com.dpc.vthacks.animation.SpriteAnimation;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.objects.AmmoCrate;
 import com.dpc.vthacks.objects.GameSprite;
@@ -19,13 +18,11 @@ import com.dpc.vthacks.zombie.Zombie;
 
 public class Factory {
     private static AnimatedUnitProperties<AdvancedSpriteAnimation> playerProperties;
-    private static AnimatedUnitProperties<SpriteAnimation> tankProperties;
-    private static AnimatedUnitProperties<SpriteAnimation> soldierProperties;
-    private static Properties bombProperties;
     private static Properties buildingProperties;
     private static Weapon primaryGun, secondaryGun;
-    private static ObjectMap<Integer, ZombieProperties> zombieProperties = new ObjectMap<Integer, ZombieProperties>();
     private static Vector2 playerGunOffset;
+    private static ObjectMap<Integer, ZombieProperties> zombieProperties = new ObjectMap<Integer, ZombieProperties>();
+
     private static int currentZombieCreationTier = 1; // Current tier of zombie to obtain from the pool
     private static final int BASE_SIZE = 10;
     
@@ -125,30 +122,6 @@ public class Factory {
 
     public static void setPlayerProperties(AnimatedUnitProperties<AdvancedSpriteAnimation> playerProperties) {
         Factory.playerProperties = playerProperties;
-    }
-
-    public static Properties getTankProperties() {
-        return tankProperties;
-    }
-
-    public static void setTankProperties(AnimatedUnitProperties<SpriteAnimation> tankProperties) {
-        Factory.tankProperties = tankProperties;
-    }
-
-    public static Properties getSoldierProperties() {
-        return soldierProperties;
-    }
-
-    public static void setSoldierProperties(AnimatedUnitProperties<SpriteAnimation> soldierProperties) {
-        Factory.soldierProperties = soldierProperties;
-    }
-
-    public static Properties getBombProperties() {
-        return bombProperties;
-    }
-
-    public static void setBombProperties(Properties bombProperties) {
-        Factory.bombProperties = bombProperties;
     }
 
     public static int getNumberOfBombs() {

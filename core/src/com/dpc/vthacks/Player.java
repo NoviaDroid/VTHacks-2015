@@ -1,5 +1,6 @@
 package com.dpc.vthacks;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.dpc.vthacks.animation.AdvancedAnimatedUnit;
@@ -7,6 +8,7 @@ import com.dpc.vthacks.animation.AdvancedSpriteAnimation;
 import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.infantry.Unit;
+import com.dpc.vthacks.level.LevelManager;
 import com.dpc.vthacks.level.LevelProperties;
 import com.dpc.vthacks.properties.AnimatedUnitProperties;
 import com.dpc.vthacks.weapons.Gun;
@@ -23,6 +25,7 @@ public class Player extends AdvancedAnimatedUnit {
     private boolean deathCallbackCalled; // True when the player's onGameOver method is called
     private Rectangle ground;
     private Weapon primary, secondary, currentWeapon;
+    private Texture q;
     
     public Player(String currentState,
                   AnimatedUnitProperties<AdvancedSpriteAnimation> properties, 
@@ -39,7 +42,19 @@ public class Player extends AdvancedAnimatedUnit {
     }
     
     @Override
-    public void render() {  
+    public void onEvent(GameEvent e) {
+        int ev = e.getEvent();
+        
+        switch(ev) {
+        case EventSystem.ENTITY_ATTACK:
+            break;
+        case EventSystem.TOUCH_DOWN:
+            break;
+        }
+    }
+    
+    @Override
+    public void render() {
         super.render();
     }
     
@@ -54,7 +69,7 @@ public class Player extends AdvancedAnimatedUnit {
 
     @Override
     public void onDeath(Unit killer) {
-        getParentLevel().onGameOver();
+        EventSystem.dispatch(new GameEvent(EventSystem.GAME_OVER));
     }
 
     @Override
@@ -88,10 +103,9 @@ public class Player extends AdvancedAnimatedUnit {
     
                 // Decrease ammo
                 currentWeapon.decAmmo(1);
-                
-                // Update the ammo label
-                getParentLevel().getContext().getToolbar().setAmmo(currentWeapon.getAmmo());
-                
+
+                EventSystem.dispatch(new GameEvent(EventSystem.PLAYER_AMMO_CHANGED, currentWeapon.getAmmo()));
+
                 if(z != null) {
                     attack(z, damageScale);
                 }
@@ -103,7 +117,7 @@ public class Player extends AdvancedAnimatedUnit {
                 Assets.sounds.get(Assets.OUT_OF_AMMO).stop();
                 Assets.sounds.get(Assets.OUT_OF_AMMO).play();
                 
-                getParentLevel().getContext().getToolbar().shakeAmmo();
+                EventSystem.dispatch(new GameEvent(EventSystem.PLAYER_AMMO_OUT));
             }
         }
     }
@@ -118,18 +132,17 @@ public class Player extends AdvancedAnimatedUnit {
         primary.refillAmmo();
         secondary.refillAmmo();
         
-        centerInViewport();
+        EventSystem.dispatch(new GameEvent(EventSystem.PLAYER_AMMO_CHANGED, primary.getAmmo()));
+        EventSystem.dispatch(new GameEvent(EventSystem.PLAYER_HEALTH_CHANGED, getProperties().getHealth()));
+        EventSystem.dispatch(new GameEvent(EventSystem.PLAYER_MONEY_CHANGED, 0));
         
-        // Reset the toolbars info
-        getParentLevel().getContext().getToolbar().setMoney(0);
-        getParentLevel().getContext().getToolbar().setAmmo(primary.getAmmo());
-        getParentLevel().getContext().getToolbar().setHealth(getProperties().getMaxHealth());
+        centerInViewport();
     }
 
     @Override
     public void onDamageTaken(Unit attacker, float amount) {
-        getParentLevel().getContext().getToolbar().setHealth(getProperties().getHealth());
-
+        EventSystem.dispatch(new GameEvent(EventSystem.PLAYER_HEALTH_CHANGED, getProperties().getHealth()));
+        
         if(getProperties().getHealth() <= 0 && !deathCallbackCalled) {
              onDeath(attacker);
              deathCallbackCalled = true;
@@ -156,7 +169,7 @@ public class Player extends AdvancedAnimatedUnit {
             }
         }
 
-        for (Zombie z : getParentLevel().getZombies()) {
+        for (Zombie z : LevelManager.getCurrentLevel().getZombies()) {
             if (getY() > z.getY()) {
                 drawBehind = true;
             } else {
@@ -167,8 +180,8 @@ public class Player extends AdvancedAnimatedUnit {
         }
         
         if(slowed) {
-            setX(getX() + amX * (getVelocityScalarX() * 0.85f));
-            setY(getY() + amY * (getVelocityScalarY() * 0.85f));
+            setX(getX() + amX * (getVelocityScalarX() * 0.65f));
+            setY(getY() + amY * (getVelocityScalarY() * 0.65f));
         }
         else {
             setX(getX() + amX * getVelocityScalarX());
@@ -227,7 +240,7 @@ public class Player extends AdvancedAnimatedUnit {
         primary.setAmmo(primary.getMaxAmmo());
         secondary.setAmmo(secondary.getMaxAmmo());
         
-        getParentLevel().getContext().getToolbar().setAmmo(currentWeapon.getAmmo());
+        EventSystem.dispatch(new GameEvent(EventSystem.PLAYER_AMMO_CHANGED, primary.getAmmo()));
     }
     
     public void setGround(Rectangle rect) {

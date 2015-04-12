@@ -1,18 +1,20 @@
 package com.dpc.vthacks.screens;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.alpha;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.moveBy;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.parallel;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.repeat;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.dpc.vthacks.App;
@@ -20,12 +22,15 @@ import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
 import com.dpc.vthacks.data.Parser;
 import com.dpc.vthacks.level.Level;
+import com.dpc.vthacks.level.LevelManager;
 
 public class ModeSelectionScreen implements Screen {
     private Stage stage;
     private Image campaign;
     private Image waves;
     private App context;
+    private boolean modeSelected;
+    private boolean wavesSelected;
     
     public ModeSelectionScreen(App context) {
         this.context = context;
@@ -35,9 +40,17 @@ public class ModeSelectionScreen implements Screen {
     public void show() {
         Assets.allocateModeSelectionScreen();
         
-        stage = new Stage(new StretchViewport(AppData.width, AppData.height));
+        stage = new Stage(new StretchViewport(AppData.width, AppData.height), App.batch);
+
+        final Label description = new Label("Select a mode", Assets.aerialLabelStyle);
         
-        final Label next = new Label("Next", Assets.labelStyle);
+        description.setColor(Color.GRAY);
+        
+        final Label back = new Label("Back", Assets.aerialLabelStyle);
+        
+        final ScrollPane sp = new ScrollPane(description);
+        
+        final Label next = new Label("Next", Assets.aerialLabelStyle);
         
         next.setX(AppData.width - next.getWidth());
    
@@ -45,7 +58,18 @@ public class ModeSelectionScreen implements Screen {
           
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                context.setScreen(new LevelSelectionScreen(context));
+                if(!modeSelected) { 
+                    sp.addAction(repeat(3, sequence(moveBy(5, 0, 0.05f), moveBy(-5, 0, 0.05f))));
+                    
+                    return true; 
+                }
+                
+                if(wavesSelected) {
+                    context.setScreen(new LevelSelectionScreen(context));
+                }
+                else {
+                    context.setScreen(new CampaignMapScreen(context));
+                }
                 
                 return true;
             }
@@ -54,11 +78,10 @@ public class ModeSelectionScreen implements Screen {
         
         next.setColor(Assets.RED);
         
-        final Label description = new Label("Select a mode", Assets.labelStyle);
+        Image background = new Image(Assets.menuBackground);
         
-        final Label back = new Label("Back", Assets.labelStyle);
-        
-        final ScrollPane sp = new ScrollPane(description);
+        background.setWidth(AppData.width);
+        background.setHeight(AppData.height);
 
         description.setWrap(true);
         
@@ -66,6 +89,7 @@ public class ModeSelectionScreen implements Screen {
             
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                
                 context.setScreen(new WeaponSelectionScreen(context));
                 
                 return super.touchDown(event, x, y, pointer, button);
@@ -80,18 +104,14 @@ public class ModeSelectionScreen implements Screen {
         campaign = new Image(Assets.campaignPreview);
         waves = new Image(Assets.endlessWavesPreview);
         
-        campaign.setWidth(campaign.getWidth() * 0.5f);
-        waves.setWidth(waves.getWidth() * 0.5f);
+        campaign.setWidth(AppData.width * 0.5f);
+        waves.setWidth(AppData.width * 0.5f);
         
-        campaign.setHeight(campaign.getHeight() * 0.5f);
-        waves.setHeight(waves.getHeight() * 0.5f);
+        campaign.setHeight(AppData.height * 0.5f);
+        waves.setHeight(AppData.height * 0.5f);
         
-//        campaign.setWidth(AppData.width * 0.25f);
-//        waves.setWidth(AppData.width * 0.25f);
-//        campaign.setHeight(AppData.height * 0.25f);
-//        waves.setHeight(AppData.height * 0.25f);
-//        
-        final ObjectMap<String, String> modes = Parser.parseGameModes();
+        
+        final ObjectMap<Integer, String> modes = Parser.parseGameModes();
         
         final float centerX = AppData.width * 0.5f;
         final float centerY = AppData.height * 0.5f;
@@ -104,9 +124,13 @@ public class ModeSelectionScreen implements Screen {
                 campaign.addAction(parallel(alpha(1, 0.25f)));
                 waves.addAction(parallel(alpha(0.25f, 0.25f)));
                 back.addAction(alpha(0.25f, 0.25f));
-                next.addAction(alpha(0.25f, 0.25f));
+                next.addAction(alpha(1, 0.25f));
                 
-                description.setText(modes.get(Level.CAMPAIGN_MODE));
+                description.setText(modes.get(LevelManager.CAMPAIGN_MODE));
+                sp.setHeight(description.getHeight());
+                
+                modeSelected = true;
+                wavesSelected = false;
                 
                 return true;
             }
@@ -120,10 +144,14 @@ public class ModeSelectionScreen implements Screen {
                 waves.addAction(parallel(alpha(1, 0.25f)));
                 campaign.addAction(parallel(alpha(0.25f, 0.25f)));
                 back.addAction(alpha(0.25f, 0.25f));
-                next.addAction(alpha(0.25f, 0.25f));
+                next.addAction(alpha(1, 0.25f));
                 
-                description.setText(modes.get(Level.WAVES_MODE));
+                description.setText(modes.get(LevelManager.ENDLESS_WAVES_MODE));
+                sp.setHeight(description.getHeight());
                 sp.setPosition(centerX - (sp.getWidth() * 0.5f), 0);
+                
+                modeSelected = true;
+                wavesSelected = true;
                 
                 return true;
             }
@@ -136,9 +164,13 @@ public class ModeSelectionScreen implements Screen {
         campaign.setPosition(centerX,
                              centerY - (campaign.getHeight() * 0.5f));
         
+        next.addAction(alpha(0.5f, 0.25f));
+        
         sp.setWidth(AppData.width);
         sp.setPosition(centerX - (sp.getWidth() * 0.5f), 0);
+        sp.setHeight(description.getHeight());
         
+        stage.addActor(background);
         stage.addActor(back);
         stage.addActor(waves);
         stage.addActor(campaign);
@@ -154,17 +186,20 @@ public class ModeSelectionScreen implements Screen {
                 if(((x > campaign.getX() && x < campaign.getX() + campaign.getWidth() &&
                    y > campaign.getY() && y < campaign.getY() + campaign.getHeight()) ||
                    (x > waves.getX() && x < waves.getX() + waves.getWidth() && 
-                   y < waves.getY() + waves.getHeight()) || (x > sp.getX() &&
-                   x < sp.getX() + sp.getWidth() && y > sp.getY() && y < sp.getY() + sp.getHeight()))) {
+                   y < waves.getY() + waves.getHeight()))) {
                     return false;
                 }
                 
                 // "Refocus" the stage
+                wavesSelected = false;
+                modeSelected = false;
+                next.addAction(alpha(0.5f, 0.25f));
+                
                 back.addAction(alpha(1, 0.25f));
-                next.addAction(alpha(1, 0.25f));
                 campaign.addAction(alpha(1, 0.25f));
                 waves.addAction(alpha(1, 0.25f));
                 description.setText("Select a mode");
+                sp.setHeight(description.getHeight());
                 sp.setPosition(centerX - (sp.getWidth() * 0.5f), 0);
                 
                 return super.touchDown(event, x, y, pointer, button);

@@ -30,11 +30,17 @@ public class Assets {
     
     // Weapon selection screen assets
     
-    // Level selection screen assets
+    public static TextureRegion gameBackground;
     
+    // Level selection screen assets
+    public static final Color GREEN = new Color(0, 0.4f, 0, 1);
     public static final Color RED = new Color(0.85f, 0.05f, 0.24f, 1);
     public static TextureRegion campaignPreview;
     public static TextureRegion endlessWavesPreview;
+    public static TextureRegion touchOnceScreenBackground;
+    public static TextureRegion campaignMap;
+    public static BitmapFont aerialStore;
+    public static LabelStyle storeLabelStyle;
     
     // Game screen assets
     public static final String SHOT1 = "shot1";
@@ -51,18 +57,20 @@ public class Assets {
     public static TextureRegion  playerIcon, barBackground, road, background, 
                                  healthbar, ammoCrate, healthBarBackground;
     public static TextureRegion splashLogo;
+    public static TextureRegion campaignMapPoint;
     
     // Loading screen textures
     public static TextureRegion progressBar;
     
     // Shared assets
     public static Skin uiSkin;
-    public static BitmapFont zombieFont;
-    public static BitmapFont zombieSmallFont;
-    public static BitmapFont visitorFont;
-    public static BitmapFont zombieXSmallFont;
+    public static BitmapFont leviBrush;
+    public static BitmapFont roboto;
+    public static BitmapFont aerial;
     public static TextButtonStyle textButtonStyle;
-    public static LabelStyle labelStyle;
+    public static LabelStyle leviBrushLabelStyle;
+    public static LabelStyle aerialLabelStyle;
+    public static LabelStyle robotoLabelStyle;
     private static boolean fontsLoaded;
     
     public static TextureRegion[] shallowCopy(TextureRegion[] input) {
@@ -90,53 +98,21 @@ public class Assets {
     
     public static void allocateMenuScreen() {
         System.out.println("allocateMenuScreen()");
-       
-        
-        if(!manager.isLoaded("Metro Z.png")) {
-            manager.load("Metro Z.png", Texture.class);
-        }
+
         
         if(!manager.isLoaded("uiskin.json")) {
             manager.load("uiskin.json", Skin.class);
         }
+        
+        if(!manager.isLoaded("menuBackground.png")) {
+            manager.load("menuBackground.png", Texture.class);
+        }
 
         manager.finishLoading();
         
-        menuBackground = new TextureRegion(manager.get("Metro Z.png", Texture.class));
+        menuBackground = new TextureRegion(manager.get("menuBackground.png", Texture.class));
         
         uiSkin = manager.get("uiskin.json", Skin.class);    
-        
-        if(!fontsLoaded) {
-            FreeTypeFontGenerator generator = new FreeTypeFontGenerator(
-                    Gdx.files.internal("fonts/LEVIBRUSH.TTF"));
-            
-            FreeTypeFontParameter parameter = new FreeTypeFontParameter();
-    
-            parameter.size = Gdx.graphics.getWidth() * 74 / 1200;
-    
-            zombieFont = generator.generateFont(parameter);
-    
-            parameter.size = Gdx.graphics.getWidth() * 54 / 1200;
-    
-            zombieSmallFont = generator.generateFont(parameter);
-    
-            visitorFont = generator.generateFont(parameter);
-    
-            parameter.size = Gdx.graphics.getWidth() * 44 / 1200;
-    
-            zombieXSmallFont = generator.generateFont(parameter);
-    
-            generator.dispose();
-    
-            labelStyle = new LabelStyle();
-            labelStyle.font = Assets.zombieFont;
-            labelStyle.fontColor = Color.WHITE;
-    
-            textButtonStyle = new TextButtonStyle();
-            textButtonStyle.font = Assets.zombieFont;
-            
-            fontsLoaded = true;
-        }
     }
     
     public static void deallocateMenuScreen() {
@@ -152,6 +128,89 @@ public class Assets {
         weaponIconAtlas = manager.get("weaponIconPack.pack", TextureAtlas.class);
     }
     
+    public static void allocateTouchOnceScreen() {
+        if(!manager.isLoaded("Metro Z new.jpg")) {
+            manager.load("Metro Z new.jpg", Texture.class);
+        }
+        
+        manager.finishLoading();
+        
+        touchOnceScreenBackground = new TextureRegion(manager.get("Metro Z new.jpg", Texture.class));
+        
+        if(!fontsLoaded) {
+            FreeTypeFontGenerator generator = new FreeTypeFontGenerator(
+                    Gdx.files.internal("fonts/LEVIBRUSH.TTF"));
+            
+            FreeTypeFontParameter parameter = new FreeTypeFontParameter();
+    
+            parameter.size = Gdx.graphics.getWidth() * 30 / AppData.TARGET_HEIGHT;
+    
+            leviBrush = generator.generateFont(parameter);
+    
+            
+            generator = new FreeTypeFontGenerator(
+                    Gdx.files.internal("fonts/RobotoCondensed-Bold.ttf"));
+            
+            parameter.size = Gdx.graphics.getWidth() * 45 / AppData.TARGET_HEIGHT;
+            
+            roboto = generator.generateFont(parameter);
+    
+            generator = new FreeTypeFontGenerator(
+                    Gdx.files.internal("fonts/aerial.ttf"));
+            
+            parameter.size = Gdx.graphics.getWidth() * 32 / AppData.TARGET_HEIGHT;
+            
+            aerial = generator.generateFont(parameter);
+    
+            aerial.setFixedWidthGlyphs(":");
+            
+            parameter.size = Gdx.graphics.getWidth() * 24 / AppData.TARGET_HEIGHT;
+            
+            aerialStore = generator.generateFont(parameter);
+            
+            aerialStore.setFixedWidthGlyphs(":");
+            
+            generator.dispose();
+    
+            aerialLabelStyle = new LabelStyle();
+            aerialLabelStyle.font = Assets.aerial;
+            aerialLabelStyle.fontColor = Color.WHITE;
+    
+            storeLabelStyle = new LabelStyle();
+            storeLabelStyle.font = Assets.aerialStore;
+            storeLabelStyle.fontColor = Color.WHITE;
+            
+            robotoLabelStyle = new LabelStyle();
+            robotoLabelStyle.font = Assets.roboto;
+            robotoLabelStyle.fontColor = Color.WHITE;
+            
+            leviBrushLabelStyle = new LabelStyle();
+            leviBrushLabelStyle.font = Assets.leviBrush;
+            leviBrushLabelStyle.fontColor = Color.WHITE;
+            
+            textButtonStyle = new TextButtonStyle();
+            textButtonStyle.font = Assets.leviBrush;
+            
+            fontsLoaded = true;
+        }
+    }
+    
+    public int fsize(){
+        int a = AppData.TARGET_WIDTH * 4;
+        int b = a/AppData.width;
+        return b;
+    }
+    
+    public static void deallocateFonts() {
+        aerial.dispose();
+        roboto.dispose();
+        leviBrush.dispose();
+        aerialStore.dispose();
+    }
+    
+    public static void deallocateTouchOnceScreen() {
+    }
+    
     public static void deallocateStoreScreen() {
         System.out.println("deallocateStoreScreen()");
         manager.clear();
@@ -164,9 +223,14 @@ public class Assets {
             manager.load("weaponIconPack.pack", TextureAtlas.class);
         }
         
+        if(!manager.isLoaded("playerIcon.png")) {
+            manager.load("playerIcon.png", Texture.class);
+        }
+        
         manager.finishLoading();
         
         weaponIconAtlas = manager.get("weaponIconPack.pack", TextureAtlas.class);
+        playerIcon = new TextureRegion(manager.get("playerIcon.png", Texture.class));
     }
     
     public static void deallocateWeaponSelectionScreen() {
@@ -183,14 +247,17 @@ public class Assets {
         System.out.println("deallocateLevelSelectionScreen()");
         uiSkin.dispose();
         menuBackground.getTexture().dispose();
-        manager.unload("Metro Z.png");
+        manager.unload("Metro Z new.jpg");
         manager.unload("uiskin.json");
+        touchOnceScreenBackground.getTexture().dispose();
     }
     
     public static void allocateGameScreen() {
         System.out.println("allocateGameScreen()");
 
         manager.load("weaponIconPack.pack", TextureAtlas.class);
+        
+        gameBackground = new TextureRegion(new Texture(Gdx.files.internal("gameBackground.png")));
         
         manager.finishLoading();
         
@@ -212,6 +279,8 @@ public class Assets {
         manager.unload("sounds/outofammo.wav"); 
         manager.unload("skinPack.pack");
 
+        gameBackground.getTexture().dispose();
+        
         playerAnimations = new ObjectMap<String, AdvancedSpriteAnimation>();
         zombieAnimations = new ObjectMap<String, SpriteAnimation>();
       
@@ -254,26 +323,28 @@ public class Assets {
     public static void allocateSplashScreen() {
         System.out.println("allocateSplashScreen()");
         
-        if(!manager.isLoaded("Metro Z.png")) {
-            manager.load("Metro Z.png", Texture.class);
+        if(!manager.isLoaded("Metro Z new.jpg")) {
+            manager.load("Metro Z new.jpg", Texture.class);
         }
         
-        if(!manager.isLoaded("logoSplash.png")) {
-            manager.load("logoSplash.png", Texture.class);
+        if(!manager.isLoaded("Pixel Prism.png")) {
+            manager.load("Pixel Prism.png", Texture.class);
         }
  
         manager.finishLoading();
         
-        splashLogo = new TextureRegion(manager.get("logoSplash.png", Texture.class));
+        splashLogo = new TextureRegion(manager.get("Pixel Prism.png", Texture.class));
         
-        menuBackground = new TextureRegion(manager.get("Metro Z.png", Texture.class));
+        menuBackground = new TextureRegion(manager.get("Metro Z new.jpg", Texture.class));
     }
     
     public static void deallocateSplashScreen() {
         System.out.println("deallocateSplashScreen()");
         
         splashLogo.getTexture().dispose();
-        manager.unload("logoSplash.png");
+        splashLogo.getTexture().dispose();
+        manager.unload("Metro Z new.jpg");
+        manager.unload("Pixel Prism.png");
     }
     
     public static void allocateModeSelectionScreen() {
@@ -310,11 +381,23 @@ public class Assets {
     }
     
     public static void allocateCampaignMapScreen() {
+        if(!manager.isLoaded("campaignMapPoint.png")) {
+            manager.load("campaignMapPoint.png", Texture.class);
+        }
         
+        if(!manager.isLoaded("campaignMap.jpg")) {
+            manager.load("campaignMap.jpg", Texture.class);
+        }
+        
+        manager.finishLoading();
+        
+        campaignMapPoint = new TextureRegion(manager.get("campaignMapPoint.png", Texture.class));
+        campaignMap = new TextureRegion(manager.get("campaignMap.jpg", Texture.class));
     }
     
     public static void deallocateCampaignMapScreen() {
-        
+        campaignMapPoint.getTexture().dispose();
+       // manager.unload("campaignMapPoint.png");
     }
     
     public static void  allocateEndlessWavesLSScreen() {
@@ -414,7 +497,6 @@ public class Assets {
         }
         
         healthBarBackground = gameAtlas.findRegion("barBackground");
-        playerIcon = gameAtlas.findRegion("playerIcon1");
         healthbar = gameAtlas.findRegion("healthbar");  
         background = gameAtlas.findRegion("background");
         road = gameAtlas.findRegion("road");

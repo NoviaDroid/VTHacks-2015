@@ -3,6 +3,8 @@ package com.dpc.vthacks.modes;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.moveTo;
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
 
+import java.io.IOException;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.scenes.scene2d.Action;
@@ -12,10 +14,12 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.dpc.vthacks.EventSystem;
+import com.dpc.vthacks.GameEvent;
 import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
+import com.dpc.vthacks.data.Parser;
 import com.dpc.vthacks.level.Level;
 import com.dpc.vthacks.screens.GameScreen;
 import com.dpc.vthacks.screens.MenuScreen;
@@ -30,23 +34,32 @@ public class EndlessWaves extends Level {
     private Stage dialogStage; // Game over dialog stage
     private InputProcessor mplex; // Saved off and put back as the input processor after play again touched
     private boolean isDialogOpen;
+    private String levelName;
     private static final float TIME_DEC = 0.08f;
     private int wave = 1;
     private int zombiesInWave = 10;
     private int zombiesGenerated; 
     private int zombiesKilled;
     
-    public EndlessWaves(GameScreen context) {
-        super(context);
+    public EndlessWaves(GameScreen context, String levelName) {
+        super(context);  
+        this.levelName = levelName;
     }
     
     @Override
-    public void onGameOver() {
-        super.onGameOver();
+    public void dispose() {
+        super.dispose();
         
-        // Disable the controls
-        getContext().getToolbar().setActive(false);
-        setActive(false);
+        dialogStage.dispose();
+    }
+    
+    @Override
+    public void loadLevels() {
+        try {
+            Parser.parseOgmoLevels(levelName, this);
+        } catch (IOException e) {   
+            e.printStackTrace();
+        }
     }
     
     @Override
@@ -69,7 +82,7 @@ public class EndlessWaves extends Level {
 
         final Dialog dialog = getGameOverDialog();
         
-        Label tb1 = new Label("menu", Assets.labelStyle);
+        Label tb1 = new Label("menu", Assets.aerialLabelStyle);
         
         tb1.addListener(new InputListener() {
             @Override
@@ -83,7 +96,7 @@ public class EndlessWaves extends Level {
         
         dialog.getButtonTable().add(tb1).width(100).height(25);
         
-        tb1 = new Label("play again", Assets.labelStyle);
+        tb1 = new Label("play again", Assets.aerialLabelStyle);
         
         tb1.addListener(new InputListener() {
             @Override
@@ -92,10 +105,10 @@ public class EndlessWaves extends Level {
                 Action callback = new Action() {
                     @Override
                     public boolean act(float delta) {
-                        EndlessWaves.this.reset();
+                        GameEvent e = new GameEvent(EventSystem.GAME_STARTED);
                         
-                        getContext().getToolbar().setActive(true);
-               
+                        EventSystem.dispatch(e);
+
                         isDialogOpen = false;
                         
                         dialogStage.clear();
@@ -135,9 +148,7 @@ public class EndlessWaves extends Level {
         
         // Save off the last input processor
         mplex = Gdx.input.getInputProcessor();
-        
-        // Draw no unit
-        setUnitsVisible(false);
+ 
         
         Gdx.input.setInputProcessor(dialogStage);
     }
@@ -156,10 +167,8 @@ public class EndlessWaves extends Level {
         zombiesKilled++;
         
         if(zombiesKilled >= zombiesInWave) {
-            onWaveEnd();
+            EventSystem.dispatch(new GameEvent(EventSystem.WAVE_ENDED, wave + 1));
         }
-        
-        System.out.println(zombiesKilled + "    KILLED");
     }
     
     public void update(float delta) {
@@ -179,26 +188,31 @@ public class EndlessWaves extends Level {
         }
     }
     
+    @Override
+    public void onEvent(GameEvent e) {
+        super.onEvent(e);
+        
+        switch(e.getEvent()) {
+        case EventSystem.WAVE_ENDED:
+            onWaveEnd();
+            break;
+        }
+    }
+    
     private void onWaveEnd() {
         Assets.sounds.get(Assets.WAVE_UP).play(1);
-        
+
         wave++;
         zombiesKilled = 0;
         zombiesGenerated = 0;
         zombiesInWave += wave * 1.5f;
+        
         getZombies().clear();
         getObjectDrawOrder().clear();
-        
         getObjectDrawOrder().add(getPlayer());
         
         if(getSpawnTime() - TIME_DEC > 0.1) {
             setSpawnTime(getSpawnTime() - TIME_DEC);
         }
-        
-        getContext().getToolbar().setWave(wave);
-    }
-    
-    public void dispose() {
-
     }
 }

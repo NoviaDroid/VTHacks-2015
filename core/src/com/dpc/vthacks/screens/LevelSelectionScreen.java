@@ -16,6 +16,7 @@ import com.dpc.vthacks.App;
 import com.dpc.vthacks.PagedScrollPane;
 import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
+import com.dpc.vthacks.level.LevelManager;
 import com.dpc.vthacks.level.LevelProperties;
 
 public class LevelSelectionScreen implements Screen {
@@ -34,7 +35,7 @@ public class LevelSelectionScreen implements Screen {
     public void show() {
         Assets.allocateLevelSelectionScreen();
         
-        stage = new Stage(new StretchViewport(AppData.width, AppData.height));
+        stage = new Stage(new StretchViewport(AppData.width, AppData.height), App.batch);
 
         background = new Image(Assets.menuBackground);
         background.setWidth(AppData.width);
@@ -43,7 +44,7 @@ public class LevelSelectionScreen implements Screen {
         
         stage.addActor(background);
        
-        Label back = new Label("Back", Assets.labelStyle);
+        Label back = new Label("Back", Assets.aerialLabelStyle);
         
         back.setX(back.getWidth() * 0.2f);
         back.setY(AppData.height - back.getHeight());
@@ -61,7 +62,7 @@ public class LevelSelectionScreen implements Screen {
             
         });
         
-        go = new Label("Go!", Assets.labelStyle);
+        go = new Label("Go!", Assets.aerialLabelStyle);
         
         go.setColor(Assets.RED);
         
@@ -85,10 +86,10 @@ public class LevelSelectionScreen implements Screen {
         scroll.setPageSpacing(AppData.width * 0.5f);
 
         // Blank
-        scroll.addPage(new Label("", Assets.labelStyle));
+        scroll.addPage(new Label("", Assets.aerialLabelStyle));
         
         for(Entry<String, String> levels : LevelProperties.getLevels()) {
-            Label label = new Label(levels.key, Assets.labelStyle);
+            Label label = new Label(levels.key, Assets.aerialLabelStyle);
             label.setUserObject(levels.value);
             scroll.addPage(label);
         }
@@ -96,7 +97,7 @@ public class LevelSelectionScreen implements Screen {
         scroll.setCurrentActor(scroll.getContent().getChildren().get(1));
         
         // Blank
-        scroll.addPage(new Label("", Assets.labelStyle));
+        scroll.addPage(new Label("", Assets.aerialLabelStyle));
 
         wrapper.center();
         
@@ -128,7 +129,7 @@ public class LevelSelectionScreen implements Screen {
             
             context.setScreen(new GameScreen(context, 
                                             ((Label) scroll.getCurrentActor()).getUserObject().toString(), 
-                                            LevelProperties.ENDLESS_MODE));
+                                            LevelManager.ENDLESS_WAVES_MODE));
         }
     }
 

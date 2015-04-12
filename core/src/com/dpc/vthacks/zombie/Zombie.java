@@ -3,10 +3,13 @@ package com.dpc.vthacks.zombie;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.dpc.vthacks.App;
+import com.dpc.vthacks.EventSystem;
+import com.dpc.vthacks.GameEvent;
 import com.dpc.vthacks.animation.AnimatedUnit;
 import com.dpc.vthacks.animation.SpriteAnimation;
 import com.dpc.vthacks.factories.Factory;
 import com.dpc.vthacks.infantry.Unit;
+import com.dpc.vthacks.level.LevelManager;
 import com.dpc.vthacks.properties.AnimatedUnitProperties;
 import com.dpc.vthacks.properties.ZombieProperties;
 
@@ -26,12 +29,19 @@ public class Zombie extends AnimatedUnit implements Poolable {
        
         attackSpeed = ((ZombieProperties) properties).getAttackSpeed();
         
+        attackTimer = attackSpeed;
+        
         getProperties().maxHealth(MathUtils.random(getProperties().getHealth(), 
                                                    getProperties().getHealth() * 2) + 25);
         
         init();
     }
 
+    @Override
+    public void onEvent(GameEvent e) {
+    
+    }
+    
     @Override
     public void addPos(float x, float y) {
         super.addPos(x, y);
@@ -64,31 +74,32 @@ public class Zombie extends AnimatedUnit implements Poolable {
                                       App.rand(getProperties().getMaxVel().y,
                                       getProperties().getMaxVel().y));
         
+        float px = LevelManager.getPlayer().getX();
+        float py = LevelManager.getPlayer().getY();
+        float x = getX();
+        float y = getY();
+        
         // If in range of the player, attack
-        if(inRange(getParentLevel().getPlayer())) {
+        if(inRange(LevelManager.getPlayer())) {
             
             float range = 0;
             
-            if(getX() < getParentLevel().getPlayer().getX()) {
-                range = getWidth();
+            if(x < px) {
+                range = getWidth() * 0.65f;
             }
-            else if(getX() > getParentLevel().getPlayer().getX()) {
-                range = getParentLevel().getPlayer().getWidth();
+            else if(x > px) {
+                range = LevelManager.getPlayer().getWidth() * 0.65f;
             }
             
-            if(App.dst(getX(), 
-                       getY(),
-                       getParentLevel().getPlayer().getX(), 
-                       getParentLevel().getPlayer().getY()) <= range &&
-               App.dst(0, getY(), 0, getParentLevel().getPlayer().getY()) < getParentLevel().getPlayer().getHeight() * 0.15f) {
+            if(App.dst(x, y, px, py) <= range &&
+               App.dst(0, getY(), 0, py) < LevelManager.getPlayer().getHeight()) {
                 
-                if(!isAttacking()) {
-                    setAttacking(true, getParentLevel().getPlayer());
-                //    setState("attacking");
-                }
+                //if(!isAttacking()) {
+                    setAttacking(true, LevelManager.getPlayer());
+                //}
                 
                 // Slow the player
-                getParentLevel().getPlayer().setSlowed(true);
+                LevelManager.getPlayer().setSlowed(true);
             }
             else {
                 if(isAttacking()) {
@@ -98,11 +109,11 @@ public class Zombie extends AnimatedUnit implements Poolable {
             
             // Set target based on where currently is
             if (getVelX() < 0) {
-                setCurrentTarget(getParentLevel().getPlayer().getX()
-                        - getWidth(), getParentLevel().getPlayer().getY());
+                setCurrentTarget(px
+                        - getWidth(), py);
             } else {
-                setCurrentTarget(getParentLevel().getPlayer().getX(),
-                        getParentLevel().getPlayer().getY());
+                setCurrentTarget(px,
+                                 py);
             }
             
         }
@@ -110,11 +121,11 @@ public class Zombie extends AnimatedUnit implements Poolable {
             // If there is no target near, reset the path
          //   resetPath();
             if (getVelX() < 0) {
-                setCurrentTarget(getParentLevel().getPlayer().getX()
-                        - getWidth(), getParentLevel().getPlayer().getY());
+                setCurrentTarget(px
+                        - getWidth(), py);
             } else {
-                setCurrentTarget(getParentLevel().getPlayer().getX(),
-                        getParentLevel().getPlayer().getY());
+                setCurrentTarget(px,
+                                 py);
             }
         }
 
@@ -147,17 +158,7 @@ public class Zombie extends AnimatedUnit implements Poolable {
     @Override
     public void onDeath(Unit killer) {
         Factory.zombiePool.free(this);
-        getParentLevel().remove(this);
-        
-        // Add money to the money total
-        getParentLevel()
-                .getContext()
-                .getToolbar()
-                .addMoney((int) MathUtils.random(((ZombieProperties) getProperties())
-                                                    .getMinKillMoney(),
-                                                ((ZombieProperties) getProperties())
-                                                    .getMaxKillMoney()));
-        getParentLevel().onZombieKilled();
+        EventSystem.dispatch(new GameEvent(EventSystem.ZOMBIE_DEATH, this));        
     }
 
     @Override
@@ -165,10 +166,6 @@ public class Zombie extends AnimatedUnit implements Poolable {
         if(getProperties().getHealth() <= 0) {
             onDeath(attacker);
         }
-    }
-
-    public void resetPath() {
-        setCurrentTarget(getFinalDestination().x, getFinalDestination().y);
     }
 
     @Override
@@ -190,6 +187,12 @@ public class Zombie extends AnimatedUnit implements Poolable {
     @Override
     public void attack(Unit enemy, float dmg) {
         enemy.takeDamage(this, dmg);
+    }
+    
+    public int getMoneyReward() {
+        return MathUtils.random(
+                ((ZombieProperties) getProperties()).getMinKillMoney(),
+                ((ZombieProperties) getProperties()).getMaxKillMoney());
     }
     
     public int getTier() {

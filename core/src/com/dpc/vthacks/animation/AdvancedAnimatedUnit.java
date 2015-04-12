@@ -2,6 +2,7 @@ package com.dpc.vthacks.animation;
 
 import com.badlogic.gdx.utils.ObjectMap;
 import com.dpc.vthacks.App;
+import com.dpc.vthacks.GameEvent;
 import com.dpc.vthacks.infantry.Unit;
 import com.dpc.vthacks.properties.AnimatedUnitProperties;
 
@@ -28,9 +29,10 @@ public abstract class AdvancedAnimatedUnit extends Unit {
         playing = false; 
     }
 
+    @Override
+    public abstract void onEvent(GameEvent e);
+    
     public void update(float delta) {
-        super.update(delta);
-
         if(playing) {
             setRegion(stateAnimations.get(currentState).update(delta));
         }

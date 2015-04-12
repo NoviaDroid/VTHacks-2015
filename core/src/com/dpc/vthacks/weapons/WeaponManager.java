@@ -9,14 +9,19 @@ import com.badlogic.gdx.utils.JsonWriter;
 public final class WeaponManager {
     public static final int NUMBER_OF_WEAPONS = 5;
     private static final String UPGRADE_KEY = "currentUpgrade";
-    private static final String PREFS_PATH = "WEAPON_PREFFS";
+    private static final String PREFS_PATH = "weaponPreferencessS";
     private static Preferences prefs;
     private static Array<Weapon> weapons;
-    private static Array<Weapon> unlockedWeapons;
+    private static Array<Weapon> secondaryWeapons;
+    private static Array<Weapon> primaryWeapons;
+    private static Array<Weapon> unlockedPrimaryWeapons;
+    private static Array<Weapon> unlockedSecondaryWeapons;
     
     public static void load() {
+        primaryWeapons = new Array<Weapon>(NUMBER_OF_WEAPONS);
+        secondaryWeapons = new Array<Weapon>(NUMBER_OF_WEAPONS);
         weapons = new Array<Weapon>(NUMBER_OF_WEAPONS);
-
+       
         Json json = new Json();
         json.setTypeName(null);
         json.setUsePrototypes(false);
@@ -25,6 +30,16 @@ public final class WeaponManager {
 
         // Load every weapon in from the json file
         for (Object obj : json.fromJson(Array.class, Gun.class, Gdx.files.internal("json/weapons.json"))) {
+            
+            System.out.println(((Weapon) obj).isPrimary());
+            
+            if(((Weapon) obj).isPrimary()) {
+                primaryWeapons.add((Weapon) obj);
+            }
+            else {
+                secondaryWeapons.add((Weapon) obj);
+            }
+            
             weapons.add((Weapon) obj);
         }
         
@@ -38,28 +53,34 @@ public final class WeaponManager {
         prefs.putInteger("unlocked2", 2);
         prefs.flush();
       
-        unlockedWeapons = new Array<Weapon>();
+        unlockedPrimaryWeapons = new Array<Weapon>();
+        unlockedSecondaryWeapons = new Array<Weapon>();
         
         loadUnlockedWeapons();
-        
-        unlockNextUpgrade(1);
     }
 
     private static void loadUnlockedWeapons() {
         for(Object id : prefs.get().values()) {
             int inumb = Integer.valueOf(String.valueOf(id));
-            
+          
             // Flag the proper weapon as unlocked
             for(Weapon w : weapons) {
                 if(w.getId() == inumb) {
-                    unlockedWeapons.add(w);
+                    if(w.isPrimary()) {
+                        System.err.println("yah it is");
+                        unlockedPrimaryWeapons.add(w);
+                    }
+                    else {
+                        unlockedSecondaryWeapons.add(w);
+                        System.err.println("nah");
+                    }
                 }
             }
         }
     }
     
-    public static boolean isUnlocked(int weaponID) {
-        for(Weapon weapon : unlockedWeapons) {
+    public static boolean isSecondaryUnlocked(int weaponID) {
+        for(Weapon weapon : unlockedSecondaryWeapons) {
             if(weapon.getId() == weaponID) {
                 return true;
             }
@@ -68,22 +89,60 @@ public final class WeaponManager {
         return false;
     }
     
-    public static void unlockNextUpgrade(int weaponID) {
-        int current = prefs.getInteger(weaponID + UPGRADE_KEY, 0);
+    public static boolean isUnlocked(int weaponID) {
+        // Could be simplified, favoring android performance :/
         
-        if(current < getWeapon(weaponID).getUpgrades().length) {
-            prefs.putInteger(weaponID + UPGRADE_KEY, current + 1);
+        for(Weapon w : unlockedPrimaryWeapons) {
+            if(w.getId() == weaponID) {
+                return true;
+            }
+        }
+        
+        for(Weapon w : unlockedSecondaryWeapons) {
+            if(w.getId() == weaponID) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    public static boolean isPrimaryUnlocked(int weaponID) {
+        for(Weapon weapon : unlockedPrimaryWeapons) {
+            if(weapon.getId() == weaponID) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    public static void unlockNextUpgrade(Weapon w) {
+        int current = prefs.getInteger(w.getId() + UPGRADE_KEY, 0);
+
+
+        if(current < getWeapon(w.isPrimary(), w.getId()).getUpgrades().length) {
+            prefs.putInteger(w.getId() + UPGRADE_KEY, current + 1);
             prefs.flush();
             
-            System.out.println("unlocked upgrade " + current + " for weapon " + weaponID);
+            System.out.println("unlocked upgrade " + current + " for weapon " + w.getId());
         }
         else {
-            System.out.println("unable to unlock upgrade for weapon " + weaponID);
+            System.out.println("unable to unlock upgrade for weapon " + w.getId());
         }
     }
     
-    private static Weapon getWeapon(int weaponID) {
-        for(Weapon w : weapons) {
+    private static Weapon getWeapon(boolean primary, int id) {
+        if(primary) {
+            return getPrimary(id);
+        }
+        else {
+            return getSecondary(id);
+        }
+    }
+
+    private static Weapon getSecondary(int weaponID) {
+        for(Weapon w : secondaryWeapons) {
             if(w.getId() == weaponID) {
                 return w;
             }
@@ -92,19 +151,51 @@ public final class WeaponManager {
         return null;
     }
     
-    public static void unlock(int weaponID) {
+    private static Weapon getPrimary(int weaponID) {
+        for(Weapon w : primaryWeapons) {
+            if(w.getId() == weaponID) {
+                return w;
+            }
+        }
+        
+        return null;
+    }
+    
+    public static void unlockSecondary(int weaponID) {
+        unlock(weaponID);
+        
+        unlockedSecondaryWeapons.add(getSecondary(weaponID));
+    }
+    
+    public static void unlockPrimary(int weaponID) {
+        unlock(weaponID);
+        
+        unlockedPrimaryWeapons.add(getPrimary(weaponID));
+    }
+    
+    private static void unlock(int weaponID) {
         // Unlock weapon with that ID
         prefs.putInteger("unlocked" + weaponID, weaponID);
         prefs.flush();
-        
-        unlockedWeapons.add(getWeapon(weaponID));
     }
     
-    public static Array<Weapon> getUnlockedWeapons() {
-        return unlockedWeapons;
-    }
-    
-    public static Array<Weapon> getWeapons() {
+    public static Array<Weapon> getAllWeapons() {
         return weapons;
+    }
+    
+    public static Array<Weapon> getUnlockedSecondaryWeapons() {
+        return unlockedSecondaryWeapons;
+    }
+    
+    public static Array<Weapon> getUnlockedPrimaryWeapons() {
+        return unlockedPrimaryWeapons;
+    }
+    
+    public static Array<Weapon> getPrimaryWeapons() {
+        return primaryWeapons;
+    }
+    
+    public static Array<Weapon> getSecondaryWeapons() {
+        return secondaryWeapons;
     }
 }
