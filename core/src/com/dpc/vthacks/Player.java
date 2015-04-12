@@ -1,5 +1,6 @@
 package com.dpc.vthacks;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.dpc.vthacks.animation.AdvancedAnimatedUnit;
@@ -24,6 +25,7 @@ public class Player extends AdvancedAnimatedUnit {
     private boolean deathCallbackCalled; // True when the player's onGameOver method is called
     private Rectangle ground;
     private Weapon primary, secondary, currentWeapon;
+    private Texture q;
     
     public Player(String currentState,
                   AnimatedUnitProperties<AdvancedSpriteAnimation> properties, 
@@ -40,7 +42,19 @@ public class Player extends AdvancedAnimatedUnit {
     }
     
     @Override
-    public void render() {  
+    public void onEvent(GameEvent e) {
+        int ev = e.getEvent();
+        
+        switch(ev) {
+        case EventSystem.ENTITY_ATTACK:
+            break;
+        case EventSystem.TOUCH_DOWN:
+            break;
+        }
+    }
+    
+    @Override
+    public void render() {
         super.render();
     }
     
@@ -55,7 +69,7 @@ public class Player extends AdvancedAnimatedUnit {
 
     @Override
     public void onDeath(Unit killer) {
-        LevelManager.getCurrentLevel().onGameOver();
+        EventSystem.dispatch(new GameEvent(EventSystem.GAME_OVER));
     }
 
     @Override
@@ -89,10 +103,9 @@ public class Player extends AdvancedAnimatedUnit {
     
                 // Decrease ammo
                 currentWeapon.decAmmo(1);
-                
-                // Update the ammo label
-                LevelManager.getCurrentLevel().getContext().getToolbar().setAmmo(currentWeapon.getAmmo());
-                
+
+                EventSystem.dispatch(new GameEvent(EventSystem.PLAYER_AMMO_CHANGED, currentWeapon.getAmmo()));
+
                 if(z != null) {
                     attack(z, damageScale);
                 }
@@ -104,7 +117,7 @@ public class Player extends AdvancedAnimatedUnit {
                 Assets.sounds.get(Assets.OUT_OF_AMMO).stop();
                 Assets.sounds.get(Assets.OUT_OF_AMMO).play();
                 
-                LevelManager.getCurrentLevel().getContext().getToolbar().shakeAmmo();
+                EventSystem.dispatch(new GameEvent(EventSystem.PLAYER_AMMO_OUT));
             }
         }
     }
@@ -119,18 +132,17 @@ public class Player extends AdvancedAnimatedUnit {
         primary.refillAmmo();
         secondary.refillAmmo();
         
-        centerInViewport();
+        EventSystem.dispatch(new GameEvent(EventSystem.PLAYER_AMMO_CHANGED, primary.getAmmo()));
+        EventSystem.dispatch(new GameEvent(EventSystem.PLAYER_HEALTH_CHANGED, getProperties().getHealth()));
+        EventSystem.dispatch(new GameEvent(EventSystem.PLAYER_MONEY_CHANGED, 0));
         
-        // Reset the toolbars info
-        LevelManager.getCurrentLevel().getContext().getToolbar().setMoney(0);
-        LevelManager.getCurrentLevel().getContext().getToolbar().setAmmo(primary.getAmmo());
-        LevelManager.getCurrentLevel().getContext().getToolbar().setHealth(getProperties().getMaxHealth());
+        centerInViewport();
     }
 
     @Override
     public void onDamageTaken(Unit attacker, float amount) {
-        LevelManager.getCurrentLevel().getContext().getToolbar().setHealth(getProperties().getHealth());
-
+        EventSystem.dispatch(new GameEvent(EventSystem.PLAYER_HEALTH_CHANGED, getProperties().getHealth()));
+        
         if(getProperties().getHealth() <= 0 && !deathCallbackCalled) {
              onDeath(attacker);
              deathCallbackCalled = true;
@@ -228,7 +240,7 @@ public class Player extends AdvancedAnimatedUnit {
         primary.setAmmo(primary.getMaxAmmo());
         secondary.setAmmo(secondary.getMaxAmmo());
         
-        LevelManager.getCurrentLevel().getContext().getToolbar().setAmmo(currentWeapon.getAmmo());
+        EventSystem.dispatch(new GameEvent(EventSystem.PLAYER_AMMO_CHANGED, primary.getAmmo()));
     }
     
     public void setGround(Rectangle rect) {

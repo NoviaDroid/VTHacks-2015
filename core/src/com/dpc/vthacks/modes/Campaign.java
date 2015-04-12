@@ -56,21 +56,13 @@ public class Campaign extends Level {
     
     @Override
     public void dispose() {
+        super.dispose();
         dialogStage.dispose();
     }
 
     @Override
     public void onZombieKilled() {
         
-    }
-    
-    @Override
-    public void onGameOver() {
-        super.onGameOver();
-        
-        // Disable the controls
-        getContext().getToolbar().setActive(false);
-        setActive(false);
     }
     
     @Override

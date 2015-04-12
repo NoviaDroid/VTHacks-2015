@@ -6,6 +6,7 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -13,7 +14,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.badlogic.gdx.utils.Scaling;
+import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.dpc.vthacks.AndroidCamera;
 import com.dpc.vthacks.App;
 import com.dpc.vthacks.data.AppData;
@@ -51,16 +53,20 @@ public class MenuScreen implements Screen {
     public void show() {
         Assets.allocateMenuScreen();
 
-        stage = new Stage(new StretchViewport(AppData.width, AppData.height));
-
+        stage = new Stage(new ScalingViewport(Scaling.stretch, 
+                AppData.width,
+                AppData.height,
+                new AndroidCamera(AppData.TARGET_WIDTH, AppData.TARGET_HEIGHT)),
+                App.batch);
+        
         background = new Image(Assets.menuBackground);
-        background.setSize(AppData.width, AppData.height);
+        background.setSize(AppData.TARGET_WIDTH, AppData.TARGET_HEIGHT);
         background.addAction(sequence(alpha(0.5f), alpha(1, 0.5f)));
         
-        footer = new Label("Made with love at VT Hacks", Assets.aerialLabelStyle);
+        footer = new Label("Made with love at VT Hacks", Assets.storeLabelStyle);
         footer.setColor(0.5f, 0, 0, 1);
         
-        play = new Label("Play", Assets.aerialLabelStyle);
+        play = new Label("Play", Assets.storeLabelStyle);
         
         play.addListener(new InputListener() {
             
@@ -74,7 +80,7 @@ public class MenuScreen implements Screen {
         
         play.setColor(Assets.RED);
         
-        shop = new Label("Store", Assets.aerialLabelStyle);
+        shop = new Label("Store", Assets.storeLabelStyle);
         shop.setColor(Assets.RED);
         
         shop.addListener(new InputListener() {
@@ -88,12 +94,30 @@ public class MenuScreen implements Screen {
             
         });
         
+        Label settings = new Label("Settings", Assets.storeLabelStyle);
+        settings.setColor(Assets.RED);
+        
+        settings.addListener(new InputListener() {
+            
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                context.setScreen(new SettingsScreen(context));
+                
+                return super.touchDown(event, x, y, pointer, button);
+            }
+            
+        });
+        
         t = new Table();
 
         t.add(play);
         t.row();
 
         t.add(shop);
+        
+        t.row();
+        
+        t.add(settings);
         
         t.center();
         t.right();
@@ -112,8 +136,8 @@ public class MenuScreen implements Screen {
         
         menu = new Sprite(Assets.menuBackground);
         menu.setPosition(0, 0);
-        menu.setSize(AppData.width, AppData.height);
-        
+        menu.setSize(AppData.TARGET_WIDTH, AppData.TARGET_HEIGHT);
+
         Gdx.input.setInputProcessor(stage);
     }
 

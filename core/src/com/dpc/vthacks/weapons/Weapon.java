@@ -13,6 +13,7 @@ public class Weapon {
     private String description;
     private String iconPath;
     private String sound; // Key to sounds map in assets
+    private boolean primary; // True = primary, false = secondary
     private float minDamage;
     private float maxDamage;
     private int ammo;
@@ -126,5 +127,13 @@ public class Weapon {
     
     public int getCurrentUpgradeIndex() {
         return currentUpgradeIndex;
+    }
+    
+    public void setPrimary(boolean primary) {
+        this.primary = primary;
+    }
+    
+    public boolean isPrimary() {
+        return primary;
     }
 }

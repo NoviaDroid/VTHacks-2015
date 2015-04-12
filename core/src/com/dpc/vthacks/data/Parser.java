@@ -17,7 +17,6 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 import com.dpc.vthacks.App;
 import com.dpc.vthacks.Player;
 import com.dpc.vthacks.animation.AdvancedSpriteAnimation;
-import com.dpc.vthacks.animation.SpriteAnimation;
 import com.dpc.vthacks.factories.Factory;
 import com.dpc.vthacks.gameobject.GameObject;
 import com.dpc.vthacks.level.Level;
@@ -57,12 +56,6 @@ public class Parser {
         
         JsonValue root = reader.parse(handle);
         JsonValue root1 = reader.parse(handle1);
-
-        parseTanks(root.getChild("tank"));
-        
-        parseSoldiers(root.getChild("soldier"));
-        
-        parseBomb(root.getChild("bomb"));
 
         parseZombieProperties();
         
@@ -120,64 +113,6 @@ public class Parser {
      */
     private static void parseBuildings() {
         Factory.setBuildingProperties(new Properties());
-    }
-    
-    /**
-     * Parses tank properties from JSON and gives it to the factory
-     * @param tank
-     */
-    private static void parseTanks(JsonValue tank) {
-        AnimatedUnitProperties<SpriteAnimation> tankProperties = 
-                new AnimatedUnitProperties<SpriteAnimation>()
-                    .cost(tank.getInt("cost"))
-                    .minDamage(tank.getFloat("minDamage"))
-                    .maxDamage(tank.getFloat("maxDamage"))
-                    .health(tank.getInt("health"))
-                    .vel(tank.getFloat("velX"), tank.getFloat("velY"))
-                    .range(tank.getFloat("range"))
-                    .maxHealth(tank.getInt("max health"))
-                    .frameTime(tank.getFloat("frameTime"))
-                    .scaleX(tank.getFloat("scaleX"))
-                    .scaleY(tank.getFloat("scaleY"));
-        
-        Factory.setTankProperties(tankProperties);
-    }
-
-    /**
-     * Parses soldier properties from JSON and gives it to the factory
-     * @param soldier
-     */
-    private static void parseSoldiers(JsonValue soldier) {
-        AnimatedUnitProperties<SpriteAnimation> soldierProperties = 
-                new AnimatedUnitProperties<SpriteAnimation>()
-                    .cost(soldier.getInt("cost"))
-                    .minDamage(soldier.getFloat("minDamage"))
-                    .maxDamage(soldier.getFloat("maxDamage"))
-                    .health(soldier.getInt("health"))
-                    .range(soldier.getFloat("range"))
-                    .vel(soldier.getFloat("velX"), soldier.getFloat("velY"))
-                    .maxHealth(soldier.getInt("max health"))
-                    .frameTime(soldier.getFloat("frameTime"))
-                    .scaleX(soldier.getFloat("scaleX")) 
-                    .scaleY(soldier.getFloat("scaleY"));
-        
-        Factory.setSoldierProperties(soldierProperties);
-    }
-
-    /**
-     * Parses bomb properties from JSON and gives it to the factory
-     * @param bomb
-     */
-    private static void parseBomb(JsonValue bomb) {
-        Properties bombProperties = 
-                new Properties()
-                    .minDamage(bomb.getFloat("minDamage"))
-                    .maxDamage(bomb.getFloat("maxDamage"))
-                    .vel(bomb.getFloat("velX"), bomb.getFloat("velY"))
-                    .scaleX(bomb.getFloat("scaleX"))
-                    .scaleY(bomb.getFloat("scaleY"));
-        
-        Factory.setBombProperties(bombProperties);
     }
 
     /**
@@ -388,6 +323,5 @@ public class Parser {
         
         level.setSpawnTime(root.getFloat("zombieSpawnTime"));
         level.setLayers(parsedLayers);
-    System.out.println(level.getSpawnTime());
     }
 }

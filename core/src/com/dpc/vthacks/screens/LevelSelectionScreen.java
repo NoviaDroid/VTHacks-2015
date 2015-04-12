@@ -35,7 +35,7 @@ public class LevelSelectionScreen implements Screen {
     public void show() {
         Assets.allocateLevelSelectionScreen();
         
-        stage = new Stage(new StretchViewport(AppData.width, AppData.height));
+        stage = new Stage(new StretchViewport(AppData.width, AppData.height), App.batch);
 
         background = new Image(Assets.menuBackground);
         background.setWidth(AppData.width);

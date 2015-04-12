@@ -27,7 +27,7 @@ public class SplashScreen implements Screen {
         splash = new Image(Assets.splashLogo);
         splash.setSize(AppData.width, AppData.height);
         
-        stage = new Stage(new StretchViewport(AppData.width, AppData.height));
+        stage = new Stage(new StretchViewport(AppData.width, AppData.height), App.batch);
         
         stage.addActor(splash);
         

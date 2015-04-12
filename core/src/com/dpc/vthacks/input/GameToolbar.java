@@ -24,14 +24,20 @@ import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad.TouchpadStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Scaling;
+import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.dpc.vthacks.AndroidCamera;
-import com.dpc.vthacks.Bank;
+import com.dpc.vthacks.App;
+import com.dpc.vthacks.EventSystem;
+import com.dpc.vthacks.GameEvent;
+import com.dpc.vthacks.IListener;
 import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
+import com.dpc.vthacks.data.Bank;
 import com.dpc.vthacks.level.LevelManager;
 import com.dpc.vthacks.weapons.Weapon;
 
-public class GameToolbar {
+public class GameToolbar implements IListener {
     private Stage stage;
     private Image healthBarBackground, healthBar, playerIcon;
     private Image gunIcon;
@@ -104,13 +110,15 @@ public class GameToolbar {
         healthBar.setPosition(healthBarBackground.getX() + (Assets.healthBarBackground.getRegionHeight() * 0.135f),
                               healthBarBackground.getY() + (Assets.healthBarBackground.getRegionHeight() * 0.135f));
         
-        stage = new Stage();
+        stage = new Stage(new ScalingViewport(Scaling.stretch, 
+                AppData.width,
+                AppData.height,
+                new AndroidCamera(AppData.TARGET_WIDTH, AppData.TARGET_HEIGHT, cameraX, cameraY)),
+                App.batch);
         
         cameraX = AppData.TARGET_WIDTH * 0.5f;
         cameraY = AppData.TARGET_HEIGHT * 0.5f;
-        
-        stage.getViewport().setCamera(new AndroidCamera(AppData.TARGET_WIDTH, AppData.TARGET_HEIGHT, cameraX, cameraY));
-        
+
         joystick.setPosition(PADDING, PADDING);
         addMoney(0);
 
@@ -250,16 +258,51 @@ public class GameToolbar {
             }
             
         };
+
+        EventSystem.register(EventSystem.PLAYER_AMMO_CHANGED, this);
+        EventSystem.register(EventSystem.PLAYER_MONEY_CHANGED, this);
+        EventSystem.register(EventSystem.PLAYER_HEALTH_CHANGED, this);
+        EventSystem.register(EventSystem.GAME_OVER, this);
+        EventSystem.register(EventSystem.GAME_STARTED, this);
+        EventSystem.register(EventSystem.WAVE_STARTED, this);
+        EventSystem.register(EventSystem.WAVE_ENDED, this);
+        EventSystem.register(EventSystem.PLAYER_AMMO_OUT, this);
     }
    
+    @Override
+    public void onEvent(GameEvent e) {
+        switch(e.getEvent()) {
+        case EventSystem.PLAYER_AMMO_CHANGED:
+            setAmmo((Integer) e.getUserData());
+            break;
+        case EventSystem.PLAYER_MONEY_CHANGED:
+            addMoney((Integer) e.getUserData());
+            break;
+        case EventSystem.PLAYER_HEALTH_CHANGED:
+            setHealth((Float) e.getUserData());
+            break;
+        case EventSystem.GAME_STARTED:
+            setActive(true);
+            break;
+        case EventSystem.GAME_OVER:
+            setMoney(0);
+            stage.cancelTouchFocus();
+            setActive(false);
+            break;
+        case EventSystem.WAVE_ENDED:
+            setWave((Integer) e.getUserData());
+            break;
+        case EventSystem.PLAYER_AMMO_OUT:
+            shakeAmmo();
+            break;
+        }
+    }
+    
     public void update(float delta) {
         stage.act(delta);
        
        // Transition is complete
        if(transitionDone) {
-           // Notify the level
-           LevelManager.getCurrentLevel().openGameOverDialog();
-           
            transitionDone = false;
        }
        
@@ -340,9 +383,6 @@ public class GameToolbar {
     public void addMoney(int am) {
         this.money += am;
 
-        // Deposit money into the player's bank
-        Bank.deposit(am);
-        
         moneyLabel.setText("$" + money);
         
         float t = (moneyLabel.getStyle().font.getBounds(moneyLabel.getText()).height * 2);
@@ -360,7 +400,7 @@ public class GameToolbar {
         updateMoneyToast(am);
     }
     
-    public void shakeAmmo() {
+    private void shakeAmmo() {
         ammoLabel.addAction(repeat(2, sequence(
                 moveBy(20, 0, 0.1f),
                 moveBy(-20, 0, 0.1f))));

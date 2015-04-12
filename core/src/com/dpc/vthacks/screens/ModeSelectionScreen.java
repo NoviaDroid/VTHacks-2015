@@ -8,6 +8,7 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -39,10 +40,11 @@ public class ModeSelectionScreen implements Screen {
     public void show() {
         Assets.allocateModeSelectionScreen();
         
-        stage = new Stage(new StretchViewport(AppData.width, AppData.height));
-        
-        
+        stage = new Stage(new StretchViewport(AppData.width, AppData.height), App.batch);
+
         final Label description = new Label("Select a mode", Assets.aerialLabelStyle);
+        
+        description.setColor(Color.GRAY);
         
         final Label back = new Label("Back", Assets.aerialLabelStyle);
         

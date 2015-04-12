@@ -30,7 +30,8 @@ public class TouchOnceScreen implements Screen {
     @Override
     public void show() {
         Assets.allocateTouchOnceScreen();
-        stage = new Stage(new StretchViewport(AppData.width, AppData.height));
+        
+        stage = new Stage(new StretchViewport(AppData.width, AppData.height), App.batch);
         
         Image background = new Image(Assets.touchOnceScreenBackground);
         background.setWidth(AppData.width);
@@ -68,7 +69,7 @@ public class TouchOnceScreen implements Screen {
             }
             
         });
- 
+
         Gdx.input.setInputProcessor(stage);
     }
 

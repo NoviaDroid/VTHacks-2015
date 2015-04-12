@@ -30,13 +30,17 @@ public class Assets {
     
     // Weapon selection screen assets
     
-    // Level selection screen assets
+    public static TextureRegion gameBackground;
     
+    // Level selection screen assets
+    public static final Color GREEN = new Color(0, 0.4f, 0, 1);
     public static final Color RED = new Color(0.85f, 0.05f, 0.24f, 1);
     public static TextureRegion campaignPreview;
     public static TextureRegion endlessWavesPreview;
     public static TextureRegion touchOnceScreenBackground;
     public static TextureRegion campaignMap;
+    public static BitmapFont aerialStore;
+    public static LabelStyle storeLabelStyle;
     
     // Game screen assets
     public static final String SHOT1 = "shot1";
@@ -125,13 +129,13 @@ public class Assets {
     }
     
     public static void allocateTouchOnceScreen() {
-        if(!manager.isLoaded("Metro Z.png")) {
-            manager.load("Metro Z.png", Texture.class);
+        if(!manager.isLoaded("Metro Z new.jpg")) {
+            manager.load("Metro Z new.jpg", Texture.class);
         }
         
         manager.finishLoading();
         
-        touchOnceScreenBackground = new TextureRegion(manager.get("Metro Z.png", Texture.class));
+        touchOnceScreenBackground = new TextureRegion(manager.get("Metro Z new.jpg", Texture.class));
         
         if(!fontsLoaded) {
             FreeTypeFontGenerator generator = new FreeTypeFontGenerator(
@@ -154,11 +158,17 @@ public class Assets {
             generator = new FreeTypeFontGenerator(
                     Gdx.files.internal("fonts/aerial.ttf"));
             
-            parameter.size = Gdx.graphics.getWidth() * 35 / AppData.TARGET_HEIGHT;
+            parameter.size = Gdx.graphics.getWidth() * 32 / AppData.TARGET_HEIGHT;
             
             aerial = generator.generateFont(parameter);
     
             aerial.setFixedWidthGlyphs(":");
+            
+            parameter.size = Gdx.graphics.getWidth() * 24 / AppData.TARGET_HEIGHT;
+            
+            aerialStore = generator.generateFont(parameter);
+            
+            aerialStore.setFixedWidthGlyphs(":");
             
             generator.dispose();
     
@@ -166,6 +176,10 @@ public class Assets {
             aerialLabelStyle.font = Assets.aerial;
             aerialLabelStyle.fontColor = Color.WHITE;
     
+            storeLabelStyle = new LabelStyle();
+            storeLabelStyle.font = Assets.aerialStore;
+            storeLabelStyle.fontColor = Color.WHITE;
+            
             robotoLabelStyle = new LabelStyle();
             robotoLabelStyle.font = Assets.roboto;
             robotoLabelStyle.fontColor = Color.WHITE;
@@ -181,10 +195,17 @@ public class Assets {
         }
     }
     
+    public int fsize(){
+        int a = AppData.TARGET_WIDTH * 4;
+        int b = a/AppData.width;
+        return b;
+    }
+    
     public static void deallocateFonts() {
         aerial.dispose();
         roboto.dispose();
         leviBrush.dispose();
+        aerialStore.dispose();
     }
     
     public static void deallocateTouchOnceScreen() {
@@ -202,9 +223,14 @@ public class Assets {
             manager.load("weaponIconPack.pack", TextureAtlas.class);
         }
         
+        if(!manager.isLoaded("playerIcon.png")) {
+            manager.load("playerIcon.png", Texture.class);
+        }
+        
         manager.finishLoading();
         
         weaponIconAtlas = manager.get("weaponIconPack.pack", TextureAtlas.class);
+        playerIcon = new TextureRegion(manager.get("playerIcon.png", Texture.class));
     }
     
     public static void deallocateWeaponSelectionScreen() {
@@ -221,7 +247,7 @@ public class Assets {
         System.out.println("deallocateLevelSelectionScreen()");
         uiSkin.dispose();
         menuBackground.getTexture().dispose();
-        manager.unload("Metro Z.png");
+        manager.unload("Metro Z new.jpg");
         manager.unload("uiskin.json");
         touchOnceScreenBackground.getTexture().dispose();
     }
@@ -230,6 +256,8 @@ public class Assets {
         System.out.println("allocateGameScreen()");
 
         manager.load("weaponIconPack.pack", TextureAtlas.class);
+        
+        gameBackground = new TextureRegion(new Texture(Gdx.files.internal("gameBackground.png")));
         
         manager.finishLoading();
         
@@ -251,6 +279,8 @@ public class Assets {
         manager.unload("sounds/outofammo.wav"); 
         manager.unload("skinPack.pack");
 
+        gameBackground.getTexture().dispose();
+        
         playerAnimations = new ObjectMap<String, AdvancedSpriteAnimation>();
         zombieAnimations = new ObjectMap<String, SpriteAnimation>();
       
@@ -293,19 +323,19 @@ public class Assets {
     public static void allocateSplashScreen() {
         System.out.println("allocateSplashScreen()");
         
-        if(!manager.isLoaded("Metro Z.png")) {
-            manager.load("Metro Z.png", Texture.class);
+        if(!manager.isLoaded("Metro Z new.jpg")) {
+            manager.load("Metro Z new.jpg", Texture.class);
         }
         
-        if(!manager.isLoaded("logoSplash.png")) {
-            manager.load("logoSplash.png", Texture.class);
+        if(!manager.isLoaded("Pixel Prism.png")) {
+            manager.load("Pixel Prism.png", Texture.class);
         }
  
         manager.finishLoading();
         
-        splashLogo = new TextureRegion(manager.get("logoSplash.png", Texture.class));
+        splashLogo = new TextureRegion(manager.get("Pixel Prism.png", Texture.class));
         
-        menuBackground = new TextureRegion(manager.get("Metro Z.png", Texture.class));
+        menuBackground = new TextureRegion(manager.get("Metro Z new.jpg", Texture.class));
     }
     
     public static void deallocateSplashScreen() {
@@ -313,8 +343,8 @@ public class Assets {
         
         splashLogo.getTexture().dispose();
         splashLogo.getTexture().dispose();
-        manager.unload("Metro Z.png");
-        manager.unload("logoSplash.png");
+        manager.unload("Metro Z new.jpg");
+        manager.unload("Pixel Prism.png");
     }
     
     public static void allocateModeSelectionScreen() {
@@ -467,7 +497,6 @@ public class Assets {
         }
         
         healthBarBackground = gameAtlas.findRegion("barBackground");
-        playerIcon = gameAtlas.findRegion("playerIcon1");
         healthbar = gameAtlas.findRegion("healthbar");  
         background = gameAtlas.findRegion("background");
         road = gameAtlas.findRegion("road");

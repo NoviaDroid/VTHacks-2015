@@ -16,6 +16,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Scaling;
+import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.dpc.vthacks.AndroidCamera;
 import com.dpc.vthacks.App;
 import com.dpc.vthacks.data.AppData;
@@ -49,8 +51,11 @@ public class CampaignMapScreen implements Screen {
             e.printStackTrace();
         }
         
-        stage = new Stage();
-        stage.getViewport().setCamera(new AndroidCamera(AppData.TARGET_WIDTH, AppData.TARGET_HEIGHT));
+        stage = new Stage(new ScalingViewport(Scaling.stretch, 
+                AppData.width,
+                AppData.height,
+                new AndroidCamera(AppData.TARGET_WIDTH, AppData.TARGET_HEIGHT)),
+                App.batch);
         
         Label back = new Label("Back", Assets.aerialLabelStyle);
         

@@ -1,11 +1,8 @@
 package com.dpc.vthacks.screens;
 
-import java.io.IOException;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.FPSLogger;
 import com.dpc.vthacks.AndroidCamera;
 import com.dpc.vthacks.App;
 import com.dpc.vthacks.Player;
@@ -16,7 +13,6 @@ import com.dpc.vthacks.factories.Factory;
 import com.dpc.vthacks.input.GameToolbar;
 import com.dpc.vthacks.level.Level;
 import com.dpc.vthacks.level.LevelManager;
-import com.dpc.vthacks.level.LevelProperties;
 import com.dpc.vthacks.modes.Campaign;
 import com.dpc.vthacks.modes.EndlessWaves;
 

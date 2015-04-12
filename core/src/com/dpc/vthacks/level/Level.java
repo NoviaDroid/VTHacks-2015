@@ -3,33 +3,43 @@ package com.dpc.vthacks.level;
 import java.util.Comparator;
 import java.util.Iterator;
 
+import box2dLight.RayHandler;
+
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.input.GestureDetector.GestureListener;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.utils.Array;
 import com.dpc.vthacks.AndroidCamera;
 import com.dpc.vthacks.App;
+import com.dpc.vthacks.EventSystem;
+import com.dpc.vthacks.GameEvent;
+import com.dpc.vthacks.IListener;
 import com.dpc.vthacks.Player;
 import com.dpc.vthacks.data.AppData;
 import com.dpc.vthacks.data.Assets;
+import com.dpc.vthacks.data.Bank;
 import com.dpc.vthacks.factories.Factory;
 import com.dpc.vthacks.gameobject.GameObject;
-import com.dpc.vthacks.infantry.Unit;
 import com.dpc.vthacks.objects.AmmoCrate;
+import com.dpc.vthacks.objects.StreetLight;
 import com.dpc.vthacks.properties.ZombieProperties;
 import com.dpc.vthacks.screens.GameScreen;
 import com.dpc.vthacks.weapons.Gun;
 import com.dpc.vthacks.zombie.Zombie;
 import com.dpc.vthacks.zombie.ZombieSegment;
 
-public abstract class Level {
+public abstract class Level implements IListener {
+    private Array<StreetLight> lights;
+    private World physicsWorld;
+    private RayHandler rayHandler;
     private Player player;
     private Array<AmmoCrate> ammoCrates;
-    private Array<Unit> playerArmy;
     private Array<Zombie> zombies;
     private Array<Array<GameObject>> layers;
     private Array<GameObject> objectDrawOrder;
@@ -43,16 +53,16 @@ public abstract class Level {
     private float spawnTime, spawnTimer;
     private float origCameraZoom;
     private float AMMO_CRATE_SPAWN_TIME = 0.001f;
+    private boolean fingerDown;
+    private static final float CAMERA_ZOOM = 0.45f;
     private static final float MAX_ZOOM = 0.35f; // Most that can be zoomed in
     private static final float ZOOM_STEP = 0.05f; // How much zoom to add
-    private boolean fingerDown;
     
     public Level(final GameScreen context) {
         this.context = context;
         
         input = new Vector3();
         layers = new Array<Array<GameObject>>();
-        playerArmy = new Array<Unit>();
         zombies = new Array<Zombie>();
         ammoCrates = new Array<AmmoCrate>();
         gameCamera = new AndroidCamera(AppData.TARGET_WIDTH, AppData.TARGET_HEIGHT);
@@ -60,6 +70,20 @@ public abstract class Level {
         
         initializeCamera();
 
+        if(App.settings.isDynamicLightingEnabled()) {
+            physicsWorld = new World(new Vector2(0, -9.807f), true);
+            
+            rayHandler = new RayHandler(physicsWorld);
+            
+            rayHandler.setCombinedMatrix(gameCamera.combined);
+            
+            lights = new Array<StreetLight>();
+            
+            for(int i = 0; i < 10; i++) {
+                lights.add(new StreetLight(rayHandler, Assets.ammoCrate, i * 600, 200));
+            }
+        }
+        
         GestureListener l = new GestureListener() {
             
             @Override
@@ -124,23 +148,23 @@ public abstract class Level {
 
             @Override
             public boolean scrolled(int amount) {
-                // Make sure the amount of zoom is valid
-                if(gameCamera.zoom + ZOOM_STEP > origCameraZoom && amount > 0) {
-                    return false;
-                }
-  
-                // Actual zooming
-                if(amount > 0) {
-                    gameCamera.zoom += ZOOM_STEP;
-                }
-                else if(gameCamera.zoom - ZOOM_STEP > MAX_ZOOM){
-                    gameCamera.zoom -= ZOOM_STEP;
-                }
-                
-                // Reposition the camera
-                repositionCamera();
-
-                gameCamera.update();
+//                // Make sure the amount of zoom is valid
+//                if(gameCamera.zoom + ZOOM_STEP > origCameraZoom && amount > 0) {
+//                    return false;
+//                }
+//  
+//                // Actual zooming
+//                if(amount > 0) {
+//                    gameCamera.zoom += ZOOM_STEP;
+//                }
+//                else if(gameCamera.zoom - ZOOM_STEP > MAX_ZOOM){
+//                    gameCamera.zoom -= ZOOM_STEP;
+//                }
+//                
+//                // Reposition the camera
+//                repositionCamera();
+//
+//                gameCamera.update();
                 
                 
                 return false;
@@ -159,6 +183,11 @@ public abstract class Level {
                 return true;
             }
         };
+        
+        EventSystem.register(EventSystem.GAME_OVER, this);
+        EventSystem.register(EventSystem.WAVE_ENDED, this);
+        EventSystem.register(EventSystem.GAME_STARTED, this);
+        EventSystem.register(EventSystem.ZOMBIE_DEATH, this);
     }
     
     public void repositionCamera() {
@@ -218,6 +247,28 @@ public abstract class Level {
         }
     }
     
+    @Override
+    public void onEvent(GameEvent e) {
+
+        switch(e.getEvent()) {
+        case EventSystem.GAME_STARTED:  
+            reset();
+            break;
+        case EventSystem.GAME_OVER:
+            setActive(false);
+            setUnitsVisible(false);
+            openGameOverDialog();
+            break;
+        case EventSystem.ZOMBIE_DEATH:      
+            EventSystem.dispatch(new GameEvent(EventSystem.PLAYER_MONEY_CHANGED, 
+                    ((Zombie) e.getUserData()).getMoneyReward()));
+            
+            remove((Zombie) e.getUserData());
+            onZombieKilled();    
+            break;
+        }
+    }
+    
     public abstract void loadLevels();
     
     public void setGameCamera(AndroidCamera gameCamera) {
@@ -228,7 +279,7 @@ public abstract class Level {
         if(!b) {
             zombies.clear();
             ammoCrates.clear();
-            playerArmy.clear();
+            objectDrawOrder.clear();
             player.setVisible(false);
         }
     }
@@ -238,29 +289,19 @@ public abstract class Level {
      */
     public void reset() {
         active = true;
-        getContext().getToolbar().setMoney(0);
-        getContext().getToolbar().getStage().cancelTouchFocus();
         player.reset();
         spawnTimer = 0;
         ammoCrates.clear();
+        objectDrawOrder.clear();
         zombies.clear();
-        playerArmy.clear();
         initializeCamera();
+        System.out.println("Level: reset()");
         
-        playerArmy = new Array<Unit>();
         ammoCrates = new Array<AmmoCrate>();
         zombies = new Array<Zombie>();
         objectDrawOrder = new Array<GameObject>();
         
         objectDrawOrder.add(player);
-    }
-   
-    public void onGameOver() {
-        Factory.zombiePool.clear();
-        Factory.ammoCratePool.clear();
-        
-        zombies.clear();
-        objectDrawOrder.clear();
     }
     
     public abstract void openGameOverDialog();
@@ -411,6 +452,8 @@ public abstract class Level {
         App.batch.setProjectionMatrix(gameCamera.combined);
         App.batch.begin();
 
+        App.batch.draw(Assets.gameBackground, 0, 0, LevelProperties.WIDTH, AppData.TARGET_HEIGHT);
+        
         for(Array<GameObject> sub : layers) {
             for(GameObject o : sub) {
                 o.render();
@@ -429,6 +472,11 @@ public abstract class Level {
         }
 
         App.batch.end();
+
+        if(App.settings.isDynamicLightingEnabled()) {
+            rayHandler.setCombinedMatrix(gameCamera.combined);
+            rayHandler.updateAndRender();        
+        }
     }
 
     public void remove(Zombie z) {
@@ -476,7 +524,7 @@ public abstract class Level {
     }
     
     private void initializeCamera() {
-        gameCamera.zoom = 0.45f;
+        gameCamera.zoom = CAMERA_ZOOM ;
         
         origCameraZoom = gameCamera.zoom;
 
@@ -486,7 +534,13 @@ public abstract class Level {
         gameCamera.update();
     }
     
-    public abstract void dispose();
+    public void dispose() {
+        System.out.println("Level dispose");
+        
+        if(physicsWorld != null) {
+            physicsWorld.dispose();
+        }
+    }
     
     public void setLayers(Array<Array<GameObject>> layers) {
         this.layers = layers;
@@ -499,10 +553,6 @@ public abstract class Level {
     public Array<Zombie> getZombies() {
         return zombies;
     }
-    
-    public Array<Unit> getPlayerArmy() {
-        return playerArmy;
-    }
 
     public Player getPlayer() {
         return player;
@@ -512,9 +562,6 @@ public abstract class Level {
         return inputAdapter;
     }
     
-    public void setPlayerArmy(Array<Unit> playerArmy) {
-        this.playerArmy = playerArmy;
-    }
 
     public void setFingerDown(boolean fingerDown) {
         this.fingerDown = fingerDown;
@@ -532,60 +579,32 @@ public abstract class Level {
         return enabled;
     }
     
-    public void setPlayer(Player player) {
-        this.player = player;
-    }
-    
-    public void setZombies(Array<Zombie> zombies) {
-        this.zombies = zombies;
-    }
-    
-    public void addUnit(Unit u) {
-        playerArmy.add(u);
-    }
-    
-    public void removeUnit(Unit u) {
-        playerArmy.removeValue(u, false);
+    public float getSpawnTime() {
+        return spawnTime;
     }
     
     public Array<GameObject> getObjectDrawOrder() {
         return objectDrawOrder;
     }
     
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+    
     public void setSpawnTime(float spawnTime) {
         this.spawnTime = spawnTime;
-    }
-    
-    public float getSpawnTime() {
-        return spawnTime;
-    }
-    
-    public void setSpawnTimer(float spawnTimer) {
-        this.spawnTimer = spawnTimer;
     }
     
     public GestureDetector getGestureDetector() {
         return gestureDetector;
     }
     
-    public float getSpawnTimer() {
-        return spawnTimer;
-    }
-
     public boolean isActive() {
         return active;
     }
     
     public void setActive(boolean active) {
         this.active = active;
-    }
-    
-    public void setSpawnTime(int spawnTime) {
-        this.spawnTime = spawnTime;
-    }
-    
-    public Array<Array<GameObject>> getLayers() {
-        return layers;
     }
 
     public AndroidCamera getGameCamera() {

@@ -4,10 +4,12 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.dpc.vthacks.App;
+import com.dpc.vthacks.GameEvent;
+import com.dpc.vthacks.IListener;
 import com.dpc.vthacks.gameobject.DynamicGameObject;
 import com.dpc.vthacks.properties.Properties;
 
-public abstract class Unit extends DynamicGameObject implements Poolable {
+public abstract class Unit extends DynamicGameObject implements Poolable, IListener {
     private Properties properties;
     private Unit targetEnemy;
     private boolean moving, attacking;
@@ -21,9 +23,10 @@ public abstract class Unit extends DynamicGameObject implements Poolable {
     }
 
     @Override
-    public void update(float delta) { 
-        
-    }
+    public abstract void onEvent(GameEvent e);
+    
+    @Override
+    public abstract void update(float delta);
     
     @Override
     public abstract void render();
@@ -32,6 +35,8 @@ public abstract class Unit extends DynamicGameObject implements Poolable {
     
     public abstract void attack(Unit enemy, float dmg);
     
+    public abstract void onDamageTaken(Unit attacker, float amount);
+    
     /*
      * Returns the distance between two units
      */
@@ -39,8 +44,6 @@ public abstract class Unit extends DynamicGameObject implements Poolable {
         return App.dst(u.getX(), u.getY(),
                              getX(), getY());
     }
-    
-    public abstract void onDamageTaken(Unit attacker, float amount);
 
     @Override
     public void reset() {

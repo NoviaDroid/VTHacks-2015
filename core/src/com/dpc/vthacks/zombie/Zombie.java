@@ -3,6 +3,8 @@ package com.dpc.vthacks.zombie;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.dpc.vthacks.App;
+import com.dpc.vthacks.EventSystem;
+import com.dpc.vthacks.GameEvent;
 import com.dpc.vthacks.animation.AnimatedUnit;
 import com.dpc.vthacks.animation.SpriteAnimation;
 import com.dpc.vthacks.factories.Factory;
@@ -35,6 +37,11 @@ public class Zombie extends AnimatedUnit implements Poolable {
         init();
     }
 
+    @Override
+    public void onEvent(GameEvent e) {
+    
+    }
+    
     @Override
     public void addPos(float x, float y) {
         super.addPos(x, y);
@@ -151,17 +158,7 @@ public class Zombie extends AnimatedUnit implements Poolable {
     @Override
     public void onDeath(Unit killer) {
         Factory.zombiePool.free(this);
-        LevelManager.getCurrentLevel().remove(this);
-        
-        // Add money to the money total
-        LevelManager.getCurrentLevel()
-                .getContext()
-                .getToolbar()
-                .addMoney((int) MathUtils.random(((ZombieProperties) getProperties())
-                                                    .getMinKillMoney(),
-                                                ((ZombieProperties) getProperties())
-                                                    .getMaxKillMoney()));
-        LevelManager.getCurrentLevel().onZombieKilled();
+        EventSystem.dispatch(new GameEvent(EventSystem.ZOMBIE_DEATH, this));        
     }
 
     @Override
@@ -190,6 +187,12 @@ public class Zombie extends AnimatedUnit implements Poolable {
     @Override
     public void attack(Unit enemy, float dmg) {
         enemy.takeDamage(this, dmg);
+    }
+    
+    public int getMoneyReward() {
+        return MathUtils.random(
+                ((ZombieProperties) getProperties()).getMinKillMoney(),
+                ((ZombieProperties) getProperties()).getMaxKillMoney());
     }
     
     public int getTier() {

@@ -37,10 +37,10 @@ public class MyActions {
         
     };
     
-    private static Pool<RepeatAction> linearActionPool = new Pool<RepeatAction>() {
+    private static Pool<Action> linearActionPool = new Pool<Action>() {
 
         @Override
-        protected RepeatAction newObject() {
+        protected Action newObject() {
             RepeatAction a = repeat(2, sequence(
                     moveBy(20, 0, 0.1f),
                     moveBy(-20, 0, 0.1f)));
@@ -100,8 +100,10 @@ public class MyActions {
         return waveLabelActionPool.obtain();
     }
     
-    public static RepeatAction backAndForth() {
-        return linearActionPool.obtain();
+    public static Action backAndForth() {
+        return repeat(2, sequence(
+                moveBy(20, 0, 0.1f),
+                moveBy(-20, 0, 0.1f)));
     }
     
     public static Action shake() {
