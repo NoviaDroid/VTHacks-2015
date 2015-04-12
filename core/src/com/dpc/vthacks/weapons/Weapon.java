@@ -12,7 +12,7 @@ public class Weapon {
     private String name;
     private String description;
     private String iconPath;
-    private String sound; // Key to sounds map in assets
+    private Integer sound; // Key to sounds map in assets
     private boolean primary; // True = primary, false = secondary
     private float minDamage;
     private float maxDamage;
@@ -35,21 +35,21 @@ public class Weapon {
      * Stops this weapon's shot 
      */
     public void stopSound() {
-        Assets.sounds.get(sound).stop();
+        Assets.stopSound(sound);
     }
     
     /**
      * Plays this weapon's shot 
      */
     public void playSound(float volume) {
-        Assets.sounds.get(sound).play(volume);
+        Assets.playSound(sound, volume);
     }
     
-    public String getSound() {
+    public Integer getSound() {
         return sound;
     }
     
-    public void setSound(String sound) {
+    public void setSound(Integer sound) {
         this.sound = sound;
     }
     

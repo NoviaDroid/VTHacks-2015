@@ -43,12 +43,12 @@ public class Assets {
     public static LabelStyle storeLabelStyle;
     
     // Game screen assets
-    public static final String SHOT1 = "shot1";
-    public static final String SHOT2 = "shot2";
-    public static final String SHOT3 = "shot3";
-    public static final String WAVE_UP = "wave up";
-    public static final String OUT_OF_AMMO = "outofammo";
-    public static ObjectMap<String, Sound> sounds;
+    public static final int SHOT1 = 1;
+    public static final int SHOT2 = 2;
+    public static final int SHOT3 = 3;
+    public static final int WAVE_UP = 4;
+    public static final int OUT_OF_AMMO = 5;
+    private static ObjectMap<Integer, Sound> sounds;
     public static ObjectMap<String, AdvancedSpriteAnimation> playerAnimations;
     public static ObjectMap<String, SpriteAnimation> zombieAnimations;
     public static AssetManager manager = new AssetManager();
@@ -72,6 +72,24 @@ public class Assets {
     public static LabelStyle aerialLabelStyle;
     public static LabelStyle robotoLabelStyle;
     private static boolean fontsLoaded;
+    
+    public static void playSound(int sound) {
+        if(App.settings.isAudioEnabled()) {
+            sounds.get(sound).play();
+        }
+    }
+    
+    public static void playSound(int sound, float volume) {
+        if(App.settings.isAudioEnabled()) {
+            sounds.get(sound).play(volume);
+        }
+    }
+    
+    public static void stopSound(int sound) {
+        if(App.settings.isAudioEnabled()) {
+            sounds.get(sound).stop();
+        }
+    }
     
     public static TextureRegion[] shallowCopy(TextureRegion[] input) {
         TextureRegion[] output = new TextureRegion[input.length];
@@ -459,7 +477,7 @@ public class Assets {
         manager.finishLoading();
        
         
-        sounds = new ObjectMap<String, Sound>();
+        sounds = new ObjectMap<Integer, Sound>();
         
         gameAtlas = manager.get("gamePack.pack", TextureAtlas.class);
         zombieAtlas = manager.get("Zombie1.pack", TextureAtlas.class);

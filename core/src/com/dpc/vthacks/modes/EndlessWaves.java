@@ -200,7 +200,7 @@ public class EndlessWaves extends Level {
     }
     
     private void onWaveEnd() {
-        Assets.sounds.get(Assets.WAVE_UP).play(1);
+        Assets.playSound(Assets.WAVE_UP, 1);
 
         wave++;
         zombiesKilled = 0;

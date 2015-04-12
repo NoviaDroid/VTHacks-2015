@@ -114,8 +114,8 @@ public class Player extends AdvancedAnimatedUnit {
                 ((Gun) currentWeapon).fire();
             }
             else {
-                Assets.sounds.get(Assets.OUT_OF_AMMO).stop();
-                Assets.sounds.get(Assets.OUT_OF_AMMO).play();
+                Assets.stopSound(Assets.OUT_OF_AMMO);
+                Assets.playSound(Assets.OUT_OF_AMMO);
                 
                 EventSystem.dispatch(new GameEvent(EventSystem.PLAYER_AMMO_OUT));
             }

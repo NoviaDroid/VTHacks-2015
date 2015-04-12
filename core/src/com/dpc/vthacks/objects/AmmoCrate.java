@@ -21,7 +21,7 @@ public class AmmoCrate extends GameSprite implements Poolable {
     public void onPickedUp(Player p) {
         p.refillAmmo();
         Factory.ammoCratePool.free(this);
-        Assets.sounds.get(Assets.OUT_OF_AMMO).play();
+        Assets.playSound(Assets.OUT_OF_AMMO);
     }
 
 }
